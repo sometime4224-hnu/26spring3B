@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>고향 글쓰기 웹앱 (KO-VI) · 자동저장</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: system-ui, -apple-system, "Noto Sans KR", Arial, sans-serif; }
+    .safe-bottom { padding-bottom: max(96px, env(safe-area-inset-bottom)); }
+    .tap { -webkit-tap-highlight-color: transparent; }
+    details > summary { list-style: none; }
+    details > summary::-webkit-details-marker { display:none; }
+    .shadow-soft { box-shadow: 0 10px 30px rgba(2,6,23,.06); }
+    .ring-soft:focus { outline: none; box-shadow: 0 0 0 4px rgba(59,130,246,.15); }
+    .btn { @apply tap inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-semibold active:scale-[.99]; }
+    .btn-primary { @apply bg-slate-900 text-white hover:bg-slate-800; }
+    .btn-ghost { @apply bg-white border border-slate-200 text-slate-900 hover:bg-slate-50; }
+    .btn-muted { @apply bg-slate-100 text-slate-900 hover:bg-slate-200; }
+    .chip { @apply inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700; }
+    .card { @apply bg-white border border-slate-200 rounded-3xl; }
+    .muted { color: rgb(71 85 105); }
+    .k { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; }
+  </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+
+<body class="bg-slate-50 text-slate-900 safe-bottom">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+  <!-- Top bar -->
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-200">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+      <div class="min-w-0">
+        <div class="flex items-center gap-2 flex-wrap">
+          <h1 class="text-base font-extrabold tracking-tight truncate">고향 글쓰기 (KO-VI)</h1>
+          <span id="saveChip" class="chip">
+            <span class="k">●</span>
+            <span id="saveStatus">저장됨</span>
+          </span>
+        </div>
+        <p id="stageHint" class="text-xs text-slate-600 truncate">지금: 1) 도입 · 다음: 2) 과거</p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="toggleVI" class="btn btn-ghost px-3 py-2 text-xs">
+          VI <span id="viState" class="font-extrabold">ON</span>
+        </button>
+        <button id="openHelp" class="btn btn-ghost px-3 py-2 text-xs">
+          도움말
+        </button>
+        <button id="resetAll" class="btn btn-primary px-3 py-2 text-xs">
+          초기화
+        </button>
+      </div>
+    </div>
+
+    <!-- Progress stepper -->
+    <div class="max-w-5xl mx-auto px-4 pb-3">
+      <div class="card p-3 shadow-soft">
+        <div class="flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2 min-w-0">
+            <div id="stepBadge" class="rounded-2xl bg-slate-900 text-white text-xs font-extrabold px-3 py-2">STEP 1</div>
+            <div class="min-w-0">
+              <p id="stepTitle" class="text-sm font-extrabold truncate">도입을 작성하세요</p>
+              <p id="stepSub" class="text-xs text-slate-600 truncate">Q1-Q3 → 단락 만들기 → 최종 글에 저장</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="jumpNext" class="btn btn-muted px-3 py-2 text-xs">다음 단계</button>
+          </div>
+        </div>
+
+        <div class="mt-3 grid grid-cols-5 gap-2">
+          <button class="stepDot tap rounded-2xl border border-slate-200 bg-slate-900 text-white text-xs font-extrabold py-2" data-step="1">1</button>
+          <button class="stepDot tap rounded-2xl border border-slate-200 bg-white text-slate-700 text-xs font-extrabold py-2" data-step="2">2</button>
+          <button class="stepDot tap rounded-2xl border border-slate-200 bg-white text-slate-700 text-xs font-extrabold py-2" data-step="3">3</button>
+          <button class="stepDot tap rounded-2xl border border-slate-200 bg-white text-slate-700 text-xs font-extrabold py-2" data-step="4">4</button>
+          <button class="stepDot tap rounded-2xl border border-slate-200 bg-white text-slate-700 text-xs font-extrabold py-2" data-step="6">완성</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Help drawer (modal) -->
+  <div id="helpModal" class="hidden fixed inset-0 z-[60]">
+    <div class="absolute inset-0 bg-black/40"></div>
+    <div class="absolute left-0 right-0 bottom-0 max-w-5xl mx-auto px-4 pb-4">
+      <div class="card shadow-soft p-4 rounded-3xl">
+        <div class="flex items-center justify-between gap-2">
+          <p class="text-sm font-extrabold">사용 방법(학습자용)</p>
+          <button id="closeHelp" class="btn btn-ghost px-3 py-2 text-xs">닫기</button>
+        </div>
+
+        <div class="mt-3 space-y-3 text-sm text-slate-700 leading-relaxed">
+          <div class="rounded-2xl bg-slate-50 border border-slate-200 p-3">
+            <p class="font-bold">1) 질문에 답하기</p>
+            <p>각 카드에서 문장 1-2개 작성 → 필요하면 <b>추천 문법·예문</b>을 열고 <b>예문 삽입</b> 후 단어만 바꾸세요.</p>
+          </div>
+          <div class="rounded-2xl bg-slate-50 border border-slate-200 p-3">
+            <p class="font-bold">2) 단락 만들기</p>
+            <p>섹션 아래의 <b>단락 만들기</b>를 누르면 자동으로 문장이 연결됩니다.</p>
+          </div>
+          <div class="rounded-2xl bg-slate-50 border border-slate-200 p-3">
+            <p class="font-bold">3) 최종 글 완성</p>
+            <p><b>최종 글</b>에서 단락을 확인하고 <b>최종 글 생성</b>을 누르세요. 필요하면 <b>.txt 저장</b>을 사용하세요.</p>
+          </div>
+          <div class="rounded-2xl bg-slate-50 border border-slate-200 p-3">
+            <p class="font-bold">자동저장</p>
+            <p>입력하면 자동으로 저장됩니다. (같은 기기/같은 브라우저 기준)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <main class="max-w-5xl mx-auto px-4 py-6 space-y-5">
+
+    <!-- Quick action bar (mobile-first) -->
+    <section class="card p-4 shadow-soft">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="chip">자동저장</span>
+        <span class="chip">예문 삽입</span>
+        <span class="chip">단락 만들기</span>
+        <span class="chip">최종 글</span>
+      </div>
+
+      <div class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <button id="goStep1" class="btn btn-ghost">1) 도입</button>
+        <button id="goStep2" class="btn btn-ghost">2) 과거</button>
+        <button id="goStep3" class="btn btn-ghost">3) 현재</button>
+        <button id="goStep4" class="btn btn-ghost">4) 미래</button>
+      </div>
+
+      <div class="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <button id="goGrammar" class="btn btn-ghost">필수표현</button>
+        <button id="goFinal" class="btn btn-primary">최종 글</button>
+        <button id="copyAllDraft" class="btn btn-ghost">전체 임시복사</button>
+        <button id="downloadJSON" class="btn btn-ghost">백업(.json)</button>
+      </div>
+
+      <p class="mt-3 text-xs text-slate-600">
+        팁: <b>예문 삽입</b> → 단어 바꾸기 → 문장 다듬기.
+      </p>
+    </section>
+
+    <!-- Shared: question card template-like styles -->
+    <style>
+      .qcard { border:1px solid rgb(226 232 240); border-radius: 1.5rem; background: rgb(255 255 255); }
+      .qhead { padding: 0.9rem 0.9rem 0.6rem 0.9rem; }
+      .qbody { padding: 0 0.9rem 0.9rem 0.9rem; }
+      .qtitle { font-weight: 800; }
+      .qmeta { font-size: .8rem; color: rgb(71 85 105); }
+      .textarea { width:100%; border:1px solid rgb(203 213 225); border-radius: 1.25rem; padding: .85rem .9rem; background:#fff; font-size: .95rem; line-height: 1.35rem; }
+      .textarea:focus { outline:none; box-shadow: 0 0 0 4px rgba(59,130,246,.12); border-color: rgb(147 197 253); }
+      .helpPanel { background: rgb(248 250 252); border:1px solid rgb(226 232 240); border-radius: 1.25rem; padding: .85rem; }
+      .helpTitle { font-weight: 800; font-size: .85rem; }
+      .helpList { margin-top: .4rem; font-size: .9rem; color: rgb(30 41 59); }
+      .pill2 { display:inline-flex; align-items:center; padding:.15rem .55rem; border-radius:999px; border:1px solid rgb(226 232 240); background:rgb(248 250 252); font-size:.75rem; font-weight:800; color:rgb(51 65 85); }
+      .miniBtn { display:inline-flex; align-items:center; justify-content:center; padding:.6rem .85rem; border-radius:1.1rem; font-weight:800; font-size:.85rem; border:1px solid rgb(226 232 240); background:white; }
+      .miniBtn:active { transform: scale(.99); }
+      .miniPrimary { border-color: rgb(15 23 42); background: rgb(15 23 42); color:#fff; }
+      .miniMuted { background: rgb(241 245 249); }
+    </style>
+
+    <!-- TAB 1 -->
+    <section id="tab1" class="tabPanel card p-4 shadow-soft space-y-4">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <h2 class="text-base font-extrabold">1) 도입</h2>
+          <p class="text-xs text-slate-600">Q1-Q3를 먼저 쓰세요.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="pill2">STEP 1</span>
+        </div>
+      </div>
+
+      <!-- Q1 -->
+      <div class="qcard">
+        <div class="qhead flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <p class="qtitle">Q1. 고향은 어디입니까?</p>
+            <p class="qmeta">도시/마을, 지역</p>
+            <p class="viHelp qmeta mt-1">VI: Quê bạn ở đâu? (thành phố/làng, vùng/tỉnh)</p>
+          </div>
+          <span class="pill2">문장 1</span>
+        </div>
+        <div class="qbody space-y-2">
+          <textarea id="s1" class="textarea" placeholder="예: 제 고향은 …에 있습니다."></textarea>
+          <details>
+            <summary class="miniBtn miniMuted w-full">추천 문법·예문 열기</summary>
+            <div class="helpPanel mt-2">
+              <p class="helpTitle">추천 문법</p>
+              <p class="helpList">1) N(은/는) …에 있다  2) N(이/가) 있다  3) N(으)로</p>
+              <p class="helpTitle mt-3">한국어 예문</p>
+              <ul class="helpList list-disc pl-5">
+                <li>제 고향은 하노이에 있습니다.</li>
+                <li>제 고향은 베트남 북쪽에 있습니다.</li>
+                <li>제 고향은 바다가 가까운 곳에 있습니다.</li>
+              </ul>
+              <p class="viHelp qmeta mt-2">VI: “Quê tôi ở … / nằm ở …”</p>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <button class="exInsert miniBtn miniPrimary" data-target="s1" data-text="제 고향은 하노이에 있습니다.">예문 삽입</button>
+                <button class="exInsert miniBtn" data-target="s1" data-text="제 고향은 베트남 북쪽에 있습니다.">예문 삽입</button>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="qcard">
+        <div class="qhead flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <p class="qtitle">Q2. 고향은 무엇으로 유명합니까?</p>
+            <p class="qmeta">음식, 관광지, 자연, 사람</p>
+            <p class="viHelp qmeta mt-1">VI: Quê bạn nổi tiếng về điều gì?</p>
+          </div>
+          <span class="pill2">문장 1</span>
+        </div>
+        <div class="qbody space-y-2">
+          <textarea id="s2" class="textarea" placeholder="예: 제 고향은 …로 유명합니다."></textarea>
+          <details>
+            <summary class="miniBtn miniMuted w-full">추천 문법·예문 열기</summary>
+            <div class="helpPanel mt-2">
+              <p class="helpTitle">추천 문법</p>
+              <p class="helpList">1) N(으)로 유명하다  2) N(이/가) 많다  3) 특히</p>
+              <p class="helpTitle mt-3">한국어 예문</p>
+              <ul class="helpList list-disc pl-5">
+                <li>제 고향은 바다로 유명합니다.</li>
+                <li>제 고향에는 관광지가 많습니다.</li>
+                <li>특히 야시장이 유명합니다.</li>
+              </ul>
+              <p class="viHelp qmeta mt-2">VI: nổi tiếng về… / có nhiều…</p>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <button class="exInsert miniBtn miniPrimary" data-target="s2" data-text="제 고향은 바다로 유명합니다.">예문 삽입</button>
+                <button class="exInsert miniBtn" data-target="s2" data-text="특히 야시장이 유명해서 사람들이 많이 옵니다.">예문 삽입</button>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="qcard">
+        <div class="qhead flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <p class="qtitle">Q3. 이번 글에서 무엇을 말하고 싶습니까?</p>
+            <p class="qmeta">변화, 좋은 점, 바라는 점</p>
+            <p class="viHelp qmeta mt-1">VI: Bạn muốn nói về điều gì trong bài này?</p>
+          </div>
+          <span class="pill2">문장 1</span>
+        </div>
+        <div class="qbody space-y-2">
+          <textarea id="s3" class="textarea" placeholder="예: 이번 글에서는 …에 대해 이야기해 보겠습니다."></textarea>
+          <details>
+            <summary class="miniBtn miniMuted w-full">추천 문법·예문 열기</summary>
+            <div class="helpPanel mt-2">
+              <p class="helpTitle">추천 문법</p>
+              <p class="helpList">1) N에 대해  2) V-(으)려고 하다  3) V-고 싶다</p>
+              <p class="helpTitle mt-3">한국어 예문</p>
+              <ul class="helpList list-disc pl-5">
+                <li>이번 글에서는 고향의 변화에 대해 이야기해 보겠습니다.</li>
+                <li>저는 고향의 과거와 현재를 비교해 보고 싶습니다.</li>
+              </ul>
+              <p class="viHelp qmeta mt-2">VI: nói về… / muốn…</p>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <button class="exInsert miniBtn miniPrimary" data-target="s3" data-text="이번 글에서는 고향의 변화에 대해 이야기해 보겠습니다.">예문 삽입</button>
+                <button class="exInsert miniBtn" data-target="s3" data-text="저는 고향의 과거와 현재를 비교해 보고 싶습니다.">예문 삽입</button>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <button id="makeP1" class="btn btn-primary">단락 만들기</button>
+        <button class="copyBtn btn btn-ghost" data-copy="p1Out">단락 복사</button>
+        <button class="saveBtn btn btn-ghost" data-save="p1Out" data-target="final1">최종에 저장</button>
+        <button class="nextBtn btn btn-muted" data-next="tab2">다음(과거)</button>
+      </div>
+
+      <div class="p-3 rounded-3xl border border-slate-200 bg-slate-50">
+        <p class="text-xs text-slate-600 font-bold mb-2">생성된 도입 단락</p>
+        <textarea id="p1Out" class="textarea bg-white" placeholder="단락 만들기 버튼을 누르세요." readonly></textarea>
+      </div>
+    </section>
+
+    <!-- TAB 2 -->
+    <section id="tab2" class="tabPanel hidden card p-4 shadow-soft space-y-4">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <h2 class="text-base font-extrabold">2) 과거</h2>
+          <p class="text-xs text-slate-600">Q4-Q8를 작성하세요.</p>
+        </div>
+        <span class="pill2">STEP 2</span>
+      </div>
+
+      <!-- Q4 -->
+      <div class="qcard">
+        <div class="qhead flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <p class="qtitle">Q4. 어렸을 때 고향 분위기는 어땠습니까?</p>
+            <p class="qmeta">조용했다/복잡했다, 깨끗했다/먼지가 많았다</p>
+            <p class="viHelp qmeta mt-1">VI: Khi còn nhỏ, quê bạn có không khí như thế nào?</p>
+          </div>
+          <span class="pill2">1-2문장</span>
+        </div>
+        <div class="qbody space-y-2">
+          <textarea id="s4" class="textarea" placeholder="예: 어렸을 때 제 고향은 …(이)었습니다."></textarea>
+          <details>
+            <summary class="miniBtn miniMuted w-full">추천 문법·예문 열기</summary>
+            <div class="helpPanel mt-2">
+              <p class="helpTitle">추천 문법</p>
+              <p class="helpList">1) 어렸을 때는 N(이)었다  2) A/V-았다/었다  3) N(이/가) 많았다</p>
+              <p class="helpTitle mt-3">한국어 예문</p>
+              <ul class="helpList list-disc pl-5">
+                <li>어렸을 때 제 고향은 조용한 마을이었습니다.</li>
+                <li>그때는 공기가 깨끗했습니다.</li>
+                <li>지금보다 사람이 적었습니다.</li>
+              </ul>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <button class="exInsert miniBtn miniPrimary" data-target="s4" data-text="어렸을 때 제 고향은 조용한 마을이었습니다.">예문 삽입</button>
+                <button class="exInsert miniBtn" data-target="s4" data-text="그때는 공기가 깨끗했고 지금보다 사람이 적었습니다.">예문 삽입</button>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="qcard">
+        <div class="qhead flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <p class="qtitle">Q5. 그때 집과 동네는 어떤 모습이었습니까?</p>
+            <p class="viHelp qmeta mt-1">VI: Lúc đó nhà và khu phố như thế nào?</p>
+          </div>
+          <span class="pill2">1-2문장</span>
+        </div>
+        <div class="qbody space-y-2">
+          <textarea id="s5" class="textarea" placeholder="예: 그때는 …이/가 많았습니다."></textarea>
+          <details>
+            <summary class="miniBtn miniMuted w-full">추천 문법·예문 열기</summary>
+            <div class="helpPanel mt-2">
+              <p class="helpTitle">추천 문법</p>
+              <p class="helpList">1) N(이/가) 많았다  2) A-았다/었다  3) N(이/가) 있었다</p>
+              <p class="helpTitle mt-3">한국어 예문</p>
+              <ul class="helpList list-disc pl-5">
+                <li>그때는 낮은 집이 많았습니다.</li>
+                <li>골목길이 좁았습니다.</li>
+                <li>동네에 작은 시장이 있었습니다.</li>
+              </ul>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <button class="exInsert miniBtn miniPrimary" data-target="s5" data-text="그때는 낮은 집이 많았고 골목길이 좁았습니다.">예문 삽입</button>
+                <button class="exInsert miniBtn" data-target="s5" data-text="동네에 작은 시장이 있어서 사람들이 자주 갔습니다.">예문 삽입</button>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- Q6 -->
+      <div class="qcard">
+        <div class="qhead flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <p class="qtitle">Q6. 자연환경은 어땠습니까?</p>
+            <p class="qmeta">공기, 강, 나무, 날씨</p>
+            <p class="viHelp qmeta mt-1">VI: Môi trường tự nhiên như thế nào?</p>
+          </div>
+          <span class="pill2">1-2문장</span>
+        </div>
+        <div class="qbody space-y-2">
+          <textarea id="s6" class="textarea" placeholder="예: 나무가 많아서 …했습니다."></textarea>
+          <details>
+            <summary class="miniBtn miniMuted w-full">추천 문법·예문 열기</summary>
+            <div class="helpPanel mt-2">
+              <p class="helpTitle">추천 문법</p>
+              <p class="helpList">1) A/V-아서/어서  2) 그래서  3) N(이/가) 있다</p>
+              <p class="helpTitle mt-3">한국어 예문</p>
+              <ul class="helpList list-disc pl-5">
+                <li>나무가 많아서 여름에 시원했습니다.</li>
+                <li>공기가 좋아서 산책하기가 좋았습니다.</li>
+                <li>강이 있어서 풍경이 아름다웠습니다.</li>
+              </ul>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <button class="exInsert miniBtn miniPrimary" data-target="s6" data-text="나무가 많아서 여름에 시원했습니다.">예문 삽입</button>
+                <button class="exInsert miniBtn" data-target="s6" data-text="공기가 좋아서 산책하기가 좋았습니다.">예문 삽입</button>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- Q7 -->
+      <div class="qcard">
+        <div class="qhead flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <p class="qtitle">Q7. 사람들은 어떻게 살았습니까?</p>
+            <p class="qmeta">직업, 생활, 이웃</p>
+            <p class="viHelp qmeta mt-1">VI: Người dân sống như thế nào?</p>
+          </div>
+          <span class="pill2">1-2문장</span>
+        </div>
+        <div class="qbody space-y-2">
+          <textarea id="s7" class="textarea" placeholder="예: 이웃끼리 서로 도와주곤 했습니다."></textarea>
+          <details>
+            <summary class="miniBtn miniMuted w-full">추천 문법·예문 열기</summary>
+            <div class="helpPanel mt-2">
+              <p class="helpTitle">추천 문법</p>
+              <p class="helpList">1) V-곤 했다  2) 자주  3) 서로</p>
+              <p class="helpTitle mt-3">한국어 예문</p>
+              <ul class="helpList list-disc pl-5">
+                <li>이웃끼리 서로 도와주곤 했습니다.</li>
+                <li>사람들은 농사를 짓곤 했습니다.</li>
+              </ul>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <button class="exInsert miniBtn miniPrimary" data-target="s7" data-text="이웃끼리 서로 도와주곤 했습니다.">예문 삽입</button>
+                <button class="exInsert miniBtn" data-target="s7" data-text="사람들은 농사를 짓곤 했습니다.">예문 삽입</button>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- Q8 -->
+      <div class="qcard">
+        <div class="qhead flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <p class="qtitle">Q8. 기억에 남는 장소/사건 + 이유</p>
+            <p class="viHelp qmeta mt-1">VI: Nơi/kỷ niệm bạn nhớ nhất và lý do?</p>
+          </div>
+          <span class="pill2">2-3문장</span>
+        </div>
+        <div class="qbody space-y-2">
+          <textarea id="s8" class="textarea" placeholder="예: …이 가장 기억에 남습니다. 왜냐하면 …기 때문입니다."></textarea>
+          <details>
+            <summary class="miniBtn miniMuted w-full">추천 문법·예문 열기</summary>
+            <div class="helpPanel mt-2">
+              <p class="helpTitle">추천 문법</p>
+              <p class="helpList">1) N(이/가) 기억에 남다  2) 왜냐하면 A/V-기 때문  3) 예를 들면</p>
+              <p class="helpTitle mt-3">한국어 예문</p>
+              <ul class="helpList list-disc pl-5">
+                <li>시장이 가장 기억에 남습니다. 왜냐하면 어렸을 때 친구들과 자주 갔기 때문입니다.</li>
+              </ul>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <button class="exInsert miniBtn miniPrimary" data-target="s8" data-text="시장이 가장 기억에 남습니다. 왜냐하면 어렸을 때 친구들과 자주 갔기 때문입니다.">예문 삽입</button>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <button id="makeP2" class="btn btn-primary">단락 만들기</button>
+        <button class="copyBtn btn btn-ghost" data-copy="p2Out">단락 복사</button>
+        <button class="saveBtn btn btn-ghost" data-save="p2Out" data-target="final2">최종에 저장</button>
+        <button class="nextBtn btn btn-muted" data-next="tab3">다음(현재)</button>
+      </div>
+
+      <div class="p-3 rounded-3xl border border-slate-200 bg-slate-50">
+        <p class="text-xs text-slate-600 font-bold mb-2">생성된 과거 단락</p>
+        <textarea id="p2Out" class="textarea bg-white" placeholder="단락 만들기 버튼을 누르세요." readonly></textarea>
+      </div>
+    </section>
+
+    <!-- TAB 3 -->
+    <section id="tab3" class="tabPanel hidden card p-4 shadow-soft space-y-4">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <h2 class="text-base font-extrabold">3) 현재</h2>
+          <p class="text-xs text-slate-600">변화 + 장점 + 문제를 쓰세요.</p>
+        </div>
+        <span class="pill2">STEP 3</span>
+      </div>
+
+      <!-- Q9 -->
+      <div class="qcard">
+        <div class="qhead flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <p class="qtitle">Q9. 지금 고향에서 가장 크게 변한 것은?</p>
+            <p class="viHelp qmeta mt-1">VI: Điều gì thay đổi nhiều nhất?</p>
+          </div>
+          <span class="pill2">1문장</span>
+        </div>
+        <div class="qbody space-y-2">
+          <textarea id="s9" class="textarea" placeholder="예: 요즘 고향에서는 …가 가장 크게 변했습니다."></textarea>
+          <details>
+            <summary class="miniBtn miniMuted w-full">추천 문법·예문 열기</summary>
+            <div class="helpPanel mt-2">
+              <p class="helpTitle">추천 문법</p>
+              <p class="helpList">1) N(이/가) 변하다  2) 가장  3) 특히</p>
+              <p class="helpTitle mt-3">한국어 예문</p>
+              <ul class="helpList list-disc pl-5">
+                <li>요즘 고향에서는 교통이 가장 크게 변했습니다.</li>
+                <li>아파트가 많이 생겨서 동네 모습이 달라졌습니다.</li>
+              </ul>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <button class="exInsert miniBtn miniPrimary" data-target="s9" data-text="요즘 고향에서는 교통이 가장 크게 변했습니다.">예문 삽입</button>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- Q10 -->
+      <div class="qcard">
+        <div class="qhead flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <p class="qtitle">Q10. 변한 이유는?</p>
+            <p class="viHelp qmeta mt-1">VI: Vì sao thay đổi?</p>
+          </div>
+          <span class="pill2">1-2문장</span>
+        </div>
+        <div class="qbody space-y-2">
+          <textarea id="s10" class="textarea" placeholder="예: … 때문에 …가 달라지게 되었습니다."></textarea>
+          <details>
+            <summary class="miniBtn miniMuted w-full">추천 문법·예문 열기</summary>
+            <div class="helpPanel mt-2">
+              <p class="helpTitle">추천 문법</p>
+              <p class="helpList">1) N 때문에  2) A/V-아서/어서  3) V-게 되다</p>
+              <p class="helpTitle mt-3">한국어 예문</p>
+              <ul class="helpList list-disc pl-5">
+                <li>개발 때문에 도시가 달라지게 되었습니다.</li>
+                <li>관광객이 늘어서 가게가 많아졌습니다.</li>
+              </ul>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <button class="exInsert miniBtn miniPrimary" data-target="s10" data-text="개발 때문에 도시가 달라지게 되었습니다.">예문 삽입</button>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- Q11 -->
+      <div class="qcard">
+        <div class="qhead flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <p class="qtitle">Q11. 변화의 장점은?</p>
+            <p class="viHelp qmeta mt-1">VI: Ưu điểm là gì?</p>
+          </div>
+          <span class="pill2">1-2문장</span>
+        </div>
+        <div class="qbody space-y-2">
+          <textarea id="s11" class="textarea" placeholder="예: … 덕분에 …할 수 있습니다."></textarea>
+          <details>
+            <summary class="miniBtn miniMuted w-full">추천 문법·예문 열기</summary>
+            <div class="helpPanel mt-2">
+              <p class="helpTitle">추천 문법</p>
+              <p class="helpList">1) 덕분에  2) V-(으)ㄹ 수 있다  3) 좋아지다</p>
+              <p class="helpTitle mt-3">한국어 예문</p>
+              <ul class="helpList list-disc pl-5">
+                <li>지하철이 생긴 덕분에 빨리 이동할 수 있습니다.</li>
+              </ul>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <button class="exInsert miniBtn miniPrimary" data-target="s11" data-text="지하철이 생긴 덕분에 빨리 이동할 수 있습니다.">예문 삽입</button>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- Q12 -->
+      <div class="qcard">
+        <div class="qhead flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <p class="qtitle">Q12. 현재 고향의 좋은 점 1가지 + 예시</p>
+            <p class="viHelp qmeta mt-1">VI: 1 điểm tốt + ví dụ</p>
+          </div>
+          <span class="pill2">2-3문장</span>
+        </div>
+        <div class="qbody space-y-2">
+          <textarea id="s12" class="textarea" placeholder="예: 가장 좋은 점은 …입니다. 예를 들면 …"></textarea>
+          <details>
+            <summary class="miniBtn miniMuted w-full">추천 문법·예문 열기</summary>
+            <div class="helpPanel mt-2">
+              <p class="helpTitle">추천 문법</p>
+              <p class="helpList">1) 가장 …은/는  2) 예를 들면  3) A/V-아서/어서</p>
+              <p class="helpTitle mt-3">한국어 예문</p>
+              <ul class="helpList list-disc pl-5">
+                <li>현재 고향에서 가장 좋은 점은 공원이 많은 것입니다. 예를 들면, 집 근처에 큰 공원이 있어서 매일 산책할 수 있습니다.</li>
+              </ul>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <button class="exInsert miniBtn miniPrimary" data-target="s12" data-text="현재 고향에서 가장 좋은 점은 공원이 많은 것입니다. 예를 들면, 집 근처에 큰 공원이 있어서 매일 산책할 수 있습니다.">예문 삽입</button>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- Q13 -->
+      <div class="qcard">
+        <div class="qhead flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <p class="qtitle">Q13. 변화로 생긴 문제/불편은?</p>
+            <p class="viHelp qmeta mt-1">VI: Có bất tiện nào?</p>
+          </div>
+          <span class="pill2">1-2문장</span>
+        </div>
+        <div class="qbody space-y-2">
+          <textarea id="s13" class="textarea" placeholder="예: …하지만 …도 있습니다."></textarea>
+          <details>
+            <summary class="miniBtn miniMuted w-full">추천 문법·예문 열기</summary>
+            <div class="helpPanel mt-2">
+              <p class="helpTitle">추천 문법</p>
+              <p class="helpList">1) A/V-지만  2) N 때문에  3) 심해지다</p>
+              <p class="helpTitle mt-3">한국어 예문</p>
+              <ul class="helpList list-disc pl-5">
+                <li>생활은 편리해졌지만 교통체증이 심해졌습니다.</li>
+              </ul>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <button class="exInsert miniBtn miniPrimary" data-target="s13" data-text="생활은 편리해졌지만 교통체증이 심해졌습니다.">예문 삽입</button>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <button id="makeP3" class="btn btn-primary">단락 만들기</button>
+        <button class="copyBtn btn btn-ghost" data-copy="p3Out">단락 복사</button>
+        <button class="saveBtn btn btn-ghost" data-save="p3Out" data-target="final3">최종에 저장</button>
+        <button class="nextBtn btn btn-muted" data-next="tab4">다음(미래)</button>
+      </div>
+
+      <div class="p-3 rounded-3xl border border-slate-200 bg-slate-50">
+        <p class="text-xs text-slate-600 font-bold mb-2">생성된 현재 단락</p>
+        <textarea id="p3Out" class="textarea bg-white" placeholder="단락 만들기 버튼을 누르세요." readonly></textarea>
+      </div>
+    </section>
+
+    <!-- TAB 4 -->
+    <section id="tab4" class="tabPanel hidden card p-4 shadow-soft space-y-4">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <h2 class="text-base font-extrabold">4) 미래</h2>
+          <p class="text-xs text-slate-600">바라는 점 + 이유 + 방법 + 결론</p>
+        </div>
+        <span class="pill2">STEP 4</span>
+      </div>
+
+      <!-- Q14 -->
+      <div class="qcard">
+        <div class="qhead flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <p class="qtitle">Q14. 앞으로 더 좋아졌으면 하는 점은?</p>
+            <p class="viHelp qmeta mt-1">VI: Bạn mong cải thiện điều gì?</p>
+          </div>
+          <span class="pill2">1문장</span>
+        </div>
+        <div class="qbody space-y-2">
+          <textarea id="s14" class="textarea" placeholder="예: 앞으로 …했으면 좋겠습니다."></textarea>
+          <details>
+            <summary class="miniBtn miniMuted w-full">추천 문법·예문 열기</summary>
+            <div class="helpPanel mt-2">
+              <p class="helpTitle">추천 문법</p>
+              <p class="helpList">1) V-았/었으면 좋겠다  2) 더  3) A-(으)면 좋겠다</p>
+              <p class="helpTitle mt-3">한국어 예문</p>
+              <ul class="helpList list-disc pl-5">
+                <li>앞으로 공기가 더 깨끗해졌으면 좋겠습니다.</li>
+              </ul>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <button class="exInsert miniBtn miniPrimary" data-target="s14" data-text="앞으로 공기가 더 깨끗해졌으면 좋겠습니다.">예문 삽입</button>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- Q15 -->
+      <div class="qcard">
+        <div class="qhead flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <p class="qtitle">Q15. 왜 그렇게 되면 좋습니까?</p>
+            <p class="viHelp qmeta mt-1">VI: Vì sao tốt?</p>
+          </div>
+          <span class="pill2">1-2문장</span>
+        </div>
+        <div class="qbody space-y-2">
+          <textarea id="s15" class="textarea" placeholder="예: 왜냐하면 …기 때문입니다. 그래서 …할 수 있습니다."></textarea>
+          <details>
+            <summary class="miniBtn miniMuted w-full">추천 문법·예문 열기</summary>
+            <div class="helpPanel mt-2">
+              <p class="helpTitle">추천 문법</p>
+              <p class="helpList">1) 왜냐하면 A/V-기 때문  2) 그래서  3) V-(으)ㄹ 수 있다</p>
+              <p class="helpTitle mt-3">한국어 예문</p>
+              <ul class="helpList list-disc pl-5">
+                <li>왜냐하면 주민들이 더 건강해질 수 있기 때문입니다. 그래서 아이들이 밖에서 더 안전하게 놀 수 있습니다.</li>
+              </ul>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <button class="exInsert miniBtn miniPrimary" data-target="s15" data-text="왜냐하면 주민들이 더 건강해질 수 있기 때문입니다. 그래서 아이들이 밖에서 더 안전하게 놀 수 있습니다.">예문 삽입</button>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- Q16 -->
+      <div class="qcard">
+        <div class="qhead flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <p class="qtitle">Q16. 가능한 방법은 무엇이라고 생각합니까?</p>
+            <p class="viHelp qmeta mt-1">VI: Giải pháp nào?</p>
+          </div>
+          <span class="pill2">1-2문장</span>
+        </div>
+        <div class="qbody space-y-2">
+          <textarea id="s16" class="textarea" placeholder="예: …할 필요가 있다고 생각합니다."></textarea>
+          <details>
+            <summary class="miniBtn miniMuted w-full">추천 문법·예문 열기</summary>
+            <div class="helpPanel mt-2">
+              <p class="helpTitle">추천 문법</p>
+              <p class="helpList">1) V-(으)ㄹ 필요가 있다  2) V-(으)면 좋겠다  3) 늘리다/줄이다</p>
+              <p class="helpTitle mt-3">한국어 예문</p>
+              <ul class="helpList list-disc pl-5">
+                <li>공원을 더 만들 필요가 있다고 생각합니다.</li>
+                <li>대중교통을 더 늘리면 좋겠습니다.</li>
+              </ul>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <button class="exInsert miniBtn miniPrimary" data-target="s16" data-text="공원을 더 만들 필요가 있다고 생각합니다.">예문 삽입</button>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- Q17 -->
+      <div class="qcard">
+        <div class="qhead flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <p class="qtitle">Q17. 마지막 한 문장(정리)</p>
+            <p class="viHelp qmeta mt-1">VI: Tóm tắt bằng 1 câu</p>
+          </div>
+          <span class="pill2">1문장</span>
+        </div>
+        <div class="qbody space-y-2">
+          <textarea id="s17" class="textarea" placeholder="예: 저에게 고향은 …입니다."></textarea>
+          <details>
+            <summary class="miniBtn miniMuted w-full">추천 문법·예문 열기</summary>
+            <div class="helpPanel mt-2">
+              <p class="helpTitle">추천 문법</p>
+              <p class="helpList">1) 저에게 N은/는 …이다  2) A-(으)ㄴ 곳  3) 그리운/편안한/활기찬</p>
+              <p class="helpTitle mt-3">한국어 예문</p>
+              <ul class="helpList list-disc pl-5">
+                <li>저에게 고향은 언제나 그리운 곳입니다.</li>
+              </ul>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <button class="exInsert miniBtn miniPrimary" data-target="s17" data-text="저에게 고향은 언제나 그리운 곳입니다.">예문 삽입</button>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <button id="makeP4" class="btn btn-primary">단락 만들기</button>
+        <button class="copyBtn btn btn-ghost" data-copy="p4Out">단락 복사</button>
+        <button class="saveBtn btn btn-ghost" data-save="p4Out" data-target="final4">최종에 저장</button>
+        <button class="nextBtn btn btn-muted" data-next="tab6">다음(완성)</button>
+      </div>
+
+      <div class="p-3 rounded-3xl border border-slate-200 bg-slate-50">
+        <p class="text-xs text-slate-600 font-bold mb-2">생성된 미래 단락</p>
+        <textarea id="p4Out" class="textarea bg-white" placeholder="단락 만들기 버튼을 누르세요." readonly></textarea>
+      </div>
+    </section>
+
+    <!-- TAB 5 Grammar -->
+    <section id="tab5" class="tabPanel hidden card p-4 shadow-soft space-y-3">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <h2 class="text-base font-extrabold">필수 표현·문법</h2>
+          <p class="text-xs text-slate-600">글에 3개 이상 포함</p>
+        </div>
+        <span class="pill2">참고</span>
+      </div>
+
+      <div class="grid gap-2">
+        <div class="helpPanel">
+          <p class="helpTitle">1) 어렸을 때는 N(이)었다</p>
+          <p class="text-sm mt-1"><b>예문</b>: 어렸을 때는 우리 동네가 아주 조용한 마을이었습니다.</p>
+          <p class="viHelp qmeta mt-1">VI: Hồi nhỏ…</p>
+        </div>
+        <div class="helpPanel">
+          <p class="helpTitle">2) 요즘은/지금은</p>
+          <p class="text-sm mt-1"><b>예문</b>: 요즘은 새 건물이 많이 생겨서 거리가 더 밝아졌습니다.</p>
+          <p class="viHelp qmeta mt-1">VI: Dạo này…</p>
+        </div>
+        <div class="helpPanel">
+          <p class="helpTitle">3) N이/가 많았다·늘었다·줄었다</p>
+          <p class="text-sm mt-1"><b>예문</b>: 예전에는 논이 많았지만, 지금은 아파트가 늘었습니다.</p>
+          <p class="viHelp qmeta mt-1">VI: nhiều/tăng/giảm</p>
+        </div>
+        <div class="helpPanel">
+          <p class="helpTitle">4) V-게 되다</p>
+          <p class="text-sm mt-1"><b>예문</b>: 도로가 넓어져서 이동이 편해지게 되었습니다.</p>
+          <p class="viHelp qmeta mt-1">VI: trở nên…</p>
+        </div>
+        <div class="helpPanel">
+          <p class="helpTitle">5) A/V-지만</p>
+          <p class="text-sm mt-1"><b>예문</b>: 교통이 편리하지만, 사람도 너무 많습니다.</p>
+          <p class="viHelp qmeta mt-1">VI: nhưng…</p>
+        </div>
+        <div class="helpPanel">
+          <p class="helpTitle">6) 왜냐하면 A/V-기 때문(에)</p>
+          <p class="text-sm mt-1"><b>예문</b>: 저는 고향을 좋아합니다. 왜냐하면 사람들 사이가 따뜻하기 때문입니다.</p>
+          <p class="viHelp qmeta mt-1">VI: bởi vì…</p>
+        </div>
+        <div class="helpPanel">
+          <p class="helpTitle">7) V-았/었으면 좋겠다</p>
+          <p class="text-sm mt-1"><b>예문</b>: 앞으로 공원이 더 많아졌으면 좋겠습니다.</p>
+          <p class="viHelp qmeta mt-1">VI: mong rằng…</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <button class="btn btn-ghost nextBtn" data-next="tab1">도입으로</button>
+        <button class="btn btn-ghost nextBtn" data-next="tab2">과거로</button>
+        <button class="btn btn-ghost nextBtn" data-next="tab3">현재로</button>
+        <button class="btn btn-primary nextBtn" data-next="tab6">최종 글로</button>
+      </div>
+    </section>
+
+    <!-- TAB 6 Final -->
+    <section id="tab6" class="tabPanel hidden card p-4 shadow-soft space-y-4">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <h2 class="text-base font-extrabold">최종 글</h2>
+          <p class="text-xs text-slate-600">단락 확인 → 최종 글 생성</p>
+        </div>
+        <span class="pill2">완성</span>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <button id="autoFill" class="btn btn-ghost">자동 채우기</button>
+        <button id="makeFinal" class="btn btn-primary">최종 글 생성</button>
+        <button class="copyBtn btn btn-ghost" data-copy="finalOut">최종 복사</button>
+        <button id="downloadTxt" class="btn btn-ghost">.txt 저장</button>
+      </div>
+
+      <div class="rounded-3xl border border-slate-200 bg-slate-50 p-3 space-y-2">
+        <p class="text-xs text-slate-600 font-bold">단락(수정 가능)</p>
+
+        <label class="text-xs text-slate-600 font-bold">도입</label>
+        <textarea id="final1" class="textarea bg-white" placeholder="도입 단락"></textarea>
+
+        <label class="text-xs text-slate-600 font-bold">과거</label>
+        <textarea id="final2" class="textarea bg-white" placeholder="과거 단락"></textarea>
+
+        <label class="text-xs text-slate-600 font-bold">현재</label>
+        <textarea id="final3" class="textarea bg-white" placeholder="현재 단락"></textarea>
+
+        <label class="text-xs text-slate-600 font-bold">미래</label>
+        <textarea id="final4" class="textarea bg-white" placeholder="미래 단락"></textarea>
+      </div>
+
+      <div class="rounded-3xl border border-slate-200 bg-white p-3">
+        <p class="text-xs text-slate-600 font-bold mb-2">최종 글(결과)</p>
+        <textarea id="finalOut" class="textarea bg-slate-50" placeholder="여기에 생성됩니다." readonly></textarea>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <button class="btn btn-ghost nextBtn" data-next="tab1">처음으로</button>
+        <button id="copyAllDraft2" class="btn btn-ghost">전체 임시복사</button>
+        <button id="downloadJSON2" class="btn btn-ghost">백업(.json)</button>
+        <button id="scrollTop" class="btn btn-primary">맨 위</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom sticky navigator (mobile) -->
+  <nav class="fixed left-0 right-0 bottom-0 z-50 bg-white/95 backdrop-blur border-t border-slate-200">
+    <div class="max-w-5xl mx-auto px-4 py-3 grid grid-cols-5 gap-2">
+      <button class="bottomBtn btn btn-ghost px-2 py-3 text-xs" data-tab="tab1">도입</button>
+      <button class="bottomBtn btn btn-ghost px-2 py-3 text-xs" data-tab="tab2">과거</button>
+      <button class="bottomBtn btn btn-ghost px-2 py-3 text-xs" data-tab="tab3">현재</button>
+      <button class="bottomBtn btn btn-ghost px-2 py-3 text-xs" data-tab="tab4">미래</button>
+      <button class="bottomBtn btn btn-primary px-2 py-3 text-xs" data-tab="tab6">완성</button>
+    </div>
+  </nav>
+
+  <!-- Toast -->
+  <div id="toast" class="pointer-events-none fixed left-0 right-0 bottom-[92px] z-[70] hidden">
+    <div class="max-w-5xl mx-auto px-4">
+      <div id="toastBox" class="pointer-events-auto card shadow-soft px-4 py-3 text-sm font-bold"></div>
+    </div>
+  </div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+
+  // =========================
+  // Auto Save (localStorage)
+  // =========================
+  const STORAGE_KEY = "hometown_writing_KO-VI_ui_v3";
+  const SAVE_DELAY_MS = 250;
+  let saveTimer = null;
+
+  function setSaveStatus(text, state="ok") {
+    const el = $("saveStatus");
+    if (el) el.textContent = text;
+
+    const chip = $("saveChip");
+    if (!chip) return;
+    chip.classList.remove("border-emerald-200","bg-emerald-50","text-emerald-800","border-amber-200","bg-amber-50","text-amber-800","border-rose-200","bg-rose-50","text-rose-800");
+    chip.classList.add("border-slate-200","bg-white","text-slate-700");
+
+    if (state === "saving") {
+      chip.classList.remove("bg-white","text-slate-700","border-slate-200");
+      chip.classList.add("border-amber-200","bg-amber-50","text-amber-800");
+    } else if (state === "error") {
+      chip.classList.remove("bg-white","text-slate-700","border-slate-200");
+      chip.classList.add("border-rose-200","bg-rose-50","text-rose-800");
+    } else if (state === "restored") {
+      chip.classList.remove("bg-white","text-slate-700","border-slate-200");
+      chip.classList.add("border-emerald-200","bg-emerald-50","text-emerald-800");
+    }
+  }
+
+  function collectAllTextareaValues() {
+    const data = {};
+    document.querySelectorAll("textarea").forEach(t => {
+      if (t.id) data[t.id] = t.value;
+    });
+    data.__viHelpOn = localStorage.getItem("viHelpOn") || "1";
+    data.__activeTab = window.__activeTab || "tab1";
+    return data;
+  }
+
+  function saveToLocalStorageNow() {
+    try {
+      const data = collectAllTextareaValues();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ savedAt: Date.now(), data }));
+      setSaveStatus("저장됨", "ok");
+    } catch (e) {
+      setSaveStatus("저장 실패", "error");
+      console.error(e);
+    }
+  }
+
+  function scheduleSave() {
+    setSaveStatus("저장 중…", "saving");
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      saveToLocalStorageNow();
+      saveTimer = null;
+    }, SAVE_DELAY_MS);
+  }
+
+  function restoreFromLocalStorage() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return false;
+      const parsed = JSON.parse(raw);
+      const data = parsed?.data || {};
+      Object.keys(data).forEach(id => {
+        if (id.startsWith("__")) return;
+        const el = $(id);
+        if (el && el.tagName === "TEXTAREA") el.value = data[id];
+      });
+      setSaveStatus("복원됨", "restored");
+      // restore VI toggle
+      if (data.__viHelpOn) localStorage.setItem("viHelpOn", data.__viHelpOn);
+      // restore tab (later, after init)
+      window.__restoreTab = data.__activeTab || "tab1";
+      return true;
+    } catch (e) {
+      console.error(e);
+      setSaveStatus("복원 실패", "error");
+      return false;
+    }
+  }
+
+  function clearSavedData() {
+    localStorage.removeItem(STORAGE_KEY);
+    setSaveStatus("저장 데이터 삭제됨", "ok");
+  }
+
+  // =========================
+  // UX helpers
+  // =========================
+  function toast(msg, kind="info") {
+    const t = $("toast");
+    const box = $("toastBox");
+    if (!t || !box) return;
+    t.classList.remove("hidden");
+    box.className = "pointer-events-auto card shadow-soft px-4 py-3 text-sm font-bold";
+    box.classList.add("rounded-3xl","border");
+    if (kind === "ok") box.classList.add("border-emerald-200","bg-emerald-50","text-emerald-900");
+    else if (kind === "warn") box.classList.add("border-amber-200","bg-amber-50","text-amber-900");
+    else box.classList.add("border-slate-200","bg-white","text-slate-900");
+    box.textContent = msg;
+    setTimeout(()=> t.classList.add("hidden"), 1500);
+  }
+
+  function normalizeSentence(s) {
+    if (!s) return "";
+    s = s.trim();
+    if (!s) return "";
+    if (!/[.!?。？！]$/.test(s)) s += ".";
+    return s;
+  }
+
+  function joinSentences(arr) {
+    return arr.map(normalizeSentence).filter(Boolean).join(" ");
+  }
+
+  async function copyToClipboard(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast("복사했습니다.", "ok");
+    } catch (e) {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      toast("복사했습니다.", "ok");
+    }
+  }
+
+  function toggleVI(on) {
+    document.querySelectorAll(".viHelp").forEach(el => {
+      el.style.display = on ? "" : "none";
+    });
+    $("viState").textContent = on ? "ON" : "OFF";
+    localStorage.setItem("viHelpOn", on ? "1" : "0");
+  }
+
+  // Step mapping
+  const tabToStep = {
+    tab1: { step: 1, title: "도입을 작성하세요", sub: "Q1-Q3 → 단락 만들기 → 최종 글에 저장", next: "tab2" },
+    tab2: { step: 2, title: "과거를 작성하세요", sub: "Q4-Q8 → 단락 만들기 → 최종 글에 저장", next: "tab3" },
+    tab3: { step: 3, title: "현재를 작성하세요", sub: "Q9-Q13 → 단락 만들기 → 최종 글에 저장", next: "tab4" },
+    tab4: { step: 4, title: "미래를 작성하세요", sub: "Q14-Q17 → 단락 만들기 → 최종 글에 저장", next: "tab6" },
+    tab5: { step: 5, title: "필수 표현을 확인하세요", sub: "글에 3개 이상 포함", next: "tab6" },
+    tab6: { step: 6, title: "최종 글을 완성하세요", sub: "자동 채우기 → 최종 글 생성 → 복사/저장", next: "tab1" },
+  };
+
+  function updateStepper(tabId) {
+    const info = tabToStep[tabId] || tabToStep.tab1;
+    $("stepBadge").textContent = `STEP ${info.step}`;
+    $("stepTitle").textContent = info.title;
+    $("stepSub").textContent = info.sub;
+
+    const stageHint = $("stageHint");
+    if (stageHint) {
+      const nowLabel =
+        tabId === "tab1" ? "1) 도입" :
+        tabId === "tab2" ? "2) 과거" :
+        tabId === "tab3" ? "3) 현재" :
+        tabId === "tab4" ? "4) 미래" :
+        tabId === "tab5" ? "필수표현" : "완성";
+
+      const nextLabel =
+        info.next === "tab1" ? "1) 도입" :
+        info.next === "tab2" ? "2) 과거" :
+        info.next === "tab3" ? "3) 현재" :
+        info.next === "tab4" ? "4) 미래" :
+        info.next === "tab5" ? "필수표현" : "완성";
+
+      stageHint.textContent = `지금: ${nowLabel} · 다음: ${nextLabel}`;
+    }
+
+    // step dots
+    document.querySelectorAll(".stepDot").forEach(btn => {
+      btn.classList.remove("bg-slate-900","text-white");
+      btn.classList.add("bg-white","text-slate-700","border","border-slate-200");
+    });
+    // map: step dots include "6" for completion
+    const activeStepKey = (info.step === 6) ? "6" : String(info.step);
+    const dot = document.querySelector(`.stepDot[data-step="${activeStepKey}"]`);
+    if (dot) {
+      dot.classList.add("bg-slate-900","text-white");
+      dot.classList.remove("bg-white","text-slate-700");
+    }
+
+    // bottom nav active highlight
+    document.querySelectorAll(".bottomBtn").forEach(b => {
+      b.classList.remove("bg-slate-900","text-white");
+      b.classList.add("bg-white","border","border-slate-200","text-slate-900");
+    });
+    const bb = document.querySelector(`.bottomBtn[data-tab="${tabId}"]`);
+    if (bb) {
+      bb.classList.add("bg-slate-900","text-white");
+      bb.classList.remove("bg-white","text-slate-900");
+    }
+  }
+
+  function setActiveTab(tabId) {
+    window.__activeTab = tabId;
+
+    document.querySelectorAll(".tabPanel").forEach(p => p.classList.add("hidden"));
+    const panel = $(tabId);
+    if (panel) panel.classList.remove("hidden");
+
+    updateStepper(tabId);
+    scheduleSave();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // =========================
+  // Init
+  // =========================
+  // Restore first (may set __restoreTab)
+  restoreFromLocalStorage();
+
+  // VI toggle init
+  let viOn = localStorage.getItem("viHelpOn");
+  viOn = viOn === null ? true : (viOn === "1");
+  toggleVI(viOn);
+
+  $("toggleVI").addEventListener("click", () => {
+    viOn = !viOn;
+    toggleVI(viOn);
+    scheduleSave();
+    toast(viOn ? "베트남어 도움말: ON" : "베트남어 도움말: OFF", "ok");
+  });
+
+  // Help modal
+  $("openHelp").addEventListener("click", ()=> $("helpModal").classList.remove("hidden"));
+  $("closeHelp").addEventListener("click", ()=> $("helpModal").classList.add("hidden"));
+  $("helpModal").addEventListener("click", (e)=> { if (e.target === $("helpModal")) $("helpModal").classList.add("hidden"); });
+
+  // Step dots click
+  document.querySelectorAll(".stepDot").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const s = btn.dataset.step;
+      if (s === "1") setActiveTab("tab1");
+      else if (s === "2") setActiveTab("tab2");
+      else if (s === "3") setActiveTab("tab3");
+      else if (s === "4") setActiveTab("tab4");
+      else if (s === "6") setActiveTab("tab6");
+    });
+  });
+
+  // Jump next
+  $("jumpNext").addEventListener("click", () => {
+    const info = tabToStep[window.__activeTab] || tabToStep.tab1;
+    setActiveTab(info.next);
+  });
+
+  // Quick navigation buttons
+  $("goStep1").addEventListener("click", ()=> setActiveTab("tab1"));
+  $("goStep2").addEventListener("click", ()=> setActiveTab("tab2"));
+  $("goStep3").addEventListener("click", ()=> setActiveTab("tab3"));
+  $("goStep4").addEventListener("click", ()=> setActiveTab("tab4"));
+  $("goGrammar").addEventListener("click", ()=> setActiveTab("tab5"));
+  $("goFinal").addEventListener("click", ()=> setActiveTab("tab6"));
+
+  // bottom nav
+  document.querySelectorAll(".bottomBtn").forEach(b=>{
+    b.addEventListener("click", ()=> setActiveTab(b.dataset.tab));
+  });
+
+  // Next buttons inside tabs
+  document.querySelectorAll(".nextBtn").forEach(b=>{
+    b.addEventListener("click", ()=> setActiveTab(b.dataset.next));
+  });
+
+  // Example insert
+  document.querySelectorAll(".exInsert").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const target = btn.dataset.target;
+      const text = btn.dataset.text;
+      const el = $(target);
+      if (!el) return;
+      el.value = text;
+      el.focus();
+      el.setSelectionRange(el.value.length, el.value.length);
+      scheduleSave();
+      toast("예문을 넣었습니다. 단어를 바꾸세요.", "ok");
+    });
+  });
+
+  // Copy buttons
+  document.querySelectorAll(".copyBtn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.copy;
+      copyToClipboard($(id)?.value || "");
+    });
+  });
+
+  // Auto-save wiring
+  document.querySelectorAll("textarea").forEach(t => {
+    t.addEventListener("input", scheduleSave);
+  });
+
+  // before unload
+  window.addEventListener("beforeunload", () => {
+    saveToLocalStorageNow();
+  });
+
+  // Paragraph builders
+  $("makeP1").addEventListener("click", () => {
+    $("p1Out").value = joinSentences([$("s1").value, $("s2").value, $("s3").value]);
+    scheduleSave();
+    toast("도입 단락 생성 완료", "ok");
+  });
+  $("makeP2").addEventListener("click", () => {
+    $("p2Out").value = joinSentences([$("s4").value, $("s5").value, $("s6").value, $("s7").value, $("s8").value]);
+    scheduleSave();
+    toast("과거 단락 생성 완료", "ok");
+  });
+  $("makeP3").addEventListener("click", () => {
+    $("p3Out").value = joinSentences([$("s9").value, $("s10").value, $("s11").value, $("s12").value, $("s13").value]);
+    scheduleSave();
+    toast("현재 단락 생성 완료", "ok");
+  });
+  $("makeP4").addEventListener("click", () => {
+    $("p4Out").value = joinSentences([$("s14").value, $("s15").value, $("s16").value, $("s17").value]);
+    scheduleSave();
+    toast("미래 단락 생성 완료", "ok");
+  });
+
+  // Save buttons to final
+  document.querySelectorAll(".saveBtn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const srcId = btn.dataset.save;
+      const targetId = btn.dataset.target;
+      const src = $(srcId)?.value || "";
+      if (!$(targetId)) return;
+      $(targetId).value = src;
+      scheduleSave();
+      toast("최종 글에 저장했습니다.", "ok");
+      setActiveTab("tab6");
+    });
+  });
+
+  // Auto fill final
+  $("autoFill").addEventListener("click", () => {
+    $("final1").value = $("p1Out").value || joinSentences([$("s1").value, $("s2").value, $("s3").value]);
+    $("final2").value = $("p2Out").value || joinSentences([$("s4").value, $("s5").value, $("s6").value, $("s7").value, $("s8").value]);
+    $("final3").value = $("p3Out").value || joinSentences([$("s9").value, $("s10").value, $("s11").value, $("s12").value, $("s13").value]);
+    $("final4").value = $("p4Out").value || joinSentences([$("s14").value, $("s15").value, $("s16").value, $("s17").value]);
+    scheduleSave();
+    toast("단락을 자동으로 채웠습니다.", "ok");
+  });
+
+  // Make final text
+  $("makeFinal").addEventListener("click", () => {
+    const parts = [
+      $("final1").value.trim(),
+      $("final2").value.trim(),
+      $("final3").value.trim(),
+      $("final4").value.trim()
+    ].filter(Boolean);
+    $("finalOut").value = parts.join("\n\n");
+    scheduleSave();
+    toast("최종 글 생성 완료", "ok");
+  });
+
+  // Download txt
+  $("downloadTxt").addEventListener("click", () => {
+    const text = $("finalOut").value || "";
+    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "hometown_writing_KO-VI.txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast(".txt 저장 완료", "ok");
+  });
+
+  // Backup JSON (download)
+  function downloadBackupJSON() {
+    const data = collectAllTextareaValues();
+    const blob = new Blob([JSON.stringify({ exportedAt: new Date().toISOString(), data }, null, 2)], { type: "application/json;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "hometown_writing_backup.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast("백업(.json) 저장 완료", "ok");
+  }
+  $("downloadJSON").addEventListener("click", downloadBackupJSON);
+  $("downloadJSON2").addEventListener("click", downloadBackupJSON);
+
+  // Copy all draft (all s1-s17 + p + final)
+  function makeAllDraftText() {
+    const ids = ["s1","s2","s3","s4","s5","s6","s7","s8","s9","s10","s11","s12","s13","s14","s15","s16","s17","p1Out","p2Out","p3Out","p4Out","finalOut"];
+    const lines = [];
+    ids.forEach(id => {
+      const v = $(id)?.value?.trim();
+      if (v) lines.push(`[${id}] ${v}`);
+    });
+    return lines.join("\n\n");
+  }
+  $("copyAllDraft").addEventListener("click", ()=> copyToClipboard(makeAllDraftText()));
+  $("copyAllDraft2").addEventListener("click", ()=> copyToClipboard(makeAllDraftText()));
+
+  // Reset all
+  $("resetAll").addEventListener("click", () => {
+    if (!confirm("정말 전체 초기화할까요? (저장된 내용도 삭제됩니다)")) return;
+    document.querySelectorAll("textarea").forEach(el => el.value = "");
+    clearSavedData();
+    // keep VI preference
+    localStorage.setItem("viHelpOn", viOn ? "1" : "0");
+    toast("초기화 완료", "ok");
+    setActiveTab("tab1");
+  });
+
+  // Scroll top
+  $("scrollTop").addEventListener("click", ()=> window.scrollTo({top:0, behavior:"smooth"}));
+
+  // Set initial tab
+  const startTab = window.__restoreTab || "tab1";
+  setActiveTab(startTab);
+</script>
+</body>
+</html>

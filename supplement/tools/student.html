@@ -1,0 +1,239 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?숈깮 異쒖꽍 泥댄겕 ??/title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            background-color: #f8fafc;
+        }
+
+        .student-item {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+        }
+
+        .student-item:active {
+            transform: scale(0.97);
+        }
+
+        .checked {
+            background-color: #e0e7ff;
+            /* indigo-100 */
+            border-color: #818cf8;
+            /* indigo-400 */
+        }
+
+        .checked .check-icon {
+            display: inline-block;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .check-icon {
+            display: none;
+        }
+
+        .button {
+            transition: all 0.2s ease;
+        }
+
+        .button:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="../../assets/content-consistency.css">
+</head>
+
+<body class="flex flex-col items-center min-h-screen pb-10">
+
+    <!-- Global Navigation -->
+    <nav
+        class="w-full bg-white/80 backdrop-blur-md border-b border-indigo-100 sticky top-0 z-50 shadow-sm h-16 px-4 sm:px-6 flex items-center">
+        <a href="../index.html"
+            class="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-bold transition-colors">
+            <i class="fa-solid fa-house"></i>
+            <span>硫붿씤?쇰줈</span>
+        </a>
+    </nav>
+
+    <div class="w-full max-w-md mt-6 px-4">
+        <div id="app-container"
+            class="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-slate-100 p-6 sm:p-8 space-y-6">
+            <div class="text-center">
+                <div
+                    class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 mb-4">
+                    <i class="fa-solid fa-clipboard-user text-2xl"></i>
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight">?숈깮 異쒖꽍 泥댄겕</h1>
+            </div>
+
+            <!-- ?숈깮 紐낅떒 -->
+            <div id="student-list" class="space-y-3 mt-4">
+                <!-- ?숈깮 紐⑸줉???ш린???숈쟻?쇰줈 異붽??⑸땲??-->
+            </div>
+
+            <!-- 踰꾪듉 洹몃９ -->
+            <div class="pt-6 flex flex-col space-y-3 border-t border-slate-100">
+                <button id="capture-button"
+                    class="button w-full py-3.5 px-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl shadow-lg shadow-indigo-200 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-camera"></i> 寃곌낵 罹≪쿂
+                </button>
+                <button id="reset-button"
+                    class="button w-full py-3.5 px-6 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-2xl shadow-sm border border-slate-200 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-arrow-rotate-right"></i> 珥덇린??                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 罹≪쿂 ?대?吏 ?쒖떆 紐⑤떖 -->
+    <div id="capture-modal"
+        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-[100]">
+        <div class="bg-white rounded-3xl p-6 shadow-2xl w-full max-w-sm relative transform scale-95 opacity-0 transition-all duration-300"
+            id="capture-modal-content">
+            <h2 class="text-xl font-black mb-4 text-center text-slate-800">罹≪쿂 ?꾨즺</h2>
+            <div class="rounded-xl overflow-hidden border border-slate-200 mb-5 shadow-sm">
+                <img id="captured-image" src="" alt="Captured image" class="w-full h-auto">
+            </div>
+            <div class="flex flex-col space-y-2">
+                <button id="close-modal-button"
+                    class="py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl transition-colors">
+                    ?リ린
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const students = [
+            '??????, '??罹??먯븞 ??, '????? ?쒖뿁', '?묒쎂 ?묒뼲 留덉씠', '????洹??묒븘',
+            '?????붿뿏', '?묒슦????留?, '易붿뿁 ???ъ씠 由?, '痢좎뿁 諛???, '?????묒삦 ?꾩삅',
+            '吏??먯씠 ??, '????????, '?묒쭊猷?, '?뚯슦 ??遺 ??, '??諛??꾩븞',
+            '?묒쎂 ???꾩뿏 由?, '李???誘??먯뿁', '留덉씠 ??吏?, '?????섏삤', '遺 ???ㅼ뿏',
+            '?좊???, '?꾩퓼?섍? 肄붿슦誘?
+        ];
+
+        const STORAGE_KEY = 'attendance_status';
+        const studentList = document.getElementById('student-list');
+        const captureButton = document.getElementById('capture-button');
+        const resetButton = document.getElementById('reset-button');
+        const captureModal = document.getElementById('capture-modal');
+        const captureModalContent = document.getElementById('capture-modal-content');
+        const closeButton = document.getElementById('close-modal-button');
+        const capturedImage = document.getElementById('captured-image');
+
+        const savedStatus = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+
+        students.forEach(name => {
+            const studentItem = document.createElement('div');
+            studentItem.classList.add('student-item', 'p-4', 'bg-white', 'rounded-2xl', 'shadow-sm', 'cursor-pointer', 'select-none', 'flex', 'items-center', 'justify-between', 'border', 'border-slate-100');
+            studentItem.dataset.name = name;
+            studentItem.innerHTML = `
+                <span class="font-bold text-[15px] sm:text-base text-slate-700">${name}</span>
+                <span class="check-icon text-indigo-600 text-xl"><i class="fa-solid fa-circle-check"></i></span>
+            `;
+
+            if (savedStatus[name]) {
+                studentItem.classList.add('checked');
+                studentItem.classList.replace('border-slate-100', 'border-indigo-400');
+            }
+
+            studentItem.addEventListener('click', () => {
+                studentItem.classList.toggle('checked');
+                if (studentItem.classList.contains('checked')) {
+                    studentItem.classList.replace('border-slate-100', 'border-indigo-400');
+                } else {
+                    studentItem.classList.replace('border-indigo-400', 'border-slate-100');
+                }
+                updateStatus(name, studentItem.classList.contains('checked'));
+            });
+            studentList.appendChild(studentItem);
+        });
+
+        function updateStatus(name, isChecked) {
+            savedStatus[name] = isChecked;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedStatus));
+        }
+
+        captureButton.addEventListener('click', () => {
+            const appContainer = document.getElementById('app-container');
+            const originalBackground = document.body.style.backgroundColor;
+            document.body.style.backgroundColor = 'white';
+            captureButton.style.display = 'none';
+            resetButton.style.display = 'none';
+
+            html2canvas(appContainer, { scale: 2, backgroundColor: '#ffffff' }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                capturedImage.src = imgData;
+                captureModal.style.display = 'flex';
+                // Animation trigger
+                setTimeout(() => {
+                    captureModalContent.classList.remove('scale-95', 'opacity-0');
+                    captureModalContent.classList.add('scale-100', 'opacity-100');
+                }, 10);
+
+                captureButton.style.display = 'flex';
+                resetButton.style.display = 'flex';
+                document.body.style.backgroundColor = originalBackground;
+            });
+        });
+
+        resetButton.addEventListener('click', () => {
+            const confirmationModal = document.createElement('div');
+            confirmationModal.innerHTML = `
+                <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-[100]">
+                    <div class="bg-white rounded-3xl p-6 shadow-2xl w-full max-w-xs text-center transform scale-100 transition-all">
+                        <div class="w-12 h-12 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                        </div>
+                        <p class="mb-6 text-[15px] font-bold text-slate-800">紐⑤뱺 異쒖꽍 ?곗씠?곕?<br>珥덇린?뷀븯?쒓쿋?듬땲源?</p>
+                        <div class="flex justify-center gap-3">
+                            <button id="confirm-yes" class="flex-1 py-3 bg-rose-500 text-white font-bold rounded-xl hover:bg-rose-600 transition-colors">?? 珥덇린??/button>
+                            <button id="confirm-no" class="flex-1 py-3 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition-colors">痍⑥냼</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(confirmationModal);
+
+            document.getElementById('confirm-yes').addEventListener('click', () => {
+                localStorage.removeItem(STORAGE_KEY);
+                location.reload();
+            });
+
+            document.getElementById('confirm-no').addEventListener('click', () => {
+                confirmationModal.remove();
+            });
+        });
+
+        closeButton.addEventListener('click', () => {
+            captureModalContent.classList.remove('scale-100', 'opacity-100');
+            captureModalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                captureModal.style.display = 'none';
+            }, 300);
+        });
+    </script>
+</body>
+
+</html>

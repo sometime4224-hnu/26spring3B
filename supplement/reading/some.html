@@ -1,0 +1,436 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Korean "Some" Culture (with Vietnamese)</title>
+
+    <!-- Reveal.js & Plugins -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css" id="theme">
+
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts: Noto Sans KR (Korean), Noto Sans (Vietnamese support), Gaegu -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans:wght@400;700&family=Noto+Sans+KR:wght@300;500;700;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* Global Navigation Container */
+        .global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-sizing: border-box;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            transition: color 0.2s;
+        }
+
+        .global-nav a:hover {
+            color: #3730a3;
+        }
+
+        /* --- Custom Theme Design --- */
+        :root {
+            --primary-color: #FF6B6B;
+            /* ?ㅻ젅???묓겕/肄붾엫 */
+            --secondary-color: #4ECDC4;
+            /* 誘쇳듃 */
+            --text-dark: #2d3436;
+            --vn-text: #636e72;
+            /* 踰좏듃?⑥뼱 ?띿뒪???됱긽 (?뚯깋議? */
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+        }
+
+        body {
+            background: var(--bg-gradient);
+            font-family: 'Noto Sans KR', 'Noto Sans', sans-serif !important;
+            /* ?쒓?+踰좏듃?⑥뼱 ?고듃 */
+        }
+
+        .reveal {
+            color: var(--text-dark);
+        }
+
+        /* Typography */
+        .reveal h1,
+        .reveal h2,
+        .reveal h3 {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--text-dark);
+            text-transform: none;
+        }
+
+        /* 踰좏듃?⑥뼱 蹂댁“ ?띿뒪???ㅽ???*/
+        .vn-sub {
+            font-family: 'Noto Sans', sans-serif;
+            font-size: 0.6em;
+            /* ?쒓뎅?대낫???묎쾶 */
+            color: var(--vn-text);
+            font-weight: 400;
+            display: block;
+            /* 以꾨컮轅?*/
+            margin-top: 5px;
+        }
+
+        .handwriting {
+            font-family: 'Gaegu', cursive;
+            color: var(--primary-color);
+        }
+
+        .highlight {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .text-blue {
+            color: #3498db;
+        }
+
+        /* Card Styling */
+        .card-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            flex: 1;
+            min-width: 250px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card i {
+            font-size: 2em;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+
+        .card h4 {
+            font-size: 1.3em;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        /* Checklist Style */
+        .checklist-item {
+            background: rgba(255, 255, 255, 0.8);
+            border-left: 5px solid var(--primary-color);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 0 10px 10px 0;
+            text-align: left;
+            font-size: 0.85em;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Chat Bubble Style */
+        .chat-bubble {
+            background: #ffeaa7;
+            padding: 15px 25px;
+            border-radius: 20px;
+            border-bottom-left-radius: 2px;
+            display: inline-block;
+            margin: 10px;
+            font-family: 'Gaegu', cursive;
+            font-size: 1.4em;
+            position: relative;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Comparison Box */
+        .vs-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin-top: 30px;
+        }
+
+        .vs-item {
+            width: 40%;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .vs-western {
+            background: #dfe6e9;
+        }
+
+        .vs-korean {
+            background: #ffe0e0;
+            border: 2px solid var(--primary-color);
+        }
+    </style>
+    <link rel="stylesheet" href="../../assets/content-consistency.css">
+</head>
+
+<body>
+
+    <!-- Global Navigation -->
+    <nav class="global-nav">
+        <a href="../index.html">
+            <i class="fa-solid fa-house"></i>
+            <span>硫붿씤?쇰줈</span>
+        </a>
+    </nav>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- Slide 1: Intro -->
+            <section>
+                <div style="font-size: 3em; margin-bottom: 20px;">?뮄</div>
+                <h3>?쒓뎅???곗븷 臾명솕</h3>
+                <span class="vn-sub">V훱n h처a h梳퉚 h챵 c沼쬪 H횪n Qu沼멵</span>
+
+                <h1 style="font-size: 3.5em; margin-top: 20px;">'???대? 臾댁뾿?멸???</h1>
+                <h2 class="text-blue">(Some)</h2>
+                <hr style="width: 100px; border: 2px solid var(--primary-color);">
+                <p>?쒓뎅??媛???ㅻ젅???④퀎瑜??뚭컻?⑸땲??</p>
+                <span class="vn-sub">Gi沼쌻 thi沼뇎 v沼?giai 휃o梳죒 rung 휃沼셬g nh梳쩿 沼?H횪n Qu沼멵.</span>
+            </section>
+
+            <!-- Slide 2: Definition -->
+            <section>
+                <h2>1. '??????/h2>
+                <span class="vn-sub">휂沼땙h ngh칫a c沼쬪 "Some"</span>
+
+                <div class="fragment fade-up">
+                    <p style="font-size: 1.5em; margin-top: 30px;">
+                        <i class="fas fa-quote-left highlight"></i>
+                        ?곸뼱 <span class="highlight">"Something"</span>?먯꽌 ?좊옒
+                    </p>
+                    <span class="vn-sub">Xu梳쩿 ph찼t t沼?t沼?ti梳퓆g Anh "Something"</span>
+                </div>
+
+                <div class="card-container" style="margin-top: 40px;">
+                    <div class="card fragment" style="background-color: #fff0f0;">
+                        <i class="fas fa-magic" style="color: var(--primary-color);"></i>
+                        <h4 class="highlight">?좊ℓ??愿怨?/h4>
+                        <span class="vn-sub">M沼멼 quan h沼?m梳춑 m沼?/span>
+                        <hr>
+                        <p style="font-size: 0.8em; font-weight: bold;">"??爰쇱씤 ????爰??꾨땶"</p>
+                        <span class="vn-sub" style="font-size: 0.7em;">Tr챗n t챙nh b梳죒, d튼沼쌻 t챙nh y챗u</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 3: Checklist (Interactive) -->
+            <section>
+                <h2>2. ?섎룄 吏湲?'???쇨퉴?</h2>
+                <span class="vn-sub">Li沼뇎 m챙nh c처 휃ang "Some" kh척ng?</span>
+
+                <div style="width: 90%; margin: 0 auto; margin-top: 20px;">
+                    <div class="checklist-item fragment fade-right">
+                        <i class="fas fa-mobile-alt highlight" style="margin-right: 10px;"></i>
+                        <strong>留ㅼ씪 ?곕씫?쒕떎</strong> (?꾩묠遺??諛ㅺ퉴吏)
+                        <span class="vn-sub">Li챗n l梳죅 m沼뾦 ng횪y (T沼?s찼ng 휃梳퓆 t沼멼)</span>
+                    </div>
+                    <div class="checklist-item fragment fade-right">
+                        <i class="fas fa-utensils highlight" style="margin-right: 10px;"></i>
+                        <strong>"諛?癒뱀뿀??"</strong> = 愿?ъ쓽 ?쒗쁽
+                        <span class="vn-sub">H沼뢩 "B梳죒 훱n c퉤m ch튼a?" = Bi沼긳 hi沼뇆 s沼?quan t창m</span>
+                    </div>
+                    <div class="checklist-item fragment fade-right">
+                        <i class="fas fa-film highlight" style="margin-right: 10px;"></i>
+                        <strong>?⑤몮??留뚮궃??/strong> (?곹솕, 移댄럹, 留쏆쭛)
+                        <span class="vn-sub">G梳톚 g沼?ri챗ng hai ng튼沼쓎 (Xem phim, c횪 ph챗, 훱n u沼몁g)</span>
+                    </div>
+                    <div class="checklist-item fragment fade-right">
+                        <i class="fas fa-angry highlight" style="margin-right: 10px;"></i>
+                        <strong>吏덊닾媛 ?쒕떎</strong> (?섏?留??붾궪 ?먭꺽? ?놁쓬)
+                        <span class="vn-sub">Th梳쪅 ghen tu척ng (Nh튼ng kh척ng c처 quy沼걆 gi梳춏 d沼뾦)</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 4: Vocabulary -->
+            <section>
+                <h2>3. ?꾩닔 ?쒓뎅???⑥뼱</h2>
+                <span class="vn-sub">T沼?v沼켷g ti梳퓆g H횪n c梳쬷 thi梳퓍</span>
+                <div class="card-container" style="margin-top: 20px;">
+                    <div class="card fragment zoom-in">
+                        <h4>?몃궓 / ?몃?</h4>
+                        <span class="vn-sub">Ssome-nam / Ssome-nyeo</span>
+                        <hr>
+                        <p style="font-size: 0.7em;">?몄쓣 ????⑥옄 / ?ъ옄</p>
+                        <span class="vn-sub">Ch횪ng trai / C척 g찼i 휃ang t챙m hi沼긳</span>
+                    </div>
+                    <div class="card fragment zoom-in">
+                        <h4>諛??/h4>
+                        <span class="vn-sub">Mil-dang</span>
+                        <hr>
+                        <p style="font-size: 0.7em;">諛怨??밴린湲?/p>
+                        <span class="vn-sub">Th梳?th챠nh / K챕o 휃梳쯻 t챙nh c梳즡</span>
+                    </div>
+                    <div class="card fragment zoom-in">
+                        <h4>?댁옣愿由?/h4>
+                        <span class="vn-sub">Eojang-gwanli</span>
+                        <hr>
+                        <p style="font-size: 0.7em;">?щ윭 紐낃낵 ?숈떆?????湲??슜</p>
+                        <span class="vn-sub">Qu梳즢 l첵 h沼?c찼 / B梳칣 c찼 nhi沼걏 tay</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 5: The Confession -->
+            <section>
+                <h2>4. ?몄쓽 ?앹??</h2>
+                <span class="vn-sub">K梳퓍 th첬c c沼쬪 "Some" l횪 g챙?</span>
+
+                <div class="vs-box">
+                    <div class="vs-item vs-western fragment">
+                        <h4>?눣?눡 ?쒖뼇 ?ㅽ???/h4>
+                        <span class="vn-sub">Phong c찼ch ph튼퉤ng T창y</span>
+                        <hr style="border-top: 1px dashed #999;">
+                        <p style="font-size: 0.7em;">?먯뿰?ㅻ읇寃??곗씤????/p>
+                        <span class="vn-sub">Tr沼?th횪nh ng튼沼쓎 y챗u m沼셳 c찼ch t沼?nhi챗n</span>
+                    </div>
+
+                    <div style="font-size: 1.5em; font-weight: bold;">VS</div>
+
+                    <div class="vs-item vs-korean fragment">
+                        <h4>?눖?눟 ?쒓뎅 ?ㅽ???/h4>
+                        <span class="vn-sub">Phong c찼ch H횪n Qu沼멵</span>
+                        <hr style="border-top: 1px dashed var(--primary-color);">
+                        <p class="highlight" style="font-size: 0.9em;">諛섎뱶??'怨좊갚'???꾩슂!</p>
+                        <span class="vn-sub">Nh梳쩿 휃沼땙h ph梳즜 c처 "L沼쓎 t沼?t챙nh"!</span>
+                    </div>
+                </div>
+
+                <div class="fragment"
+                    style="margin-top: 20px; background: #eaffe9; padding: 10px; border-radius: 10px;">
+                    <i class="fas fa-check-circle" style="color: green;"></i>
+                    <strong>?ㅻ뒛遺??1??/strong>
+                    <span class="vn-sub">H척m nay l횪 ng횪y 휃梳쬾 ti챗n h梳퉚 h챵</span>
+                </div>
+            </section>
+
+            <!-- Slide 6: Key Phrases -->
+            <section>
+                <h2>?대뼸寃?怨좊갚?섎굹??</h2>
+                <span class="vn-sub">T沼?t챙nh nh튼 th梳?n횪o?</span>
+
+                <div style="margin-top: 30px;">
+                    <div class="fragment">
+                        <div class="chat-bubble">
+                            ?섎옉 ?ш톲?? ?뭾
+                        </div>
+                        <p style="font-size: 0.8em; margin-bottom: 0;">"?섎옉 ?ш톲??"</p>
+                        <span class="vn-sub">B梳죒 h梳퉚 h챵 v沼쌻 m챙nh nha?</span>
+                    </div>
+
+                    <div class="fragment" style="margin-top: 20px;">
+                        <div class="chat-bubble" style="background: var(--primary-color); color: white;">
+                            ?곕━ ?ㅻ뒛遺??1???좉퉴? ?뿎截?                        </div>
+                        <p style="font-size: 0.8em; margin-bottom: 0;">"?곕━ ?ㅻ뒛遺??1???좉퉴?"</p>
+                        <span class="vn-sub">Ch첬ng m챙nh b梳칣 휃梳쬾 ng횪y 휃梳쬾 ti챗n t沼?h척m nay nh챕?</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 7: Quiz -->
+            <section data-background-color="#f8a5c2">
+                <h2 style="color: white; text-shadow: 2px 2px 0 rgba(0,0,0,0.1);">源쒖쭩 ?댁쫰! ?쭬</h2>
+                <span class="vn-sub" style="color: rgba(255,255,255,0.8);">C창u 휃沼?b梳쩿 ng沼?</span>
+
+                <div style="background: white; padding: 30px; border-radius: 20px; margin-top: 30px;">
+                    <p style="font-size: 1em; font-weight: bold;">
+                        Q. ????吏 2?ъ씠 吏?щ뒗???꾨Т 留먯씠 ?녿떎硫?
+                    </p>
+                    <span class="vn-sub">Q. 휂찾 "Some" 2 th찼ng r沼밿 m횪 휃沼멼 ph튼퉤ng kh척ng n처i g챙 c梳?</span>
+
+                    <ol style="text-align: left; font-size: 0.8em; margin-top: 20px; margin-left: 30px;">
+                        <li class="fragment">?대쫫??源뚮㉨?댁꽌 <span class="vn-sub" style="display:inline;">(Qu챗n t챗n b梳죒
+                                r沼밿)</span></li>
+                        <li class="fragment highlight-red">?ㅼ뼱吏怨??띠뼱??<span class="vn-sub" style="display:inline;">(Mu沼몁
+                                chia tay)</span></li>
+                        <li class="fragment highlight-green"><strong>?뺤떎??愿怨?怨좊갚)</strong>瑜??먰빐?? <span class="vn-sub"
+                                style="display:inline;">(Mu沼몁 x찼c 휃沼땙h m沼멼 quan h沼?)</span></li>
+                    </ol>
+                </div>
+                <p class="fragment" style="color: white; font-weight: bold; margin-top: 20px;">
+                    ?뺣떟: 3踰? 吏곸젒 臾쇱뼱蹂댁꽭?? "?곕━ 臾댁뒯 ?ъ씠??"
+                    <span class="vn-sub" style="color: rgba(255,255,255,0.9);">휂찼p 찼n: S沼?3! H찾y h沼뢩 th梳쿻g: "Ch첬ng ta l횪
+                        quan h沼?g챙?"</span>
+                </p>
+            </section>
+
+            <!-- Slide 8: Tips -->
+            <section>
+                <h2>?뮕 ?멸뎅?몄쓣 ?꾪븳 ??/h2>
+                <span class="vn-sub">M梳퉛 nh沼?cho ng튼沼쓎 n튼沼쌵 ngo횪i</span>
+
+                <div class="card-container" style="margin-top: 20px;">
+                    <div class="card fragment">
+                        <i class="fas fa-shipping-fast"></i>
+                        <h4>?듭옣? 鍮좊Ⅴ寃?/h4>
+                        <span class="vn-sub">Tr梳?l沼쓎 tin nh梳칗 nhanh</span>
+                        <hr>
+                        <p style="font-size: 0.6em;">?띾룄 = 愿??/p>
+                        <span class="vn-sub">T沼멵 휃沼?= S沼?quan t창m</span>
+                    </div>
+                    <div class="card fragment">
+                        <i class="fas fa-hand-holding-heart"></i>
+                        <h4>?ㅽ궓??? 泥쒖쿇??/h4>
+                        <span class="vn-sub">Ti梳퓈 x첬c th창n m梳춗 t沼?t沼?/span>
+                        <hr>
+                        <p style="font-size: 0.6em;">怨좊갚 ?꾩뿉???먯옟湲?No!</p>
+                        <span class="vn-sub">Tr튼沼쌵 khi t沼?t챙nh th챙 kh척ng n梳칖 tay!</span>
+                    </div>
+                </div>
+                <h3 class="handwriting fragment" style="margin-top: 40px; font-size: 2em;">?덉걶 ?щ옉 ?섏꽭?? ?ㅿ툘</h3>
+                <span class="vn-sub fragment">Ch첬c b梳죒 c처 m沼셳 t챙nh y챗u 휃梳퉝!</span>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Reveal.js Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            center: true,
+            hash: true,
+            transition: 'convex',
+            touch: true
+        });
+    </script>
+</body>
+
+</html>

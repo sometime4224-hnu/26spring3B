@@ -1,0 +1,1429 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>한국어 쓰기(빈칸) + 쉬운 표현 대체 학습</title>
+  <style>
+    :root{
+      --bg:#0b0d10;
+      --card:#12161c;
+      --text:#e9eef6;
+      --muted:#a9b4c2;
+      --line:#243041;
+      --accent:#7aa2ff;
+      --good:#31d07f;
+      --bad:#ff5d5d;
+      --warn:#ffcc66;
+      --alt:#7df0ff;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR", Arial, sans-serif;
+      background:linear-gradient(180deg, #07080a, var(--bg));
+      color:var(--text);
+    }
+    header{
+      padding:22px 16px 14px;
+      border-bottom:1px solid var(--line);
+      position:sticky;
+      top:0;
+      background:rgba(11,13,16,0.92);
+      backdrop-filter: blur(8px);
+      z-index:10;
+    }
+    .wrap{width: 100%; max-width: 980px; margin:0 auto;}
+    h1{font-size:18px; margin:0;}
+    .sub{
+      margin:8px 0 12px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.35;
+    }
+
+    .headbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .headbar .right{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .topbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .btns{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+    }
+    button{
+      border:1px solid var(--line);
+      background:#0f1217;
+      color:var(--text);
+      padding:9px 10px;
+      border-radius:10px;
+      cursor:pointer;
+      font-size:13px;
+    }
+    button:hover{border-color:#37506d}
+    button:active{transform:translateY(1px)}
+    .toggle{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      color:var(--muted);
+      font-size:13px;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .toggle input{transform:translateY(1px)}
+    .progress{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:260px;
+      justify-content:flex-end;
+      flex:1;
+    }
+    .bar{
+      height:10px;
+      background:#0f1217;
+      border:1px solid var(--line);
+      border-radius:999px;
+      overflow:hidden;
+      width:min(420px, 100%);
+    }
+    .fill{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg, var(--accent), #8a7aff);
+      transition:width 180ms ease;
+    }
+    .ptext{
+      font-size:12px;
+      color:var(--muted);
+      min-width:140px;
+      text-align:right;
+    }
+
+    main{padding:18px 16px 40px;}
+    nav{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin:0 0 16px;
+    }
+    nav a{
+      color:var(--muted);
+      text-decoration:none;
+      font-size:12px;
+      border:1px solid var(--line);
+      background:#0f1217;
+      padding:8px 10px;
+      border-radius:999px;
+    }
+    nav a:hover{border-color:#37506d; color:var(--text)}
+
+    section.passage{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:16px;
+      margin:0 0 14px;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.25);
+    }
+    .ptitle{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      margin:0 0 10px;
+    }
+    .ptitle h2{
+      font-size:16px;
+      margin:0;
+      line-height:1.2;
+    }
+    .tag{
+      font-size:12px;
+      color:var(--muted);
+      border:1px solid var(--line);
+      background:#0f1217;
+      padding:6px 10px;
+      border-radius:999px;
+      white-space:nowrap;
+    }
+
+    .passage-text{
+      padding:12px 12px;
+      border:1px dashed #2b3a4f;
+      border-radius:12px;
+      background:#0f1217;
+      margin:0 0 12px;
+      line-height:1.7;
+      font-size:14px;
+    }
+    .blank{
+      display:inline-block;
+      min-width:86px;
+      text-align:center;
+      padding:2px 8px;
+      margin:0 2px;
+      border-radius:10px;
+      border:1px solid #2b3a4f;
+      background:#0b0d10;
+      color:var(--warn);
+      font-weight:600;
+    }
+    .blank.blank-filled{color:var(--text)}
+    .blank.blank-correct{
+      border-color:rgba(49,208,127,0.45);
+      color:var(--good);
+      background:rgba(49,208,127,0.06);
+    }
+    .blank.blank-wrong{
+      border-color:rgba(255,93,93,0.5);
+      color:var(--bad);
+      background:rgba(255,93,93,0.06);
+    }
+
+    fieldset{
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:12px;
+      margin:0 0 10px;
+    }
+    legend{
+      padding:0 8px;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .opts{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:8px;
+    }
+    @media (max-width:720px){
+      .opts{grid-template-columns:1fr}
+      .ptext{text-align:left}
+      .progress{justify-content:flex-start}
+      .headbar{align-items:flex-start}
+    }
+    label.opt{
+      display:flex;
+      align-items:flex-start;
+      gap:8px;
+      padding:10px 10px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#0f1217;
+      cursor:pointer;
+      line-height:1.25;
+      position:relative;
+    }
+    label.opt:hover{border-color:#37506d}
+    label.opt input{margin-top:2px}
+    .answer-tag{
+      display:none;
+      margin-left:auto;
+      font-size:11px;
+      color:var(--good);
+      border:1px solid rgba(49,208,127,0.45);
+      padding:3px 8px;
+      border-radius:999px;
+      white-space:nowrap;
+    }
+
+    body.show-answers label.opt[data-correct="true"] .answer-tag{
+      display:inline-block;
+    }
+    label.opt.opt-correct{
+      border-color:rgba(49,208,127,0.45);
+      background:rgba(49,208,127,0.06);
+    }
+    label.opt.opt-wrong{
+      border-color:rgba(255,93,93,0.5);
+      background:rgba(255,93,93,0.06);
+    }
+
+    .controls{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+      margin-top:8px;
+    }
+    .feedback{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#0f1217;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+    .feedback strong{color:var(--text)}
+    .mini{
+      color:var(--muted);
+      font-size:12px;
+      margin-top:8px;
+    }
+    .toTop{
+      display:inline-block;
+      margin-top:14px;
+      color:var(--muted);
+      text-decoration:none;
+      font-size:12px;
+    }
+    .toTop:hover{color:var(--text)}
+
+    /* 쉬운 표현 패널 */
+    .alt-panel{
+      margin-top:10px;
+      border:1px solid #2b3a4f;
+      background:#0f1217;
+      border-radius:12px;
+      overflow:hidden;
+      display:none;
+    }
+    body.show-alts .alt-panel{ display:block; }
+    .alt-head{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      border-bottom:1px solid #223042;
+      align-items:flex-start;
+    }
+    .alt-head .title{
+      font-size:13px;
+      color:var(--text);
+      margin:0;
+    }
+    .alt-head .hint{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.35;
+      margin:2px 0 0;
+    }
+    .alt-body{ padding:10px 12px; }
+    .alt-item{
+      border:1px solid #223042;
+      background:#0b0d10;
+      border-radius:12px;
+      padding:10px;
+      margin:0 0 10px;
+    }
+    .alt-item:last-child{ margin-bottom:0; }
+    .alt-row{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-bottom:6px;
+    }
+    .alt-label{
+      font-size:12px;
+      color:var(--muted);
+      border:1px solid #223042;
+      background:#0f1217;
+      padding:3px 8px;
+      border-radius:999px;
+      white-space:nowrap;
+    }
+    .alt-answer{
+      font-size:13px;
+      color:var(--text);
+    }
+    .alt-answer code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:12px;
+      padding:2px 6px;
+      border-radius:8px;
+      border:1px solid #223042;
+      background:#0f1217;
+      color:var(--warn);
+    }
+    .alt-list{
+      display:grid;
+      gap:8px;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+    }
+    @media (max-width:720px){
+      .alt-list{ grid-template-columns:1fr; }
+    }
+    .alt-card{
+      border:1px solid #223042;
+      background:#0f1217;
+      border-radius:12px;
+      padding:10px;
+    }
+    .alt-card .alt-text{
+      color:var(--alt);
+      font-weight:600;
+      margin:0 0 4px;
+      font-size:13px;
+    }
+    .alt-card .alt-note{
+      margin:0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+    }
+    .alt-example{
+      margin-top:8px;
+      padding:8px 10px;
+      border:1px dashed #223042;
+      border-radius:12px;
+      color:var(--text);
+      background:#0b0d10;
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    /* ---------- 상단 UI 접기 ---------- */
+    #topUiBody{ display:block; }
+    body.ui-collapsed #topUiBody{ display:none; }
+    body.ui-collapsed header{
+      padding:14px 16px 12px;
+    }
+    body.ui-collapsed nav{
+      display:none;
+    }
+
+    /* ---------- 가로 화면(강제) 폴백 ---------- */
+    #app{ min-height:100vh; }
+    body.force-landscape{ overflow:hidden; }
+    body.force-landscape #app{
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vh;
+      height: 100vw;
+      transform: rotate(90deg) translateY(-100%);
+      transform-origin: top left;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+  </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+
+<body>
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+  <div id="app">
+    <header>
+      <div class="wrap">
+        <div class="headbar">
+          <h1>빈칸 채우기 + 쉬운 표현(대체) 학습</h1>
+          <div class="right">
+            <button type="button" id="collapseTopBtn" title="상단 설명/버튼/진행률/이동 버튼을 접거나 펼칩니다.">상단 접기</button>
+          </div>
+        </div>
+
+        <div id="topUiBody">
+          <p class="sub">
+            각 지문에서 (ㄱ), (ㄴ) 정답을 고른 뒤 채점할 수 있습니다.
+            아래 “쉬운 표현 보기”는 정답을 더 쉬운 말로 바꿔 말하는 연습용 제안입니다(문맥/말투에 따라 자연스러움이 달라질 수 있습니다).
+          </p>
+
+          <div class="topbar">
+            <div class="btns">
+              <button type="button" id="gradeAllBtn">전체 채점</button>
+              <button type="button" id="resetAllBtn">전체 초기화</button>
+              <button type="button" id="landscapeBtn" title="가능하면 가로 방향 잠금, 안 되면 화면 회전으로 표시">가로 화면</button>
+              <label class="toggle">
+                <input type="checkbox" id="showAnswersToggle" />
+                정답 보기
+              </label>
+              <label class="toggle">
+                <input type="checkbox" id="showAltsToggle" checked />
+                쉬운 표현 보기
+              </label>
+            </div>
+
+            <div class="progress" aria-label="학습 진행률">
+              <div class="bar" aria-hidden="true"><div class="fill" id="progressFill"></div></div>
+              <div class="ptext" id="progressText">선택 완료: 0/16</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="wrap">
+        <nav aria-label="지문 이동">
+          <a href="#p1">지문 1</a>
+          <a href="#p2">지문 2</a>
+          <a href="#p3">지문 3</a>
+          <a href="#p4">지문 4</a>
+          <a href="#p5">지문 5</a>
+          <a href="#p6">지문 6</a>
+          <a href="#p7">지문 7</a>
+          <a href="#p8">지문 8</a>
+        </nav>
+
+        <!-- 지문 1 -->
+        <section class="passage" id="p1" data-questions="p1g,p1n">
+          <div class="ptitle">
+            <h2>지문 1</h2>
+            <div class="tag">회사 지각</div>
+          </div>
+
+          <div class="passage-text">
+            오늘 아침에 <span class="blank" data-qname="p1g" data-placeholder="( ㄱ )">( ㄱ )</span>.
+            그래서 회사에 늦지 않으려고 빨리 준비하고 나갔습니다.
+            버스정류장에 도착했는데 버스가 떠나려고 하고 있었습니다.
+            뛰어가서 <span class="blank" data-qname="p1n" data-placeholder="( ㄴ )">( ㄴ )</span>.
+            버스를 탄 후에 창문 밖을 봤는데 뭔가 이상했습니다.
+            버스를 잘못 탄 것이었습니다.
+          </div>
+
+          <form class="quiz" autocomplete="off">
+            <fieldset>
+              <legend>1. (ㄱ)에 알맞은 말을 고르시오.</legend>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="p1g" value="일찍 일어났습니다" />① 일찍 일어났습니다</label>
+                <label class="opt"><input type="radio" name="p1g" value="늦잠을 잤습니다" />② 늦잠을 잤습니다</label>
+                <label class="opt"><input type="radio" name="p1g" value="아침을 먹었습니다" />③ 아침을 먹었습니다</label>
+                <label class="opt"><input type="radio" name="p1g" value="운동을 했습니다" />④ 운동을 했습니다</label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>2. (ㄴ)에 알맞은 말을 고르시오.</legend>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="p1n" value="버스에서 내렸습니다" />① 버스에서 내렸습니다</label>
+                <label class="opt"><input type="radio" name="p1n" value="버스를 놓쳤습니다" />② 버스를 놓쳤습니다</label>
+                <label class="opt"><input type="radio" name="p1n" value="버스를 탔습니다" />③ 버스를 탔습니다</label>
+                <label class="opt"><input type="radio" name="p1n" value="버스표를 샀습니다" />④ 버스표를 샀습니다</label>
+              </div>
+            </fieldset>
+          </form>
+
+          <div class="controls">
+            <button type="button" class="gradeBtn">이 지문 채점</button>
+            <button type="button" class="resetBtn">이 지문 초기화</button>
+          </div>
+          <div class="feedback" aria-live="polite">선택 후 “이 지문 채점”을 눌러 결과를 확인하세요.</div>
+
+          <div class="alt-panel" data-for="p1">
+            <div class="alt-head">
+              <div>
+                <p class="title">쉬운 표현(대체) 연습</p>
+                <p class="hint">정답과 의미가 크게 어긋나지 않는 범위의 “더 쉬운 말” 제안입니다. 말투(합니다/해요)에 맞게 골라 쓰세요.</p>
+              </div>
+            </div>
+            <div class="alt-body" data-alt-body></div>
+          </div>
+        </section>
+
+        <!-- 지문 2 -->
+        <section class="passage" id="p2" data-questions="p2g,p2n">
+          <div class="ptitle">
+            <h2>지문 2</h2>
+            <div class="tag">생활 속 공과금 절약 방법</div>
+          </div>
+
+          <div class="passage-text">
+            공과금을 아끼려면 작은 것부터 <span class="blank" data-qname="p2g" data-placeholder="( ㄱ )">( ㄱ )</span>.
+            그럼 어떻게 해야 공과금을 줄일 수 있을까요?
+            첫째, 사용하지 않는 전등은 바로 끕니다.
+            둘째, 쓰지 않는 전자제품은 플러그를 뽑습니다.
+            셋째, 물을 사용할 때는 시간을 줄입니다.
+            모두가 알고 있는 쉬운 방법이지만 습관으로 만들기는 어렵습니다.
+            미리 목표를 정하고 작은 것부터 <span class="blank" data-qname="p2n" data-placeholder="( ㄴ )">( ㄴ )</span>.
+          </div>
+
+          <form class="quiz" autocomplete="off">
+            <fieldset>
+              <legend>1. (ㄱ)에 알맞은 말을 고르시오.</legend>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="p2g" value="더 많이 내야 합니다" />① 더 많이 내야 합니다</label>
+                <label class="opt"><input type="radio" name="p2g" value="계속 켜야 합니다" />② 계속 켜야 합니다</label>
+                <label class="opt"><input type="radio" name="p2g" value="버려야 합니다" />③ 버려야 합니다</label>
+                <label class="opt"><input type="radio" name="p2g" value="아껴야 합니다" />④ 아껴야 합니다</label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>2. (ㄴ)에 알맞은 말을 고르시오.</legend>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="p2n" value="포기합시다" />① 포기합시다</label>
+                <label class="opt"><input type="radio" name="p2n" value="실천합시다" />② 실천합시다</label>
+                <label class="opt"><input type="radio" name="p2n" value="기다립시다" />③ 기다립시다</label>
+                <label class="opt"><input type="radio" name="p2n" value="잊읍시다" />④ 잊읍시다</label>
+              </div>
+            </fieldset>
+          </form>
+
+          <div class="controls">
+            <button type="button" class="gradeBtn">이 지문 채점</button>
+            <button type="button" class="resetBtn">이 지문 초기화</button>
+          </div>
+          <div class="feedback" aria-live="polite">선택 후 “이 지문 채점”을 눌러 결과를 확인하세요.</div>
+
+          <div class="alt-panel" data-for="p2">
+            <div class="alt-head">
+              <div>
+                <p class="title">쉬운 표현(대체) 연습</p>
+                <p class="hint">정답을 “더 쉬운 말”로 바꾸어 말해보세요. 같은 뜻이라도 문장 분위기가 조금 달라질 수 있습니다.</p>
+              </div>
+            </div>
+            <div class="alt-body" data-alt-body></div>
+          </div>
+        </section>
+
+        <!-- 지문 3 -->
+        <section class="passage" id="p3" data-questions="p3g,p3n">
+          <div class="ptitle">
+            <h2>지문 3</h2>
+            <div class="tag">부산 여행(대전에서 부산에 가기)</div>
+          </div>
+
+          <div class="passage-text">
+            부산은 한국의 유명한 도시이다.
+            대전에서 부산에 가려면 기차로 두 시간쯤 걸린다.
+            부산은 바다와 가까워서 도시에서 바다 풍경을 볼 수 있다.
+            그래서 다른 경치를 <span class="blank" data-qname="p3g" data-placeholder="( ㄱ )">( ㄱ )</span>.
+            부산에서 가장 유명한 곳은 해운대이다.
+            해운대에서는 바다를 보면서 산책할 수 있다.
+            부산은 지하철이 있지만 서울만큼 <span class="blank" data-qname="p3n" data-placeholder="( ㄴ )">( ㄴ )</span> 조금 불편하다.
+            그래서 부산을 찾는 관광객은 버스와 지하철을 함께 이용한다.
+          </div>
+
+          <form class="quiz" autocomplete="off">
+            <fieldset>
+              <legend>1. (ㄱ)에 알맞은 말을 고르시오.</legend>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="p3g" value="즐길 수 있습니다" />① 즐길 수 있습니다</label>
+                <label class="opt"><input type="radio" name="p3g" value="즐기고 있다" />② 즐기고 있다</label>
+                <label class="opt"><input type="radio" name="p3g" value="즐길 수 있다" />③ 즐길 수 있다</label>
+                <label class="opt"><input type="radio" name="p3g" value="즐겼다" />④ 즐겼다</label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>2. (ㄴ)에 알맞은 말을 고르시오.</legend>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="p3n" value="넓어서" />① 넓어서</label>
+                <label class="opt"><input type="radio" name="p3n" value="깨끗해서" />② 깨끗해서</label>
+                <label class="opt"><input type="radio" name="p3n" value="비싸서" />③ 비싸서</label>
+                <label class="opt"><input type="radio" name="p3n" value="많지 않아서" />④ 많지 않아서</label>
+              </div>
+            </fieldset>
+          </form>
+
+          <div class="controls">
+            <button type="button" class="gradeBtn">이 지문 채점</button>
+            <button type="button" class="resetBtn">이 지문 초기화</button>
+          </div>
+          <div class="feedback" aria-live="polite">선택 후 “이 지문 채점”을 눌러 결과를 확인하세요.</div>
+
+          <div class="alt-panel" data-for="p3">
+            <div class="alt-head">
+              <div>
+                <p class="title">쉬운 표현(대체) 연습</p>
+                <p class="hint">여행 설명문에서는 “볼 수 있다/갈 수 있다/있다” 같은 기본 표현이 특히 자주 쓰입니다.</p>
+              </div>
+            </div>
+            <div class="alt-body" data-alt-body></div>
+          </div>
+        </section>
+
+        <!-- 지문 4 -->
+        <section class="passage" id="p4" data-questions="p4g,p4n">
+          <div class="ptitle">
+            <h2>지문 4</h2>
+            <div class="tag">피아노 연주</div>
+          </div>
+
+          <div class="passage-text">
+            ‘피아노’는 사람들이 자주 <span class="blank" data-qname="p4g" data-placeholder="( ㄱ )">( ㄱ )</span> 악기이다.
+            피아노는 기타처럼 줄이 있지만 줄을 직접 만지지 않는다.
+            앞에 하얀색과 검은색 건반이 있다.
+            이 건반을 손가락으로 <span class="blank" data-qname="p4n" data-placeholder="( ㄴ )">( ㄴ )</span> 연주한다.
+          </div>
+
+          <form class="quiz" autocomplete="off">
+            <fieldset>
+              <legend>1. (ㄱ)에 알맞은 말을 고르시오.</legend>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="p4g" value="잠자는" />① 잠자는</label>
+                <label class="opt"><input type="radio" name="p4g" value="연주하는" />② 연주하는</label>
+                <label class="opt"><input type="radio" name="p4g" value="씻는" />③ 씻는</label>
+                <label class="opt"><input type="radio" name="p4g" value="걷는" />④ 걷는</label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>2. (ㄴ)에 알맞은 말을 고르시오.</legend>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="p4n" value="불어서" />① 불어서</label>
+                <label class="opt"><input type="radio" name="p4n" value="당겨서" />② 당겨서</label>
+                <label class="opt"><input type="radio" name="p4n" value="눌러서" />③ 눌러서</label>
+                <label class="opt"><input type="radio" name="p4n" value="튕겨서" />④ 튕겨서</label>
+              </div>
+            </fieldset>
+          </form>
+
+          <div class="controls">
+            <button type="button" class="gradeBtn">이 지문 채점</button>
+            <button type="button" class="resetBtn">이 지문 초기화</button>
+          </div>
+          <div class="feedback" aria-live="polite">선택 후 “이 지문 채점”을 눌러 결과를 확인하세요.</div>
+
+          <div class="alt-panel" data-for="p4">
+            <div class="alt-head">
+              <div>
+                <p class="title">쉬운 표현(대체) 연습</p>
+                <p class="hint">악기 설명에서는 “치다/누르다/잡다/만지다”처럼 기본 동사가 자주 쓰입니다.</p>
+              </div>
+            </div>
+            <div class="alt-body" data-alt-body></div>
+          </div>
+        </section>
+
+        <!-- 지문 5 -->
+        <section class="passage" id="p5" data-questions="p5g,p5n">
+          <div class="ptitle">
+            <h2>지문 5</h2>
+            <div class="tag">돈 절약(가계부)</div>
+          </div>
+
+          <div class="passage-text">
+            부자가 되려면 작은 돈부터 <span class="blank" data-qname="p5g" data-placeholder="( ㄱ )">( ㄱ )</span>.
+            그럼 어떻게 해야 돈을 아낄 수 있을까요?
+            첫째, 산 물건의 영수증을 모으고 가계부에 적습니다.
+            둘째, 쓸데없는 지출을 줄이지 않으면 안 됩니다.
+            셋째, 필요할 때만 알뜰하게 쇼핑합니다.
+            돈을 아끼는 방법은 쉬워 보이지만 계속하기는 어렵습니다.
+            미리 목표를 정하고 작은 것부터 <span class="blank" data-qname="p5n" data-placeholder="( ㄴ )">( ㄴ )</span>.
+          </div>
+
+          <form class="quiz" autocomplete="off">
+            <fieldset>
+              <legend>1. (ㄱ)에 알맞은 말을 고르시오.</legend>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="p5g" value="마음대로 써야 합니다" />① 마음대로 써야 합니다</label>
+                <label class="opt"><input type="radio" name="p5g" value="아껴 써야 합니다" />② 아껴 써야 합니다</label>
+                <label class="opt"><input type="radio" name="p5g" value="버려야 합니다" />③ 버려야 합니다</label>
+                <label class="opt"><input type="radio" name="p5g" value="남에게 줘야 합니다" />④ 남에게 줘야 합니다</label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>2. (ㄴ)에 알맞은 말을 고르시오.</legend>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="p5n" value="실천합시다" />① 실천합시다</label>
+                <label class="opt"><input type="radio" name="p5n" value="포기합시다" />② 포기합시다</label>
+                <label class="opt"><input type="radio" name="p5n" value="늦춥시다" />③ 늦춥시다</label>
+                <label class="opt"><input type="radio" name="p5n" value="잊읍시다" />④ 잊읍시다</label>
+              </div>
+            </fieldset>
+          </form>
+
+          <div class="controls">
+            <button type="button" class="gradeBtn">이 지문 채점</button>
+            <button type="button" class="resetBtn">이 지문 초기화</button>
+          </div>
+          <div class="feedback" aria-live="polite">선택 후 “이 지문 채점”을 눌러 결과를 확인하세요.</div>
+
+          <div class="alt-panel" data-for="p5">
+            <div class="alt-head">
+              <div>
+                <p class="title">쉬운 표현(대체) 연습</p>
+                <p class="hint">“아끼다”가 어렵다면 “덜 쓰다/너무 쓰지 않다”로 바꿔 말할 수 있습니다.</p>
+              </div>
+            </div>
+            <div class="alt-body" data-alt-body></div>
+          </div>
+        </section>
+
+        <!-- 지문 6 -->
+        <section class="passage" id="p6" data-questions="p6g,p6n">
+          <div class="ptitle">
+            <h2>지문 6</h2>
+            <div class="tag">기타 연주</div>
+          </div>
+
+          <div class="passage-text">
+            ‘기타’는 사람들이 자주 <span class="blank" data-qname="p6g" data-placeholder="( ㄱ )">( ㄱ )</span> 악기이다.
+            모양은 우쿨렐레와 비슷한데 우쿨렐레보다 크다.
+            목 부분은 가늘고 길며 6개의 줄이 있다.
+            이 줄을 손으로 <span class="blank" data-qname="p6n" data-placeholder="( ㄴ )">( ㄴ )</span> 연주한다.
+          </div>
+
+          <form class="quiz" autocomplete="off">
+            <fieldset>
+              <legend>1. (ㄱ)에 알맞은 말을 고르시오.</legend>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="p6g" value="연주하는" />① 연주하는</label>
+                <label class="opt"><input type="radio" name="p6g" value="입는" />② 입는</label>
+                <label class="opt"><input type="radio" name="p6g" value="읽는" />③ 읽는</label>
+                <label class="opt"><input type="radio" name="p6g" value="요리하는" />④ 요리하는</label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>2. (ㄴ)에 알맞은 말을 고르시오.</legend>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="p6n" value="눌러서" />① 눌러서</label>
+                <label class="opt"><input type="radio" name="p6n" value="두드려서" />② 두드려서</label>
+                <label class="opt"><input type="radio" name="p6n" value="튕겨서" />③ 튕겨서</label>
+                <label class="opt"><input type="radio" name="p6n" value="불어서" />④ 불어서</label>
+              </div>
+            </fieldset>
+          </form>
+
+          <div class="controls">
+            <button type="button" class="gradeBtn">이 지문 채점</button>
+            <button type="button" class="resetBtn">이 지문 초기화</button>
+          </div>
+          <div class="feedback" aria-live="polite">선택 후 “이 지문 채점”을 눌러 결과를 확인하세요.</div>
+
+          <div class="alt-panel" data-for="p6">
+            <div class="alt-head">
+              <div>
+                <p class="title">쉬운 표현(대체) 연습</p>
+                <p class="hint">기타는 “줄을 튕기다”가 핵심이지만, 아주 쉬운 말로는 “손으로 쳐서”처럼 말하기도 합니다(정확성은 조금 떨어질 수 있음).</p>
+              </div>
+            </div>
+            <div class="alt-body" data-alt-body></div>
+          </div>
+        </section>
+
+        <!-- 지문 7 -->
+        <section class="passage" id="p7" data-questions="p7g,p7n">
+          <div class="ptitle">
+            <h2>지문 7</h2>
+            <div class="tag">택시에 가방을 놓고 나온 상황</div>
+          </div>
+
+          <div class="passage-text">
+            오늘 저녁에 <span class="blank" data-qname="p7g" data-placeholder="( ㄱ )">( ㄱ )</span>.
+            그래서 집에 도착하자마자 택시에서 빨리 내렸습니다.
+            엘리베이터를 타고 올라가다가 가방이 없다는 것을 알았습니다.
+            다시 밖으로 내려왔는데 택시가 떠나려고 하고 있었습니다.
+            뛰어가서 <span class="blank" data-qname="p7n" data-placeholder="( ㄴ )">( ㄴ )</span>.
+            하지만 이미 늦었습니다. 가방을 택시에 놓고 나온 것이었습니다.
+          </div>
+
+          <form class="quiz" autocomplete="off">
+            <fieldset>
+              <legend>1. (ㄱ)에 알맞은 말을 고르시오.</legend>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="p7g" value="비행기를 탔습니다" />① 비행기를 탔습니다</label>
+                <label class="opt"><input type="radio" name="p7g" value="택시를 탔습니다" />② 택시를 탔습니다</label>
+                <label class="opt"><input type="radio" name="p7g" value="배를 탔습니다" />③ 배를 탔습니다</label>
+                <label class="opt"><input type="radio" name="p7g" value="자전거를 탔습니다" />④ 자전거를 탔습니다</label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>2. (ㄴ)에 알맞은 말을 고르시오.</legend>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="p7n" value="택시를 기다렸습니다" />① 택시를 기다렸습니다</label>
+                <label class="opt"><input type="radio" name="p7n" value="택시를 세우려고 했습니다" />② 택시를 세우려고 했습니다</label>
+                <label class="opt"><input type="radio" name="p7n" value="택시를 타고 싶었습니다" />③ 택시를 타고 싶었습니다</label>
+                <label class="opt"><input type="radio" name="p7n" value="택시를 잊었습니다" />④ 택시를 잊었습니다</label>
+              </div>
+            </fieldset>
+          </form>
+
+          <div class="controls">
+            <button type="button" class="gradeBtn">이 지문 채점</button>
+            <button type="button" class="resetBtn">이 지문 초기화</button>
+          </div>
+          <div class="feedback" aria-live="polite">선택 후 “이 지문 채점”을 눌러 결과를 확인하세요.</div>
+
+          <div class="alt-panel" data-for="p7">
+            <div class="alt-head">
+              <div>
+                <p class="title">쉬운 표현(대체) 연습</p>
+                <p class="hint">상황 설명에서는 “~하려고 했다”를 “~하려고 했어요/멈추라고 했습니다”처럼 바꿔 말해도 됩니다.</p>
+              </div>
+            </div>
+            <div class="alt-body" data-alt-body></div>
+          </div>
+        </section>
+
+        <!-- 지문 8 -->
+        <section class="passage" id="p8" data-questions="p8g,p8n">
+          <div class="ptitle">
+            <h2>지문 8</h2>
+            <div class="tag">대전 여행</div>
+          </div>
+
+          <div class="passage-text">
+            대전은 한국의 중심에 있는 도시이다.
+            서울에서 대전에 가려면 KTX로 한 시간 정도 걸린다.
+            대전은 과학과 연구로 유명해서 과학관 같은 곳이 많다.
+            그래서 다양한 체험을 <span class="blank" data-qname="p8g" data-placeholder="( ㄱ )">( ㄱ )</span>.
+            대전에서 유명한 곳은 유성 온천과 한밭수목원이다.
+            유성 온천에서는 따뜻한 물로 피로를 풀 수 있고, 한밭수목원에서는 산책을 즐길 수 있다.
+            대전은 지하철이 있지만 노선이 <span class="blank" data-qname="p8n" data-placeholder="( ㄴ )">( ㄴ )</span> 이동할 때 조금 불편하다.
+            그래서 여행객들은 버스와 지하철을 함께 이용한다.
+          </div>
+
+          <form class="quiz" autocomplete="off">
+            <fieldset>
+              <legend>1. (ㄱ)에 알맞은 말을 고르시오.</legend>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="p8g" value="했다" />① 했다</label>
+                <label class="opt"><input type="radio" name="p8g" value="할 수 있다" />② 할 수 있다</label>
+                <label class="opt"><input type="radio" name="p8g" value="하자" />③ 하자</label>
+                <label class="opt"><input type="radio" name="p8g" value="했었다" />④ 했었다</label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>2. (ㄴ)에 알맞은 말을 고르시오.</legend>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="p8n" value="길어서" />① 길어서</label>
+                <label class="opt"><input type="radio" name="p8n" value="많지 않아서" />② 많지 않아서</label>
+                <label class="opt"><input type="radio" name="p8n" value="비싸서" />③ 비싸서</label>
+                <label class="opt"><input type="radio" name="p8n" value="늦어서" />④ 늦어서</label>
+              </div>
+            </fieldset>
+          </form>
+
+          <div class="controls">
+            <button type="button" class="gradeBtn">이 지문 채점</button>
+            <button type="button" class="resetBtn">이 지문 초기화</button>
+          </div>
+          <div class="feedback" aria-live="polite">선택 후 “이 지문 채점”을 눌러 결과를 확인하세요.</div>
+
+          <div class="alt-panel" data-for="p8">
+            <div class="alt-head">
+              <div>
+                <p class="title">쉬운 표현(대체) 연습</p>
+                <p class="hint">“할 수 있다”는 기본 표현입니다. 말투만 바꿔도(해요/합니다) 난이도가 내려가는 경우가 있습니다.</p>
+              </div>
+            </div>
+            <div class="alt-body" data-alt-body></div>
+          </div>
+
+          <a class="toTop" href="#">맨 위로</a>
+        </section>
+
+        <p class="mini">팁: “정답 보기”는 학습 확인용입니다. 시험 형태로 쓰려면 끄고 사용하세요.</p>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // 정답 키(문항명 -> 정답 문자열)
+    const ANSWER_KEY = {
+      p1g: "늦잠을 잤습니다",
+      p1n: "버스를 탔습니다",
+      p2g: "아껴야 합니다",
+      p2n: "실천합시다",
+      p3g: "즐길 수 있다",
+      p3n: "많지 않아서",
+      p4g: "연주하는",
+      p4n: "눌러서",
+      p5g: "아껴 써야 합니다",
+      p5n: "실천합시다",
+      p6g: "연주하는",
+      p6n: "튕겨서",
+      p7g: "택시를 탔습니다",
+      p7n: "택시를 세우려고 했습니다",
+      p8g: "할 수 있다",
+      p8n: "많지 않아서"
+    };
+
+    const ALL_QNAMES = Object.keys(ANSWER_KEY);
+
+    /*
+      쉬운 표현(대체) 제안
+      - 아래 제안은 “학습용 제안”입니다. (완전한 동의어가 아닌 경우, 노트에 차이를 표시)
+      - example은 해당 지문 문맥에 맞춘 예시 한 문장(학습용).
+    */
+    const EASY_ALTS = {
+      p1g: [
+        { text: "늦게 일어났습니다", note: "‘늦잠을 자다’보다 단순하게 말함.", example: "오늘 아침에 늦게 일어났습니다." },
+        { text: "아침에 늦게 일어났어요", note: "해요체(구어체).", example: "오늘 아침에 아침에 늦게 일어났어요." }
+      ],
+      p1n: [
+        { text: "버스에 탔습니다", note: "‘~에 타다’ 형태는 초급에서 자주 연습함.", example: "뛰어가서 버스에 탔습니다." },
+        { text: "버스를 타고 갔습니다", note: "이동 느낌이 더 강함(‘가다’ 포함).", example: "뛰어가서 버스를 타고 갔습니다." }
+      ],
+      p2g: [
+        { text: "덜 써야 합니다", note: "‘아끼다’ 대신 ‘덜 쓰다’로 말함.", example: "공과금을 아끼려면 작은 것부터 덜 써야 합니다." },
+        { text: "아껴야 해요", note: "같은 단어지만 해요체로 더 쉬움.", example: "공과금을 아끼려면 작은 것부터 아껴야 해요." }
+      ],
+      p2n: [
+        { text: "해 봅시다", note: "‘실천하다’보다 쉬운 동사 ‘하다’ 사용.", example: "미리 목표를 정하고 작은 것부터 해 봅시다." },
+        { text: "시작합시다", note: "‘실천’보다 부담이 적게 들리는 표현.", example: "미리 목표를 정하고 작은 것부터 시작합시다." }
+      ],
+      p3g: [
+        { text: "볼 수 있다", note: "‘즐기다’보다 쉬운 동사 ‘보다’ 사용(의미: ‘경치를 보다’ 중심).", example: "그래서 다른 경치를 볼 수 있다." },
+        { text: "구경할 수 있다", note: "‘보다’보다 조금 자연스러운 여행 표현.", example: "그래서 다른 경치를 구경할 수 있다." }
+      ],
+      p3n: [
+        { text: "적어서", note: "‘많지 않다’ → ‘적다’로 간단히.", example: "부산은 지하철이 있지만 서울만큼 적어서 조금 불편하다." },
+        { text: "별로 없어서", note: "구어체 느낌(조금 더 쉬움).", example: "부산은 지하철이 있지만 서울만큼 별로 없어서 조금 불편하다." }
+      ],
+      p4g: [
+        { text: "치는", note: "한국어에서 ‘피아노를 치다’ 표현이 흔함(동사 단순).", example: "피아노는 사람들이 자주 치는 악기이다." },
+        { text: "많이 치는", note: "‘자주’와 비슷한 뜻으로 쉬운 표현.", example: "피아노는 사람들이 많이 치는 악기이다." }
+      ],
+      p4n: [
+        { text: "누르고", note: "연결어미를 단순화(‘~해서’ 대신 ‘~고’).", example: "이 건반을 손가락으로 누르고 연주한다." },
+        { text: "눌러", note: "구어체(문어에서는 ‘눌러서/누르고’가 더 안정적).", example: "이 건반을 손가락으로 눌러 연주한다." }
+      ],
+      p5g: [
+        { text: "아껴야 합니다", note: "‘아껴 쓰다’보다 짧고 단순.", example: "부자가 되려면 작은 돈부터 아껴야 합니다." },
+        { text: "돈을 덜 써야 합니다", note: "‘아끼다’ 대신 ‘덜 쓰다’로 말함.", example: "부자가 되려면 작은 돈부터 돈을 덜 써야 합니다." }
+      ],
+      p5n: [
+        { text: "해 봅시다", note: "‘실천’ 대신 쉬운 동사 ‘하다’로.", example: "미리 목표를 정하고 작은 것부터 해 봅시다." },
+        { text: "계속해 봅시다", note: "‘계속하기는 어렵다’와 연결이 자연스러움.", example: "미리 목표를 정하고 작은 것부터 계속해 봅시다." }
+      ],
+      p6g: [
+        { text: "치는", note: "‘기타를 치다’도 자연스러운 표현.", example: "기타는 사람들이 자주 치는 악기이다." },
+        { text: "많이 하는", note: "조금 덜 정확하지만 뜻은 전달됨(학습용).", example: "기타는 사람들이 자주 많이 하는 악기이다." }
+      ],
+      p6n: [
+        { text: "손으로 쳐서", note: "가장 쉬운 말이지만 ‘튕기다’보다 정확성은 떨어질 수 있음(학습용).", example: "이 줄을 손으로 쳐서 연주한다." },
+        { text: "손으로 튕기며", note: "정확성을 유지하면서 형태만 바꿈.", example: "이 줄을 손으로 튕기며 연주한다." }
+      ],
+      p7g: [
+        { text: "택시를 타고 왔습니다", note: "‘타다’ + ‘오다’로 상황이 더 분명해짐.", example: "오늘 저녁에 택시를 타고 왔습니다." },
+        { text: "택시로 왔습니다", note: "가장 짧고 쉬움.", example: "오늘 저녁에 택시로 왔습니다." }
+      ],
+      p7n: [
+        { text: "택시를 멈추라고 했습니다", note: "‘세우다’ 대신 쉬운 동사 ‘멈추다’ 사용.", example: "뛰어가서 택시를 멈추라고 했습니다." },
+        { text: "택시를 멈추게 하려고 했습니다", note: "원문 구조(‘~려고 했습니다’) 유지.", example: "뛰어가서 택시를 멈추게 하려고 했습니다." }
+      ],
+      p8g: [
+        { text: "할 수 있어요", note: "해요체로 더 쉬운 느낌.", example: "그래서 다양한 체험을 할 수 있어요." },
+        { text: "할 수 있습니다", note: "합니다체(설명문).", example: "그래서 다양한 체험을 할 수 있습니다." }
+      ],
+      p8n: [
+        { text: "적어서", note: "‘많지 않다’ → ‘적다’로 단순화.", example: "대전은 지하철이 있지만 노선이 적어서 이동할 때 조금 불편하다." },
+        { text: "별로 없어서", note: "구어체 느낌(조금 더 쉬움).", example: "대전은 지하철이 있지만 노선이 별로 없어서 이동할 때 조금 불편하다." }
+      ]
+    };
+
+    // ----- 상단 UI 접기 -----
+    const TOPUI_STORE_KEY = "topUiCollapsed";
+    let topUiCollapsed = false;
+
+    function refreshTopUiButton(){
+      const btn = document.getElementById("collapseTopBtn");
+      if (!btn) return;
+      btn.textContent = topUiCollapsed ? "상단 펼치기" : "상단 접기";
+    }
+
+    function setTopUiCollapsed(v){
+      topUiCollapsed = !!v;
+      document.body.classList.toggle("ui-collapsed", topUiCollapsed);
+      if (topUiCollapsed) localStorage.setItem(TOPUI_STORE_KEY, "1");
+      else localStorage.removeItem(TOPUI_STORE_KEY);
+      refreshTopUiButton();
+    }
+
+    // ----- 가로 화면 전환 -----
+    const LANDSCAPE_STORE_KEY = "landscapeMode";
+    let landscapeEnabled = false;
+
+    function refreshLandscapeButton() {
+      const btn = document.getElementById("landscapeBtn");
+      if (!btn) return;
+      btn.textContent = landscapeEnabled ? "세로 화면" : "가로 화면";
+    }
+
+    async function enableLandscape() {
+      let locked = false;
+      try {
+        if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+          await document.documentElement.requestFullscreen();
+        }
+      } catch (e) {}
+
+      try {
+        if (screen.orientation && screen.orientation.lock) {
+          await screen.orientation.lock("landscape");
+          locked = true;
+        }
+      } catch (e) {}
+
+      if (!locked) document.body.classList.add("force-landscape");
+      landscapeEnabled = true;
+      localStorage.setItem(LANDSCAPE_STORE_KEY, "1");
+      refreshLandscapeButton();
+    }
+
+    async function disableLandscape() {
+      try {
+        if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
+      } catch (e) {}
+
+      document.body.classList.remove("force-landscape");
+
+      try {
+        if (document.fullscreenElement && document.exitFullscreen) {
+          await document.exitFullscreen();
+        }
+      } catch (e) {}
+
+      landscapeEnabled = false;
+      localStorage.removeItem(LANDSCAPE_STORE_KEY);
+      refreshLandscapeButton();
+    }
+
+    function markCorrectOptions() {
+      for (const [qname, correctValue] of Object.entries(ANSWER_KEY)) {
+        const inputs = document.querySelectorAll(`input[name="${qname}"]`);
+        inputs.forEach(input => {
+          const label = input.closest("label.opt");
+          if (!label) return;
+          if (input.value === correctValue) {
+            label.dataset.correct = "true";
+            if (!label.querySelector(".answer-tag")) {
+              const tag = document.createElement("span");
+              tag.className = "answer-tag";
+              tag.textContent = "정답";
+              label.appendChild(tag);
+            }
+          }
+        });
+      }
+    }
+
+    function setBlankText(qname, text, stateClass) {
+      const blank = document.querySelector(`.blank[data-qname="${qname}"]`);
+      if (!blank) return;
+      blank.textContent = text ?? blank.dataset.placeholder ?? "(   )";
+      blank.classList.add("blank-filled");
+      blank.classList.remove("blank-correct", "blank-wrong");
+      if (stateClass) blank.classList.add(stateClass);
+    }
+
+    function resetBlank(qname) {
+      const blank = document.querySelector(`.blank[data-qname="${qname}"]`);
+      if (!blank) return;
+      blank.textContent = blank.dataset.placeholder ?? "(   )";
+      blank.classList.remove("blank-filled", "blank-correct", "blank-wrong");
+    }
+
+    function clearOptionClassesWithin(section, qname) {
+      const labels = section.querySelectorAll(`label.opt input[name="${qname}"]`);
+      labels.forEach(inp => {
+        const lab = inp.closest("label.opt");
+        if (!lab) return;
+        lab.classList.remove("opt-correct", "opt-wrong");
+      });
+    }
+
+    function evaluateQuestion(section, qname) {
+      const correct = ANSWER_KEY[qname];
+      const selectedInput = section.querySelector(`input[name="${qname}"]:checked`);
+      const selected = selectedInput ? selectedInput.value : null;
+
+      clearOptionClassesWithin(section, qname);
+
+      if (selected) setBlankText(qname, selected, null);
+      else resetBlank(qname);
+
+      const inputs = section.querySelectorAll(`input[name="${qname}"]`);
+      inputs.forEach(inp => {
+        const lab = inp.closest("label.opt");
+        if (!lab) return;
+        if (inp.value === correct) lab.classList.add("opt-correct");
+        if (selectedInput && inp === selectedInput && inp.value !== correct) lab.classList.add("opt-wrong");
+      });
+
+      const isCorrect = (selected !== null && selected === correct);
+
+      if (selected === null) {
+        // 그대로
+      } else if (isCorrect) {
+        setBlankText(qname, selected, "blank-correct");
+      } else {
+        setBlankText(qname, selected, "blank-wrong");
+      }
+
+      return { selected, correct, isCorrect };
+    }
+
+    function evaluatePassage(section) {
+      const qnames = (section.dataset.questions || "").split(",").map(s => s.trim()).filter(Boolean);
+      let correctCount = 0;
+
+      const details = [];
+      for (const qname of qnames) {
+        const r = evaluateQuestion(section, qname);
+        if (r.isCorrect) correctCount++;
+        details.push({ qname, ...r });
+      }
+
+      const feedback = section.querySelector(".feedback");
+      const total = qnames.length;
+      const missing = details.filter(d => d.selected === null).length;
+
+      const msgParts = [];
+      msgParts.push(`<strong>점수:</strong> ${correctCount}/${total}`);
+      if (missing > 0) msgParts.push(`(미선택 ${missing}개)`);
+
+      const ansLine = details.map((d, idx) => {
+        const label = idx === 0 ? "ㄱ" : "ㄴ";
+        return `${label} 정답: <strong>${escapeHtml(d.correct)}</strong>`;
+      }).join(" · ");
+      msgParts.push(`<div style="margin-top:6px">${ansLine}</div>`);
+
+      if (feedback) feedback.innerHTML = msgParts.join(" ");
+
+      renderAltPanel(section);
+      updateProgress();
+    }
+
+    function resetPassage(section) {
+      const qnames = (section.dataset.questions || "").split(",").map(s => s.trim()).filter(Boolean);
+
+      qnames.forEach(qname => {
+        const checked = section.querySelector(`input[name="${qname}"]:checked`);
+        if (checked) checked.checked = false;
+
+        clearOptionClassesWithin(section, qname);
+        resetBlank(qname);
+      });
+
+      const feedback = section.querySelector(".feedback");
+      if (feedback) feedback.textContent = "선택 후 “이 지문 채점”을 눌러 결과를 확인하세요.";
+
+      renderAltPanel(section);
+      updateProgress();
+    }
+
+    function evaluateAll() {
+      document.querySelectorAll("section.passage").forEach(sec => evaluatePassage(sec));
+
+      const { score, total, answered } = computeOverall();
+      const headerText = document.getElementById("progressText");
+      if (headerText) {
+        headerText.textContent = `선택 완료: ${answered}/${total} · 현재 점수(채점 기준): ${score}/${total}`;
+      }
+    }
+
+    function resetAll() {
+      document.querySelectorAll("section.passage").forEach(sec => resetPassage(sec));
+      const headerText = document.getElementById("progressText");
+      if (headerText) headerText.textContent = `선택 완료: 0/${ALL_QNAMES.length}`;
+    }
+
+    function computeOverall() {
+      let answered = 0;
+      let score = 0;
+      const total = ALL_QNAMES.length;
+      for (const qname of ALL_QNAMES) {
+        const sel = document.querySelector(`input[name="${qname}"]:checked`);
+        if (sel) {
+          answered++;
+          if (sel.value === ANSWER_KEY[qname]) score++;
+        }
+      }
+      return { answered, score, total };
+    }
+
+    function updateProgress() {
+      const { answered, total } = computeOverall();
+      const fill = document.getElementById("progressFill");
+      const text = document.getElementById("progressText");
+
+      const pct = total ? Math.round((answered / total) * 100) : 0;
+      if (fill) fill.style.width = pct + "%";
+      if (text) text.textContent = `선택 완료: ${answered}/${total}`;
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    // 쉬운 표현 패널 렌더링
+    function renderAltPanel(section) {
+      const body = section.querySelector("[data-alt-body]");
+      if (!body) return;
+
+      const qnames = (section.dataset.questions || "").split(",").map(s => s.trim()).filter(Boolean);
+      const items = qnames.map((qname, idx) => {
+        const label = idx === 0 ? "ㄱ" : "ㄴ";
+        const answer = ANSWER_KEY[qname];
+        const alts = EASY_ALTS[qname] || [];
+
+        const altCards = alts.length
+          ? `<div class="alt-list">
+              ${alts.map(a => `
+                <div class="alt-card">
+                  <p class="alt-text">${escapeHtml(a.text)}</p>
+                  <p class="alt-note">${escapeHtml(a.note || "")}</p>
+                  ${a.example ? `<div class="alt-example">${escapeHtml(a.example)}</div>` : ""}
+                </div>
+              `).join("")}
+            </div>`
+          : `<p class="alt-note">대체 표현이 아직 준비되지 않았습니다.</p>`;
+
+        return `
+          <div class="alt-item">
+            <div class="alt-row">
+              <span class="alt-label">${label}</span>
+              <span class="alt-answer">정답(기본): <code>${escapeHtml(answer)}</code></span>
+            </div>
+            ${altCards}
+          </div>
+        `;
+      });
+
+      body.innerHTML = items.join("");
+    }
+
+    // 이벤트: 선택 시 빈칸에 즉시 반영(채점 전에는 중립 표시)
+    function bindLiveFill() {
+      document.querySelectorAll("input[type=radio]").forEach(inp => {
+        inp.addEventListener("change", () => {
+          const qname = inp.name;
+          const val = inp.value;
+          setBlankText(qname, val, null);
+          updateProgress();
+        });
+      });
+    }
+
+    function bindButtons() {
+      document.querySelectorAll("section.passage").forEach(section => {
+        const gradeBtn = section.querySelector(".gradeBtn");
+        const resetBtn = section.querySelector(".resetBtn");
+        if (gradeBtn) gradeBtn.addEventListener("click", () => evaluatePassage(section));
+        if (resetBtn) resetBtn.addEventListener("click", () => resetPassage(section));
+      });
+
+      const gradeAllBtn = document.getElementById("gradeAllBtn");
+      const resetAllBtn = document.getElementById("resetAllBtn");
+      const toggle = document.getElementById("showAnswersToggle");
+      const altsToggle = document.getElementById("showAltsToggle");
+
+      if (gradeAllBtn) gradeAllBtn.addEventListener("click", evaluateAll);
+      if (resetAllBtn) resetAllBtn.addEventListener("click", resetAll);
+
+      if (toggle) {
+        toggle.addEventListener("change", (e) => {
+          document.body.classList.toggle("show-answers", e.target.checked);
+        });
+      }
+
+      if (altsToggle) {
+        altsToggle.addEventListener("change", (e) => {
+          document.body.classList.toggle("show-alts", e.target.checked);
+        });
+      }
+
+      const landscapeBtn = document.getElementById("landscapeBtn");
+      if (landscapeBtn) {
+        landscapeBtn.addEventListener("click", async () => {
+          if (!landscapeEnabled) await enableLandscape();
+          else await disableLandscape();
+        });
+      }
+
+      const collapseTopBtn = document.getElementById("collapseTopBtn");
+      if (collapseTopBtn) {
+        collapseTopBtn.addEventListener("click", () => setTopUiCollapsed(!topUiCollapsed));
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      markCorrectOptions();
+      bindLiveFill();
+      bindButtons();
+      updateProgress();
+
+      // 쉬운 표현 패널 초기 렌더
+      document.querySelectorAll("section.passage").forEach(sec => renderAltPanel(sec));
+
+      // 기본: 쉬운 표현 보기 ON
+      document.body.classList.add("show-alts");
+
+      // 상단 UI 접기 저장 복원
+      const savedTop = localStorage.getItem(TOPUI_STORE_KEY) === "1";
+      setTopUiCollapsed(savedTop);
+
+      // 가로 화면 저장 복원: 자동 실행은 방향 잠금이 막히는 경우가 많아 CSS 폴백만 적용
+      const savedLandscape = localStorage.getItem(LANDSCAPE_STORE_KEY) === "1";
+      if (savedLandscape) {
+        landscapeEnabled = true;
+        document.body.classList.add("force-landscape");
+      }
+      refreshLandscapeButton();
+    });
+  </script>
+</body>
+</html>

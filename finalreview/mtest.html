@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 능력 평가 모의고사 (3B)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        
+        /* 선택지 버튼 스타일 */
+        .choice-btn {
+            transition: all 0.2s ease;
+            border: 2px solid #e5e7eb;
+        }
+        .choice-btn:hover {
+            background-color: #eff6ff;
+            border-color: #3b82f6;
+        }
+        .choice-btn.selected {
+            background-color: #dbeafe;
+            border-color: #2563eb;
+            color: #1e40af;
+            font-weight: bold;
+            box-shadow: 0 0 0 2px #bfdbfe;
+        }
+
+        /* 페이드 효과 */
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col items-center justify-center">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <div class="w-full max-w-2xl bg-white shadow-xl rounded-2xl overflow-hidden min-h-[600px] flex flex-col relative">
+        
+        <!-- 상단 헤더 (진행 상황) -->
+        <div id="header" class="bg-white border-b px-6 py-4 flex justify-between items-center sticky top-0 z-10 hidden">
+            <div class="font-bold text-lg text-slate-700">한국어 3B 모의고사</div>
+            <div class="text-sm font-medium bg-slate-100 px-3 py-1 rounded-full text-slate-600">
+                <span id="current-num">1</span> / <span id="total-num">25</span>
+            </div>
+        </div>
+
+        <!-- 메인 콘텐츠 영역 -->
+        <main class="flex-grow p-6 flex flex-col justify-center relative">
+            
+            <!-- 1. 시작 화면 -->
+            <div id="start-screen" class="text-center space-y-6 fade-in">
+                <div class="mb-8">
+                    <div class="inline-block bg-blue-100 text-blue-600 px-4 py-1 rounded-full font-bold text-sm mb-4">실전 모의고사</div>
+                    <h1 class="text-3xl font-bold text-slate-900 mb-2">3B 어휘·문법·읽기 평가</h1>
+                    <p class="text-slate-500">총 25문항 | 4지선다 객관식</p>
+                </div>
+                
+                <div class="space-y-4 max-w-xs mx-auto text-left text-sm bg-slate-50 p-5 rounded-xl border border-slate-200">
+                    <p>✓ 어휘 및 문법 (15문항)</p>
+                    <p>✓ 읽기 (10문항)</p>
+                    <p>✓ 문제 풀이 후 바로 결과 확인</p>
+                </div>
+
+                <button onclick="startQuiz()" class="w-full max-w-xs bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl transition transform active:scale-95 shadow-lg text-lg">
+                    시험 시작하기
+                </button>
+            </div>
+
+            <!-- 2. 문제 화면 -->
+            <div id="quiz-screen" class="hidden flex flex-col h-full">
+                <div id="question-container" class="flex-grow">
+                    <!-- 자바스크립트로 문제 내용이 여기에 들어갑니다 -->
+                </div>
+
+                <!-- 네비게이션 버튼 -->
+                <div class="mt-8 flex justify-between items-center pt-4 border-t">
+                    <button onclick="prevQuestion()" id="prev-btn" class="px-5 py-2 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-30 disabled:hover:bg-transparent transition font-medium" disabled>
+                        이전 문제
+                    </button>
+                    <button onclick="nextQuestion()" id="next-btn" class="px-8 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow-md transition font-bold">
+                        다음
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3. 결과 화면 -->
+            <div id="result-screen" class="hidden text-center space-y-6 fade-in py-10">
+                <h2 class="text-2xl font-bold text-slate-800">시험 결과</h2>
+                
+                <div class="relative inline-block">
+                    <svg class="w-40 h-40 mx-auto transform -rotate-90">
+                        <circle class="text-slate-100" stroke-width="12" stroke="currentColor" fill="transparent" r="70" cx="80" cy="80" />
+                        <circle id="score-circle" class="text-blue-500 transition-all duration-1000 ease-out" stroke-width="12" stroke-dasharray="440" stroke-dashoffset="440" stroke-linecap="round" stroke="currentColor" fill="transparent" r="70" cx="80" cy="80" />
+                    </svg>
+                    <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center flex-col">
+                        <span id="score-text" class="text-4xl font-bold text-slate-800">0</span>
+                        <span class="text-xs text-slate-500 uppercase font-bold">Score</span>
+                    </div>
+                </div>
+
+                <p id="feedback-text" class="text-lg font-medium text-slate-600"></p>
+
+                <div class="flex justify-center space-x-3 pt-4">
+                    <button onclick="showReview()" class="bg-white border border-slate-300 text-slate-700 px-6 py-3 rounded-lg hover:bg-slate-50 font-medium transition">
+                        오답 노트
+                    </button>
+                    <button onclick="location.reload()" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-bold shadow transition">
+                        다시 풀기
+                    </button>
+                </div>
+            </div>
+
+            <!-- 4. 오답 노트 화면 -->
+            <div id="review-screen" class="hidden h-full flex flex-col">
+                <h3 class="text-xl font-bold mb-4 pb-4 border-b flex justify-between items-center">
+                    <span>오답 확인</span>
+                    <button onclick="backToResult()" class="text-sm text-blue-600 hover:underline font-normal">돌아가기</button>
+                </h3>
+                <div id="review-list" class="flex-grow overflow-y-auto space-y-6 pr-2 custom-scrollbar">
+                    <!-- 오답 리스트 -->
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // --- 데이터: 앞서 변형한 문제들을 그대로 사용합니다 ---
+        
+        const questionData = [
+            // 어휘 & 문법 (랜덤 배치 예정)
+            {
+                type: "vocab",
+                instruction: "[어휘] 무엇에 대한 이야기입니까?",
+                text: "강물이 쓰레기 때문에 더럽고 냄새가 납니다. 자동차 매연 때문에 숨쉬기가 힘들어요.",
+                choices: ["날씨", "공해", "습관", "계절"],
+                answer: 1 // 공해
+            },
+            {
+                type: "vocab",
+                instruction: "[어휘] 무엇에 대한 이야기입니까?",
+                text: "옆집 사람이 곧 이사를 갈 거라는 이야기가 동네에 돌고 있어요.",
+                choices: ["뉴스", "소문", "거짓말", "약속"],
+                answer: 1 // 소문
+            },
+            {
+                type: "vocab",
+                instruction: "[어휘] 무엇에 대한 이야기입니까?",
+                text: "도서관 책을 늦게 반납했더니 돈을 더 내라고 했어요.",
+                choices: ["연체료", "입장료", "수업료", "물건값"],
+                answer: 0 // 연체료
+            },
+            {
+                type: "vocab",
+                instruction: "[어휘] 빈칸에 들어갈 말로 알맞은 것은?",
+                text: "요즘 베란다에서 꽃과 채소를 ( &nbsp;&nbsp;&nbsp;&nbsp; ) 재미가 쏠쏠해요.",
+                choices: ["만드는", "고치는", "키우는", "배우는"],
+                answer: 2 // 키우는
+            },
+            {
+                type: "vocab",
+                instruction: "[어휘] 빈칸에 들어갈 말로 알맞은 것은?",
+                text: "내일 여자 친구와 데이트할 생각을 하니 가슴이 두근거리고 ( &nbsp;&nbsp;&nbsp;&nbsp; ).",
+                choices: ["설렌다", "무섭다", "외롭다", "귀찮다"],
+                answer: 0 // 설렌다
+            },
+            {
+                type: "vocab",
+                instruction: "[어휘] 빈칸에 들어갈 말로 알맞은 것은?",
+                text: "물병 뚜껑을 꽉 닫지 않아서 가방 안에 물이 다 ( &nbsp;&nbsp;&nbsp;&nbsp; ).",
+                choices: ["새요", "씻어요", "마셔요", "닫아요"],
+                answer: 0 // 새요
+            },
+            {
+                type: "vocab",
+                instruction: "[어휘] 빈칸에 들어갈 말로 알맞은 것은?",
+                text: "길을 걷다가 ( &nbsp;&nbsp;&nbsp;&nbsp; ) 초등학교 때 친구를 만났어요.",
+                choices: ["일부러", "우연히", "마침내", "억지로"],
+                answer: 1 // 우연히
+            },
+            {
+                type: "vocab",
+                instruction: "[어휘] 밑줄 친 부분과 바꿀 수 있는 말은?",
+                text: "등록금은 기간 내에 은행에 가서 <span class='text-blue-600 font-bold underline'>내면</span> 됩니다.",
+                choices: ["납부하면", "저축하면", "출금하면", "환전하면"],
+                answer: 0 // 납부하면
+            },
+            {
+                type: "vocab",
+                instruction: "[어휘] 밑줄 친 부분과 바꿀 수 있는 말은?",
+                text: "약을 먹고 한숨 잤더니 두통이 씻은 듯이 <span class='text-blue-600 font-bold underline'>없어졌어요</span>.",
+                choices: ["시작됐어요", "커졌어요", "나타났어요", "사라졌어요"],
+                answer: 3 // 사라졌어요
+            },
+            {
+                type: "vocab",
+                instruction: "[어휘] 밑줄 친 부분과 바꿀 수 있는 말은?",
+                text: "평소에 성실했던 그 친구가 지각을 했다니 <span class='text-blue-600 font-bold underline'>그럴 리가 없어요</span>.",
+                choices: ["이해가 안 돼요", "당연한 일이에요", "그럴 수도 있어요", "믿어지지 않아요"],
+                answer: 3 // 믿어지지 않아요
+            },
+            {
+                type: "grammar",
+                instruction: "[문법] 빈칸에 들어갈 말로 알맞은 것은?",
+                text: "처음에는 평범한 식당인 줄 알았는데, ( &nbsp;&nbsp;&nbsp;&nbsp; ) 아주 유명한 맛집이었어요.",
+                choices: ["알까 봐", "알고 보니", "알면서도", "알기로는"],
+                answer: 1 // 알고 보니
+            },
+            {
+                type: "grammar",
+                instruction: "[문법] 빈칸에 들어갈 말로 알맞은 것은?",
+                text: "집에 ( &nbsp;&nbsp;&nbsp;&nbsp; ) 편의점에 들러서 우유를 샀어요.",
+                choices: ["가니까", "가는 길에", "가러", "가고 나서"],
+                answer: 1 // 가는 길에
+            },
+            {
+                type: "grammar",
+                instruction: "[문법] 빈칸에 들어갈 말로 알맞은 것은?",
+                text: "비행기 표를 미리 예매( &nbsp;&nbsp;&nbsp;&nbsp; ) 휴가철이라 표를 구할 수 없을 거예요.",
+                choices: ["해야", "하면", "하거나", "하지 않으면"],
+                answer: 3 // 하지 않으면
+            },
+            {
+                type: "grammar_err",
+                instruction: "[문법] 다음 중 틀린 문장은?",
+                text: "",
+                choices: [
+                    "동생이 선물을 받고 매우 기뻐해요.",
+                    "선생님이 학생들의 진로를 걱정하세요.",
+                    "저는 시험에 떨어져서 너무 슬퍼해해요.",
+                    "아버지가 드라마를 보고 즐거워하세요."
+                ],
+                answer: 2 // 슬퍼해해요(X) -> 슬퍼해요
+            },
+            {
+                type: "grammar_err",
+                instruction: "[문법] 다음 중 틀린 문장은?",
+                text: "",
+                choices: [
+                    "배가 고프지 않았지만 고픈 척했다.",
+                    "사실을 다 알고 있었지만 모르는 척했다.",
+                    "수업 시간에 잤으면서 안 잔 척했다.",
+                    "눈이 마주쳤지만 못 보는 척했다."
+                ],
+                answer: 3 // 못 보는 척했다(X) -> 못 본 척했다
+            }
+        ];
+
+        const readingPassages = [
+            {
+                text: "‘칼림바’는 아프리카에서 유래한 악기이다. 작은 나무 상자에 쇠막대가 붙어 있는 모양이다. 크기가 스마트폰만큼 작아서 주머니에 넣고 다니기도 쉽다. 이 악기는 양손의 엄지손가락으로 쇠막대를 ( &nbsp;&nbsp;&nbsp;&nbsp; ) 연주한다. 소리가 오르골처럼 맑고 아름다워서 마음이 편안해진다. 악보를 보는 법이 어렵지 않아서 누구나 쉽게 배울 수 있다.",
+                questions: [
+                    { instruction: "[읽기] 괄호 안에 들어갈 알맞은 말은?", choices: ["켜서", "튕겨서", "불어서", "눌러서"], answer: 1 },
+                    { instruction: "[읽기] 이 글의 내용과 같은 것은?", choices: ["크기가 커서 가지고 다니기 힘들다.", "손가락으로 건반을 눌러서 연주한다.", "누구나 쉽게 배워서 연주할 수 있다.", "소리가 크고 웅장해서 야외 연주에 좋다."], answer: 2 }
+                ]
+            },
+            {
+                text: "맛있는 과일을 고르는 방법은 따로 있다. 참외는 색이 진한 노란색이고 흰색 줄무늬가 선명할수록 맛있다. 너무 큰 것보다는 어른 주먹만 한 크기가 적당하다.<br><br>포도는 알이 꽉 차 있고 껍질에 하얀 가루가 묻어 있는 것이 좋다. 그리고 포도송이의 가장 아래쪽에 있는 알을 먹어 보고 고르는 것이 좋다. 포도는 위쪽부터 익기 때문에 아래쪽 알이 달면 전체가 다 달고 맛있는 포도이다.",
+                questions: [
+                    { instruction: "[읽기] 이 글을 쓴 목적은 무엇입니까?", choices: ["과일의 가격을 비교하려고", "과일이 몸에 좋은 이유를 알리려고", "맛있는 과일 고르는 법을 소개하려고", "과일을 보관하는 방법을 설명하려고"], answer: 2 },
+                    { instruction: "[읽기] 이 글의 내용과 같은 것은?", choices: ["참외는 크면 클수록 맛이 좋다.", "참외는 줄무늬가 없는 것이 더 달다.", "포도는 껍질이 매끄럽고 깨끗한 것이 좋다.", "포도는 아래쪽이 달면 전체가 다 달다."], answer: 3 }
+                ]
+            },
+            {
+                text: "부자가 되려면 작은 돈부터 아껴야 합니다. ‘티끌 모아 태산’이라는 말이 있지요? 생활 속 작은 습관으로 돈을 절약할 수 있습니다.<br><br>첫째, 사용하지 않는 전기는 코드를 뽑아 둡니다. 이렇게 하면 전기 요금을 줄일 수 있습니다.<br>둘째, 카페에 갈 때 개인 컵을 가져갑니다. 텀블러를 사용하면 할인을 받을 수 있어서 ( ㉠ )을/를 아낄 수 있습니다.<br>셋째, 가까운 거리는 걷거나 자전거를 탑니다. 건강도 챙기고 교통비도 아낄 수 있어 일석이조입니다.",
+                questions: [
+                    { instruction: "[읽기] ‘티끌 모아 태산’과 의미가 같은 것은?", choices: ["돈은 벌기보다 쓰기가 더 쉽다.", "작은 돈이라도 모이면 큰돈이 된다.", "돈을 모으려면 큰 목표를 세워야 한다.", "건강을 잃으면 돈도 소용이 없다."], answer: 1 },
+                    { instruction: "[읽기] ㉠에 들어갈 알맞은 말은?", choices: ["난방비", "치료비", "커피 값", "학비"], answer: 2 },
+                    { instruction: "[읽기] 이 글을 쓴 목적은 무엇입니까?", choices: ["환경 보호의 중요성을 강조하려고", "생활 속 절약 방법을 알려 주려고", "건강 관리 비법을 소개하려고", "대중교통 이용을 권장하려고"], answer: 1 }
+                ]
+            },
+            {
+                text: "옛날에 한 낚시꾼이 배를 타고 바다로 나갔다가 낯선 섬을 발견했다. (가) 섬에는 아름다운 동굴이 있었는데, 안으로 들어가니 노인들이 모여서 장기를 두고 있었다. (나) 낚시꾼은 장기 두는 것이 너무 재미있어서 시간 가는 줄 모르고 구경을 했다. 한참을 구경하다가 집에 가려고 낚싯대를 집어 들었는데 깜짝 놀랐다. (다) 그는 고개를 갸웃거리며 썩어 버린 낚싯대를 들고 마을로 돌아왔다. 마을은 완전히 변해 있었고 아는 사람이 아무도 없었다. (라) 낚시꾼이 구경하는 동안 100년의 시간이 지난 것이었다.",
+                questions: [
+                    { instruction: "[읽기] 다음 문장이 들어갈 곳은?<br><span class='text-blue-600 font-bold'>'나무로 된 낚싯대 손잡이가 다 썩어서 없어졌기 때문이다.'</span>", choices: ["(가)", "(나)", "(다)", "(라)"], answer: 2 },
+                    { instruction: "[읽기] 이 글의 내용과 맞는 것은?", choices: ["낚시꾼은 노인들과 함께 장기를 두었다.", "낚시꾼은 동굴에서 하룻밤을 자고 나왔다.", "낚시꾼이 돌아왔을 때 가족들이 기다리고 있었다.", "낚시꾼이 구경하는 사이에 아주 오랜 시간이 흘렀다."], answer: 3 },
+                    { instruction: "[읽기] ‘도끼자루 썩는 줄 모른다’와 의미가 같은 것은?", choices: ["어떤 일에 빠져서 시간 가는 줄 모른다.", "도구는 오랫동안 쓰지 않으면 망가진다.", "힘든 일을 하면 시간이 더디게 간다.", "물건을 소중히 다루지 않으면 잃어버린다."], answer: 0 }
+                ]
+            }
+        ];
+
+        // --- 앱 로직 ---
+
+        let quizList = [];
+        let currentIdx = 0;
+        let userAnswers = [];
+
+        // 배열 섞기 (피셔-예이츠 셔플)
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // 퀴즈 초기화 및 데이터 구성
+        function initQuizData() {
+            // 1. 어휘/문법 문제 섞기
+            const shuffledVocab = shuffle([...questionData]);
+
+            // 2. 읽기 문제는 지문 단위로 처리 (지문 순서는 유지하되 내부는 고정)
+            let readingList = [];
+            readingPassages.forEach(p => {
+                p.questions.forEach(q => {
+                    readingList.push({
+                        type: "reading",
+                        passage: p.text,
+                        instruction: q.instruction,
+                        text: "", // 읽기 문제는 본문 지문이 위쪽에 나옴
+                        choices: q.choices,
+                        answer: q.answer
+                    });
+                });
+            });
+
+            // 합치기
+            quizList = [...shuffledVocab, ...readingList];
+            document.getElementById('total-num').innerText = quizList.length;
+        }
+
+        function startQuiz() {
+            initQuizData();
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            document.getElementById('header').classList.remove('hidden');
+            currentIdx = 0;
+            userAnswers = new Array(quizList.length).fill(null);
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = quizList[currentIdx];
+            const container = document.getElementById('question-container');
+            
+            // 헤더 업데이트
+            document.getElementById('current-num').innerText = currentIdx + 1;
+
+            // 버튼 상태
+            document.getElementById('prev-btn').disabled = (currentIdx === 0);
+            document.getElementById('next-btn').innerText = (currentIdx === quizList.length - 1) ? "결과 보기" : "다음";
+
+            // HTML 구성
+            let html = `
+                <div class="space-y-6 fade-in">
+                    <div class="space-y-2">
+                        <h2 class="text-sm font-bold text-blue-600 tracking-wide uppercase">${q.type === 'reading' ? '읽기 영역' : '어휘 및 문법'}</h2>
+                        <p class="text-lg font-bold text-slate-800">${q.instruction}</p>
+                    </div>
+            `;
+
+            // 지문 (읽기 문제인 경우)
+            if (q.passage) {
+                html += `
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 text-slate-700 leading-relaxed font-serif text-sm sm:text-base">
+                        ${q.passage}
+                    </div>
+                `;
+            }
+
+            // 문제 본문 (어휘/문법 문제인 경우)
+            if (q.text) {
+                html += `
+                    <div class="p-4 bg-white rounded-lg text-lg font-medium text-slate-800 break-keep">
+                        ${q.text}
+                    </div>
+                `;
+            }
+
+            // 선택지 (4지선다)
+            html += `<div class="grid grid-cols-1 gap-3 mt-4">`;
+            q.choices.forEach((choice, i) => {
+                const isSelected = userAnswers[currentIdx] === i ? "selected" : "";
+                html += `
+                    <button onclick="selectChoice(${i})" class="choice-btn w-full text-left px-5 py-4 rounded-xl bg-white flex items-center group ${isSelected}">
+                        <span class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center mr-4 text-sm font-bold group-hover:bg-blue-100 group-hover:text-blue-600 transition-colors ${isSelected ? '!bg-blue-600 !text-white' : ''}">
+                            ${i + 1}
+                        </span>
+                        <span class="text-slate-700 font-medium group-hover:text-slate-900 ${isSelected ? '!text-blue-800' : ''}">${choice}</span>
+                    </button>
+                `;
+            });
+            html += `</div></div>`;
+
+            container.innerHTML = html;
+        }
+
+        function selectChoice(index) {
+            userAnswers[currentIdx] = index;
+            renderQuestion(); // 다시 그려서 선택 상태 업데이트
+        }
+
+        function nextQuestion() {
+            // 답을 선택하지 않았을 때 경고 (선택사항, 여기선 부드럽게 넘어감)
+            if (userAnswers[currentIdx] === null) {
+                // alert("답을 선택해주세요."); // 필요시 주석 해제
+                // return; 
+            }
+
+            if (currentIdx < quizList.length - 1) {
+                currentIdx++;
+                renderQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentIdx > 0) {
+                currentIdx--;
+                renderQuestion();
+            }
+        }
+
+        function finishQuiz() {
+            document.getElementById('header').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+
+            // 채점
+            let score = 0;
+            let correctCount = 0;
+            quizList.forEach((q, i) => {
+                if (userAnswers[i] === q.answer) {
+                    correctCount++;
+                }
+            });
+            score = Math.round((correctCount / quizList.length) * 100);
+
+            // 애니메이션
+            const circle = document.getElementById('score-circle');
+            const radius = circle.r.baseVal.value;
+            const circumference = radius * 2 * Math.PI;
+            const offset = circumference - (score / 100) * circumference;
+            
+            setTimeout(() => {
+                circle.style.strokeDashoffset = offset;
+                animateValue("score-text", 0, score, 1000);
+            }, 100);
+
+            // 피드백 텍스트
+            const feedback = document.getElementById('feedback-text');
+            if (score >= 90) feedback.innerHTML = "대단해요! <br>거의 모든 문제를 맞혔습니다.";
+            else if (score >= 70) feedback.innerHTML = "잘했습니다! <br>합격 안정권입니다.";
+            else if (score >= 50) feedback.innerHTML = "수고하셨습니다. <br>조금 더 분발해 볼까요?";
+            else feedback.innerHTML = "아쉬워요. <br>오답 노트를 확인하고 다시 도전하세요.";
+        }
+
+        function animateValue(id, start, end, duration) {
+            let range = end - start;
+            let current = start;
+            let increment = end > start ? 1 : -1;
+            let stepTime = Math.abs(Math.floor(duration / range));
+            let obj = document.getElementById(id);
+            let timer = setInterval(function() {
+                current += increment;
+                obj.innerHTML = current;
+                if (current == end) {
+                    clearInterval(timer);
+                }
+            }, stepTime);
+        }
+
+        function showReview() {
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('review-screen').classList.remove('hidden');
+            
+            const list = document.getElementById('review-list');
+            list.innerHTML = "";
+
+            let hasWrong = false;
+            quizList.forEach((q, i) => {
+                if (userAnswers[i] !== q.answer) {
+                    hasWrong = true;
+                    const myAns = userAnswers[i] !== null ? q.choices[userAnswers[i]] : "선택 안 함";
+                    const correctAns = q.choices[q.answer];
+                    
+                    // 읽기 지문 생략 여부: 너무 길면 '지문 참조' 표시, 간단하면 그냥 둠. 여기선 보여줌.
+                    const contentText = q.passage ? `(지문 내용 생략)` : q.text;
+                    const instruction = q.instruction.replace(/<[^>]*>?/gm, '');
+
+                    list.innerHTML += `
+                        <div class="bg-red-50 p-5 rounded-xl border border-red-100 text-sm">
+                            <div class="flex justify-between mb-2">
+                                <span class="font-bold text-red-600">문제 ${i + 1}</span>
+                                <span class="text-slate-400 text-xs">${q.type === 'reading' ? '읽기' : '어휘/문법'}</span>
+                            </div>
+                            <p class="font-bold text-slate-800 mb-1">${instruction}</p>
+                            <p class="text-slate-600 mb-4 line-clamp-2">${contentText}</p>
+                            
+                            <div class="grid grid-cols-2 gap-4 bg-white p-3 rounded-lg">
+                                <div>
+                                    <span class="text-xs text-slate-400 block mb-1">내가 고른 답</span>
+                                    <span class="font-bold text-red-500">${myAns}</span>
+                                </div>
+                                <div>
+                                    <span class="text-xs text-slate-400 block mb-1">정답</span>
+                                    <span class="font-bold text-green-600">${correctAns}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            if (!hasWrong) {
+                list.innerHTML = `
+                    <div class="flex flex-col items-center justify-center h-64 text-center">
+                        <div class="text-5xl mb-4">🎉</div>
+                        <h3 class="text-xl font-bold text-slate-800">틀린 문제가 없습니다!</h3>
+                        <p class="text-slate-500">완벽한 실력이네요.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function backToResult() {
+            document.getElementById('review-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
+
+

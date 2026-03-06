@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 문법 학습: 빈칸 채우기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .draggable {
+            cursor: grab;
+            user-select: none;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s;
+        }
+        .dragging {
+            opacity: 0.5;
+            border: 2px dashed #cbd5e0;
+        }
+        .drop-zone {
+            transition: background-color 0.3s, border-color 0.3s;
+            min-width: 150px;
+            min-height: 40px;
+            cursor: pointer;
+            display: inline-flex; /* Center content vertically */
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle; /* Align with surrounding text */
+        }
+        .drop-hover {
+            background-color: #e2e8f0;
+            border-color: #4299e1;
+        }
+        .correct {
+            border-color: #48bb78 !important;
+            background-color: #f0fff4;
+        }
+        .correct .draggable {
+            color: #2f855a;
+            cursor: not-allowed;
+        }
+        .incorrect {
+            border-color: #f56565 !important;
+            background-color: #fff5f5;
+        }
+        .incorrect .draggable {
+            color: #c53030;
+        }
+        
+        @keyframes pulse-blue {
+            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
+
+        .selected {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+            transform: translateY(-2px);
+            animation: pulse-blue 2s infinite;
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <div id="app" class="w-full max-w-4xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800">한국어 문법 학습</h1>
+                <p class="text-gray-500 mt-2">알맞은 문법을 드래그하거나 터치하여 빈칸에 넣어 대화를 완성하세요.</p>
+            </div>
+
+            <div id="questions-container" class="space-y-6">
+                <!-- Questions will be inserted here -->
+            </div>
+
+            <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                     <button id="save-button" class="flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105 shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                        <span>수동 저장</span>
+                    </button>
+                    <p id="save-status" class="text-sm text-gray-500 transition-opacity duration-300 opacity-0"></p>
+                </div>
+                <button id="check-answers" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-lg transition-transform transform hover:scale-105 shadow-md">
+                    결과 확인
+                </button>
+            </div>
+             <div id="result-message" class="text-center mt-4 font-semibold text-lg"></div>
+        </div>
+    </div>
+    
+    <div id="word-bank" class="fixed bottom-0 left-0 w-full z-50 bg-white p-4 border-t border-gray-200 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] flex flex-wrap justify-center items-center gap-3">
+        <!-- Grammar patterns will be inserted here -->
+    </div>
+
+    <script type="module">
+        const LOCAL_STORAGE_KEY = 'korean-grammar-progress';
+
+        const allGrammarPoints = [
+            'A/V-던', 'A/V-아야/어야', 'N이어야/여야', 'V-(으)려면 멀었다', 'A-다면',
+            'V-ㄴ다면/는다면', 'N(이)라면', 'V-았더니/었더니', '무슨 N(이)든지',
+            'A/V-(으)ㄹ까 봐', 'V-고 있다', 'A/V-았/었어야 했는데', 'V-도록'
+        ];
+
+        const allQuestions = [
+            { id: 1, dialogue: 'A: 왜 그렇게 외국어 공부를 열심히 해요?<br>B: (___) 좋은 회사에 취직할 수 있거든요.', answer: 'A/V-아야/어야' },
+            { id: 2, dialogue: 'A: 지수 씨가 다시 건강해져서 정말 다행이에요. 어떻게 건강을 되찾았어요?<br>B: 꾸준히 운동했(___) 건강해졌어요.', answer: 'V-았더니/었더니' },
+            { id: 3, dialogue: 'A: 아까부터 뭘 그렇게 찾고 있어요?<br>B: 아까 쓰(___) 볼펜이 없어졌어요.', answer: 'A/V-던' },
+            { id: 4, dialogue: 'A: 지금 1억이 생기면 뭘 하고 싶어요?<br>B: 1억이 생긴(___) 세계 여행을 하고 싶어요.', answer: 'V-ㄴ다면/는다면' },
+            { id: 5, dialogue: 'A: 집들이에 아키라 씨를 초대했는데 한국 음식을 좋아할까요?<br>B: 아키라 씨는 (___) 잘 먹으니까 걱정하지 마세요.', answer: '무슨 N(이)든지' },
+            { id: 6, dialogue: 'A: 얼마 전에 대기업에 취직했다고 들었어요. 정말 축하해요. 결혼은 언제쯤 할 계획이에요?<br>B: 결혼하(___)', answer: 'V-(으)려면 멀었다' },
+            { id: 7, dialogue: 'A: 이 동아리에 가입하고 싶은데, 조건이 있나요?<br>B: 한국 사람이(___) 가입할 수 있어요.', answer: 'N이어야/여야' },
+            { id: 8, dialogue: 'A: 내일 날씨가 좋을까요?<br>B: 내일 날씨가 좋(___) 같이 공원에 가요.', answer: 'A-다면' },
+            { id: 9, dialogue: 'A: 제가 만약 선생님이라면 학생들에게 숙제를 많이 내줄 거예요.<br>B: 저는 선생님(___) 숙제를 전혀 안 내줄 거예요.', answer: 'N(이)라면' },
+            { id: 10, dialogue: 'A: 왜 우산을 챙겨요? 날씨가 맑은데요.<br>B: 오후에 비가 오(___) 미리 챙기는 거예요.', answer: 'A/V-(으)ㄹ까 봐' },
+            { id: 11, dialogue: 'A: 오늘 처음 만나는 소개팅 상대방을 어떻게 찾죠?<br>B: 그분은 하얀색 원피스를 입(___) 있을 거예요.', answer: 'V-고 있다' },
+            { id: 12, dialogue: 'A: 시험 잘 봤어요?<br>B: 아니요, 더 열심히 공부했(___). 아쉬워요.', answer: 'A/V-았/었어야 했는데' },
+            { id: 13, dialogue: 'A: 왜 이렇게 밤늦게까지 공부해요?<br>B: 내일 시험에 합격할 수 있(___) 최선을 다하고 있어요.', answer: 'V-도록' }
+        ];
+        
+        let questions = [];
+        let autoSaveTimer;
+        let selectedWordEl = null;
+
+        const wordBank = document.getElementById('word-bank');
+        const questionsContainer = document.getElementById('questions-container');
+        const checkButton = document.getElementById('check-answers');
+        const saveButton = document.getElementById('save-button');
+        const saveStatus = document.getElementById('save-status');
+        const resultMessage = document.getElementById('result-message');
+        const mainContent = document.querySelector('#app > div');
+        
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function sanitizeForId(text) {
+            return text.replace(/[^a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣-]/g, '');
+        }
+
+        async function saveData(data) {
+            try {
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+                return true;
+            } catch (error) { console.error("Error saving data:", error); return false; }
+        }
+        
+        async function loadData() {
+            try {
+                const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+                return savedData ? JSON.parse(savedData) : null;
+            } catch (error) { console.error("Error loading data:", error); return null; }
+        }
+        
+        function adjustLayoutForWordBank() {
+            if (wordBank && mainContent) {
+                const wordBankHeight = wordBank.offsetHeight;
+                mainContent.style.paddingBottom = `${wordBankHeight + 24}px`;
+            }
+        }
+
+        function createDraggableWord(word) {
+            const wordEl = document.createElement('div');
+            wordEl.textContent = word;
+            wordEl.draggable = true;
+            wordEl.id = `word-${sanitizeForId(word)}`;
+            wordEl.className = 'draggable bg-white p-2 px-4 rounded-md shadow-sm border border-gray-300 text-gray-700 font-medium';
+            wordEl.addEventListener('dragstart', handleDragStart);
+            wordEl.addEventListener('click', handleWordClick);
+            return wordEl;
+        }
+
+        function createQuestion(question, index) {
+            const questionEl = document.createElement('div');
+            questionEl.className = 'flex flex-col sm:flex-row items-start gap-2 p-3 bg-gray-50 rounded-lg text-lg';
+            questionEl.dataset.questionId = question.id;
+
+            const dropZoneHTML = `<div class="drop-zone bg-gray-200 border-2 border-dashed border-gray-400 rounded-md p-2 text-center" data-question-id="${question.id}"></div>`;
+            const dialogueHTML = question.dialogue.replace('(___)', dropZoneHTML);
+
+            questionEl.innerHTML = `
+                <span class="font-semibold text-gray-700">${index + 1}.</span>
+                <div class="leading-relaxed">${dialogueHTML}</div>
+            `;
+            
+            const dropZone = questionEl.querySelector('.drop-zone');
+            dropZone.addEventListener('dragover', handleDragOver);
+            dropZone.addEventListener('dragenter', handleDragEnter);
+            dropZone.addEventListener('dragleave', handleDragLeave);
+            dropZone.addEventListener('drop', handleDrop);
+            dropZone.addEventListener('click', handleDropZoneClick);
+            return questionEl;
+        }
+
+        async function renderUI() {
+            wordBank.innerHTML = '';
+            shuffleArray([...allGrammarPoints]).forEach(word => wordBank.appendChild(createDraggableWord(word)));
+            
+            questionsContainer.innerHTML = '';
+            questions = shuffleArray([...allQuestions]);
+            questions.forEach((q, index) => questionsContainer.appendChild(createQuestion(q, index)));
+            
+            adjustLayoutForWordBank();
+            
+            const savedAnswers = await loadData();
+            if (savedAnswers) {
+                applySavedState(savedAnswers);
+                showSaveStatus("진행 상황을 불러왔습니다.", 2000);
+            }
+        }
+        
+        function applySavedState(savedAnswers) {
+            Object.entries(savedAnswers).forEach(([questionId, wordText]) => {
+                if (!wordText) return;
+                const dropZone = document.querySelector(`.drop-zone[data-question-id='${questionId}']`);
+                const wordId = `word-${sanitizeForId(wordText)}`;
+                const wordEl = document.getElementById(wordId) || createDraggableWord(wordText);
+                if (dropZone) {
+                    if (wordBank.contains(wordEl)) wordBank.removeChild(wordEl);
+                    dropZone.innerHTML = ''; 
+                    dropZone.appendChild(wordEl);
+                }
+            });
+        }
+        
+        function triggerAutoSave() {
+            clearTimeout(autoSaveTimer);
+            autoSaveTimer = setTimeout(() => handleSave(true), 2000);
+        }
+
+        function handleDragStart(e) {
+            if (selectedWordEl) {
+                selectedWordEl.classList.remove('selected');
+                selectedWordEl = null;
+            }
+            e.dataTransfer.setData('text/plain', e.target.id);
+            setTimeout(() => e.target.classList.add('dragging'), 0);
+        }
+
+        function handleWordClick(e) {
+            const clickedWord = e.currentTarget;
+            if (clickedWord.parentElement.classList.contains('drop-zone')) return;
+
+            if (selectedWordEl === clickedWord) {
+                clickedWord.classList.remove('selected');
+                selectedWordEl = null;
+            } else {
+                if (selectedWordEl) selectedWordEl.classList.remove('selected');
+                clickedWord.classList.add('selected');
+                selectedWordEl = clickedWord;
+            }
+        }
+
+        function handleDropZoneClick(e) {
+            const dropZone = e.currentTarget;
+            if (selectedWordEl) {
+                if (dropZone.children.length > 0) {
+                    wordBank.appendChild(dropZone.children[0]);
+                }
+                dropZone.innerHTML = '';
+                dropZone.appendChild(selectedWordEl);
+                selectedWordEl.classList.remove('selected');
+                selectedWordEl = null;
+                triggerAutoSave();
+            } else if (dropZone.children.length > 0) {
+                wordBank.appendChild(dropZone.children[0]);
+                triggerAutoSave();
+            }
+        }
+
+        function handleDragOver(e) { e.preventDefault(); }
+        function handleDragEnter(e) { e.preventDefault(); if(e.target.classList.contains('drop-zone')) e.target.classList.add('drop-hover'); }
+        function handleDragLeave(e) { if(e.target.classList.contains('drop-zone')) e.target.classList.remove('drop-hover'); }
+        
+        function handleDrop(e) {
+            e.preventDefault();
+            const dropZone = e.target.closest('.drop-zone');
+            if (!dropZone) return;
+            dropZone.classList.remove('drop-hover');
+            const id = e.dataTransfer.getData('text');
+            const draggable = document.getElementById(id);
+            if (draggable) {
+                draggable.classList.remove('dragging');
+                if (dropZone.children.length > 0) {
+                    wordBank.appendChild(dropZone.children[0]);
+                }
+                dropZone.innerHTML = '';
+                dropZone.appendChild(draggable);
+                triggerAutoSave();
+            }
+        }
+        
+        function handleCheckAnswers() {
+            let correctCount = 0;
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                const qId = zone.dataset.questionId;
+                const droppedEl = zone.querySelector('div');
+                const question = allQuestions.find(q => q.id == qId);
+                zone.classList.remove('correct', 'incorrect');
+                if (droppedEl && question && droppedEl.textContent === question.answer) {
+                    zone.classList.add('correct');
+                    droppedEl.draggable = false;
+                    correctCount++;
+                } else {
+                    zone.classList.add('incorrect');
+                }
+            });
+            resultMessage.textContent = `총 ${allQuestions.length}문제 중 ${correctCount}개를 맞혔습니다!`;
+        }
+
+        async function handleSave(isAuto = false) {
+             const userAnswers = {};
+             document.querySelectorAll('.drop-zone').forEach(zone => {
+                 const qId = zone.dataset.questionId;
+                 const wordEl = zone.querySelector('div');
+                 userAnswers[qId] = wordEl ? wordEl.textContent : null;
+             });
+             const success = await saveData(userAnswers);
+             if (!isAuto) showSaveStatus(success ? "저장되었습니다!" : "저장에 실패했습니다.", 2000, !success);
+             else if (success) showSaveStatus("자동 저장 완료", 1500);
+        }
+
+        function showSaveStatus(message, duration, isError = false) {
+            saveStatus.textContent = message;
+            saveStatus.style.color = isError ? '#c53030' : '#4a5568';
+            saveStatus.classList.remove('opacity-0');
+            setTimeout(() => saveStatus.classList.add('opacity-0'), duration);
+        }
+
+        function init() {
+            renderUI();
+            checkButton.addEventListener('click', handleCheckAnswers);
+            saveButton.addEventListener('click', () => handleSave(false));
+            window.addEventListener('resize', adjustLayoutForWordBank);
+        }
+
+        init();
+    </script>
+</body>
+</html>
+

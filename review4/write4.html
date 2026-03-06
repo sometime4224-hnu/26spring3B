@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>한국어 지문 암기 도구</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+        body { 
+            font-family: 'Noto Sans KR', sans-serif; 
+            background-color: #f8fafc;
+        }
+        /* 가려진 단어 스타일 */
+        .word-segment {
+            display: inline-block;
+            cursor: pointer;
+            padding: 2px 4px;
+            margin: 2px 1px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .word-segment:hover {
+            background-color: #e2e8f0;
+        }
+        .word-hidden {
+            background-color: #3b82f6 !important;
+            color: #3b82f6 !important;
+            border-bottom-color: #1d4ed8;
+            user-select: none;
+        }
+        .word-hidden::selection {
+            background: transparent;
+        }
+        /* 줄바꿈 보존 */
+        .passage-content {
+            white-space: pre-wrap;
+            line-height: 2.2;
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="min-h-screen p-4 md:p-8">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <div class="max-w-2xl mx-auto">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-slate-800">한국어 지문 암기 학습</h1>
+            <p class="text-slate-500 mt-2">단어를 클릭하여 가리고 외워보세요.</p>
+        </header>
+
+        <!-- Sidebar / Selection -->
+        <div class="mb-6">
+            <label class="block text-sm font-bold text-slate-600 mb-2">학습할 지문 선택:</label>
+            <select id="passage-selector" class="w-full p-3 bg-white border border-slate-200 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                <!-- Options will be injected here -->
+            </select>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="flex gap-2 mb-4 justify-end">
+            <button id="hide-all-btn" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg text-sm font-bold hover:bg-slate-300 transition">모두 가리기</button>
+            <button id="show-all-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-bold hover:bg-indigo-700 shadow-md transition">모두 보이기 (초기화)</button>
+        </div>
+
+        <!-- Passage Display Card -->
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 md:p-10 min-h-[400px]">
+            <h2 id="current-title" class="text-xl font-bold text-indigo-700 mb-6 border-b pb-4">지문 제목</h2>
+            <div id="passage-render-area" class="passage-content text-lg text-slate-700">
+                <!-- Interactive words will be injected here -->
+            </div>
+        </div>
+
+        <footer class="mt-12 text-center text-slate-400 text-xs">
+            © Korean Reading Study Tool - Click words to toggle visibility
+        </footer>
+    </div>
+
+    <script>
+        // 추출된 모든 지문 데이터 (ragmid, ragmid2 통합)
+        const passageData = [
+            { id: 1, title: "연애 칼럼", content: "사랑에 빠진 연인들은 서로의 사랑이 영원할 거라고 생각합니다. 하지만 사랑에도 유통 기한가 있다고 합니다. 뜨겁게 사랑하던 사람들도 시간이 지나면 설레는 마음이 줄어들기 때문입니다. \n\n이 때문에 사랑이 식었다고 생각해서 헤어지는 연인들이 많습니다. 그러나 이런 변화는 이것은 사랑이 끝난 것이 아니라 깊어지는 과정입니다. \n\n보통 여자는 남자의 마음이 변했다고 느낄 때 헤어질 생각을 하고, 남자는 여자와 성격이 안 맞을 때 이별을 고민한다고 합니다." },
+            { id: 2, title: "목 건강", content: "요즘 많은 사람들이 목의 통증을 느낍니다. 컴퓨터를 볼 때 거북처럼 목을 앞으로 길게 빼고 잘못된 자세를 오래 유지하기 때문입니다. \n\n이런 통증을 예방하려면 자세 교정이 필수적입니다. 특히 맑은 공기를 마시며 걷기 운동을 하면 전신의 자세를 바로잡는 데 매우 효과적입니다. \n\n또한 스트레칭을 여러 번 반복하는 것도 목 건강을 지키는 좋은 습관입니다." },
+            { id: 3, title: "동물 사랑 바자회", content: "저희 ‘동사모’는 동물을 사랑하는 사람들이 모여서 버려진 동물을 돌보는 일을 합니다. 매년 바자회를 열어서 동물 보호 기금도 마련하고 버려진 동물에게 새 주인을 찾아 주고 있습니다.\n\n경험이 없어 동물을 잘 돌볼 수 없을까 봐 걱정하시는 분들을 위해 여러 가지 도움도 드립니다. 이번 수익금은 버려진 동물과 멸종 위기 동물을 보호하는 데 쓰입니다." },
+            { id: 4, title: "성공 비결", content: "직장인들의 성공 비결은 크게 두 가지가 있습니다.\n\nⅠ. 친절한 사람이 성공한다\n회사에서 작은 친절을 베푸는 사람이 나중에 큰 도움을 받아 성공합니다.\n\nⅡ. 꾸준히 독서하는 사람이 성공한다\n직장인들은 매년 평균 16권의 책을 읽으며 지식을 쌓습니다. 지식을 쌓는 것은 성공을 위해 매우 중요합니다." },
+            { id: 5, title: "사랑의 언어", content: "다섯 가지 사랑의 언어는 말, 선물, 스킨십, 봉사, 그리고 시간 함께 보내기이다. \n\n사랑의 언어가 말인 사람은 ‘사랑해’, ‘넌 정말 좋은 사람이야’ 등의 칭찬이나 격려의 말을 해 주면 사랑받고 있다고 느낀다. 어떤 사람들은 선물이 사랑을 표현하는 방법이라고 생각해서 항상 크고 작은 선물을 주고받는 것을 좋아한다. \n\n스킨십이 사랑의 언어인 사람들은 손을 잡거나 팔짱을 끼는 것만으로도 행복해진다. 하지만 어떤 사람은 손을 잡거나 선물을 받는 것보다 상대방과 함께 시간을 보내는 것을 좋아한다. \n\n어떤 사람들은 상대방이 자기를 도와줄 때 사랑을 느낀다. 이들은 사랑하는 사람이 생기면 말없이 요리나 청소 등을 해 주는 것으로 사랑을 표현한다." },
+            { id: 6, title: "크로스핏(CrossFit)", content: "‘크로스핏’은 달리기나 줄넘기, 역도 같은 여러 가지 운동을 섞어서 만든 운동 프로그램이다. 이 운동은 몸의 여러 부분을 골고루 쓰기 때문에 다이어트와 몸매 만들기에 효과적이다. \n\n‘크로스핏’ 운동 방법의 예는 다음과 같다. 먼저 팔굽혀펴기를 한 후 역기를 든다. 처음에는 가벼운 역기로 시작하지만 점점 무거운 역기로 바꿔서 팔을 굽혔다 펴는 동작을 반복한다. \n\n그 다음에 윗몸 일으키기를 한 후 철봉에 매달리거나 작은 덤벨을 들고 팔을 올렸다가 내리는 동작을 여러 번 한다." },
+            { id: 7, title: "교수님에게 문의 이메일", content: "교수님, 안녕하십니까? 저는 히엔이라고 합니다. \n\n숙제 제출 날짜를 물어보려고 메일을 씁니다. 숙제는 다음 주에 제출해도 됩니까? \n\n답장을 기다리겠습니다. 안녕히 계십시오." },
+            { id: 8, title: "청첩장 내용", content: "드디어 결혼합니다. \n\n두 사람이 만나서 하나가 되었습니다. 오랜 연애 끝에 저희가 결혼을 합니다. 바쁘시겠지만 꼭 참석해 주시기 바랍니다. \n\n 신랑 : 김철수   신부 : 이영희 \n 일시 : 12월 25일 오후 2시 \n 장소 : 행복웨딩홀" }
+        ];
+
+        const selector = document.getElementById('passage-selector');
+        const renderArea = document.getElementById('passage-render-area');
+        const titleEl = document.getElementById('current-title');
+        const showAllBtn = document.getElementById('show-all-btn');
+        const hideAllBtn = document.getElementById('hide-all-btn');
+
+        // 초기 셀렉터 옵션 생성
+        function initSelector() {
+            passageData.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.id;
+                opt.textContent = p.title;
+                selector.appendChild(opt);
+            });
+        }
+
+        // 지문을 어절 단위로 렌더링
+        function renderPassage(id) {
+            const passage = passageData.find(p => p.id == id);
+            titleEl.textContent = passage.title;
+            renderArea.innerHTML = '';
+
+            // 줄바꿈 단위로 먼저 나누고, 그 안에서 공백 단위로 나눔
+            const lines = passage.content.split('\n');
+            
+            lines.forEach((line, lineIdx) => {
+                const words = line.split(' ');
+                words.forEach((word, wordIdx) => {
+                    if (word.trim() === '') return;
+                    
+                    const span = document.createElement('span');
+                    span.className = 'word-segment';
+                    span.textContent = word;
+                    span.onclick = () => span.classList.toggle('word-hidden');
+                    renderArea.appendChild(span);
+                    
+                    // 단어 사이 공백 유지
+                    if (wordIdx < words.length - 1) {
+                        renderArea.appendChild(document.createTextNode(' '));
+                    }
+                });
+                
+                // 줄바꿈 처리
+                if (lineIdx < lines.length - 1) {
+                    renderArea.appendChild(document.createElement('br'));
+                }
+            });
+        }
+
+        // 전체 보이기/가리기 기능
+        showAllBtn.onclick = () => {
+            document.querySelectorAll('.word-segment').forEach(el => el.classList.remove('word-hidden'));
+        };
+
+        hideAllBtn.onclick = () => {
+            document.querySelectorAll('.word-segment').forEach(el => el.classList.add('word-hidden'));
+        };
+
+        selector.onchange = (e) => renderPassage(e.target.value);
+
+        // 초기화 실행
+        initSelector();
+        renderPassage(1);
+    </script>
+</body>
+</html>

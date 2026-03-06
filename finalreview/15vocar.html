@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 제목을 새로운 어휘에 맞게 수정 -->
+    <title>한국어 어휘 퀴즈 (부동산/집 문제)</title>
+    <!-- Tailwind CSS 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Inter 폰트 적용 (Noto Sans KR로 변경하여 한국어 가독성 향상) */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+        body {
+            font-family: 'Noto Sans KR', 'Inter', sans-serif;
+        }
+        /* 화면 전환을 위한 기본 스타일 */
+        .screen {
+            display: none; /* 기본적으로 모든 화면 숨김 */
+        }
+        .screen.active {
+            display: block; /* active 클래스가 있는 화면만 표시 */
+        }
+        /* 커스텀 라디오 버튼/체크박스 스타일 */
+        .option-label {
+            transition: all 0.2s ease-in-out;
+        }
+        .option-input:checked + .option-label {
+            background-color: #3b82f6; /* bg-blue-500 */
+            color: white;
+            border-color: #3b82f6; /* border-blue-500 */
+        }
+        .option-input:disabled + .option-label {
+            background-color: #f3f4f6; /* bg-gray-100 */
+            color: #9ca3af; /* text-gray-400 */
+            cursor: not-allowed;
+        }
+        /* 정답/오답 피드백 스타일 */
+        .feedback-correct {
+            background-color: #d1fae5; /* bg-green-100 */
+            border-left: 4px solid #10b981; /* border-green-500 */
+        }
+        .feedback-incorrect {
+            background-color: #fee2e2; /* bg-red-100 */
+            border-left: 4px solid #ef4444; /* border-red-500 */
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-gray-100 text-gray-800 flex items-center justify-center min-h-screen">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <div class="container w-full max-w-2xl mx-auto p-4 md:p-8 bg-white shadow-2xl rounded-lg">
+
+        <!-- 1. 메인 화면 -->
+        <div id="main-screen" class="screen active text-center">
+            <h1 class="text-3xl font-bold text-blue-600 mb-6">한국어 어휘 퀴즈</h1>
+            <!-- 설명을 새로운 어휘에 맞게 수정 -->
+            <p class="text-lg text-gray-700 mb-8">부동산, 공과금, 집 문제 관련 어휘(연습 1~3)를 복습해 봅시다.</p>
+            <button id="start-quiz-btn" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-xl transition duration-300 shadow-md">
+                퀴즈 시작하기
+            </button>
+            <button id="show-history-btn" class="w-full mt-4 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-lg text-xl transition duration-300">
+                퀴즈 기록 보기
+            </button>
+            <div id="history-container" class="mt-6 text-left hidden">
+                <h2 class="text-2xl font-semibold mb-4 text-center">퀴즈 기록</h2>
+                <div id="history-list" class="space-y-3 max-h-64 overflow-y-auto">
+                    <!-- 기록이 여기에 동적으로 추가됩니다 -->
+                </div>
+                <button id="clear-history-btn" class="w-full mt-4 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
+                    기록 모두 삭제
+                </button>
+            </div>
+            <!-- 상세 기록 모달 -->
+            <div id="history-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50">
+                <div class="bg-white rounded-lg shadow-xl w-full max-w-xl max-h-[80vh] overflow-hidden">
+                    <div class="flex justify-between items-center p-4 border-b">
+                        <h3 class="text-xl font-bold">상세 기록</h3>
+                        <button id="close-modal-btn" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+                    </div>
+                    <div id="modal-content" class="p-6 overflow-y-auto max-h-[calc(80vh-120px)]">
+                        <!-- 상세 피드백이 여기에 표시됩니다 -->
+                    </div>
+                    <div class="p-4 border-t bg-gray-50 text-right">
+                        <button id="close-modal-btn-bottom" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg">
+                            닫기
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. 퀴즈 화면 -->
+        <div id="quiz-screen" class="screen">
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <!-- 총 문제 수는 JS에서 questions.length로 동적 설정됨 -->
+                    <span class="text-lg font-semibold text-blue-600">문제 <span id="question-number">1</span> / <span id="total-questions">25</span></span>
+                    <!-- 힌트 버튼과 텍스트가 표시될 영역 -->
+                    <div class="text-right">
+                        <button id="hint-btn" class="text-sm font-medium bg-yellow-300 hover:bg-yellow-400 text-yellow-800 px-3 py-1 rounded-full transition duration-300 shadow-sm">
+                            💡 힌트 보기
+                        </button>
+                        <span id="hint-text" class="hidden text-sm font-semibold text-yellow-800 bg-yellow-100 px-3 py-1 rounded-full ml-2"></span>
+                    </div>
+                </div>
+                <!-- 진행률 바 -->
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div id="progress-bar" class="bg-blue-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <h2 id="question-text" class="text-xl md:text-2xl font-semibold text-gray-900 mb-6 min-h-[60px]"></h2>
+            
+            <!-- 선택지 영역 -->
+            <div id="options-container" class="space-y-3">
+                <!-- 선택지가 여기에 동적으로 추가됩니다 -->
+            </div>
+
+            <!-- O/X 선택지 영역 -->
+            <div id="ox-options-container" class="flex space-x-4 mt-4">
+                <!-- O/X 버튼이 여기에 동적으로 추가됩니다 -->
+            </div>
+
+            <button id="next-question-btn" class="w-full mt-8 bg-gray-300 text-gray-500 font-bold py-3 px-6 rounded-lg text-lg transition duration-300 cursor-not-allowed" disabled>
+                다음
+            </button>
+        </div>
+
+        <!-- 3. 결과 화면 -->
+        <div id="results-screen" class="screen text-center">
+            <h1 class="text-3xl font-bold text-blue-600 mb-4">퀴즈 완료!</h1>
+            <div class="bg-blue-50 p-6 rounded-lg shadow-inner mb-6">
+                <h2 class="text-2xl font-semibold mb-2">당신의 점수</h2>
+                <!-- 총 점수는 JS에서 questions.length로 동적 설정됨 -->
+                <p class="text-5xl font-bold text-blue-600"><span id="score">0</span> / <span id="total-score">25</span></p>
+            </div>
+            
+            <div class="text-left mb-6">
+                <h3 class="text-2xl font-semibold mb-4">상세 피드백</h3>
+                <div id="feedback-container" class="space-y-4 max-h-80 overflow-y-auto p-4 bg-gray-50 rounded-lg border">
+                    <!-- 피드백이 여기에 동적으로 추가됩니다 -->
+                </div>
+            </div>
+
+            <button id="save-results-btn" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300 shadow-md">
+                결과 저장하기
+            </button>
+            <button id="restart-quiz-btn" class="w-full mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300">
+                다시 풀기
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 1. 퀴즈 데이터 ---
+        // [수정됨] 새 이미지(연습 1, 2, 3)의 어휘를 기반으로 한 25개의 문제
+        const questions = [
+            // 연습 1: 집 문제 어휘 (9개)
+            {
+                vocab: '고장 나다 / 난방이 안 되다',
+                type: 'mc',
+                question: '보일러가 ________ 난방이 안 돼요.',
+                options: ['고장 나서', '막혀서', '새서', '나가서'],
+                answer: '고장 나서'
+            },
+            {
+                vocab: '소음이 심하다',
+                type: 'dialogue',
+                question: 'A: 위층이 너무 시끄러워요.\nB: 네, ________.',
+                options: ['소음이 심하네요', '물이 안 내려가네요', '전기가 나갔네요', '난방이 안 되네요'],
+                answer: '소음이 심하네요'
+            },
+            {
+                vocab: '막히다 (변기)',
+                type: 'mc',
+                question: '변기에 비누가 빠져서 ________.',
+                options: ['변기가 막혔어요', '변기 물이 새요', '변기가 고장 났어요', '변기에서 냄새가 나요'],
+                answer: '변기가 막혔어요'
+            },
+            {
+                vocab: '막히다 / 물이 안 내려가다',
+                type: 'mc',
+                question: '욕조 하수구가 막혀서 ________.',
+                options: ['물이 안 내려가요', '물이 새요', '소음이 심해요', '난방이 안 돼요'],
+                answer: '물이 안 내려가요'
+            },
+            {
+                vocab: '쓰러지다 / 전기가 나가다',
+                type: 'mc',
+                question: '태풍으로 전봇대가 쓰러져서 ________.',
+                options: ['전기가 나갔어요', '수돗물이 안 나와요', '난방이 안 돼요', '물이 새요'],
+                answer: '전기가 나갔어요'
+            },
+            {
+                vocab: '이상한 냄새가 나다',
+                type: 'ox',
+                question: '문장이 바릅니까?: "음식물 쓰레기를 안 버렸더니 이상한 냄새가 나요."',
+                answer: 'o'
+            },
+            {
+                vocab: '천장에서 물이 새다',
+                type: 'mc',
+                question: '지붕이 낡아서 ________.',
+                options: ['천장에서 물이 새요', '수돗물이 안 나와요', '소음이 심해요', '이상한 냄새가 나요'],
+                answer: '천장에서 물이 새요'
+            },
+            {
+                vocab: '수돗물이 안 나오다',
+                type: 'ox',
+                question: '문장이 바릅니까?: "아파트 물탱크 청소 중이라서 수돗물이 안 나와요."',
+                answer: 'o'
+            },
+            {
+                vocab: '낡다',
+                type: 'ox',
+                question: '문장이 바릅니까?: "이 집은 새로 지어서 아주 낡았다."',
+                hint: '반대말: 새것이다',
+                answer: 'x'
+            },
+            // 연습 2: 부동산 계약 어휘 (8개)
+            {
+                vocab: '계약',
+                type: 'mc',
+                question: '집을 사거나 빌릴 때 ________을/를 합니다.',
+                options: ['계약', '보증금', '공과금', '연체료'],
+                answer: '계약'
+            },
+            {
+                vocab: '보증금',
+                type: 'mc',
+                question: '월세방을 구할 때 집주인에게 맡기는 돈을 ________이라고 합니다.',
+                options: ['보증금', '월세', '관리비', '공과금'],
+                answer: '보증금'
+            },
+            {
+                vocab: '계약 기간',
+                type: 'dialogue',
+                question: 'A: 계약은 얼마나 하실 거예요?\nB: ________은 2년으로 하고 싶어요.',
+                options: ['계약 기간', '보증금', '월세', '연체료'],
+                answer: '계약 기간'
+            },
+            {
+                vocab: '공과금',
+                type: 'mc',
+                question: '전기 요금, 수도 요금, 가스 요금 등을 합쳐서 ________이라고 합니다.',
+                options: ['공과금', '관리비', '월세', '보증금'],
+                answer: '공과금'
+            },
+            {
+                vocab: '포함되다',
+                type: 'dialogue',
+                question: 'A: 관리비에 인터넷 요금도 ________?\nB: 네, 포함되어 있어요.',
+                options: ['포함돼요', '밀려요', '납부해요', '줄어요'],
+                answer: '포함돼요'
+            },
+            {
+                vocab: '납부하다',
+                type: 'mc',
+                question: '이번 달 관리비를 아직 ________ 못했어요.',
+                options: ['납부하지', '포함하지', '밀리지', '아끼지'],
+                answer: '납부하지'
+            },
+            {
+                vocab: '밀리다',
+                type: 'mc',
+                question: '월세가 3달이나 ________.',
+                options: ['밀렸어요', '포함됐어요', '절약됐어요', '줄었어요'],
+                answer: '밀렸어요'
+            },
+            {
+                vocab: '연체료',
+                type: 'mc',
+                question: '요금을 늦게 내면 ________를 내야 할 수도 있어요.',
+                options: ['연체료', '보증금', '관리비', '월세'],
+                answer: '연체료'
+            },
+            // 연습 3: 요금 및 절약 어휘 (8개)
+            {
+                vocab: '월세',
+                type: 'mc',
+                question: '매달 집주인에게 내는 집세를 ________라고 합니다.',
+                options: ['월세', '보증금', '관리비', '공과금'],
+                answer: '월세'
+            },
+            {
+                vocab: '관리비',
+                type: 'mc',
+                question: '아파트의 공용 전기, 청소 등을 위해 내는 돈은?',
+                options: ['관리비', '전기 요금', '수도 요금', '식비'],
+                answer: '관리비'
+            },
+            {
+                vocab: '전기 요금 / 수도 요금',
+                type: 'ox',
+                question: '문장이 바릅니까?: "여름에 에어컨을 많이 켜서 전기 요금이 많이 나왔다."',
+                answer: 'o'
+            },
+            {
+                vocab: '식비 / 교통비',
+                type: 'ox',
+                question: '문장이 바릅니까?: "밥 먹는 데 드는 돈은 \'교통비\'라고 한다."',
+                hint: '밥 먹는 데 드는 돈은 \'식비\'입니다.',
+                answer: 'x'
+            },
+            {
+                vocab: '절약하다',
+                type: 'mc',
+                question: '돈을 아껴 쓰는 것을 ________라고 합니다.',
+                options: ['절약하다', '낭비하다', '저축하다', '납부하다'],
+                answer: '절약하다'
+            },
+            {
+                vocab: '아끼다',
+                type: 'dialogue',
+                question: 'A: 식비를 줄이고 싶어요.\nB: 외식을 줄이고 물건을 ________.',
+                options: ['아껴야 해요', '낭비해야 해요', '납부해야 해요', '밀려야 해요'],
+                answer: '아껴야 해요'
+            },
+            {
+                vocab: '낭비하다',
+                type: 'mc',
+                question: '돈이나 물건을 함부로 막 쓰는 것은?',
+                options: ['낭비하다', '절약하다', '저축하다', '아끼다'],
+                answer: '낭비하다'
+            },
+            {
+                vocab: '저축하다',
+                type: 'mc',
+                question: '미래를 위해 돈을 모으는 것을 ________라고 합니다.',
+                options: ['저축하다', '낭비하다', '밀리다', '납부하다'],
+                answer: '저축하다'
+            }
+        ];
+
+
+        // --- 2. 전역 변수 ---
+        const mainScreen = document.getElementById('main-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const screens = [mainScreen, quizScreen, resultsScreen];
+
+        const startQuizBtn = document.getElementById('start-quiz-btn');
+        const nextQuestionBtn = document.getElementById('next-question-btn');
+        const restartQuizBtn = document.getElementById('restart-quiz-btn');
+        const saveResultsBtn = document.getElementById('save-results-btn');
+        const showHistoryBtn = document.getElementById('show-history-btn');
+        const historyContainer = document.getElementById('history-container');
+        const historyList = document.getElementById('history-list');
+        const clearHistoryBtn = document.getElementById('clear-history-btn');
+
+        const historyModal = document.getElementById('history-modal');
+        const modalContent = document.getElementById('modal-content');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const closeModalBtnBottom = document.getElementById('close-modal-btn-bottom');
+
+        const questionNumberEl = document.getElementById('question-number');
+        const totalQuestionsEl = document.getElementById('total-questions');
+        const hintBtn = document.getElementById('hint-btn');
+        const hintTextEl = document.getElementById('hint-text');
+        const progressBar = document.getElementById('progress-bar');
+        const questionTextEl = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const oxOptionsContainer = document.getElementById('ox-options-container');
+
+        const scoreEl = document.getElementById('score');
+        const totalScoreEl = document.getElementById('total-score');
+        const feedbackContainer = document.getElementById('feedback-container');
+
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let score = 0;
+        let feedbackDetails = [];
+
+        // --- 3. 화면 전환 함수 ---
+        function showScreen(screenId) {
+            screens.forEach(screen => {
+                if (screen.id === screenId) {
+                    screen.classList.add('active');
+                } else {
+                    screen.classList.remove('active');
+                }
+            });
+        }
+
+        // --- 4. 퀴즈 로직 함수 ---
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            score = 0;
+            feedbackDetails = [];
+            // 총 문제 수 동적 설정
+            totalQuestionsEl.textContent = questions.length;
+            totalScoreEl.textContent = questions.length;
+            // 결과 저장 버튼 초기화
+            saveResultsBtn.textContent = '결과 저장하기';
+            saveResultsBtn.disabled = false;
+            saveResultsBtn.classList.add('bg-green-500', 'hover:bg-green-600');
+            saveResultsBtn.classList.remove('bg-gray-400');
+            
+            showScreen('quiz-screen');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            // 이전 선택지 초기화
+            optionsContainer.innerHTML = '';
+            oxOptionsContainer.innerHTML = '';
+            
+            // 다음 버튼 비활성화
+            disableNextButton();
+
+            if (currentQuestionIndex >= questions.length) {
+                showResults();
+                return;
+            }
+
+            // 힌트 버튼과 텍스트 초기화
+            hintTextEl.classList.add('hidden'); // 힌트 숨기기
+            hintTextEl.textContent = ''; // 힌트 내용 지우기
+            hintBtn.classList.remove('hidden'); // 힌트 버튼 보이기
+
+            const question = questions[currentQuestionIndex];
+            
+            // 질문 정보 업데이트
+            questionNumberEl.textContent = currentQuestionIndex + 1;
+            questionTextEl.innerHTML = question.question.replace(/\n/g, '<br>'); // 줄바꿈 처리
+            
+            // 힌트 내용 설정
+            let hint = question.vocab; // 기본 힌트는 어휘
+            if (question.hint) { // 'hint' 속성이 따로 있으면 그것을 사용
+                hint = question.hint;
+            }
+            hintTextEl.textContent = hint; // 힌트 텍스트 설정
+
+            // 진행률 바 업데이트
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+
+            // 문제 유형에 따라 선택지 생성
+            if (question.type === 'mc' || question.type === 'dialogue') {
+                oxOptionsContainer.style.display = 'none';
+                optionsContainer.style.display = 'block';
+                
+                // 선택지 순서 섞기 (옵션)
+                const shuffledOptions = [...question.options].sort(() => Math.random() - 0.5);
+
+                shuffledOptions.forEach(option => {
+                    const optionId = `q${currentQuestionIndex}_${option.replace(/\s+/g, '_')}`;
+                    const optionElement = `
+                        <div>
+                            <input type="radio" name="option" id="${optionId}" value="${option}" class="option-input hidden">
+                            <label for="${optionId}" class="option-label block w-full text-left p-4 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                                ${option}
+                            </label>
+                        </div>
+                    `;
+                    optionsContainer.innerHTML += optionElement;
+                });
+            } else if (question.type === 'ox') {
+                optionsContainer.style.display = 'none';
+                oxOptionsContainer.style.display = 'flex';
+
+                const options = ['o', 'x'];
+                options.forEach(option => {
+                    const optionId = `q${currentQuestionIndex}_${option}`;
+                    const optionText = option === 'o' ? 'O (맞다)' : 'X (틀리다)';
+                    const optionElement = `
+                        <div class="flex-1">
+                            <input type="radio" name="option" id="${optionId}" value="${option}" class="option-input hidden">
+                            <label for="${optionId}" class="option-label block w-full text-center p-4 border-2 ${option === 'o' ? 'border-blue-400' : 'border-red-400'} rounded-lg cursor-pointer hover:bg-gray-50 text-xl font-bold">
+                                ${optionText}
+                            </label>
+                        </div>
+                    `;
+                    oxOptionsContainer.innerHTML += optionElement;
+                });
+            }
+
+            // 생성된 라디오 버튼에 이벤트 리스너 추가
+            document.querySelectorAll('input[name="option"]').forEach(input => {
+                input.addEventListener('change', () => {
+                    userAnswers[currentQuestionIndex] = input.value;
+                    // 정답/오답 즉시 피드백 (선택 사항)
+                    // checkAnswer(input);
+                    enableNextButton();
+                });
+            });
+        }
+
+        // (선택 사항) 즉시 피드백 함수
+        // function checkAnswer(selectedInput) {
+        //     const question = questions[currentQuestionIndex];
+        //     const selectedLabel = document.querySelector(`label[for="${selectedInput.id}"]`);
+        //     const allLabels = document.querySelectorAll('.option-label');
+        //     const allInputs = document.querySelectorAll('.option-input');
+
+        //     // 모든 입력 비활성화
+        //     allInputs.forEach(input => input.disabled = true);
+            
+        //     allLabels.forEach(label => {
+        //         const input = document.getElementById(label.getAttribute('for'));
+        //         if (input.value === question.answer) {
+        //             label.classList.add('!bg-green-500', '!text-white', '!border-green-500'); // 정답
+        //         } else if (input.checked) {
+        //             label.classList.add('!bg-red-500', '!text-white', '!border-red-500'); // 선택한 오답
+        //         } else {
+        //             label.classList.add('opacity-50'); // 선택 안 된 나머지
+        //         }
+        //     });
+        //     enableNextButton();
+        // }
+
+
+        function enableNextButton() {
+            nextQuestionBtn.disabled = false;
+            nextQuestionBtn.classList.remove('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+            nextQuestionBtn.classList.add('bg-blue-500', 'hover:bg-blue-600', 'text-white');
+            if (currentQuestionIndex === questions.length - 1) {
+                nextQuestionBtn.textContent = '결과 보기';
+            } else {
+                nextQuestionBtn.textContent = '다음';
+            }
+        }
+
+        function disableNextButton() {
+            nextQuestionBtn.disabled = true;
+            nextQuestionBtn.classList.add('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+            nextQuestionBtn.classList.remove('bg-blue-500', 'hover:bg-blue-600', 'text-white');
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex >= questions.length - 1) {
+                showResults();
+            } else {
+                currentQuestionIndex++;
+                loadQuestion();
+            }
+        }
+
+        function showResults() {
+            score = 0;
+            feedbackDetails = []; // 피드백 초기화
+            feedbackContainer.innerHTML = ''; // 피드백 컨테이너 초기화
+
+            questions.forEach((q, index) => {
+                const userAnswer = userAnswers[index];
+                const correctAnswer = q.answer;
+                const isCorrect = userAnswer === correctAnswer;
+
+                if (isCorrect) {
+                    score++;
+                }
+
+                // 피드백 상세 정보 생성
+                const feedback = {
+                    question: q.question,
+                    vocab: q.vocab,
+                    userAnswer: userAnswer,
+                    correctAnswer: correctAnswer,
+                    isCorrect: isCorrect
+                };
+                feedbackDetails.push(feedback); // 상세 피드백 저장
+
+                // 피드백 UI 생성
+                const feedbackElement = document.createElement('div');
+                feedbackElement.className = `p-4 rounded-lg ${isCorrect ? 'feedback-correct' : 'feedback-incorrect'}`;
+                
+                let answerText = correctAnswer;
+                if (q.type === 'ox') {
+                    answerText = correctAnswer === 'o' ? 'O (맞다)' : 'X (틀리다)';
+                }
+                let userAnswerText = userAnswer;
+                if (q.type === 'ox' && userAnswer) { // userAnswer가 undefined가 아닌지 확인
+                    userAnswerText = userAnswer === 'o' ? 'O (맞다)' : 'X (틀리다)';
+                } else if (!userAnswer) {
+                    userAnswerText = "선택 안 함";
+                }
+
+                feedbackElement.innerHTML = `
+                    <p class="font-semibold text-gray-800">${index + 1}. [${q.vocab}] ${q.question.replace(/\n/g, '<br>')}</p>
+                    <p class="mt-2 text-sm"><strong>정답:</strong> ${answerText}</p>
+                    <p class="text-sm"><strong>선택:</strong> ${userAnswerText} ${isCorrect ? '👍' : '👎'}</p>
+                `;
+                feedbackContainer.appendChild(feedbackElement);
+            });
+
+            scoreEl.textContent = score;
+            totalScoreEl.textContent = questions.length; // 총점 다시 한 번 확인
+            showScreen('results-screen');
+        }
+
+        function restartQuiz() {
+            showScreen('main-screen');
+        }
+
+        // --- 5. 기록 저장/불러오기 함수 ---
+
+        function saveResults() {
+            try {
+                const history = JSON.parse(localStorage.getItem('quizHistory') || '[]');
+                const resultData = {
+                    date: new Date().toLocaleString('ko-KR'),
+                    score: score,
+                    total: questions.length,
+                    feedback: feedbackDetails // 상세 피드백 정보 포함
+                };
+                history.push(resultData);
+                localStorage.setItem('quizHistory', JSON.stringify(history));
+                
+                saveResultsBtn.textContent = '저장 완료!';
+                saveResultsBtn.disabled = true;
+                saveResultsBtn.classList.replace('bg-green-500', 'bg-gray-400');
+                saveResultsBtn.classList.remove('hover:bg-green-600');
+                
+                // 기록 목록 즉시 갱신
+                loadHistory();
+            } catch (e) {
+                console.error("결과 저장 실패:", e);
+                // (대안) 사용자에게 알림. 여기서는 alert 대신 console 사용
+                console.error("localStorage 사용이 차단되었거나 용량이 초과되었을 수 있습니다.");
+            }
+        }
+
+        function loadHistory() {
+            try {
+                const history = JSON.parse(localStorage.getItem('quizHistory') || '[]');
+                historyList.innerHTML = ''; // 목록 초기화
+
+                if (history.length === 0) {
+                    historyList.innerHTML = '<p class="text-gray-500 text-center">저장된 기록이 없습니다.</p>';
+                    historyContainer.classList.add('hidden'); // 기록이 없으면 컨테이너 숨기기
+                    return;
+                }
+
+                historyContainer.classList.remove('hidden'); // 기록이 있으면 컨테이너 표시
+                
+                history.reverse().forEach((record, index) => {
+                    const historyItem = document.createElement('div');
+                    historyItem.className = 'p-3 bg-white border rounded-lg flex justify-between items-center cursor-pointer hover:bg-gray-50';
+                    historyItem.innerHTML = `
+                        <span>
+                            <span class="font-semibold">${record.date}</span>
+                            <span class="ml-2 text-blue-600 font-bold">${record.score} / ${record.total} 점</span>
+                        </span>
+                        <span class="text-sm text-gray-500">상세보기 &gt;</span>
+                    `;
+                    // 클릭 시 상세 모달 열기
+                    historyItem.addEventListener('click', () => showHistoryDetail(record));
+                    historyList.appendChild(historyItem);
+                });
+            } catch (e) {
+                console.error("기록 불러오기 실패:", e);
+                historyList.innerHTML = '<p class="text-red-500 text-center">기록을 불러오는 데 실패했습니다.</p>';
+            }
+        }
+
+        function showHistoryDetail(record) {
+            modalContent.innerHTML = ''; // 모달 내용 초기화
+            
+            const header = document.createElement('div');
+            header.className = 'mb-4';
+            header.innerHTML = `
+                <h4 class="text-lg font-bold">${record.date}</h4>
+                <p class="text-2xl font-bold text-blue-600">총점: ${record.score} / ${record.total}</p>
+            `;
+            modalContent.appendChild(header);
+
+            record.feedback.forEach((fb, index) => {
+                const feedbackElement = document.createElement('div');
+                feedbackElement.className = `p-4 rounded-lg mb-3 ${fb.isCorrect ? 'feedback-correct' : 'feedback-incorrect'}`;
+                
+                let answerText = fb.correctAnswer;
+                let userAnswerText = fb.userAnswer;
+                
+                // 원본 질문의 유형을 찾아서 O/X 처리
+                const originalQuestion = questions.find(q => q.vocab === fb.vocab && q.question === fb.question);
+                const questionType = originalQuestion ? originalQuestion.type : null;
+
+                if (questionType === 'ox') {
+                    answerText = fb.correctAnswer === 'o' ? 'O (맞다)' : 'X (틀리다)';
+                    userAnswerText = fb.userAnswer === 'o' ? 'O (맞다)' : 'X (틀리다)';
+                }
+                if (!fb.userAnswer) {
+                     userAnswerText = "선택 안 함";
+                }
+
+                feedbackElement.innerHTML = `
+                    <p class="font-semibold text-gray-800">${index + 1}. [${fb.vocab}] ${fb.question.replace(/\n/g, '<br>')}</p>
+                    <p class="mt-2 text-sm"><strong>정답:</strong> ${answerText}</p>
+                    <p class="text-sm"><strong>선택:</strong> ${userAnswerText} ${fb.isCorrect ? '👍' : '👎'}</p>
+                `;
+                modalContent.appendChild(feedbackElement);
+            });
+
+            historyModal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            historyModal.classList.add('hidden');
+        }
+
+        function clearHistory() {
+            // alert, confirm은 iframe 환경에서 작동하지 않을 수 있으므로,
+            // 여기서는 확인 절차 없이 바로 삭제하거나 커스텀 모달을 사용해야 합니다.
+            // 일단은 바로 삭제로 구현합니다.
+            // if (confirm('정말로 모든 기록을 삭제하시겠습니까?')) {
+            try {
+                localStorage.removeItem('quizHistory');
+                loadHistory(); // 목록 갱신
+            } catch (e) {
+                console.error("기록 삭제 실패:", e);
+            }
+            // }
+        }
+
+        // --- 6. 이벤트 리스너 연결 ---
+        startQuizBtn.addEventListener('click', startQuiz);
+        nextQuestionBtn.addEventListener('click', nextQuestion);
+        restartQuizBtn.addEventListener('click', restartQuiz);
+        saveResultsBtn.addEventListener('click', saveResults);
+        
+        showHistoryBtn.addEventListener('click', () => {
+            loadHistory(); // 버튼을 누를 때마다 최신 기록을 불러옴
+            historyContainer.classList.toggle('hidden');
+        });
+        
+        clearHistoryBtn.addEventListener('click', clearHistory);
+        
+        closeModalBtn.addEventListener('click', closeModal);
+        closeModalBtnBottom.addEventListener('click', closeModal);
+
+        hintBtn.addEventListener('click', () => {
+            hintTextEl.classList.remove('hidden'); // 힌트 표시
+            hintBtn.classList.add('hidden'); // 힌트 버튼 숨기기
+        });
+
+        // 초기 화면 설정
+        showScreen('main-screen');
+    </script>
+</body>
+</html>

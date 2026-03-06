@@ -1,0 +1,531 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?곕━ 諛?諛섏옣 戮묎린</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons & FontAwesome -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        /* 3D 移대뱶 ?ㅽ???*/
+        .card-perspective {
+            perspective: 1000px;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 移대뱶 ?욌㈃ (踰덊샇) */
+        .card-front {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            border: 2px solid #818cf8;
+            z-index: 2;
+        }
+
+        /* 移대뱶 ?룸㈃ (寃곌낵) */
+        .card-back {
+            background-color: #ffffff;
+            border: 2px solid #e2e8f0;
+            transform: rotateY(180deg);
+            z-index: 1;
+        }
+
+        /* ?ㅼ쭛???곹깭 */
+        .card-inner.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+    </style>
+    <link rel="stylesheet" href="../../assets/content-consistency.css">
+</head>
+
+<body class="h-screen flex flex-col overflow-hidden text-slate-800">
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Global Navigation & Header Combined -->
+    <header class="bg-white shadow-sm border-b border-indigo-100 z-50 shrink-0 h-16 px-4 sm:px-6">
+        <div class="max-w-7xl mx-auto h-full flex justify-between items-center">
+
+            <!-- Home Link -->
+            <a href="../index.html"
+                class="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-bold transition-colors">
+                <i class="fa-solid fa-house"></i>
+                <span class="hidden sm:inline">硫붿씤?쇰줈</span>
+            </a>
+
+            <!-- Title -->
+            <div class="flex items-center gap-3 absolute left-1/2 transform -translate-x-1/2">
+                <div
+                    class="hidden sm:flex bg-indigo-100 text-indigo-600 w-8 h-8 rounded-lg items-center justify-center">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+                <h1 class="text-xl font-black text-slate-800 tracking-tight">?곕━ 諛?諛섏옣 戮묎린</h1>
+            </div>
+
+            <!-- Action -->
+            <button onclick="resetGame()"
+                class="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-slate-50 border border-slate-200 hover:bg-slate-100 text-slate-700 rounded-xl text-sm font-bold transition-all active:scale-95 group">
+                <i data-lucide="refresh-cw"
+                    class="w-4 h-4 group-hover:rotate-180 transition-transform duration-500"></i>
+                <span class="hidden sm:inline">?ㅼ떆 ?욊린</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- 硫붿씤 而⑦뀗痢?(醫뚯슦 諛곗튂) -->
+    <div class="flex-1 flex flex-col lg:flex-row overflow-hidden max-w-7xl mx-auto w-full">
+
+        <!-- ?쇱そ: 移대뱶 洹몃━??-->
+        <main class="flex-1 p-4 lg:p-8 overflow-y-auto relative scroll-smooth">
+            <!-- ?뱀꺼 諛곕꼫 -->
+            <div id="winner-banner"
+                class="hidden mb-6 bg-gradient-to-r from-amber-50 to-yellow-100 border border-yellow-200 rounded-3xl p-6 md:p-8 text-center shadow-lg shadow-yellow-100 animate-[bounce_1s_infinite]">
+                <h2 class="text-3xl font-black text-yellow-600 mb-2 drop-shadow-sm">?럦 異뺥븯?⑸땲?? ?럦</h2>
+                <p class="text-xl font-bold text-yellow-800">
+                    ?덈줈??諛섏옣? <span id="winner-name" class="font-black text-2xl px-2"></span> ?숈깮?낅땲??
+                </p>
+            </div>
+
+            <!-- 移대뱶 而⑦뀒?대꼫 -->
+            <div id="card-grid"
+                class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5 pb-24">
+                <!-- JS Injection -->
+            </div>
+        </main>
+
+        <!-- ?ㅻⅨ履? 紐낅떒 由ъ뒪??-->
+        <aside
+            class="w-full lg:w-80 bg-white border-t lg:border-t-0 lg:border-l border-slate-200 flex flex-col h-[35vh] lg:h-auto shadow-[-4px_0_15px_rgba(0,0,0,0.02)] z-10">
+            <div
+                class="p-4 bg-white border-b border-slate-100 font-black text-slate-800 flex justify-between items-center shadow-sm">
+                <span class="flex items-center gap-2 text-indigo-600"><i class="fa-solid fa-list-ol"></i> 異붿꺼 ?쒖꽌</span>
+                <span id="turn-counter" class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md">
+                    0 / 0
+                </span>
+            </div>
+            <div id="student-list" class="flex-1 overflow-y-auto p-3 space-y-2 bg-slate-50/50">
+                <!-- JS Injection -->
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- ?ㅼ젙 踰꾪듉 -->
+    <div class="fixed bottom-6 right-6 z-50 lg:right-auto lg:left-6">
+        <button id="settings-btn" onclick="openSettings()"
+            class="flex items-center gap-2 px-5 py-3.5 bg-slate-800 text-white rounded-2xl shadow-xl shadow-slate-300 hover:bg-slate-900 transition-all active:scale-95 group"
+            title="寃곗꽍??愿由?(寃뚯엫 ?쒖옉 ?꾨쭔 媛??">
+            <i class="fa-solid fa-user-gear group-hover:rotate-45 transition-transform duration-300"></i>
+            <span class="font-bold text-sm">紐낅떒 愿由?/span>
+        </button>
+    </div>
+
+    <!-- ?ㅼ젙 紐⑤떖 -->
+    <div id="settings-modal"
+        class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[85vh] flex flex-col overflow-hidden transform scale-95 opacity-0 transition-all duration-300"
+            id="settings-modal-content">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-white">
+                <h3 class="font-black text-lg text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-users-gear text-indigo-500"></i>
+                    ?숈깮 紐낅떒 愿由?                </h3>
+                <button onclick="closeSettings()"
+                    class="text-slate-400 hover:text-slate-600 w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div
+                class="px-5 py-3 bg-indigo-50 text-sm font-medium text-indigo-800 border-b border-indigo-100 flex items-center gap-2">
+                <i class="fa-solid fa-circle-info"></i> 寃곗꽍???숈깮??泥댄겕?섎㈃ 紐⑸줉?먯꽌 利됱떆 ?쒖쇅?⑸땲??
+            </div>
+
+            <!-- 由ъ뒪???ㅻ뜑 -->
+            <div
+                class="grid grid-cols-12 gap-2 px-5 py-3 bg-slate-50 text-xs font-bold text-slate-500 border-b border-slate-200">
+                <div class="col-span-3 text-center">寃곗꽍</div>
+                <div class="col-span-9">?대쫫</div>
+            </div>
+
+            <div id="settings-list" class="overflow-y-auto flex-1 p-2 space-y-1 bg-white">
+                <!-- JS Injection -->
+            </div>
+
+            <div class="p-5 border-t border-slate-100 bg-white flex justify-end">
+                <button onclick="saveAndRestart()"
+                    class="w-full sm:w-auto px-8 py-3.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200 active:scale-95">
+                    ???諛??곸슜?섍린
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ICONS = {
+            trophy: `<i class="fa-solid fa-crown text-4xl text-yellow-500 mb-2 drop-shadow-md animate-[bounce_1s_infinite]"></i>`,
+            crownMini: `<i class="fa-solid fa-crown text-yellow-500"></i>`
+        };
+
+        const initialNames = [
+            "吏???肄?, "? ??誘???, "?묒쎂 諛???, "?묒쎂 ?묒뼲 留덉씠",
+            "荑좎뾿諛섑깢", "?묒쎂 ???묒쎔 ?묒븘", "?묒슦??誘??덉뿉??, "?묒쎂 ?곗뿏 ??,
+            "?묒쎂 ?????吏?, "?묒쎂 ?붿뿏 ??, "??袁몄삦 ??, "蹂??ㅼ븞 ???,
+            "踰???袁몄엵", "吏???援ъ씤 ?꾩뿁", "?꾩엵 ??袁몄뼲 ??, "姨먯븘?됱쫰??,
+            "?묒쎂 鍮꾩뿣 袁몄뼲", "??遺 ??, "?묒슦????吏??, "吏???罹?由?,
+            "?????꾩뿏 吏?, "易붿뿁 ??? ??
+        ];
+
+        let state = {
+            activeStudents: [],
+            excludedNames: new Set(),
+            cards: [],
+            turnIndex: 0,
+            gameStatus: 'ready',
+            randomWinnerCardId: -1
+        };
+
+        function initGame() {
+            const presentStudents = initialNames.filter(name => !state.excludedNames.has(name));
+            state.activeStudents = [...presentStudents].sort(() => Math.random() - 0.5);
+
+            state.cards = Array.from({ length: state.activeStudents.length }, (_, i) => ({
+                id: i, flipped: false, result: null
+            }));
+
+            state.randomWinnerCardId = Math.floor(Math.random() * state.cards.length);
+            state.turnIndex = 0;
+            state.gameStatus = 'ready';
+
+            stopConfetti();
+            renderCards();
+            renderStudentList();
+            renderSettingsList();
+            updateHeaderInfo();
+            document.getElementById('winner-banner').classList.add('hidden');
+
+            const settingsBtn = document.getElementById('settings-btn');
+            settingsBtn.disabled = false;
+            settingsBtn.classList.remove('opacity-50', 'cursor-not-allowed', 'bg-slate-400');
+            settingsBtn.classList.add('bg-slate-800', 'hover:bg-slate-900');
+            settingsBtn.title = "寃곗꽍??愿由?(寃뚯엫 ?쒖옉 ?꾨쭔 媛??";
+        }
+
+        function handleCardClick(cardId) {
+            if (state.gameStatus === 'ended') return;
+            const card = state.cards[cardId];
+            if (card.flipped) return;
+
+            const innerEl = document.getElementById(`card-inner-${cardId}`);
+            if (innerEl) {
+                innerEl.classList.add('is-flipped');
+                innerEl.parentElement.classList.remove('cursor-pointer');
+            }
+
+            if (state.gameStatus === 'ready') {
+                state.gameStatus = 'playing';
+                lockSettings();
+            }
+
+            const isWinner = (cardId === state.randomWinnerCardId);
+            const currentStudentName = state.activeStudents[state.turnIndex];
+
+            card.flipped = true;
+            card.result = isWinner ? 'winner' : 'loser';
+
+            updateCardContent(cardId, isWinner);
+
+            if (isWinner) {
+                setTimeout(() => endGame(currentStudentName), 300);
+            } else {
+                state.turnIndex++;
+                if (state.turnIndex >= state.activeStudents.length) {
+                    state.gameStatus = 'ended';
+                }
+                renderStudentList();
+                updateHeaderInfo();
+            }
+        }
+
+        function endGame(winnerName) {
+            state.gameStatus = 'ended';
+            document.getElementById('winner-name').innerText = winnerName;
+            document.getElementById('winner-banner').classList.remove('hidden');
+            renderStudentList();
+            startConfetti();
+        }
+
+        function lockSettings() {
+            const btn = document.getElementById('settings-btn');
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed', 'bg-slate-400');
+            btn.classList.remove('bg-slate-800', 'hover:bg-slate-900');
+            btn.title = "寃뚯엫 吏꾪뻾 以묒뿉??遺덇?";
+        }
+
+        function renderCards() {
+            const grid = document.getElementById('card-grid');
+            grid.innerHTML = '';
+
+            state.cards.forEach(card => {
+                const cardEl = document.createElement('div');
+                cardEl.className = `card-perspective w-full h-32 md:h-36 cursor-pointer group`;
+
+                const inner = document.createElement('div');
+                inner.id = `card-inner-${card.id}`;
+                inner.className = `card-inner`;
+
+                const frontFace = document.createElement('div');
+                frontFace.className = `card-face card-front group-hover:shadow-[0_0_20px_rgba(99,102,241,0.5)] transition-shadow`;
+                frontFace.innerHTML = `<span class="text-3xl md:text-4xl font-black text-white/50 drop-shadow">${card.id + 1}</span>`;
+
+                const backFace = document.createElement('div');
+                backFace.id = `result-face-${card.id}`;
+                backFace.className = `card-face card-back flex flex-col`;
+                backFace.innerHTML = `<span class="text-slate-300 font-bold text-xl"><i class="fa-solid fa-xmark"></i></span>`;
+
+                inner.appendChild(frontFace);
+                inner.appendChild(backFace);
+                cardEl.appendChild(inner);
+
+                cardEl.onclick = function () { handleCardClick(card.id); };
+                grid.appendChild(cardEl);
+            });
+        }
+
+        function updateCardContent(cardId, isWinner) {
+            const resultFace = document.getElementById(`result-face-${cardId}`);
+            if (!resultFace) return;
+
+            if (isWinner) {
+                resultFace.style.background = 'linear-gradient(135deg, #fef3c7 0%, #fef08a 100%)';
+                resultFace.style.borderColor = '#facc15';
+                resultFace.innerHTML = `
+                    ${ICONS.trophy}
+                    <span class="font-black text-xl md:text-2xl text-yellow-800 drop-shadow-sm">?뱀꺼!</span>
+                `;
+            } else {
+                resultFace.innerHTML = `<span class="text-slate-300 font-bold text-xl"><i class="fa-solid fa-xmark"></i></span>`;
+            }
+        }
+
+        function renderStudentList() {
+            const list = document.getElementById('student-list');
+            list.innerHTML = '';
+
+            state.activeStudents.forEach((name, idx) => {
+                const el = document.createElement('div');
+                let styleClass = "flex items-center gap-3 p-3 rounded-xl text-[15px] font-bold transition-all duration-300 border ";
+
+                if (state.gameStatus === 'ended' && state.cards.some(c => c.result === 'winner') && idx === state.turnIndex) {
+                    styleClass += "bg-yellow-50 border-yellow-300 text-yellow-800 shadow-md ring-2 ring-yellow-400 z-10 scale-[1.02]";
+                } else if (idx === state.turnIndex && state.gameStatus !== 'ended') {
+                    styleClass += "bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-200 z-10 scale-[1.02]";
+                } else if (idx < state.turnIndex) {
+                    styleClass += "bg-slate-100 border-slate-200 text-slate-400 line-through opacity-60";
+                } else {
+                    styleClass += "bg-white border-slate-200 text-slate-600 shadow-sm";
+                }
+
+                el.className = styleClass;
+
+                const numBadgeClass = (idx === state.turnIndex && state.gameStatus !== 'ended')
+                    ? "bg-white text-indigo-600"
+                    : "bg-slate-200 text-slate-500";
+
+                const crownIcon = (state.gameStatus === 'ended' && idx === state.turnIndex) ? ICONS.crownMini : '';
+
+                el.innerHTML = `
+                    <div class="w-7 h-7 rounded-sm flex items-center justify-center text-xs font-black ${numBadgeClass}">
+                        ${idx + 1}
+                    </div>
+                    <span class="truncate flex-1">${name}</span>
+                    ${(idx === state.turnIndex && state.gameStatus !== 'ended') ? '<span class="text-[10px] bg-indigo-500 text-white px-2 py-1 rounded-full animate-pulse uppercase tracking-wider">?湲곗쨷</span>' : ''}
+                    ${crownIcon}
+                `;
+                list.appendChild(el);
+            });
+
+            if (state.turnIndex > 0) {
+                const currentEl = list.children[state.turnIndex];
+                if (currentEl) currentEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function updateHeaderInfo() {
+            const total = state.activeStudents.length;
+            const current = Math.min(state.turnIndex + 1, total);
+            document.getElementById('turn-counter').innerText = `${current} / ${total}`;
+        }
+
+        // Settings Modal
+        const settingsModal = document.getElementById('settings-modal');
+        const settingsModalContent = document.getElementById('settings-modal-content');
+
+        function openSettings() {
+            settingsModal.classList.remove('hidden');
+            setTimeout(() => {
+                settingsModalContent.classList.remove('scale-95', 'opacity-0');
+                settingsModalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            renderSettingsList();
+        }
+
+        function closeSettings() {
+            settingsModalContent.classList.remove('scale-100', 'opacity-100');
+            settingsModalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                settingsModal.classList.add('hidden');
+            }, 300);
+        }
+
+        function toggleAbsence(name) {
+            if (state.excludedNames.has(name)) state.excludedNames.delete(name);
+            else state.excludedNames.add(name);
+            renderSettingsList();
+        }
+
+        function renderSettingsList() {
+            const container = document.getElementById('settings-list');
+            container.innerHTML = '';
+
+            initialNames.forEach(name => {
+                const isAbsent = state.excludedNames.has(name);
+                const row = document.createElement('label');
+                row.className = `grid grid-cols-12 gap-2 items-center p-3 rounded-xl border cursor-pointer transition-colors ${isAbsent ? 'bg-slate-50 border-slate-200 opacity-60' : 'bg-white border-slate-200 hover:border-indigo-300 hover:bg-indigo-50/50'}`;
+
+                const absentCol = document.createElement('div');
+                absentCol.className = 'col-span-3 flex justify-center';
+                absentCol.innerHTML = `
+                    <input type="checkbox" ${isAbsent ? 'checked' : ''} 
+                        class="w-5 h-5 text-rose-500 rounded border-slate-300 focus:ring-rose-500 cursor-pointer accent-rose-500"
+                        onchange="toggleAbsence('${name}')">
+                `;
+
+                const nameCol = document.createElement('div');
+                nameCol.className = `col-span-9 font-bold px-2 ${isAbsent ? 'text-slate-500 line-through' : 'text-slate-700'}`;
+                nameCol.innerText = name;
+
+                row.appendChild(absentCol);
+                row.appendChild(nameCol);
+                container.appendChild(row);
+            });
+        }
+
+        function saveAndRestart() {
+            closeSettings();
+            setTimeout(initGame, 300);
+        }
+
+        function resetGame() {
+            if (confirm("?쒖꽌瑜??ㅼ떆 ?욎쑝?쒓쿋?듬땲源?")) {
+                initGame();
+            }
+        }
+
+        // ??＝ ?④낵
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        let confettiAnimationId = null;
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        function startConfetti() {
+            resizeCanvas();
+            particles = [];
+            const colors = ['#6366f1', '#f59e0b', '#ec4899', '#10b981', '#3b82f6'];
+
+            for (let i = 0; i < 150; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    size: Math.random() * 6 + 4,
+                    speedY: Math.random() * 4 + 2,
+                    speedX: Math.random() * 4 - 2,
+                    rotation: Math.random() * 360,
+                    rotationSpeed: Math.random() * 10 - 5
+                });
+            }
+            animateConfetti();
+        }
+
+        function animateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.y += p.speedY;
+                p.x += p.speedX;
+                p.rotation += p.rotationSpeed;
+
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rotation * Math.PI / 180);
+                ctx.fillStyle = p.color;
+                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                ctx.restore();
+
+                if (p.y > canvas.height) {
+                    p.y = -10;
+                    p.x = Math.random() * canvas.width;
+                }
+            });
+            confettiAnimationId = requestAnimationFrame(animateConfetti);
+        }
+
+        function stopConfetti() {
+            if (confettiAnimationId) cancelAnimationFrame(confettiAnimationId);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        window.onload = () => {
+            lucide.createIcons();
+            initGame();
+        };
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,780 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TOPIK ?곌린 52踰??곗뒿 (?쒖닠??鍮덉뭏) - 14쨌15쨌16怨?/title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
+    rel="stylesheet">
+
+  <style>
+    body {
+      font-family: "Noto Sans KR", Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    .soft-shadow {
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .06);
+    }
+
+    .kbd {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: .85rem;
+      padding: .05rem .35rem;
+      border: 1px solid rgba(0, 0, 0, .15);
+      border-bottom-width: 2px;
+      border-radius: .5rem;
+      background: rgba(255, 255, 255, .7);
+    }
+
+    textarea::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    textarea::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, .12);
+      border-radius: 999px;
+    }
+  </style>
+    <link rel="stylesheet" href="../../assets/content-consistency.css">
+</head>
+
+<body class="bg-slate-50 text-slate-900">
+
+  <!-- Global Navigation -->
+  <nav
+    class="w-full bg-white/80 backdrop-blur-md border-b border-indigo-100 sticky top-0 z-50 shadow-sm h-16 px-4 flex items-center shrink-0">
+    <a href="../index.html"
+      class="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-bold transition-colors">
+      <i class="fa-solid fa-house"></i>
+      <span>硫붿씤?쇰줈</span>
+    </a>
+  </nav>
+
+  <div class="max-w-6xl mx-auto px-4 py-6 md:py-10">
+    <!-- Header -->
+    <div class="soft-shadow bg-white rounded-2xl p-5 md:p-6 border border-slate-100">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+        <div>
+          <h1 class="text-xl md:text-2xl font-bold tracking-tight">TOPIK ?곌린 52踰??곗뒿 (?쒖닠??鍮덉뭏)</h1>
+          <p class="text-sm md:text-base text-slate-600 mt-2">
+            鍮덉뭏?먮뒗 <span class="font-semibold">紐낆궗</span>媛 ?꾨땲??<span class="font-semibold">?쒖닠???쒖닠?닿? ?덈뒗 援???</span>???곗꽭??
+            ?섎?媛 媛숈쑝硫?<span class="font-semibold">?좎궗????/span>???뺣떟 泥섎━?????덉뒿?덈떎.
+          </p>
+          <p class="text-xs md:text-sm text-slate-500 mt-1">
+            PC: <span class="kbd">Ctrl</span> + <span class="kbd">Enter</span> = 梨꾩젏?섍린 쨌 紐⑤컮?? ?섎떒 踰꾪듉 ?ъ슜
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-2 items-center justify-start md:justify-end">
+          <label class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border bg-slate-50">
+            <input id="toggleVn" type="checkbox" class="w-4 h-4" />
+            <span class="text-sm font-semibold">踰좏듃?⑥뼱 ?꾩? ?쒖떆</span>
+          </label>
+
+          <button id="btnCopy" class="px-3 py-2 rounded-xl border bg-white hover:bg-slate-50 text-sm font-semibold">
+            ????蹂듭궗
+          </button>
+          <button id="btnReset" class="px-3 py-2 rounded-xl border bg-white hover:bg-slate-50 text-sm font-semibold">
+            珥덇린??          </button>
+        </div>
+      </div>
+
+      <!-- Progress -->
+      <div class="mt-5">
+        <div class="flex items-center justify-between text-xs text-slate-500 mb-2">
+          <span id="progressLabel">吏꾪뻾: 14怨?/span>
+          <span id="scoreLabel">?먯닔: -</span>
+        </div>
+        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+          <div id="progressBar" class="h-2 bg-slate-900/80 rounded-full" style="width: 33.34%"></div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="mt-5 flex gap-2 flex-wrap">
+        <button class="tabBtn px-3 py-2 rounded-xl border bg-slate-900 text-white text-sm font-semibold"
+          data-step="0">14怨?/button>
+        <button class="tabBtn px-3 py-2 rounded-xl border bg-white hover:bg-slate-50 text-sm font-semibold"
+          data-step="1">15怨?/button>
+        <button class="tabBtn px-3 py-2 rounded-xl border bg-white hover:bg-slate-50 text-sm font-semibold"
+          data-step="2">16怨?/button>
+      </div>
+    </div>
+
+    <!-- Main -->
+    <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- LEFT: Passage + Inputs -->
+      <div class="soft-shadow bg-white rounded-2xl border border-slate-100 p-5 md:p-6">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <h2 id="lessonTitle" class="text-lg md:text-xl font-bold">14怨??쎄린: ?꾨굩?먮（ ?⑸뒗 以?紐⑤Ⅸ??/h2>
+            <p class="text-sm text-slate-600 mt-1">吏臾몄쓣 ?쎄퀬, 鍮덉뭏???뚮쭪? <span class="font-semibold">?쒖닠??/span>???곗떗?쒖삤.</p>
+          </div>
+          <button id="btnGradeTop"
+            class="hidden md:inline-flex px-3 py-2 rounded-xl bg-slate-900 text-white text-sm font-semibold hover:opacity-90">
+            梨꾩젏?섍린
+          </button>
+        </div>
+
+        <!-- Passage container -->
+        <div id="passageArea" class="mt-5 space-y-4 leading-7 text-[15px] md:text-base">
+          <!-- injected -->
+        </div>
+
+        <!-- Feedback summary -->
+        <div id="summaryArea" class="mt-6 hidden">
+          <div class="rounded-2xl border bg-slate-50 p-4">
+            <div class="flex flex-col gap-1">
+              <div class="text-sm font-bold">梨꾩젏 寃곌낵</div>
+              <div id="summaryText" class="text-sm text-slate-700"></div>
+              <div id="summaryTextVn" class="text-sm text-slate-600 mt-1 hidden"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Strategy + Hint panel (adaptive) -->
+      <div class="space-y-6">
+        <!-- Strategy -->
+        <div class="soft-shadow bg-white rounded-2xl border border-slate-100 p-5 md:p-6">
+          <h3 class="text-base md:text-lg font-bold">52踰?????붾졊(?ъ슫 ?쒓뎅??</h3>
+          <ol class="mt-3 space-y-2 text-sm md:text-[15px] text-slate-700 list-decimal list-inside">
+            <li>鍮덉뭏 ?욌뮘 1-2臾몄옣??癒쇱? ?쎌뒿?덈떎.</li>
+            <li>鍮덉뭏? ?섎Т???댁슜?숈씤吏 癒쇱? ?뺥빀?덈떎(?댁쑀, 蹂?? ?됰룞, ?ㅻ챸).</li>
+            <li>吏臾몄뿉??媛숈? ??臾몄옣??李얠븘 <span class="font-semibold">?쒖닠??/span>濡??곷땲??</li>
+            <li>留먰닾(?낅땲???⑸땲??瑜?留욎땅?덈떎.</li>
+            <li>留덉?留됱뿉 ?뚮━ ?댁뼱 ?쎄퀬 ?댁깋?섎㈃ 怨좎묩?덈떎.</li>
+          </ol>
+
+          <div id="strategyVn" class="mt-4 hidden">
+            <h4 class="text-sm font-bold text-slate-800">M梳퉛 l횪m b횪i (Ti梳퓆g Vi沼뇍)</h4>
+            <ul class="mt-2 space-y-1 text-sm text-slate-700 list-disc list-inside">
+              <li>휂沼뛠 1-2 c창u tr튼沼쌵 v횪 sau ch沼?tr沼몁g.</li>
+              <li>X찼c 휃沼땙h lo梳죍 n沼셢 dung c梳쬷 휃i沼걆 (l첵 do, thay 휃沼뷼, h횪nh 휃沼셬g...).</li>
+              <li>T챙m c창u c처 ngh칫a t튼퉤ng t沼?trong 휃o梳죒 v횪 vi梳퓍 th횪nh m沼뇆h 휃沼?c처 v沼?ng沼?</li>
+              <li>Gi沼?휃첬ng v훱n phong ?쒖엯?덈떎/?⑸땲?ㅲ?</li>
+              <li>휂沼뛠 l梳죍 to횪n c창u 휃沼?ki沼긩 tra t沼?nhi챗n.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Per-blank cue panel -->
+        <div class="soft-shadow bg-white rounded-2xl border border-slate-100 p-5 md:p-6">
+          <div class="flex items-center justify-between gap-3">
+            <h3 class="text-base md:text-lg font-bold">鍮덉뭏 ?좊룄 吏덈Ц(???좎삱由ш린)</h3>
+            <button id="btnToggleAll"
+              class="px-3 py-2 rounded-xl border bg-white hover:bg-slate-50 text-sm font-semibold">
+              ?뚰듃 紐⑤몢 ?쇱튂湲?            </button>
+          </div>
+
+          <div id="cueArea" class="mt-4 space-y-4">
+            <!-- injected -->
+          </div>
+        </div>
+
+        <!-- Controls (desktop) -->
+        <div class="hidden md:flex gap-2">
+          <button id="btnPrev"
+            class="px-4 py-3 rounded-2xl border bg-white hover:bg-slate-50 text-sm font-semibold w-full">
+            ?댁쟾(??
+          </button>
+          <button id="btnNext"
+            class="px-4 py-3 rounded-2xl bg-slate-900 text-white hover:opacity-90 text-sm font-semibold w-full">
+            ?ㅼ쓬(??
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sticky bottom bar (mobile) -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200">
+      <div class="max-w-6xl mx-auto px-4 py-3 flex gap-2">
+        <button id="mPrev" class="px-4 py-3 rounded-2xl border bg-white text-sm font-semibold w-full">?댁쟾</button>
+        <button id="mGrade"
+          class="px-4 py-3 rounded-2xl bg-slate-900 text-white text-sm font-semibold w-full">梨꾩젏</button>
+        <button id="mNext"
+          class="px-4 py-3 rounded-2xl bg-slate-900 text-white text-sm font-semibold w-full">?ㅼ쓬</button>
+      </div>
+    </div>
+
+    <!-- Spacer for mobile sticky bar -->
+    <div class="md:hidden h-20"></div>
+  </div>
+
+  <script>
+    (() => {
+      const STORAGE_KEY = "topik52_clause_practice_v1";
+
+      const normalize = (s) => (s ?? "")
+        .replace(/\s+/g, " ")
+        .replace(/[?쒋?']/g, '"')
+        .replace(/[??/g, "'")
+        .replace(/[.,!???/g, "")
+        .replace(/\u00A0/g, " ")
+        .trim()
+        .toLowerCase();
+
+      const stripFinalPunct = (s) => (s ?? "").trim().replace(/[.???]+$/g, "").trim();
+
+      const hasAllTokens = (text, tokens) => {
+        const t = normalize(text);
+        return tokens.every(tok => t.includes(normalize(tok)));
+      };
+
+      const lessons = [
+        {
+          id: "14",
+          title: "14怨??쎄린: ?꾨굩?먮（ ?⑸뒗 以?紐⑤Ⅸ??,
+          passageParts: [
+            { type: "p", html: `?쏅궇???대뼡 ?섎Т袁쇱씠 ?섎Т瑜??섎윭 ?곗뿉 媛붾떎媛 ?숆뎬??諛쒓껄?덈떎. (媛) 洹??숆뎬? ?낃뎄???묎퀬 ?대몢?좎?留?<span class="inline-flex items-center gap-2 align-middle"><span class="text-xs font-bold text-slate-500">(1)</span><span data-blank="14-1"></span></span>.` },
+            { type: "p", html: `洹몃━怨??숆뎬 ?덉뿉???섏뿼??湲??몄씤?ㅼ씠 諛붾몣???먭퀬 ?덉뿀?? ?섎Т袁쇱? 諛붾몣???섎룄 ?щ??덉뼱??<span class="inline-flex items-center gap-2 align-middle"><span class="text-xs font-bold text-slate-500">(2)</span><span data-blank="14-2"></span></span> 援ш꼍???덈떎.` },
+            { type: "p", html: `?쇰쭏 ???섎Т袁쇱? 吏묒뿉 ?뚯븘媛?ㅺ퀬 ?꾨겮瑜??ㅻ떎媛 源쒖쭩 ??먮떎. (?? 洹몃뒗 ?댁긽?댄븯硫댁꽌 ?먮（媛 ?녿뒗 ?꾨겮瑜??ㅺ퀬 ?곗쓣 ?대젮?붾떎.` },
+            { type: "p", html: `留덉쓣???꾩갑??蹂대땲 吏묐뱾???꾩쟾??蹂???덉뿀怨??꾨뒗 ?щ엺???꾪? ?놁뿀?? (?? ?섎Т袁쇱쓽 吏묐룄 ?≪? 吏묒씠 ?섏뿀怨? 硫곗튌 ?꾩뿉 ?ъ뿀???섎Т媛 ?ш쾶 ?먮씪??吏遺뺤쓣 ??퀬 ?덉뿀??` },
+            { type: "p", html: `?섎Т袁쇱? 吏?섍????щ엺?먭쾶 ?먭린 ?대쫫??留먰븯硫댁꽌 洹??щ엺???꾨뒓?먭퀬 臾쇱뼱蹂댁븯?? 洹??щ엺? ?쒓렇遺꾩? ???꾨쾭吏???좎븘踰꾩??좊뜲 ?섎Т ?섎윭 ?곗뿉 媛붾떎媛 紐??뚯븘?ㅼ뀲?ㅺ퀬 ?ㅼ뿀?듬땲?ㅲ앸씪怨???듯뻽?? ?섎Т袁쇱씠 遊ㅻ뜕 ?몄씤?ㅼ? ?좎꽑?ㅼ씠?덈떎. ?좎꽑?ㅼ쓽 諛붾몣???좉퉸 援ш꼍?섎뒗 ?숈븞??100?꾩쓽 ?쒓컙??吏??寃껋씠??` },
+          ],
+          blanks: [
+            {
+              id: "14-1",
+              inputType: "textarea",
+              placeholder: "?? ?덉쑝濡??ㅼ뼱媛덉닔濡???,
+              correct: "?ㅼ뼱媛硫??ㅼ뼱媛덉닔濡??먯젏 ?볦뼱吏怨?諛앹븘議뚮떎",
+              accept: [
+                /?ㅼ뼱媛.*?섎줉.*??*諛?i,
+                /??*?ㅼ뼱媛덉닔濡?*??*諛?i,
+                /媛덉닔濡?*??*諛?i
+              ],
+              tokens: ["??, "諛?],
+              cueK: "?숆뎬? ?덉쑝濡?媛덉닔濡??대뼸寃?蹂?덈굹??",
+              cueV: "C횪ng 휃i v횪o trong hang th챙 n처 thay 휃沼뷼 nh튼 th梳?n횪o?",
+              helpK: "?섍컝?섎줉???살씠 ?꾩슂?⑸땲?? 寃곌낵???섎꼻??諛앸떎??履쎌엯?덈떎.",
+              helpV: "C梳쬷 ngh칫a ?쐁횪ng??c횪ng?╈? K梳퓍 qu梳?li챗n quan 휃梳퓆 ?쐒沼셬g/s찼ng??"
+            },
+            {
+              id: "14-2",
+              inputType: "input",
+              placeholder: "?? ?쒓컙 ??,
+              correct: "?쒓컙 媛??以?紐⑤Ⅴ怨?,
+              accept: [
+                /?쒓컙.*(紐⑤Ⅴ|??/i,
+                /(紐⑤Ⅴ|??.*(?쒓컙)/i
+              ],
+              tokens: ["?쒓컙"],
+              cueK: "?덈Т ?щ??덉뼱??臾댁뾿??紐??먭펷?섏슂?",
+              cueV: "M梳즜 xem 휃梳퓆 m沼쯢 kh척ng c梳즡 nh梳춏 휃튼沼즓 휃i沼걏 g챙?",
+              helpK: "?섏떆媛꾟숈씠 ?ㅼ뼱媛硫?嫄곗쓽 留욎뒿?덈떎. ?섎え瑜대떎/?딅떎?숆? ?④퍡 ?ㅻ㈃ ??醫뗭뒿?덈떎.",
+              helpV: "N梳퓎 c처 ?쐔h沼쓎 gian??+ ?쐊h척ng bi梳퓍/qu챗n??l횪 g梳쬷 휃첬ng."
+            }
+          ]
+        },
+
+        {
+          id: "15",
+          title: "15怨??쎄린: ?덉쓣 ?꾨겮??諛⑸쾿",
+          passageParts: [
+            { type: "p", html: `遺?먭? ?섎젮硫??묒? ?덈????꾧뺨 ?⑥빞 ?⑸땲?? ?섑떚??紐⑥븘 ?쒖궛?숈씠?쇰뒗 留먮룄 ?덉??? 洹몃읆 ?대뼸寃??댁빞 ?덉쓣 ?꾨굜 ???덉쓣源뚯슂?` },
+            { type: "p", html: `泥レ㎏, ?곸닔利앹쓣 紐⑥쑝怨?媛怨꾨?瑜??곷땲?? <span class="inline-flex items-center gap-2 align-middle"><span class="text-xs font-bold text-slate-500">(1)</span><span data-blank="15-1"></span></span>.` },
+            { type: "p", html: `?섏㎏, 愿由щ퉬瑜?以꾩씠吏 ?딆쑝硫????⑸땲?? <span class="inline-flex items-center gap-2 align-middle"><span class="text-xs font-bold text-slate-500">(2)</span><span data-blank="15-2"></span></span>. 洹몃━怨??щ엺???녿뒗 諛⑹쓽 遺덈룄 ?뺣땲?? ?뱁엳 寃⑥슱泥좎뿉 媛議깅뱾?먭쾶 ?대났???낃쾶 ?섎㈃ ?쒕갑鍮꾨? ?꾨굜 ???덉뒿?덈떎.` },
+            { type: "p", html: `?뗭㎏, ?뚮쑑?섍쾶 ?쇳븨?⑸땲?? ?닿렐?섎뒗 湲몄뿉 留덊듃???ㅻ윭???몄씪?섎뒗 ?앺뭹???щ㈃ ?앸퉬瑜??덉빟?????덉뒿?덈떎. 吏곸젒 ?붾━?댁꽌 癒뱀쑝硫??몄떇鍮꾨룄 ?꾨굜 ???덇퀬 嫄닿컯?먮룄 醫뗭뒿?덈떎.` },
+            { type: "p", html: `?덉쓣 ?꾨겮??諛⑸쾿, 紐⑤몢媛 ?뚭퀬 ?덈뒗 ?ъ슫 寃껊뱾?댁?留??ㅼ쿇?섍린???쎌? ?딆뒿?덈떎. 誘몃━ 紐⑺몴瑜??뺥븯怨??묒? 寃껊????ㅼ쿇?⑹떆??` }
+          ],
+          blanks: [
+            {
+              id: "15-1",
+              inputType: "textarea",
+              placeholder: "?? ?덉쓣 ?대뵒???곕뒗吏 ??,
+              correct: "?대뵒???대뼸寃??덉쓣 ?ъ슜?섍퀬 ?덈뒗吏 ?뚯븘???덉쓣 ?덉빟?????덉뒿?덈떎",
+              accept: [
+                /?대뵒.*(??吏異?.*(?뚯븘).*(?덉빟|?꾨겮)/i,
+                /(??吏異?.*(?대뵒|?대뼸寃?.*(?뚯븘).*(?덉빟|?꾨겮)/i
+              ],
+              tokens: ["?뚯븘", "?덉빟"],
+              cueK: "媛怨꾨?瑜??곕뒗 ?댁쑀??臾댁뾿?멸???",
+              cueV: "T梳죍 sao ph梳즜 ghi s沼?chi ti챗u?",
+              helpK: "援ъ“?????대뵒/?대뼸寃? + ?뚯븘??+ (?덉빟/?꾨겮????",
+              helpV: "M梳쳕 c창u: ?쐏h梳즜 bi梳퓍 (ti챗u 沼?휃창u/nh튼 th梳?n횪o) th챙 m沼쌻 ti梳퓍 ki沼뇅 휃튼沼즓??"
+            },
+            {
+              id: "15-2",
+              inputType: "textarea",
+              placeholder: "?? ?뚮윭洹몃뒗 ?? 臾쇱? ??,
+              correct: "?ъ슜?섏? ?딅뒗 ?꾧린 ?뚮윭洹몃? 戮묒븘 ?먭퀬, ?ㅺ굅吏???뚯뿉??臾쇱쓣 怨꾩냽 ????볦? ?딆뒿?덈떎",
+              accept: [
+                /(?뚮윭洹?肄섏꽱??.*(戮?鍮?.*(臾?.*(怨꾩냽).*(?).*(??/i,
+                /(臾?.*(怨꾩냽).*(?).*(??.*(?뚮윭洹?肄섏꽱??.*(戮?鍮?/i
+              ],
+              tokens: ["?뚮윭洹?, "臾?],
+              cueK: "愿由щ퉬(?꾧린쨌臾?瑜?以꾩씠?ㅻ㈃ 臾댁뾿???대뼸寃??섎굹??",
+              cueV: "Mu沼몁 gi梳즡 ti沼걆 휃i沼뇆/n튼沼쌵 th챙 l횪m g챙?",
+              helpK: "?꾧린=?뚮윭洹?戮묐떎/鍮쇰떎), 臾?怨꾩냽 ?吏 ?딅떎.",
+              helpV: "휂i沼뇆= r첬t ph챠ch; N튼沼쌵= kh척ng m沼?li챗n t沼쩭."
+            }
+          ]
+        },
+
+        {
+          id: "16",
+          title: "16怨??쎄린: ?쒓컯怨듭썝???⑥? ?щ?瑜?李얠븘??",
+          passageParts: [
+            { type: "p", html: `?쒖슱 ?쒕????곗콉 ?μ냼濡??좊챸???쒓컯怨듭썝???쇱쇅 ?쒕룞??泥쒓뎅?대씪???ъ떎???꾨뒗 ?щ엺? 留롮? ?딅떎. ?꾩떆?먯꽌???앷컖??紐??덈뜕 ?쒕룞?ㅼ쓣 ?쒓컯?먯꽌??利먭만 ???덈떎. ?쒖슱?쒕뒗 ?대쾲 遊꾩뿉 ?쒓컯怨듭썝?먯꽌 利먭만 ???덈뒗 ?밸퀎???쒕룞??異붿쿇?섍퀬 ?덈떎.` },
+            { type: "p", html: `癒쇱? ?앹꽟 ?쒓컯怨듭썝??媛硫??믪씠媛 ?ㅻⅨ ?ㅻえ 紐⑥뼇???명뎮遺덊뎮??踰쎌쓣 蹂????덈뒗??洹멸쾶 諛붾줈 ?멸났 ?붾꼍?μ씠?? <span class="inline-flex items-center gap-2 align-middle"><span class="text-xs font-bold text-slate-500">(1)</span><span data-blank="16-1"></span></span>. ?댁슜 ?쒓컙? ?깆닔湲?3~11???먮뒗 ?ㅼ쟾 9?쒕????ㅽ썑 9?쒓퉴吏, 鍮꾩닔湲?12~2???먮뒗 ?ㅼ쟾 9?쒕????ㅽ썑 5?쒓퉴吏?대떎.` },
+            { type: "p", html: `愿묐굹猷??쒓컯怨듭썝?먯꽌???먯쟾嫄곗? ?덉씪諛붿씠?щ? 利먭만 ???덈떎. ?먯쟾嫄??댁슜 ?붽툑? 20遺꾩뿉 1,000?먯씠怨? 留?6??誘몃쭔 ?대┛?대뒗 臾대즺?? ?덉씪諛붿씠?щ뒗 ??10遺??숈븞 ?????덈뒗 湲몄씠?몃뜲 <span class="inline-flex items-center gap-2 align-middle"><span class="text-xs font-bold text-slate-500">(2)</span><span data-blank="16-2"></span></span>. 珥?10?媛 留덈젴???덉쑝硫??댁슜 ?붽툑? 2,000?먯씠??` }
+          ],
+          blanks: [
+            {
+              id: "16-1",
+              inputType: "textarea",
+              placeholder: "?? 臾대즺濡???/ 諛곗슱 ????,
+              correct: "?멸났 ?붾꼍?μ? ?꾧뎄??臾대즺濡??댁슜?????덇퀬 ?붾꼍 ?깅컲??臾대즺濡?諛곗슱 ???덈떎",
+              accept: [
+                /(臾대즺).*(?댁슜).*(諛곗슱|諛곗슦).*(?붾꼍|?깅컲)/i,
+                /(?붾꼍|?깅컲).*(臾대즺).*(諛곗슱|諛곗슦).*(臾대즺).*(?댁슜)/i
+              ],
+              tokens: ["臾대즺", "?댁슜"],
+              cueK: "?멸났 ?붾꼍?μ? ?덉쓣 ?댁빞 ?섎굹?? ??臾댁뾿???????덈굹??",
+              cueV: "C처 ph梳즜 tr梳?ti沼걆 kh척ng? V횪 c처 th沼?l횪m/h沼뛠 g챙?",
+              helpK: "?듭떖 ?⑥뼱: ?섎Т猷뚢?+ ?섏씠?⒱?+ ?섎같?????덈떎(?붾꼍 ?깅컲)??",
+              helpV: "T沼?kh처a: ?쐌i沼꿳 ph챠??+ ?쐓沼?d沼쩸g??+ ?쐁처 th沼?h沼뛠 (leo n첬i)??"
+            },
+            {
+              id: "16-2",
+              inputType: "textarea",
+              placeholder: "?? 醫뚯꽍 ?ъ씠????洹몃옒??媛議깅룄 ??,
+              correct: "2?몄슜 醫뚯꽍 ?ъ씠???묒? ?섏옄媛 ?덉뼱???대┛?댁? ?④퍡 ??媛議깅룄 ?댁슜??留뚰븯??,
+              accept: [
+                /(醫뚯꽍).*(?ъ씠).*(?묒?).*(?섏옄).*(媛議??대┛??/i,
+                /(?묒?).*(?섏옄).*(?꾩씠|?대┛??.*(?④퍡).*(???댁슜)/i
+              ],
+              tokens: ["?섏옄"],
+              cueK: "?덉씪諛붿씠?щ뒗 ??媛議깆씠 ?湲?醫뗫굹??",
+              cueV: "V챙 sao rail bike ph첫 h沼즤 cho gia 휃챙nh?",
+              helpK: "?댁쑀???섏쥖???ъ씠 ?묒? ?섏옄?숈엯?덈떎. 洹몃옒???섏뼱由곗씠+媛議기숈씠 媛?ν빀?덈떎.",
+              helpV: "L첵 do: c처 gh梳?nh沼?gi沼칊 2 gh梳???gia 휃챙nh c처 tr梳?em c크ng d첫ng 휃튼沼즓."
+            }
+          ]
+        }
+      ];
+
+      // UI elements
+      const passageArea = document.getElementById("passageArea");
+      const cueArea = document.getElementById("cueArea");
+      const lessonTitle = document.getElementById("lessonTitle");
+      const progressLabel = document.getElementById("progressLabel");
+      const progressBar = document.getElementById("progressBar");
+      const scoreLabel = document.getElementById("scoreLabel");
+      const summaryArea = document.getElementById("summaryArea");
+      const summaryText = document.getElementById("summaryText");
+      const summaryTextVn = document.getElementById("summaryTextVn");
+      const toggleVn = document.getElementById("toggleVn");
+      const strategyVn = document.getElementById("strategyVn");
+
+      const btnPrev = document.getElementById("btnPrev");
+      const btnNext = document.getElementById("btnNext");
+      const btnGradeTop = document.getElementById("btnGradeTop");
+      const mPrev = document.getElementById("mPrev");
+      const mNext = document.getElementById("mNext");
+      const mGrade = document.getElementById("mGrade");
+
+      const btnReset = document.getElementById("btnReset");
+      const btnCopy = document.getElementById("btnCopy");
+      const btnToggleAll = document.getElementById("btnToggleAll");
+
+      const tabBtns = [...document.querySelectorAll(".tabBtn")];
+
+      let state = {
+        step: 0,
+        showVn: false,
+        answers: {} // blankId -> string
+      };
+
+      const loadState = () => {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return;
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === "object") state = { ...state, ...parsed };
+        } catch (_) { }
+      };
+
+      const saveState = () => {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (_) { }
+      };
+
+      const autoResize = (ta) => {
+        ta.style.height = "auto";
+        ta.style.height = Math.max(ta.scrollHeight, 44) + "px";
+      };
+
+      const makeInput = (blank) => {
+        const val = state.answers[blank.id] ?? "";
+        const commonCls =
+          "w-full md:w-[min(520px,100%)] rounded-xl border border-slate-200 bg-white px-3 py-2 " +
+          "focus:outline-none focus:ring-2 focus:ring-slate-900/20 focus:border-slate-300 " +
+          "placeholder:text-slate-400 text-[15px] leading-6";
+
+        let el;
+        if (blank.inputType === "textarea") {
+          el = document.createElement("textarea");
+          el.rows = 2;
+          el.className = commonCls + " min-h-[44px] resize-none";
+          el.placeholder = blank.placeholder;
+          el.value = val;
+          el.addEventListener("input", () => {
+            state.answers[blank.id] = el.value;
+            saveState();
+            autoResize(el);
+          });
+          setTimeout(() => autoResize(el), 0);
+        } else {
+          el = document.createElement("input");
+          el.type = "text";
+          el.className = commonCls + " h-[44px]";
+          el.placeholder = blank.placeholder;
+          el.value = val;
+          el.addEventListener("input", () => {
+            state.answers[blank.id] = el.value;
+            saveState();
+          });
+          el.addEventListener("keydown", (e) => {
+            if (e.ctrlKey && e.key === "Enter") gradeCurrent();
+          });
+        }
+
+        el.setAttribute("data-blank-input", blank.id);
+        return el;
+      };
+
+      const renderPassage = (lesson) => {
+        passageArea.innerHTML = "";
+        lesson.passageParts.forEach(part => {
+          const p = document.createElement("p");
+          p.className = "text-slate-900";
+          p.innerHTML = part.html;
+
+          // Replace placeholder spans with input controls
+          const targets = p.querySelectorAll("[data-blank]");
+          targets.forEach(t => {
+            const id = t.getAttribute("data-blank");
+            const blank = lesson.blanks.find(b => b.id === id);
+            if (!blank) return;
+
+            const wrap = document.createElement("span");
+            wrap.className = "inline-block align-middle w-full md:w-auto";
+
+            const inputEl = makeInput(blank);
+            wrap.appendChild(inputEl);
+            t.replaceWith(wrap);
+          });
+
+          passageArea.appendChild(p);
+        });
+      };
+
+      const renderCues = (lesson) => {
+        cueArea.innerHTML = "";
+        lesson.blanks.forEach((b, idx) => {
+          const card = document.createElement("div");
+          card.className = "rounded-2xl border border-slate-200 bg-white p-4";
+
+          const header = document.createElement("div");
+          header.className = "flex items-start justify-between gap-3";
+
+          const left = document.createElement("div");
+          left.innerHTML = `
+        <div class="text-sm font-bold">鍮덉뭏 (${idx + 1})</div>
+        <div class="mt-1 text-sm text-slate-700">${b.cueK}</div>
+        <div class="mt-1 text-sm text-slate-600 vnLine ${state.showVn ? "" : "hidden"}">${b.cueV}</div>
+      `;
+
+          const right = document.createElement("div");
+          right.className = "flex gap-2";
+          right.innerHTML = `
+        <button class="btnHint px-3 py-2 rounded-xl border bg-white hover:bg-slate-50 text-sm font-semibold" data-id="${b.id}">
+          ?뚰듃
+        </button>
+        <button class="btnAnswer px-3 py-2 rounded-xl bg-slate-900 text-white hover:opacity-90 text-sm font-semibold" data-id="${b.id}">
+          ?뺣떟
+        </button>
+      `;
+
+          header.appendChild(left);
+          header.appendChild(right);
+
+          const detail = document.createElement("div");
+          detail.className = "mt-3 hidden";
+          detail.setAttribute("data-detail", b.id);
+          detail.innerHTML = `
+        <div class="rounded-xl bg-slate-50 border border-slate-200 p-3">
+          <div class="text-sm font-semibold text-slate-800">?뚰듃(?ъ슫 ?쒓뎅??</div>
+          <div class="mt-1 text-sm text-slate-700">${b.helpK}</div>
+          <div class="mt-2 text-sm text-slate-600 vnLine ${state.showVn ? "" : "hidden"}"><span class="font-semibold text-slate-700">G沼즜 첵 (VN)</span><br>${b.helpV}</div>
+        </div>
+      `;
+
+          const answer = document.createElement("div");
+          answer.className = "mt-3 hidden";
+          answer.setAttribute("data-answer", b.id);
+          answer.innerHTML = `
+        <div class="rounded-xl bg-white border border-slate-200 p-3">
+          <div class="text-sm font-semibold text-slate-800">?먮Ц ?뺣떟(李멸퀬)</div>
+          <div class="mt-1 text-sm text-slate-700">${b.correct}</div>
+          <div class="mt-2 text-xs text-slate-500">?좎궗 ?쒗쁽???섎?媛 媛숈쑝硫??뺣떟?쇰줈 泥섎━?????덉뒿?덈떎.</div>
+        </div>
+      `;
+
+          card.appendChild(header);
+          card.appendChild(detail);
+          card.appendChild(answer);
+
+          cueArea.appendChild(card);
+        });
+
+        // Bind buttons
+        cueArea.querySelectorAll(".btnHint").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const id = btn.getAttribute("data-id");
+            const el = cueArea.querySelector(`[data-detail="${id}"]`);
+            if (!el) return;
+            el.classList.toggle("hidden");
+          });
+        });
+
+        cueArea.querySelectorAll(".btnAnswer").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const id = btn.getAttribute("data-id");
+            const el = cueArea.querySelector(`[data-answer="${id}"]`);
+            if (!el) return;
+            el.classList.toggle("hidden");
+          });
+        });
+      };
+
+      const setTabs = (step) => {
+        tabBtns.forEach(btn => {
+          const s = Number(btn.getAttribute("data-step"));
+          if (s === step) {
+            btn.className = "tabBtn px-3 py-2 rounded-xl border bg-slate-900 text-white text-sm font-semibold";
+          } else {
+            btn.className = "tabBtn px-3 py-2 rounded-xl border bg-white hover:bg-slate-50 text-sm font-semibold";
+          }
+        });
+      };
+
+      const render = () => {
+        const lesson = lessons[state.step];
+        lessonTitle.textContent = lesson.title;
+
+        const pct = ((state.step + 1) / lessons.length) * 100;
+        progressBar.style.width = pct.toFixed(2) + "%";
+        progressLabel.textContent = `吏꾪뻾: ${lesson.id}怨?;
+
+        setTabs(state.step);
+
+        // VN toggle
+        toggleVn.checked = !!state.showVn;
+        strategyVn.classList.toggle("hidden", !state.showVn);
+        summaryTextVn.classList.toggle("hidden", !state.showVn);
+
+        renderPassage(lesson);
+        renderCues(lesson);
+
+        // Hide summary when switching
+        summaryArea.classList.add("hidden");
+        scoreLabel.textContent = "?먯닔: -";
+
+        // Enable/disable prev/next
+        const isFirst = state.step === 0;
+        const isLast = state.step === lessons.length - 1;
+        btnPrev.disabled = isFirst;
+        mPrev.disabled = isFirst;
+        btnPrev.classList.toggle("opacity-50", isFirst);
+        mPrev.classList.toggle("opacity-50", isFirst);
+
+        btnNext.textContent = isLast ? "???꾨즺)" : "?ㅼ쓬(??";
+        mNext.textContent = isLast ? "?꾨즺" : "?ㅼ쓬";
+      };
+
+      const gradeBlank = (blank, answer) => {
+        const a = stripFinalPunct(answer || "");
+        if (!a) return { ok: false, empty: true, reasonK: "誘몄엯??, reasonV: "Ch튼a nh梳춑" };
+
+        const aN = normalize(a);
+        const cN = normalize(blank.correct);
+
+        if (aN === cN) return { ok: true, exact: true };
+
+        // regex accept
+        for (const rx of blank.accept) {
+          try {
+            if (rx.test(a)) return { ok: true, exact: false };
+          } catch (_) { }
+        }
+
+        // token accept (loose)
+        if (blank.tokens?.length && hasAllTokens(a, blank.tokens)) {
+          return { ok: true, exact: false, loose: true };
+        }
+
+        // Provide missing token hint
+        let missing = [];
+        if (blank.tokens?.length) {
+          const t = normalize(a);
+          missing = blank.tokens.filter(tok => !t.includes(normalize(tok)));
+        }
+
+        return {
+          ok: false,
+          empty: false,
+          reasonK: missing.length ? `?듭떖 ?⑥뼱媛 遺議깊빀?덈떎: ${missing.join(", ")}` : "?섎?媛 留욎? ?딆뒿?덈떎",
+          reasonV: missing.length ? `Thi梳퓎 t沼?kh처a: ${missing.join(", ")}` : "Ch튼a 휃첬ng 첵"
+        };
+      };
+
+      const gradeCurrent = () => {
+        const lesson = lessons[state.step];
+        let total = lesson.blanks.length;
+        let correct = 0;
+
+        const linesK = [];
+        const linesV = [];
+
+        lesson.blanks.forEach((b, i) => {
+          const ans = state.answers[b.id] || "";
+          const result = gradeBlank(b, ans);
+
+          if (result.ok) {
+            correct += 1;
+            linesK.push(`(${i + 1}) ?뺣떟`);
+            linesV.push(`(${i + 1}) 휂첬ng`);
+          } else if (result.empty) {
+            linesK.push(`(${i + 1}) 誘몄엯??);
+            linesV.push(`(${i + 1}) Ch튼a nh梳춑`);
+          } else {
+            linesK.push(`(${i + 1}) ?ㅻ떟: ${result.reasonK}`);
+            linesV.push(`(${i + 1}) Sai: ${result.reasonV}`);
+          }
+        });
+
+        const score = Math.round((correct / total) * 100);
+        scoreLabel.textContent = `?먯닔: ${correct}/${total} (${score}??`;
+
+        summaryText.textContent = linesK.join(" 쨌 ");
+        summaryTextVn.textContent = linesV.join(" 쨌 ");
+
+        summaryArea.classList.remove("hidden");
+        summaryTextVn.classList.toggle("hidden", !state.showVn);
+
+        saveState();
+        // Scroll a bit for visibility on mobile
+        if (window.innerWidth < 768) {
+          summaryArea.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      };
+
+      const gotoStep = (step) => {
+        state.step = Math.max(0, Math.min(lessons.length - 1, step));
+        saveState();
+        render();
+      };
+
+      // Copy answers
+      const buildAnswerText = () => {
+        const parts = [];
+        lessons.forEach(lesson => {
+          parts.push(`[${lesson.id}怨? ${lesson.title}`);
+          lesson.blanks.forEach((b, idx) => {
+            const a = (state.answers[b.id] || "").trim().replace(/\s+/g, " ");
+            parts.push(`(${idx + 1}) ${a || "(誘몄엯??"}`);
+          });
+          parts.push("");
+        });
+        return parts.join("\n");
+      };
+
+      // Toggle all hints
+      let allExpanded = false;
+      const toggleAllHints = () => {
+        const lesson = lessons[state.step];
+        allExpanded = !allExpanded;
+        lesson.blanks.forEach(b => {
+          const detail = cueArea.querySelector(`[data-detail="${b.id}"]`);
+          if (detail) detail.classList.toggle("hidden", !allExpanded);
+        });
+        btnToggleAll.textContent = allExpanded ? "?뚰듃 紐⑤몢 ?묎린" : "?뚰듃 紐⑤몢 ?쇱튂湲?;
+      };
+
+      // Bind events
+      tabBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          gotoStep(Number(btn.getAttribute("data-step")));
+        });
+      });
+
+      toggleVn.addEventListener("change", () => {
+        state.showVn = toggleVn.checked;
+        saveState();
+        render();
+      });
+
+      btnPrev.addEventListener("click", () => gotoStep(state.step - 1));
+      btnNext.addEventListener("click", () => {
+        if (state.step < lessons.length - 1) gotoStep(state.step + 1);
+        else gradeCurrent();
+      });
+
+      mPrev.addEventListener("click", () => gotoStep(state.step - 1));
+      mNext.addEventListener("click", () => {
+        if (state.step < lessons.length - 1) gotoStep(state.step + 1);
+        else gradeCurrent();
+      });
+
+      btnGradeTop.addEventListener("click", gradeCurrent);
+      mGrade.addEventListener("click", gradeCurrent);
+
+      btnReset.addEventListener("click", () => {
+        state.answers = {};
+        saveState();
+        render();
+      });
+
+      btnCopy.addEventListener("click", async () => {
+        const text = buildAnswerText();
+        try {
+          await navigator.clipboard.writeText(text);
+          alert("蹂듭궗?섏뿀?듬땲??");
+        } catch (e) {
+          // fallback
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          document.body.removeChild(ta);
+          alert("蹂듭궗?섏뿀?듬땲??");
+        }
+      });
+
+      btnToggleAll.addEventListener("click", toggleAllHints);
+
+      // Ctrl+Enter grading for textarea too
+      document.addEventListener("keydown", (e) => {
+        if (e.ctrlKey && e.key === "Enter") gradeCurrent();
+      });
+
+      // Init
+      loadState();
+      render();
+    })();
+  </script>
+</body>
+
+</html>

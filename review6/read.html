@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>서울대 한국어 3B - 16~18과 읽고 쓰기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #ecfdf5; /* Light Emerald bg */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Toggle Switch Custom Style */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #10b981; /* Emerald-500 */
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #10b981;
+        }
+        
+        .mode-transition {
+            transition: max-width 0.3s ease-in-out, padding 0.3s ease-in-out;
+        }
+
+        /* Custom scrollbar for textarea */
+        textarea::-webkit-scrollbar {
+            width: 8px;
+        }
+        textarea::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        textarea::-webkit-scrollbar-thumb {
+            background: #d1d5db; 
+            border-radius: 4px;
+        }
+        textarea::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af; 
+        }
+
+        /* PC Mode Grid Layout Adjustments */
+        .pc-grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+        
+        .pc-full-width {
+            grid-column: span 2;
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col items-center justify-center p-4">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <!-- App Container -->
+    <div id="app-container" class="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden mode-transition flex flex-col" style="min-height: 85vh;">
+        
+        <!-- Header -->
+        <header class="bg-emerald-600 p-4 text-white flex justify-between items-center shrink-0">
+            <div>
+                <h1 class="text-lg font-bold">3B 복습 6 (읽고 쓰기)</h1>
+                <p class="text-xs text-emerald-200">16-18과 독해 및 작문</p>
+            </div>
+            
+            <!-- View Mode Toggle -->
+            <div class="flex items-center">
+                <span class="text-xs mr-2 font-medium">PC모드</span>
+                <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                    <input type="checkbox" name="toggle" id="view-toggle" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300" style="top: 2px; left: 2px;"/>
+                    <label for="view-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                </div>
+            </div>
+        </header>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-gray-200 h-2 shrink-0">
+            <div id="progress-bar" class="bg-emerald-400 h-2 transition-all duration-300" style="width: 0%"></div>
+        </div>
+
+        <!-- Main Content Area -->
+        <main id="quiz-content" class="flex-grow p-6 flex flex-col justify-center relative overflow-y-auto">
+            
+            <!-- Start Screen -->
+            <div id="start-screen" class="text-center space-y-6 fade-in">
+                <div class="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto text-4xl">
+                    📖
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800">읽기와 쓰기</h2>
+                <p class="text-gray-600 leading-relaxed">
+                    지문을 읽고 문제를 풀어보세요.<br>
+                    쓰기 문제는 객관식으로 변형되거나<br>
+                    직접 입력하는 연습장이 제공됩니다.<br>
+                    (총 <span id="total-count-display">0</span>문제)
+                </p>
+                <button onclick="startQuiz()" class="w-full py-4 bg-emerald-600 text-white rounded-xl font-bold shadow-lg hover:bg-emerald-700 transition transform hover:-translate-y-1">
+                    시작하기
+                </button>
+            </div>
+
+            <!-- Question Card -->
+            <div id="question-card" class="hidden flex-col h-full fade-in">
+                <!-- Left Column (in PC mode): Question & Text -->
+                <div class="mb-4 flex flex-col h-full">
+                    <div>
+                        <span id="q-category" class="inline-block px-3 py-1 bg-teal-100 text-teal-800 text-xs font-bold rounded-full mb-2">Category</span>
+                        <h3 id="q-text" class="text-xl font-bold leading-snug text-gray-800 mb-4 whitespace-pre-wrap">
+                            문제 내용이 여기에 표시됩니다.
+                        </h3>
+                    </div>
+                    <!-- Subtext (Passage) -->
+                    <div id="q-subtext" class="text-sm text-gray-700 bg-gray-50 p-4 rounded-lg border border-gray-200 mb-4 hidden whitespace-pre-wrap leading-relaxed overflow-y-auto max-h-64 lg:max-h-full flex-grow">
+                        지문 내용...
+                    </div>
+                </div>
+
+                <!-- Right Column (in PC mode): Options/Input -->
+                <div id="content-area" class="flex-grow flex flex-col justify-center">
+                    <!-- Injected by JS -->
+                </div>
+
+                <!-- Feedback Area (Spans full width in PC mode) -->
+                <div id="feedback-area" class="hidden mt-4 p-4 rounded-xl bg-gray-50 border border-gray-200 pc-full-width">
+                    <div id="feedback-icon" class="text-3xl mb-2"></div>
+                    <p id="feedback-text" class="text-sm font-medium text-gray-700"></p>
+                    <button id="next-btn" onclick="nextQuestion()" class="mt-3 w-full py-3 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700">
+                        다음 문제 →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Result Screen -->
+            <div id="result-screen" class="hidden text-center space-y-6 fade-in my-auto">
+                <div class="w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center mx-auto text-5xl">
+                    🏅
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800">학습 완료!</h2>
+                    <p class="text-gray-600 mt-2">수고하셨습니다.</p>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200">
+                    <p class="text-sm text-gray-500 mb-1">객관식 점수</p>
+                    <p class="text-4xl font-black text-emerald-600"><span id="score">0</span> / <span id="total-score">0</span></p>
+                </div>
+
+                <div class="flex space-x-3">
+                    <button onclick="restartQuiz()" class="flex-1 py-3 bg-white border-2 border-emerald-600 text-emerald-600 rounded-xl font-bold hover:bg-emerald-50">
+                        다시 풀기
+                    </button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Quiz Data extracted from "3B 복습6 읽고 쓰기.pdf"
+        const quizData = [
+            // [1] 무엇에 대한 글?
+            {
+                id: 1,
+                type: 'choice',
+                category: "주제 찾기",
+                question: "다음은 무엇에 대한 글인지 고르세요.\n\n[ 안내 ]\n우리 대학 신입생들이 '로미오와 줄리엣'을 무대에 올립니다. 후배들의 멋진 연기를 기대해 주세요.\n• 일시 : 5월 16일 (오후 8시)\n• 장소 : 열린 마당",
+                options: ["연극", "콘서트", "음악회", "영화"],
+                answer: 0,
+                explanation: "'로미오와 줄리엣', '무대', '연기' 등의 단어를 통해 학생들이 준비한 '연극' 공연임을 알 수 있습니다."
+            },
+            // [2] 유의어
+            {
+                id: 2,
+                type: 'choice',
+                category: "유의어 찾기",
+                question: "밑줄 친 부분과 의미가 비슷한 것을 고르세요.\n\n\"다음 달에 여행 갈 생각을 하면 벌써부터 마음이 <u>설렌다</u>.\"",
+                options: ["가슴이 아프다", "마음이 편안하다", "가슴이 뛴다", "마음에 여유가 생긴다"],
+                answer: 2,
+                explanation: "'설렌다'는 기쁘거나 기대되어 마음이 두근거린다는 뜻이므로 '가슴이 뛴다'와 비슷합니다."
+            },
+            // [3] 내용 일치
+            {
+                id: 3,
+                type: 'choice',
+                category: "내용 이해",
+                question: "다음 글의 내용과 같은 것을 고르세요.",
+                subtext: "여자 친구의 오해를 풀어 주고 싶습니다.\n\n얼마 전 여자 친구와 사소한 오해로 다퉜는데 여자 친구에게서 헤어지자는 말을 들었습니다. 실은 지난 수요일이 여자 친구의 생일이었는데 야근 때문에 만나지 못했습니다. 그래서 여자 친구에게 주말에 만나서 축하해 주겠다고 하고 동료들과 저녁을 먹으러 갔습니다. 그런데 거기서 제 여자 친구를 만나고 말았습니다. 여자 친구는 저를 보자마자 화를 내며 밖으로 나가버렸습니다. 한 여직원이 춥다고 해서 잠깐 팔짱을 끼고 있었거든요. 여자 친구가 큰 오해를 하고 있는 것 같습니다. 어떻게 해야 여자 친구와 다시 화해할 수 있을까요?",
+                options: ["남자는 여자에게 전화를 걸어 헤어지자고 했다.", "남자는 여자 친구와 화해하는 방법을 알고 있다.", "남자는 여자 친구의 생일날 다른 여자와 데이트를 했다.", "남자는 여자 친구의 오해를 풀어 주고 싶어서 이 글을 썼다."],
+                answer: 3,
+                explanation: "글쓴이는 여자 친구와의 오해를 풀고 화해하고 싶어서 고민 글을 썼습니다. (③은 데이트가 아니라 동료들과 저녁을 먹은 것이며, 여자 친구 생일(수요일)이 아닌 다른 날일 가능성도 있고 상황 자체가 오해이므로 틀림)"
+            },
+            // [4] 순서 배열
+            {
+                id: 4,
+                type: 'choice',
+                category: "순서 배열",
+                question: "<텐트 치는 방법>을 순서대로 맞게 나열한 것을 고르세요.\n\n(가) 장소를 정했으면 울퉁불퉁한 바닥을 평평하게 정리하고 텐트를 세운다.\n(나) 바람이 불어도 텐트가 쓰러지지 않도록 줄을 이용해서 나무나 바위에 잘 묶는다.\n(다) 캠핑을 하기 위해서 텐트를 칠 때에는 먼저 장소를 잘 선택해야 한다.\n(라) 장소를 선택할 때 바다나 강에서 너무 가까운 곳은 피하는 것이 안전하다.",
+                options: ["(라)-(다)-(가)-(나)", "(다)-(나)-(가)-(라)", "(다)-(라)-(가)-(나)", "(라)-(가)-(나)-(다)"],
+                answer: 2,
+                explanation: "순서: (다) 장소 선택의 중요성 -> (라) 장소 선택 시 주의사항 -> (가) 바닥 정리 및 텐트 세우기 -> (나) 줄로 고정하기"
+            },
+            // [5] 빈칸 (우쿨렐레)
+            {
+                id: 5,
+                type: 'choice',
+                category: "빈칸 채우기",
+                question: "빈칸 ( )에 들어갈 알맞은 말을 고르세요.",
+                subtext: "'우쿨렐레'는 하와이에서 자주 (  ) 악기이다. 모양은 기타와 비슷한데 기타보다 작아서 장난감처럼 보이기도 한다. 목 부분은 가늘고 길며 4개의 줄이 있다. 이 줄을 손으로 튕겨서 연주한다. 또 크기가 작고 가벼워서 휴대하기 쉽고 아이들도 쉽게 배울 수 있다. 한 달만 배우면 간단한 노래를 연주할 수 있다고 하니까 누구나 한번 배워 볼 만하다. '우쿨렐레'를 연주하면서 아름다운 소리를 들으면 마음이 편안해지는 것을 느낄 수 있을 것이다.",
+                options: ["부는", "누르는", "연주하는", "노래하는"],
+                answer: 2,
+                explanation: "악기를 다루어 소리를 내는 것은 '연주하다'입니다."
+            },
+            // [6] 내용 일치 (우쿨렐레)
+            {
+                id: 6,
+                type: 'choice',
+                category: "내용 이해",
+                question: "위 글의 내용과 같은 것을 고르세요.",
+                subtext: "'우쿨렐레'는 하와이에서 자주 (  ) 악기이다. 모양은 기타와 비슷한데 기타보다 작아서 장난감처럼 보이기도 한다. 목 부분은 가늘고 길며 4개의 줄이 있다. 이 줄을 손으로 튕겨서 연주한다. 또 크기가 작고 가벼워서 휴대하기 쉽고 아이들도 쉽게 배울 수 있다. 한 달만 배우면 간단한 노래를 연주할 수 있다고 하니까 누구나 한번 배워 볼 만하다. '우쿨렐레'를 연주하면서 아름다운 소리를 들으면 마음이 편안해지는 것을 느낄 수 있을 것이다.",
+                options: ["기타와 모양과 크기가 같다.", "하와이에서 인기 있는 장난감이다.", "한 달 정도 배우면 누구나 간단한 노래를 연주할 수 있다.", "악기의 크기가 너무 작아서 어른들이 연주하기는 쉽지 않다."],
+                answer: 2,
+                explanation: "지문에 '한 달만 배우면 간단한 노래를 연주할 수 있다'고 언급되어 있습니다."
+            },
+            // [7] 빈칸 (매운 음식)
+            {
+                id: 7,
+                type: 'choice',
+                category: "문맥 파악",
+                question: "빈칸 ( )에 들어갈 말을 고르세요.",
+                subtext: "매운 음식은 건강에 좋지 않다고 생각하는 사람들이 많다. 실제로 매운 음식을 많이 먹으면 입과 혀가 아프고 배탈이 날 수도 있다. 하지만 적당히 매운 음식은 스트레스를 푸는 데 큰 효과가 있다. 매운 맛의 아픔을 잊기 위해 우리의 뇌에서는 엔도르핀이 나오는데 이 엔도르핀 덕분에 기분이 좋아진다고 한다. 또 매운 음식을 자주 먹으면 다이어트에도 도움이 된다. 매운 음식 안에 들어 있는 캡사이신이 몸속의 지방을 빼 주기 때문이다. 그러나(   ). 짬뽕이나 떡볶이와 같은 매운 음식은 생각보다 칼로리가 높은 편이다. 게다가 이런 음식들은 짠맛이 강하기 때문에 자주 먹는 것은 다이어트에 좋지 않다.",
+                options: ["매운 음식이 언제나 많이 팔리는 것은 아니다.", "매운 음식을 어디에서나 먹을 수 있는 것은 아니다.", "매운 음식을 먹는다고 해서 누구나 살이 찌는 것은 아니다.", "매운 음식이라고 해서 다 다이어트에 도움을 주는 것은 아니다."],
+                answer: 3,
+                explanation: "앞문장에서는 다이어트에 도움이 된다고 했지만, 뒤이어 칼로리가 높은 음식도 있다는 반대 내용이 나오므로 ④번이 적절합니다."
+            },
+            // [8] 중심 생각 (매운 음식)
+            {
+                id: 8,
+                type: 'choice',
+                category: "중심 생각",
+                question: "이 글의 중심 생각을 고르세요.",
+                subtext: "매운 음식은 건강에 좋지 않다고 생각하는 사람들이 많다. 실제로 매운 음식을 많이 먹으면 입과 혀가 아프고 배탈이 날 수도 있다. 하지만 적당히 매운 음식은 스트레스를 푸는 데 큰 효과가 있다. 매운 맛의 아픔을 잊기 위해 우리의 뇌에서는 엔도르핀이 나오는데 이 엔도르핀 덕분에 기분이 좋아진다고 한다. 또 매운 음식을 자주 먹으면 다이어트에도 도움이 된다. 매운 음식 안에 들어 있는 캡사이신이 몸속의 지방을 빼 주기 때문이다. 그러나(   ). 짬뽕이나 떡볶이와 같은 매운 음식은 생각보다 칼로리가 높은 편이다. 게다가 이런 음식들은 짠맛이 강하기 때문에 자주 먹는 것은 다이어트에 좋지 않다.",
+                options: ["건강을 위해 매운 음식을 먹지 말아야 한다.", "매운 음식이 항상 건강에 나쁜 것은 아니다.", "매운 음식을 먹어야만 스트레스를 풀 수 있다.", "매운 음식은 칼로리가 높아서 다이어트에 좋지 않다."],
+                answer: 1,
+                explanation: "글의 초반에 '매운 음식이 건강에 좋지 않다고 생각하지만 실제로는 스트레스 해소 등의 효과가 있다'고 하며 오해를 풀고 있으므로 '매운 음식이 항상 나쁜 것은 아니다'가 중심 생각에 가깝습니다."
+            },
+            // [9] 문장 넣기 (강원도)
+            {
+                id: 9,
+                type: 'choice',
+                category: "문장 삽입",
+                question: "다음 글에서 <보기>의 문장이 들어가기에 가장 알맞은 곳을 고르십시오.\n\n<보기> 강원도는 산과 바다가 있어 자연을 즐기고 싶은 사람들에게 매우 좋은 곳이기 때문이다.",
+                subtext: "1박 2일 코스로 여행을 다녀오고 싶다면 강원도가 가 볼 만하다. ( ㉠ ) 먼저 설악산은 한국에서 3번째로 높은 산이며 경치가 아름답기로 유명하다. ( ㉡ ) 만약 등산 경험이 없다면 케이블카를 타고 올라가는 것이 좋다. ( ㉢ ) 성인 요금은 9천원이며 3세 미만의 아이는 요금을 내지 않아도 된다. ( ㉣ )",
+                options: ["㉠", "㉡", "㉢", "㉣"],
+                answer: 0,
+                explanation: "첫 문장에서 강원도를 추천했고, <보기> 문장은 그 이유(산과 바다가 있음)를 설명하고 있습니다. 그 뒤로 산(설악산)에 대한 구체적인 설명이 이어지므로 ㉠ 위치가 가장 적절합니다."
+            },
+            // [10] 주제 찾기 (인터넷 예절)
+            {
+                id: 10,
+                type: 'choice',
+                category: "주제 찾기",
+                question: "다음 글의 주제로 가장 알맞은 것을 고르세요.",
+                subtext: "얼마 전 인터넷에 유명 연예인이 교통사고로 사망했다는 소문이 빠르게 퍼졌다. 자신을 기자라고 소개한 남성이 쓴 이 글은 30분 만에 많은 사람들에게 알려졌고 대부분의 사람들은 사실이라고 믿었다. 그러나 소문의 주인공은 그 시간에 영화 촬영을 하고 있었다. 이번 일로 그녀의 가족들은 큰 충격을 받았다고 한다. 소문을 퍼뜨린 남자는 심심해서 장난으로 글을 썼고 이렇게 많은 사람들이 자신의 거짓말을 믿을 줄 몰랐다고 했다.\n우리는 인터넷 덕분에 빠르고 편리한 생활을 하고 있다. 지금 이 시간에도 많은 사람들이 인터넷으로 수많은 정보를 얻고 다양한 이야기를 주고받는다. 하지만 다른 사람들이 자신을 볼 수 없다고 해서 함부로 행동하면 안 된다. 인터넷이 발전하면 발전할수록 상대방을 배려하는 인터넷 예절을 꼭 지켜야 한다.",
+                options: ["인터넷에 퍼진 소문은 믿지 않는 게 좋다.", "좋지 않은 소문일수록 함께 아는 것이 중요하다.", "인터넷에 글을 올리면 짧은 시간에 빨리 퍼뜨릴 수 있다.", "인터넷은 많은 사람들이 사용하는 공간이므로 함부로 이야기하거나 행동해서는 안 된다."],
+                answer: 3,
+                explanation: "글의 결론 부분에서 '함부로 행동하면 안 되며 인터넷 예절을 지켜야 한다'고 강조하고 있습니다."
+            },
+            // [11] 글 쓴 목적 (과일 고르기)
+            {
+                id: 11,
+                type: 'choice',
+                category: "글의 목적",
+                question: "필자가 이 글을 쓴 목적을 고르세요.",
+                subtext: "귤을 고를 때에는 아기 주먹만 한 작은 크기의 귤이 좋다. 이보다 작으면 먹기에 불편하고 크면 클수록 단맛이 덜하기 때문이다. 그리고 귤의 밑 부분이 울퉁불퉁한 것이 평평한 것보다 달다.\n\n사과는 겉이 매끄럽고 딱딱한 것이 좋다. 하지만 ( ). 좀 거칠어도 빨간 사과가 맛있다. 그리고 너무 큰 사과보다 어른 주먹만 한 중간 크기의 사과가 더 달고 맛있다고 한다.\n\n너무 큰 딸기는 속이 비어 있을 수 있으니 새끼손가락만 한 길이의 딸기를 고르는 것이 좋다. 그리고 겉이 매끄럽고 색이 진한 것을 골라야 하고 겉이 울퉁불퉁한 것은 좋지 않다. 그리고 딸기의 꼭지 부분까지 빨갛다면 잘 익은 딸기이다.\n\n마지막으로 수박은 검정색 줄무늬가 진하면 진할수록 좋다. 그리고 수박 꼭지가 싱싱한 것을 골라야 한다.",
+                options: ["자신이 키운 과일을 팔려고", "좋아하는 과일을 소개하려고", "좋은 과일 고르는 방법을 소개하려고", "과일이 몸에 좋은 이유를 설명하려고"],
+                answer: 2,
+                explanation: "맛있는 과일을 고르는 구체적인 팁들을 나열하고 있으므로 '좋은 과일 고르는 방법을 소개'하는 글입니다."
+            },
+            // [12] 빈칸 (사과)
+            {
+                id: 12,
+                type: 'choice',
+                category: "문맥 파악",
+                question: "위 글의 빈칸 ( )에 알맞은 말을 고르세요.",
+                subtext: "귤을 고를 때에는 아기 주먹만 한 작은 크기의 귤이 좋다. 이보다 작으면 먹기에 불편하고 크면 클수록 단맛이 덜하기 때문이다. 그리고 귤의 밑 부분이 울퉁불퉁한 것이 평평한 것보다 달다.\n\n사과는 겉이 매끄럽고 딱딱한 것이 좋다. 하지만 ( ). 좀 거칠어도 빨간 사과가 맛있다. 그리고 너무 큰 사과보다 어른 주먹만 한 중간 크기의 사과가 더 달고 맛있다고 한다.\n\n너무 큰 딸기는 속이 비어 있을 수 있으니 새끼손가락만 한 길이의 딸기를 고르는 것이 좋다. 그리고 겉이 매끄럽고 색이 진한 것을 골라야 하고 겉이 울퉁불퉁한 것은 좋지 않다. 그리고 딸기의 꼭지 부분까지 빨갛다면 잘 익은 딸기이다.\n\n마지막으로 수박은 검정색 줄무늬가 진하면 진할수록 좋다. 그리고 수박 꼭지가 싱싱한 것을 골라야 한다.",
+                options: ["중요한 것은 모양이다", "중요한 것은 소리이다", "중요한 것은 사과의 색이다", "중요한 것은 사과의 가격이다"],
+                answer: 2,
+                explanation: "겉이 거칠더라도 '빨간' 사과가 맛있다는 내용이 이어지므로, 색깔의 중요성을 언급하는 내용이 빈칸에 와야 자연스럽습니다."
+            },
+            // [13] 내용 일치 (과일)
+            {
+                id: 13,
+                type: 'choice',
+                category: "내용 이해",
+                question: "위 글의 내용과 같은 것을 고르세요.",
+                subtext: "귤을 고를 때에는 아기 주먹만 한 작은 크기의 귤이 좋다. 이보다 작으면 먹기에 불편하고 크면 클수록 단맛이 덜하기 때문이다. 그리고 귤의 밑 부분이 울퉁불퉁한 것이 평평한 것보다 달다.\n\n사과는 겉이 매끄럽고 딱딱한 것이 좋다. 하지만 ( ). 좀 거칠어도 빨간 사과가 맛있다. 그리고 너무 큰 사과보다 어른 주먹만 한 중간 크기의 사과가 더 달고 맛있다고 한다.\n\n너무 큰 딸기는 속이 비어 있을 수 있으니 새끼손가락만 한 길이의 딸기를 고르는 것이 좋다. 그리고 겉이 매끄럽고 색이 진한 것을 골라야 하고 겉이 울퉁불퉁한 것은 좋지 않다. 그리고 딸기의 꼭지 부분까지 빨갛다면 잘 익은 딸기이다.\n\n마지막으로 수박은 검정색 줄무늬가 진하면 진할수록 좋다. 그리고 수박 꼭지가 싱싱한 것을 골라야 한다.",
+                options: ["딸기는 크면 클수록 달다.", "귤은 작으면 작을수록 맛있다.", "중간 크기의 사과가 가장 맛있다.", "수박은 꼭지 색깔이 진한 것을 골라야 한다."],
+                answer: 2,
+                explanation: "본문에 '너무 큰 사과보다 어른 주먹만 한 중간 크기의 사과가 더 달고 맛있다'는 내용이 있습니다. (귤은 '너무 작으면 먹기 불편하다'고 했으므로 2번은 오답입니다.)"
+            },
+            // [14] 쓰기 (수첩 설명) - 객관식 변환
+            {
+                id: 14,
+                type: 'choice',
+                category: "실용문 쓰기",
+                question: "분실물 찾기 글입니다. 빈칸에 들어갈 알맞은 묘사를 고르세요.\n\n\"잃어버린 수첩을 찾습니다... 겉은 노란색이고 크기는 (________).\"",
+                subtext: "잃어버린 수첩을 찾습니다.\n\n지난 금요일 오후 휴게실에서 수첩을 잃어버렸습니다. 겉은 노란색이고 크기는 14. ( ). 그리고 수첩 안에는 가족사진이 들어 있습니다. 저에게는 아주 소중한 물건입니다. 혹시 수첩을 보시거나 가지고 계신 분은 아래 번호로 15. ( ).\n\n김민준 010-9022-XXXX",
+                options: ["손바닥만 합니다", "집만 합니다", "콩만 합니다", "산만 합니다"],
+                answer: 0,
+                explanation: "수첩의 크기를 묘사할 때 관용적으로 '손바닥만 하다'라는 표현을 자주 사용합니다."
+            },
+            // [15] 쓰기 (연락 요청) - 객관식 변환
+            {
+                id: 15,
+                type: 'choice',
+                category: "실용문 쓰기",
+                question: "분실물 찾기 글의 마지막 부분입니다. 알맞은 표현을 고르세요.\n\n\"혹시 수첩을 보시거나 가지고 계신 분은 아래 번호로 (________).\"",
+                subtext: "잃어버린 수첩을 찾습니다.\n\n지난 금요일 오후 휴게실에서 수첩을 잃어버렸습니다. 겉은 노란색이고 크기는 14. ( ). 그리고 수첩 안에는 가족사진이 들어 있습니다. 저에게는 아주 소중한 물건입니다. 혹시 수첩을 보시거나 가지고 계신 분은 아래 번호로 15. ( ).\n\n김민준 010-9022-XXXX",
+                options: ["연락해 주시기 바랍니다", "연락하지 마십시오", "찾아오지 마십시오", "주지 마십시오"],
+                answer: 0,
+                explanation: "정중하게 연락을 부탁하는 표현인 '연락해 주시기 바랍니다'가 적절합니다."
+            },
+            // [16] 자유 작문
+            {
+                id: 16,
+                type: 'writing',
+                category: "자유 작문",
+                question: "다음을 주제로 하여 자신의 생각을 써보세요. (200~300자)\n\n• 무슨 소문을 들었습니까?\n• 어떻게 그 소문을 알게 되었습니까?\n• 그 소문이 사실이었습니까? 그래서 어떻게 되었습니까?",
+                modelAnswer: "[ 예시 답안 ]\n\n저는 친구에게서 우리 반 친구인 민수가 전학을 간다는 소문을 들었습니다. 친구가 교무실에서 선생님들이 이야기하는 것을 들었다고 했습니다. 저는 민수와 친한데 저에게 아무 말도 하지 않아서 서운했습니다. 그래서 민수에게 가서 따졌습니다. 그런데 민수는 전학을 가는 것이 아니라 잠깐 여행을 가는 것이라고 했습니다. 그 소문은 사실이 아니었습니다. 저는 민수에게 미안하다고 사과했고 우리는 오해를 풀었습니다. 소문만 믿고 친구를 의심하면 안 된다는 것을 알게 되었습니다."
+            }
+        ];
+
+        // App State
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let isPCMode = false;
+        
+        // Count only MC questions for scoring
+        const mcQuestionsCount = quizData.filter(q => q.type === 'choice').length;
+
+        // DOM Elements
+        const appContainer = document.getElementById('app-container');
+        const viewToggle = document.getElementById('view-toggle');
+        const totalCountDisplay = document.getElementById('total-count-display');
+        
+        const startScreen = document.getElementById('start-screen');
+        const questionCard = document.getElementById('question-card');
+        const resultScreen = document.getElementById('result-screen');
+        
+        const progressBar = document.getElementById('progress-bar');
+        const qCategory = document.getElementById('q-category');
+        const qText = document.getElementById('q-text');
+        const qSubtext = document.getElementById('q-subtext');
+        const contentArea = document.getElementById('content-area');
+        const feedbackArea = document.getElementById('feedback-area');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const feedbackText = document.getElementById('feedback-text');
+        const nextBtn = document.getElementById('next-btn');
+        
+        const scoreDisplay = document.getElementById('score');
+        const totalScoreDisplay = document.getElementById('total-score');
+
+        // Initialization
+        window.onload = function() {
+            totalCountDisplay.innerText = quizData.length;
+            
+            // Toggle Event Listener
+            viewToggle.addEventListener('change', function() {
+                isPCMode = this.checked;
+                updateViewMode();
+            });
+        };
+
+        function updateViewMode() {
+            if (isPCMode) {
+                appContainer.classList.remove('max-w-md');
+                appContainer.classList.add('max-w-4xl');
+                
+                if(!questionCard.classList.contains('hidden')){
+                    questionCard.classList.add('pc-grid-layout');
+                }
+            } else {
+                appContainer.classList.remove('max-w-4xl');
+                appContainer.classList.add('max-w-md');
+                
+                questionCard.classList.remove('pc-grid-layout');
+            }
+        }
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            startScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            questionCard.classList.remove('hidden');
+            questionCard.classList.add('flex');
+            updateViewMode();
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const currentData = quizData[currentQuestionIndex];
+            
+            // Reset UI
+            feedbackArea.classList.add('hidden');
+            contentArea.innerHTML = '';
+            
+            // Update Progress
+            const progress = ((currentQuestionIndex) / quizData.length) * 100;
+            progressBar.style.width = `${progress}%`;
+
+            // Set Content
+            qCategory.innerText = currentData.category;
+            // Use innerHTML to render HTML tags like <u>
+            qText.innerHTML = currentData.question;
+            
+            // Subtext for long passages
+            if (currentData.subtext) {
+                qSubtext.innerText = currentData.subtext;
+                qSubtext.classList.remove('hidden');
+            } else {
+                qSubtext.classList.add('hidden');
+            }
+
+            // Render based on type
+            if (currentData.type === 'choice') {
+                renderMultipleChoice(currentData);
+                // In PC mode, ensure grid is active
+                if(isPCMode) questionCard.classList.add('pc-grid-layout');
+            } else if (currentData.type === 'writing') {
+                renderWriting(currentData);
+                // Writing mode takes full width, so remove grid if active, OR span columns
+                if(isPCMode) {
+                     questionCard.classList.remove('pc-grid-layout'); // Simplest for writing
+                }
+            }
+        }
+
+        function renderMultipleChoice(data) {
+            const container = document.createElement('div');
+            container.className = "space-y-3 w-full";
+            
+            data.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:border-emerald-400 hover:bg-emerald-50 transition-all duration-200 font-medium text-gray-700 option-btn`;
+                btn.innerText = `① ② ③ ④`.split(' ')[index] + '. ' + opt;
+                btn.onclick = () => checkAnswer(index, btn, data);
+                container.appendChild(btn);
+            });
+            contentArea.appendChild(container);
+        }
+
+        function renderWriting(data) {
+            const container = document.createElement('div');
+            container.className = "flex flex-col space-y-4 w-full";
+            
+            const textarea = document.createElement('textarea');
+            textarea.className = "w-full h-48 p-4 border-2 border-gray-300 rounded-xl focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none resize-none text-gray-700 leading-relaxed";
+            textarea.placeholder = "여기에 내용을 작성해보세요...";
+            
+            const checkBtn = document.createElement('button');
+            checkBtn.className = "w-full py-3 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-700 transition shadow-md";
+            checkBtn.innerText = "작성 완료 / 모범 답안 확인";
+            checkBtn.onclick = () => showModelAnswer(data);
+
+            container.appendChild(textarea);
+            container.appendChild(checkBtn);
+            contentArea.appendChild(container);
+        }
+
+        function checkAnswer(selectedIndex, selectedBtn, data) {
+            // Prevent multiple clicks
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(btn => btn.disabled = true);
+
+            const isCorrect = selectedIndex === data.answer;
+
+            if (isCorrect) {
+                selectedBtn.classList.add('bg-green-100', 'border-green-500', 'text-green-800');
+                feedbackIcon.innerHTML = '🙆‍♂️ <span class="text-green-600 font-bold text-lg">정답입니다!</span>';
+                score++;
+            } else {
+                selectedBtn.classList.add('bg-red-100', 'border-red-500', 'text-red-800');
+                feedbackIcon.innerHTML = '🙅‍♀️ <span class="text-red-600 font-bold text-lg">아쉽네요.</span>';
+                // Show correct answer
+                allBtns[data.answer].classList.add('bg-green-50', 'border-green-400');
+            }
+
+            feedbackText.innerHTML = `<span class="block mt-2 font-normal text-gray-600">${data.explanation.replace(/\n/g, '<br>')}</span>`;
+            feedbackArea.classList.remove('hidden');
+            feedbackArea.classList.add('fade-in');
+            
+            // Scroll logic
+            if (!isPCMode) {
+                feedbackArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        function showModelAnswer(data) {
+            // Disable button
+            const btn = contentArea.querySelector('button');
+            btn.disabled = true;
+            btn.classList.add('opacity-50');
+
+            feedbackIcon.innerHTML = '📝 <span class="text-emerald-600 font-bold text-lg">참고용 답안</span>';
+            feedbackText.innerHTML = `<div class="bg-white p-3 rounded border border-gray-200 mt-2 text-left whitespace-pre-wrap leading-relaxed text-gray-700 text-sm">${data.modelAnswer}</div>`;
+            
+            feedbackArea.classList.remove('hidden');
+            feedbackArea.classList.add('fade-in');
+
+            if (!isPCMode) {
+                feedbackArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            questionCard.classList.add('hidden');
+            questionCard.classList.remove('flex', 'pc-grid-layout');
+            
+            scoreDisplay.innerText = score;
+            totalScoreDisplay.innerText = mcQuestionsCount; // Show score only for MC questions
+            progressBar.style.width = '100%';
+            
+            resultScreen.classList.remove('hidden');
+        }
+
+        function restartQuiz() {
+            startQuiz();
+        }
+
+    </script>
+</body>
+</html>

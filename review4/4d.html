@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 단형 사동 문법 연습</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        /* TailwindCSS focus ring 커스텀 */
+        .custom-focus-ring:focus {
+            --tw-ring-opacity: 1;
+            --tw-ring-color: #3b82f6; /* blue-500 */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+        }
+        .correct-animation {
+            animation: correct-pulse 0.5s ease-in-out;
+        }
+        .incorrect-animation {
+            animation: incorrect-shake 0.5s ease-in-out;
+        }
+        @keyframes correct-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        @keyframes incorrect-shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <div id="app-container" class="w-full max-w-lg mx-auto bg-white rounded-2xl shadow-lg p-6 sm:p-8 transition-all duration-300">
+        
+        <header class="text-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">단형 사동 문법 연습</h1>
+            <p class="text-gray-500 mt-2">Short-Form Causative Practice</p>
+        </header>
+
+        <!-- 진행률 표시 -->
+        <div class="mb-6">
+            <div class="flex justify-between mb-1">
+                <span class="text-base font-medium text-blue-700">진행률</span>
+                <span id="progress-text" class="text-sm font-medium text-blue-700">1 / 12</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 8%"></div>
+            </div>
+        </div>
+
+        <!-- 퀴즈 영역 -->
+        <div id="quiz-area">
+            <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 rounded-lg mb-6">
+                <p class="font-bold">지시문</p>
+                <p>괄호 안의 동사를 알맞은 사동 형태로 바꾸어 문장을 완성하세요. (과거형으로 작성)</p>
+            </div>
+            
+            <div class="text-center text-xl sm:text-2xl font-semibold text-gray-700 mb-5 p-4 bg-gray-50 rounded-lg min-h-[80px] flex items-center justify-center">
+                <p id="sentence-display"></p>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-2">
+                <input type="text" id="user-input" class="flex-grow w-full px-4 py-3 border border-gray-300 rounded-lg text-lg focus:border-blue-500 custom-focus-ring transition-shadow" placeholder="정답을 입력하세요">
+                <button id="check-btn" class="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200">확인</button>
+            </div>
+        </div>
+
+        <!-- 결과 피드백 영역 -->
+        <div id="feedback-area" class="mt-4 text-center"></div>
+
+        <!-- 다음 문제 버튼 영역 -->
+        <div id="next-btn-area" class="mt-4 text-center">
+             <button id="next-btn" class="w-full bg-gray-700 hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 hidden">다음 문제</button>
+        </div>
+
+        <!-- 최종 결과 영역 -->
+        <div id="result-area" class="hidden text-center mt-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">퀴즈 완료!</h2>
+            <p class="text-lg text-gray-600 mb-4">총 <span id="total-questions"></span>문제 중 <span id="final-score" class="font-bold text-blue-600"></span>문제를 맞혔습니다.</p>
+            <button id="restart-btn" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg transition-colors duration-200">다시 시작</button>
+        </div>
+
+    </div>
+
+    <script>
+        const quizData = [
+            { sentence_start: "엄마가 아기에게 밥을", base_verb: "먹다", correct_answer: "먹였어요" },
+            { sentence_start: "요리사가 팬에 버터를", base_verb: "녹다", correct_answer: "녹였어요" },
+            { sentence_start: "선생님이 학생에게 책을", base_verb: "읽다", correct_answer: "읽혔어요" },
+            { sentence_start: "안내원이 손님을 자리에", base_verb: "앉다", correct_answer: "앉혔어요" },
+            { sentence_start: "간호사가 환자를 침대에", base_verb: "눕다", correct_answer: "눕혔어요" },
+            { sentence_start: "의사가 응급 환자를", base_verb: "살다", correct_answer: "살렸어요" },
+            { sentence_start: "슬픈 영화가 관객들을", base_verb: "울다", correct_answer: "울렸어요" },
+            { sentence_start: "엄마가 아이의 옷을", base_verb: "벗다", correct_answer: "벗겼어요" },
+            { sentence_start: "코미디언이 사람들을", base_verb: "웃다", correct_answer: "웃겼어요" },
+            { sentence_start: "경찰이 차를 길가에", base_verb: "서다", correct_answer: "세웠어요" },
+            { sentence_start: "아빠가 아이를 일찍", base_verb: "자다", correct_answer: "재웠어요" },
+            { sentence_start: "친구가 아침에 전화로 나를", base_verb: "깨다", correct_answer: "깨웠어요" }
+        ];
+
+        // DOM 요소 가져오기
+        const sentenceDisplay = document.getElementById('sentence-display');
+        const userInput = document.getElementById('user-input');
+        const checkBtn = document.getElementById('check-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const feedbackArea = document.getElementById('feedback-area');
+        const quizArea = document.getElementById('quiz-area');
+        const resultArea = document.getElementById('result-area');
+        const finalScoreEl = document.getElementById('final-score');
+        const totalQuestionsEl = document.getElementById('total-questions');
+        const restartBtn = document.getElementById('restart-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+
+        // 상태 변수
+        let shuffledQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        
+        // 퀴즈 시작 함수
+        function startQuiz() {
+            // 상태 초기화
+            shuffledQuestions = shuffleArray([...quizData]);
+            currentQuestionIndex = 0;
+            score = 0;
+            
+            // UI 초기화
+            resultArea.classList.add('hidden');
+            quizArea.classList.remove('hidden');
+            feedbackArea.innerHTML = '';
+            nextBtn.classList.add('hidden');
+            checkBtn.classList.remove('hidden');
+            checkBtn.disabled = false;
+            userInput.disabled = false;
+            
+            // 첫 문제 로드
+            loadQuestion();
+        }
+
+        // 문제 섞기 함수
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // 문제 로드 함수
+        function loadQuestion() {
+            // 이전 피드백 제거
+            feedbackArea.innerHTML = '';
+            feedbackArea.classList.remove('correct-animation', 'incorrect-animation');
+
+            // 문제 데이터 가져오기
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+            
+            // 화면에 문제 표시
+            sentenceDisplay.innerHTML = `${currentQuestion.sentence_start} <span class="text-gray-400">_______</span>. (<span class="text-blue-500 font-bold">${currentQuestion.base_verb}</span>)`;
+            
+            // 입력 필드 초기화 및 포커스
+            userInput.value = '';
+            userInput.focus();
+
+            // 버튼 상태 업데이트
+            checkBtn.classList.remove('hidden');
+            checkBtn.disabled = false;
+            userInput.disabled = false;
+            nextBtn.classList.add('hidden');
+            
+            // 진행률 업데이트
+            updateProgress();
+        }
+        
+        // 진행률 업데이트 함수
+        function updateProgress() {
+            const progress = ((currentQuestionIndex + 1) / shuffledQuestions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            progressText.textContent = `${currentQuestionIndex + 1} / ${shuffledQuestions.length}`;
+        }
+        
+        // 정답 확인 함수
+        function checkAnswer() {
+            const userAnswer = userInput.value.trim();
+            if (userAnswer === '') {
+                showFeedback('정답을 입력해 주세요.', 'bg-yellow-100', 'text-yellow-700');
+                return;
+            }
+
+            const correctAnswer = shuffledQuestions[currentQuestionIndex].correct_answer;
+            checkBtn.disabled = true;
+            userInput.disabled = true;
+
+            if (userAnswer === correctAnswer) {
+                score++;
+                showFeedback('정답입니다!', 'bg-green-100', 'text-green-700');
+                feedbackArea.classList.add('correct-animation');
+            } else {
+                showFeedback(`틀렸습니다. 정답은 "${correctAnswer}" 입니다.`, 'bg-red-100', 'text-red-700');
+                feedbackArea.classList.add('incorrect-animation');
+            }
+
+            checkBtn.classList.add('hidden');
+            nextBtn.classList.remove('hidden');
+        }
+
+        // 피드백 표시 함수
+        function showFeedback(message, bgColor, textColor) {
+            feedbackArea.innerHTML = `<div class="${bgColor} ${textColor} p-3 rounded-lg font-medium">${message}</div>`;
+        }
+
+        // 퀴즈 종료 함수
+        function showResults() {
+            quizArea.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            feedbackArea.innerHTML = '';
+            resultArea.classList.remove('hidden');
+            finalScoreEl.textContent = score;
+            totalQuestionsEl.textContent = shuffledQuestions.length;
+        }
+        
+        // '다음 문제' 버튼 이벤트 리스너
+        nextBtn.addEventListener('click', () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < shuffledQuestions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        });
+
+        // '확인' 버튼 이벤트 리스너
+        checkBtn.addEventListener('click', checkAnswer);
+        
+        // Enter 키로 정답 확인
+        userInput.addEventListener('keyup', (event) => {
+            if (event.key === 'Enter') {
+                if (!checkBtn.disabled) {
+                   checkAnswer();
+                } else {
+                   nextBtn.click();
+                }
+            }
+        });
+
+        // '다시 시작' 버튼 이벤트 리스너
+        restartBtn.addEventListener('click', startQuiz);
+        
+        // 페이지 로드 시 퀴즈 시작
+        startQuiz();
+
+    </script>
+</body>
+</html>
+

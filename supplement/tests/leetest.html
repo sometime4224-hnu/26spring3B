@@ -1,0 +1,581 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>?쇳빆援ъ“ ?쒕옒洹?amp;?쒕∼ ?덈젴</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #f8fafc;
+    }
+
+    /* ?쒕옒洹?以??쒓컖 ?④낵 */
+    .dragging {
+      opacity: 0.5;
+      transform: scale(0.95);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .drop-ok {
+      outline: 3px solid rgba(99, 102, 241, 0.5);
+      outline-offset: 2px;
+      background-color: #e0e7ff !important;
+    }
+
+    .drop-bad {
+      outline: 3px solid rgba(244, 63, 94, 0.5);
+      outline-offset: 2px;
+    }
+
+    .shake {
+      animation: shake 240ms ease-in-out;
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      25% {
+        transform: translateX(-6px);
+      }
+
+      75% {
+        transform: translateX(6px);
+      }
+    }
+
+    /* 紐⑤컮?쇱뿉???쒕옒洹멸? ?딄린??寃??꾪솕 */
+    .touch-pan {
+      touch-action: pan-y;
+    }
+
+    .slot-transition {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  </style>
+    <link rel="stylesheet" href="../../assets/content-consistency.css">
+</head>
+
+<body class="text-slate-900 touch-pan min-h-screen flex flex-col">
+
+  <!-- Global Navigation -->
+  <nav
+    class="w-full bg-white/80 backdrop-blur-md border-b border-indigo-100 sticky top-0 z-50 shadow-sm h-16 px-4 flex items-center shrink-0">
+    <a href="../index.html"
+      class="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-bold transition-colors">
+      <i class="fa-solid fa-house"></i>
+      <span>硫붿씤?쇰줈</span>
+    </a>
+  </nav>
+
+  <div class="max-w-6xl mx-auto p-4 md:p-6 w-full flex-1">
+    <header
+      class="mb-6 md:mb-8 bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-100 text-center">
+      <div class="inline-flex w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl items-center justify-center mb-3">
+        <i class="fa-solid fa-layer-group text-2xl"></i>
+      </div>
+      <h1 class="text-2xl md:text-3xl font-black tracking-tight text-slate-800">援?뼱 ?쇳빆援ъ“ ?덈젴</h1>
+      <p
+        class="text-sm md:text-[15px] font-bold text-slate-500 mt-2 flex flex-col md:flex-row items-center justify-center gap-2">
+        <span class="bg-slate-100 px-3 py-1 rounded-lg">1. ?쒖닠???뚯뼱?ㅺ린</span> <i
+          class="fa-solid fa-arrow-right hidden md:inline text-slate-300"></i><i
+          class="fa-solid fa-arrow-down md:hidden text-slate-300"></i>
+        <span class="bg-slate-100 px-3 py-1 rounded-lg">2. 鍮덉뭏 ?먮룞 ?앹꽦</span> <i
+          class="fa-solid fa-arrow-right hidden md:inline text-slate-300"></i><i
+          class="fa-solid fa-arrow-down md:hidden text-slate-300"></i>
+        <span class="bg-indigo-50 text-indigo-600 px-3 py-1 rounded-lg">3. ?댄쐶 梨꾩슦湲?/span>
+      </p>
+    </header>
+
+    <main class="grid grid-cols-1 md:grid-cols-12 gap-6">
+      <!-- Left: predicates -->
+      <section
+        class="md:col-span-4 bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 p-5 md:p-6 flex flex-col h-[500px]">
+        <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+          <h2 class="font-black text-lg text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-list-ul text-indigo-500"></i> ?쒖닠??李쎄퀬
+          </h2>
+          <button id="btnReset"
+            class="text-xs px-3 py-2 rounded-xl bg-slate-100 font-bold text-slate-600 hover:bg-slate-200 hover:text-slate-800 transition-colors active:scale-95">
+            <i class="fa-solid fa-rotate-left"></i> 珥덇린??          </button>
+        </div>
+
+        <div id="predicateList" class="space-y-3 overflow-y-auto pr-2 pb-2 flex-1 no-scrollbar"></div>
+
+        <details class="mt-4 border-t border-slate-100 pt-3">
+          <summary
+            class="cursor-pointer text-xs font-bold text-slate-400 hover:text-slate-600 outline-none select-none transition-colors">
+            媛쒕컻???듭뀡(?곗씠??蹂닿린)</summary>
+          <pre id="debug"
+            class="mt-2 text-[10px] bg-slate-800 text-green-400 rounded-xl p-3 overflow-auto max-h-32"></pre>
+        </details>
+      </section>
+
+      <!-- Right: sentence builder -->
+      <section
+        class="md:col-span-8 bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-100 p-5 md:p-6 flex flex-col min-h-[500px]">
+        <div class="flex items-center justify-between flex-wrap border-b border-slate-100 pb-3 mb-5 gap-3">
+          <h2 class="font-black text-lg text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-hammer text-indigo-500"></i> 臾몄옣 議곕┰??          </h2>
+          <div class="flex items-center gap-2">
+            <span id="statusPill"
+              class="text-xs px-3 py-1.5 rounded-xl bg-slate-100 font-bold text-slate-500 border border-slate-200">
+              ?쒖닠?대? ?쒕옒洹명븯?몄슂
+            </span>
+            <button id="btnNewRound"
+              class="text-xs px-4 py-2 rounded-xl bg-indigo-600 font-bold text-white hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200 active:scale-95 flex items-center gap-1.5">
+              ??臾몄젣 <i class="fa-solid fa-bolt"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex-1 flex flex-col">
+          <!-- 鍮뚮뱶 ?곸뿭 -->
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 mb-5 shrink-0">
+            <!-- fixed subject -->
+            <div class="flex items-center gap-3 flex-wrap mb-4">
+              <span class="text-sm font-bold text-slate-400 w-12 shrink-0">二쇱뼱</span>
+              <span id="subjectFixed"
+                class="px-4 py-2.5 rounded-xl bg-white border border-slate-200 shadow-sm font-black text-slate-800">
+                泥좎닔媛
+              </span>
+              <span class="text-xs font-bold text-rose-400 bg-rose-50 px-2 py-1 rounded-md ml-auto"><i
+                  class="fa-solid fa-lock text-[10px]"></i> 怨좎젙</span>
+            </div>
+
+            <!-- predicate drop zone -->
+            <div class="flex items-center gap-3 flex-wrap">
+              <span class="text-sm font-bold text-slate-400 w-12 shrink-0">?쒖닠??/span>
+              <div id="predicateDrop"
+                class="min-h-[48px] flex-1 px-4 py-3 rounded-xl border-2 border-dashed border-slate-300 bg-white slot-transition flex items-center justify-center">
+                <span class="text-slate-400 text-sm font-bold"><i class="fa-solid fa-arrow-turn-down mr-1"></i> ?ш린???쒖닠?대?
+                  ?볦쑝?몄슂</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- dynamic argument slots -->
+          <div class="flex-1 shrink-0 mb-5">
+            <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-2">
+              <span class="text-sm font-black text-slate-700">梨꾩썙?????쇳빆 移?/span>
+              <span id="progress" class="text-xs font-bold px-2 py-1 bg-slate-100 text-slate-500 rounded-lg"></span>
+            </div>
+            <div id="argSlots" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div
+                class="text-center w-full py-10 text-slate-300 font-bold text-sm bg-white border-2 border-dashed border-slate-100 rounded-2xl col-span-full">
+                ?쒖닠?대? ?볦쑝硫?移몄씠 ?앹꽦?⑸땲??
+              </div>
+            </div>
+          </div>
+
+          <!-- candidate bank -->
+          <div
+            class="mt-auto bg-slate-800 rounded-2xl p-4 shadow-inner border border-slate-900 text-white relative overflow-hidden shrinkage-0">
+            <div class="absolute -right-4 -top-4 text-slate-700 opacity-20">
+              <i class="fa-solid fa-box-open text-6xl"></i>
+            </div>
+            <div class="flex items-center justify-between mb-3 relative z-10">
+              <span class="text-sm font-bold text-slate-300 flex items-center gap-2"><i class="fa-solid fa-tags"></i> ?꾨낫
+                ?댄쐶 (<span class="text-xs text-slate-400 font-normal">?ㅻ떟? ?뺢꺼?섍컩?덈떎</span>)</span>
+              <button id="btnShuffle"
+                class="text-xs px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 font-bold text-white transition-colors active:scale-95 flex items-center gap-1">
+                <i class="fa-solid fa-shuffle text-[10px]"></i> ?욊린
+              </button>
+            </div>
+            <div id="bank" class="flex flex-wrap gap-2.5 min-h-[70px] relative z-10 transition-all"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    /***********************
+     * 1) ?곗씠???쒖닠???쇳빆援ъ“-?뺣떟)
+     ***********************/
+    const PREDICATES = [
+      {
+        id: "eat", label: "癒밸떎", type: "?숈궗",
+        args: [{ id: "obj", label: "紐⑹쟻????瑜?", hint: "臾댁뾿??", answers: ["?ш낵瑜?, "源諛μ쓣", "諛μ쓣"] }],
+        bank: ["?ш낵瑜?, "源諛μ쓣", "諛μ쓣", "?섏옄??, "移쒓뎄?먭쾶", "?숆탳?먯꽌", "鍮⑤━", "利먭쾪寃?]
+      },
+      {
+        id: "give", label: "二쇰떎", type: "?숈궗",
+        args: [
+          { id: "obj", label: "紐⑹쟻????瑜?", hint: "臾댁뾿??", answers: ["?좊Ъ??, "梨낆쓣", "?덉쓣"] },
+          { id: "goal", label: "?섑삙???먭쾶)", hint: "?꾧뎄?먭쾶?", answers: ["移쒓뎄?먭쾶", "?숈깮?먭쾶", "?좎깮?섍퍡"] }
+        ],
+        bank: ["?좊Ъ??, "梨낆쓣", "?덉쓣", "移쒓뎄?먭쾶", "?숈깮?먭쾶", "?좎깮?섍퍡", "?숆탳?먯꽌", "?댁젣", "議곗슜??]
+      },
+      {
+        id: "put", label: "?볥떎", type: "?숈궗",
+        args: [
+          { id: "obj", label: "?????瑜?", hint: "臾댁뾿??", answers: ["梨낆쓣", "媛諛⑹쓣", "而듭쓣"] },
+          { id: "loc", label: "?μ냼(??", hint: "?대뵒??", answers: ["梨낆긽??, "?섏옄??, "諛붾떏??] }
+        ],
+        bank: ["梨낆쓣", "媛諛⑹쓣", "而듭쓣", "梨낆긽??, "?섏옄??, "諛붾떏??, "移쒓뎄?먭쾶", "留쏆엳寃?, "泥쒖쿇??]
+      },
+      {
+        id: "meet", label: "留뚮굹??, type: "?숈궗",
+        args: [{ id: "obj", label: "?????瑜?", hint: "?꾧뎄瑜?", answers: ["移쒓뎄瑜?, "援먯닔瑜?, "?숈깮??] }],
+        bank: ["移쒓뎄瑜?, "援먯닔瑜?, "?숈깮??, "?숆탳?먯꽌", "移댄럹?먯꽌", "?댁젣", "?좊Ъ??, "湲곕텇??]
+      },
+      {
+        id: "like", label: "醫뗭븘?섎떎", type: "?숈궗",
+        args: [{ id: "obj", label: "?????瑜?", hint: "臾댁뾿???꾧뎄瑜?", answers: ["而ㅽ뵾瑜?, "?곹솕瑜?, "移쒓뎄瑜?] }],
+        bank: ["而ㅽ뵾瑜?, "?곹솕瑜?, "移쒓뎄瑜?, "?섏옄??, "移쒓뎄?먭쾶", "鍮⑤━", "?덉걯寃?, "怨듬?瑜?]
+      },
+      {
+        id: "be_happy", label: "?됰났?섎떎", type: "?뺤슜??,
+        args: [{ id: "cause", label: "?먯씤/怨꾧린(?뚮Ц??", hint: "臾댁뾿 ?뚮Ц??", answers: ["?⑷꺽 ?뚮Ц??, "?좊Ъ ?뚮Ц??, "?닿? ?뚮Ц??] }],
+        bank: ["?⑷꺽 ?뚮Ц??, "?좊Ъ ?뚮Ц??, "?닿? ?뚮Ц??, "?ш낵瑜?, "移쒓뎄?먭쾶", "梨낆긽??, "?숆탳?먯꽌", "?댁젣"]
+      }
+    ];
+
+    const SUBJECTS = ["泥좎닔媛", "?곹씗媛", "誘쇱닔媛", "吏?섍?", "?숈깮??, "援먯닔媛"];
+    const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+    let currentPredicate = null;
+    let filled = {};
+    let roundLocked = false;
+
+    const predicateListEl = document.getElementById("predicateList");
+    const predicateDropEl = document.getElementById("predicateDrop");
+    const argSlotsEl = document.getElementById("argSlots");
+    const bankEl = document.getElementById("bank");
+    const statusPillEl = document.getElementById("statusPill");
+    const progressEl = document.getElementById("progress");
+    const subjectFixedEl = document.getElementById("subjectFixed");
+    const debugEl = document.getElementById("debug");
+
+    function renderPredicateList() {
+      predicateListEl.innerHTML = "";
+      PREDICATES.forEach(p => {
+        const btn = document.createElement("div");
+        const typeColor = p.type === "?숈궗" ? "bg-blue-100 text-blue-700" : "bg-emerald-100 text-emerald-700";
+        btn.className = "flex items-center justify-between gap-3 p-3.5 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 cursor-grab active:cursor-grabbing shadow-sm hover:border-indigo-300 transition-colors group";
+        btn.setAttribute("draggable", "true");
+        btn.dataset.pid = p.id;
+
+        btn.innerHTML = `
+          <div class="min-w-0">
+            <div class="font-black text-slate-800 text-[15px] group-hover:text-indigo-600 transition-colors">${p.label}</div>
+            <div class="text-[11px] font-bold text-slate-400 mt-1 flex items-center gap-2">
+                <span class="px-1.5 py-0.5 rounded-md ${typeColor}">${p.type}</span>
+                <span>?꾩슂 ?쇳빆: <strong class="text-slate-600">${p.args.length}</strong>媛?/span>
+            </div>
+          </div>
+          <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200 text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-500 group-hover:border-indigo-200 transition-colors">
+            <i class="fa-solid fa-hand-pointer text-xs"></i>
+          </div>
+        `;
+
+        btn.addEventListener("dragstart", (e) => {
+          e.dataTransfer.setData("text/predicate", p.id);
+          btn.classList.add("dragging");
+        });
+        btn.addEventListener("dragend", () => btn.classList.remove("dragging"));
+
+        predicateListEl.appendChild(btn);
+      });
+      debugEl.textContent = JSON.stringify(PREDICATES, null, 2);
+    }
+
+    function setupPredicateDrop() {
+      predicateDropEl.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        predicateDropEl.classList.add("drop-ok");
+      });
+      predicateDropEl.addEventListener("dragleave", () => predicateDropEl.classList.remove("drop-ok"));
+      predicateDropEl.addEventListener("drop", (e) => {
+        e.preventDefault();
+        predicateDropEl.classList.remove("drop-ok");
+        if (roundLocked) return;
+        const pid = e.dataTransfer.getData("text/predicate");
+        if (!pid) return;
+        const p = PREDICATES.find(x => x.id === pid);
+        if (!p) return;
+        setPredicate(p);
+      });
+    }
+
+    function setPredicate(p) {
+      currentPredicate = p;
+      filled = {};
+      roundLocked = false;
+      const typeColor = p.type === "?숈궗" ? "bg-blue-100 text-blue-700" : "bg-emerald-100 text-emerald-700";
+
+      predicateDropEl.className = "min-h-[48px] flex-1 px-4 py-2.5 rounded-xl border border-indigo-200 bg-indigo-50 flex items-center justify-between gap-2 shadow-inner slot-transition";
+      predicateDropEl.innerHTML = `
+        <div class="flex items-center gap-3">
+          <span class="font-black text-[17px] text-indigo-900 drop-shadow-sm">${p.label}</span>
+          <span class="text-xs font-bold px-2 py-0.5 rounded-lg ${typeColor}">${p.type}</span>
+        </div>
+        <button id="btnClearPredicate" class="text-xs px-3 py-2 rounded-lg bg-white border border-slate-200 text-slate-600 font-bold hover:bg-slate-100 hover:text-rose-600 transition-colors active:scale-95 shadow-sm flex items-center gap-1">
+          <i class="fa-solid fa-xmark"></i> ?쒓굅
+        </button>
+      `;
+
+      document.getElementById("btnClearPredicate").addEventListener("click", () => {
+        if (roundLocked) return;
+        clearPredicate();
+      });
+
+      statusPillEl.innerHTML = `<i class="fa-solid fa-pen-to-square"></i> ?쇳빆 梨꾩슦湲?;
+      statusPillEl.className = "text-xs font-bold px-3 py-1.5 rounded-xl bg-indigo-100 text-indigo-700 border border-indigo-200 flex items-center gap-1.5";
+
+      renderArgSlots();
+      renderBank(p.bank);
+      updateProgress();
+    }
+
+    function clearPredicate() {
+      currentPredicate = null;
+      filled = {};
+      roundLocked = false;
+
+      predicateDropEl.className = "min-h-[48px] flex-1 px-4 py-3 rounded-xl border-2 border-dashed border-slate-300 bg-white slot-transition flex items-center justify-center";
+      predicateDropEl.innerHTML = `<span class="text-slate-400 text-sm font-bold"><i class="fa-solid fa-arrow-turn-down mr-1"></i> ?ш린???쒖닠?대? ?볦쑝?몄슂</span>`;
+
+      argSlotsEl.innerHTML = `<div class="text-center w-full py-10 text-slate-300 font-bold text-sm bg-white border-2 border-dashed border-slate-100 rounded-2xl col-span-full">?쒖닠?대? ?볦쑝硫?移몄씠 ?앹꽦?⑸땲??</div>`;
+      bankEl.innerHTML = "";
+
+      statusPillEl.textContent = "?쒖닠?대? ?쒕옒洹명븯?몄슂";
+      statusPillEl.className = "text-xs px-3 py-1.5 rounded-xl bg-slate-100 font-bold text-slate-500 border border-slate-200";
+
+      progressEl.textContent = "";
+      progressEl.classList.remove('bg-emerald-100', 'text-emerald-700');
+      progressEl.classList.add('bg-slate-100', 'text-slate-500');
+    }
+
+    function renderArgSlots() {
+      argSlotsEl.innerHTML = "";
+      currentPredicate.args.forEach(arg => {
+        filled[arg.id] = false;
+
+        const slot = document.createElement("div");
+        slot.className = "p-4 rounded-2xl border border-slate-200 bg-white shadow-sm flex flex-col slot-transition animate-[fadeIn_0.3s_ease-out]";
+        slot.dataset.argId = arg.id;
+
+        slot.innerHTML = `
+          <div class="flex items-start justify-between gap-2 mb-3">
+            <div class="min-w-0 flex-1 border-b border-slate-100 pb-2">
+              <div class="font-black text-[15px] text-slate-700">${arg.label}</div>
+              <div class="text-xs font-bold text-amber-600 bg-amber-50 inline-block px-1.5 py-0.5 rounded mt-1"><i class="fa-solid fa-lightbulb"></i> ${arg.hint}</div>
+            </div>
+            <div class="text-base font-black w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors" data-mark="${arg.id}"></div>
+          </div>
+          <div class="mt-auto">
+            <div class="min-h-[48px] px-3 py-2 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 flex items-center justify-center transition-colors"
+                 data-dropzone="${arg.id}">
+              <span class="text-slate-400 text-[13px] font-bold">?ш린???⑥뼱瑜??볦쑝?몄슂</span>
+            </div>
+          </div>
+        `;
+
+        const dz = slot.querySelector(`[data-dropzone="${arg.id}"]`);
+        dz.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          if (filled[arg.id] || roundLocked) return;
+          dz.classList.add("drop-ok");
+        });
+        dz.addEventListener("dragleave", () => dz.classList.remove("drop-ok"));
+        dz.addEventListener("drop", (e) => {
+          e.preventDefault();
+          dz.classList.remove("drop-ok");
+          if (filled[arg.id] || roundLocked) return;
+
+          const wid = e.dataTransfer.getData("text/word");
+          if (!wid) return;
+
+          const wordEl = document.querySelector(`[data-word-id="${CSS.escape(wid)}"]`);
+          if (!wordEl) return;
+
+          const word = wordEl.dataset.word;
+          checkWordDrop(arg, word, wordEl, dz, slot);
+        });
+
+        argSlotsEl.appendChild(slot);
+      });
+    }
+
+    function setMark(argId, ok) {
+      const markEl = document.querySelector(`[data-mark="${CSS.escape(argId)}"]`);
+      if (!markEl) return;
+      if (ok) {
+        markEl.innerHTML = '<i class="fa-solid fa-check"></i>';
+        markEl.className = "text-base font-black w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors bg-emerald-100 text-emerald-600";
+      } else {
+        markEl.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+        markEl.className = "text-base font-black w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors bg-rose-100 text-rose-600";
+      }
+      setTimeout(() => {
+        markEl.innerHTML = "";
+        markEl.className = "text-base font-black w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors bg-transparent";
+      }, ok ? 1000 : 800);
+    }
+
+    function checkWordDrop(arg, word, wordEl, dropzoneEl, slotEl) {
+      const isCorrect = arg.answers.includes(word);
+
+      if (isCorrect) {
+        filled[arg.id] = true;
+        setMark(arg.id, true);
+
+        dropzoneEl.className = "min-h-[48px] px-3 py-2 rounded-xl border-2 border-emerald-400 bg-emerald-50 flex items-center justify-between gap-2 shadow-inner transition-all";
+        dropzoneEl.innerHTML = `
+          <span class="font-black text-[15px] text-emerald-800 drop-shadow-sm ml-1">${word}</span>
+          <button class="text-xs px-2.5 py-1.5 rounded-lg bg-white border border-emerald-200 font-bold text-emerald-600 hover:bg-emerald-100 hover:border-emerald-300 transition-colors active:scale-95 shadow-sm">
+            <i class="fa-solid fa-rotate-left"></i> 鍮쇨린
+          </button>
+        `;
+
+        slotEl.classList.replace('border-slate-200', 'border-emerald-200');
+
+        wordEl.remove();
+
+        const btn = dropzoneEl.querySelector("button");
+        btn.addEventListener("click", () => {
+          if (roundLocked) return;
+          filled[arg.id] = false;
+          dropzoneEl.className = "min-h-[48px] px-3 py-2 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 flex items-center justify-center transition-colors";
+          dropzoneEl.innerHTML = `<span class="text-slate-400 text-[13px] font-bold">?ш린???⑥뼱瑜??볦쑝?몄슂</span>`;
+          slotEl.classList.replace('border-emerald-200', 'border-slate-200');
+          addWordToBank(word);
+          rebindDropzones();
+          updateProgress();
+        });
+
+        updateProgress();
+        maybeFinishRound();
+      } else {
+        setMark(arg.id, false);
+        slotEl.classList.add("shake", "border-rose-300", "bg-rose-50");
+        setTimeout(() => slotEl.classList.remove("shake", "border-rose-300", "bg-rose-50"), 300);
+
+        wordEl.classList.add("drop-bad");
+        setTimeout(() => wordEl.classList.remove("drop-bad"), 300);
+      }
+    }
+
+    function rebindDropzones() {
+      if (!currentPredicate) return;
+      currentPredicate.args.forEach(arg => {
+        const slot = document.querySelector(`[data-arg-id="${CSS.escape(arg.id)}"]`);
+        if (!slot) return;
+        const dz = slot.querySelector(`[data-dropzone="${CSS.escape(arg.id)}"]`);
+        if (!dz) return;
+        if (filled[arg.id]) return;
+
+        dz.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          if (filled[arg.id] || roundLocked) return;
+          dz.classList.add("drop-ok");
+        });
+        dz.addEventListener("dragleave", () => dz.classList.remove("drop-ok"));
+        dz.addEventListener("drop", (e) => {
+          e.preventDefault();
+          dz.classList.remove("drop-ok");
+          if (filled[arg.id] || roundLocked) return;
+          const wid = e.dataTransfer.getData("text/word");
+          if (!wid) return;
+          const wordEl = document.querySelector(`[data-word-id="${CSS.escape(wid)}"]`);
+          if (!wordEl) return;
+          const word = wordEl.dataset.word;
+          checkWordDrop(arg, word, wordEl, dz, slot);
+        });
+      });
+    }
+
+    function renderBank(words) {
+      bankEl.innerHTML = "";
+      words.forEach(w => addWordToBank(w));
+    }
+
+    function addWordToBank(word) {
+      const chip = document.createElement("div");
+      const uid = `${word}__${crypto.randomUUID()}`;
+
+      chip.className = "px-3.5 py-2.5 rounded-xl bg-slate-700 border border-slate-600 shadow-md cursor-grab active:cursor-grabbing select-none hover:bg-slate-600 transition-colors animate-[fadeIn_0.2s_ease-out]";
+      chip.setAttribute("draggable", "true");
+      chip.dataset.word = word;
+      chip.dataset.wordId = uid;
+
+      chip.innerHTML = `<span class="font-black text-[15px] tracking-tight">${word}</span>`;
+
+      chip.addEventListener("dragstart", (e) => {
+        e.dataTransfer.setData("text/word", uid);
+        chip.classList.add("dragging");
+      });
+      chip.addEventListener("dragend", () => chip.classList.remove("dragging"));
+
+      bankEl.appendChild(chip);
+    }
+
+    function shuffleBank() {
+      const chips = Array.from(bankEl.children);
+      for (let i = chips.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [chips[i], chips[j]] = [chips[j], chips[i]];
+      }
+      bankEl.innerHTML = "";
+      chips.forEach(c => bankEl.appendChild(c));
+    }
+
+    function updateProgress() {
+      if (!currentPredicate) {
+        progressEl.textContent = "";
+        return;
+      }
+      const total = currentPredicate.args.length;
+      const done = Object.values(filled).filter(Boolean).length;
+      progressEl.innerHTML = `<span class="${done === total ? 'text-emerald-700' : 'text-slate-700'}">${done}</span> / ${total} ?꾨즺`;
+      if (done === total) {
+        progressEl.classList.replace('bg-slate-100', 'bg-emerald-100');
+        progressEl.classList.replace('text-slate-500', 'text-emerald-700');
+      } else {
+        progressEl.classList.replace('bg-emerald-100', 'bg-slate-100');
+        progressEl.classList.replace('text-emerald-700', 'text-slate-500');
+      }
+    }
+
+    function maybeFinishRound() {
+      const allDone = Object.values(filled).every(Boolean);
+      if (!allDone) return;
+
+      roundLocked = true;
+      statusPillEl.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> ?꾩꽦!';
+      statusPillEl.className = "text-xs font-black px-4 py-1.5 rounded-xl bg-emerald-500 text-white shadow-md shadow-emerald-200 animate-[bounce_1s_infinite]";
+
+      const pDrop = document.getElementById('predicateDrop');
+      pDrop.classList.add('ring-4', 'ring-emerald-200', 'border-emerald-400');
+    }
+
+    function newRound() {
+      clearPredicate();
+      subjectFixedEl.textContent = pick(SUBJECTS);
+    }
+
+    document.getElementById("btnReset").addEventListener("click", () => {
+      subjectFixedEl.textContent = "泥좎닔媛";
+      clearPredicate();
+    });
+
+    document.getElementById("btnNewRound").addEventListener("click", newRound);
+    document.getElementById("btnShuffle").addEventListener("click", shuffleBank);
+
+    renderPredicateList();
+    setupPredicateDrop();
+    newRound();
+  </script>
+</body>
+
+</html>

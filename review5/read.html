@@ -1,0 +1,1155 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>한국어 3B 복습 5 · 읽기(객관식)</title>
+  <style>
+    :root{
+      --bg1:#eef2ff;
+      --bg2:#f8fafc;
+      --card:#ffffff;
+      --text:#101828;
+      --muted:#475467;
+      --line:rgba(16,24,40,.12);
+      --shadow: 0 12px 30px rgba(16,24,40,.10);
+      --radius: 18px;
+      --accent:#2563eb;
+      --accent2:#1d4ed8;
+      --ok:#16a34a;
+      --no:#dc2626;
+      --focus: rgba(37,99,235,.25);
+      --warn:#b45309;
+      --warnbg: rgba(245,158,11,.12);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(900px 520px at 18% 10%, var(--bg1) 0%, var(--bg2) 55%);
+      color: var(--text);
+      min-height:100vh;
+      padding: 14px 14px calc(18px + env(safe-area-inset-bottom));
+    }
+    .wrap{width: 100%; max-width: 980px;margin:0 auto}
+    header{
+      display:flex; gap:12px; align-items:flex-start; justify-content:space-between;
+      margin: 6px 0 10px 0;
+    }
+    .title{line-height:1.15}
+    .title h1{font-size: 18px;margin:0;letter-spacing:-0.2px;}
+    .title .sub{margin-top:6px;font-size: 12px;color: var(--muted);line-height:1.45}
+    .pillbar{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; align-items:center;}
+    .pill{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.75);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-size: 12px;
+      user-select:none;
+      display:flex; gap:8px; align-items:center;
+      box-shadow: 0 6px 14px rgba(16,24,40,.06);
+      backdrop-filter: blur(8px);
+    }
+    .pill input{transform:translateY(1px)}
+    .pillbtn{
+      border:1px solid rgba(16,24,40,.12);
+      background: rgba(248,250,252,.98);
+      color: var(--text);
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 6px 14px rgba(16,24,40,.06);
+    }
+    .pillbtn:active{transform:scale(.99)}
+    .topbar{
+      position: sticky;
+      top: 10px;
+      z-index: 50;
+      background: rgba(248,250,252,.70);
+      border: 1px solid rgba(16,24,40,.08);
+      border-radius: var(--radius);
+      padding: 12px;
+      box-shadow: 0 10px 26px rgba(16,24,40,.08);
+      backdrop-filter: blur(10px);
+      margin-bottom: 12px;
+    }
+    .tabs{
+      display:flex; gap:8px; flex-wrap:wrap;
+      margin-top: 10px;
+    }
+    .tab{
+      border:1px solid rgba(16,24,40,.12);
+      background: rgba(255,255,255,.85);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 10px 12px;
+      font-size: 13px;
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .05s ease, background .12s ease, border-color .12s ease;
+      outline:none;
+      box-shadow: 0 6px 14px rgba(16,24,40,.06);
+      white-space:nowrap;
+    }
+    .tab:active{transform:scale(.99)}
+    .tab[aria-selected="true"]{
+      color: #ffffff;
+      background: linear-gradient(180deg, var(--accent), var(--accent2));
+      border-color: rgba(37,99,235,.60);
+    }
+    .stats{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .stat{
+      border:1px solid rgba(16,24,40,.10);
+      border-radius: 999px;
+      padding: 8px 10px;
+      background: rgba(255,255,255,.85);
+    }
+
+    .page{display:none;}
+    .page.active{display:block;}
+    .pagehead{
+      display:flex; gap:10px; align-items:flex-end; justify-content:space-between;
+      margin: 10px 0 8px 0;
+    }
+    .pagehead h2{
+      font-size: 16px; margin:0; letter-spacing:-0.2px;
+    }
+    .pagehead .hint{
+      font-size: 12px; color: var(--muted);
+      text-align:right;
+      max-width: 62%;
+      line-height:1.4;
+    }
+
+    .passage{
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(16,24,40,.10);
+      border-radius: 16px;
+      padding: 12px 14px;
+      box-shadow: 0 10px 22px rgba(16,24,40,.06);
+      margin-top: 10px;
+    }
+    details.passageDetails summary{
+      cursor:pointer;
+      list-style:none;
+      user-select:none;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      color: var(--text);
+      font-weight: 650;
+      font-size: 13px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    details.passageDetails summary::-webkit-details-marker{display:none}
+    .passageTag{
+      font-size: 11px;
+      color: var(--warn);
+      background: var(--warnbg);
+      border: 1px solid rgba(180,83,9,.30);
+      padding: 4px 10px;
+      border-radius: 999px;
+      white-space:nowrap;
+    }
+    .passageText{
+      margin-top: 10px;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.65;
+      white-space: pre-line;
+    }
+
+    .qgrid{display:grid; gap:10px; margin-top: 10px;}
+    .qcard{
+      background: var(--card);
+      border:1px solid rgba(16,24,40,.10);
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 10px 22px rgba(16,24,40,.06);
+    }
+    .qtitle{
+      display:flex; gap:10px; align-items:flex-start; justify-content:space-between;
+      margin-bottom: 10px;
+    }
+    .qtitle .num{
+      font-size: 12px; color: var(--muted);
+      border:1px solid rgba(16,24,40,.10);
+      border-radius: 999px;
+      padding: 5px 10px;
+      background: rgba(248,250,252,.95);
+      white-space:nowrap;
+    }
+    .qtitle .prompt{
+      flex:1;
+      font-size: 15px;
+      line-height:1.6;
+      letter-spacing:-0.2px;
+      white-space:pre-line;
+    }
+    .choices{display:grid; gap:10px;}
+    button.choice{
+      width:100%;
+      text-align:left;
+      border:1px solid rgba(16,24,40,.12);
+      background: rgba(248,250,252,.95);
+      color: var(--text);
+      padding: 12px 12px;
+      border-radius: 14px;
+      font-size: 14px;
+      line-height:1.35;
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .05s ease, background .12s ease, border-color .12s ease;
+      outline:none;
+    }
+    button.choice:hover{border-color: rgba(37,99,235,.30)}
+    button.choice:focus-visible{box-shadow: 0 0 0 3px var(--focus);}
+    button.choice:active{transform:scale(.99)}
+    button.choice[disabled]{opacity:.86; cursor:not-allowed}
+    button.choice.correct{
+      border-color: rgba(22,163,74,.75);
+      background: rgba(22,163,74,.08);
+    }
+    button.choice.wrong{
+      border-color: rgba(220,38,38,.75);
+      background: rgba(220,38,38,.08);
+    }
+    .feedback{
+      display:none;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(16,24,40,.16);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+      white-space:pre-line;
+    }
+    .feedback strong{color: var(--text)}
+    .kblock{display:block;}
+    .vblock{display:none; margin-top:10px;}
+    .show-vi .vblock{display:block;}
+
+    .pageFooter{
+      margin-top: 14px;
+      border:1px solid rgba(16,24,40,.10);
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(255,255,255,.90);
+      box-shadow: 0 10px 22px rgba(16,24,40,.06);
+    }
+    .footerRow{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+    }
+    .footerMsg{
+      font-size: 13px;
+      color: var(--muted);
+      line-height:1.55;
+      flex: 1;
+      min-width: 220px;
+    }
+    .footerMsg strong{color: var(--text)}
+    .footerBtns{display:flex; gap:10px; flex-wrap:wrap;}
+    .btn{
+      border:1px solid rgba(16,24,40,.12);
+      background: rgba(248,250,252,.98);
+      color: var(--text);
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-size: 14px;
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+      min-width: 160px;
+    }
+    .btn.primary{
+      color: #ffffff;
+      border-color: rgba(37,99,235,.40);
+      background: linear-gradient(180deg, var(--accent), var(--accent2));
+    }
+    .btn:active{transform:scale(.99)}
+    .btn[disabled]{opacity:.55; cursor:not-allowed}
+    .miniNote{
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+  </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body>
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+  <div class="wrap">
+    <header>
+      <div class="title">
+        <h1>한국어 3B 복습 5 · 읽기(객관식)</h1>
+        <div class="sub">유형별 1페이지. 보기 선택 즉시 채점. 오답 시 상세 해설 + 베트남어 해설 토글. 각 유형 마지막에 ‘다음 유형’ 버튼이 있습니다.</div>
+      </div>
+      <div class="pillbar">
+        <label class="pill"><input id="toggleVI" type="checkbox" /> 베트남어 해설</label>
+        <span class="pill" id="overallStat">전체: 0 / 15</span>
+        <button class="pillbtn" id="resetAll">처음부터</button>
+      </div>
+    </header>
+
+    <div class="topbar" aria-label="유형 선택 및 진행률">
+      <div style="display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+        <div style="color:var(--muted); font-size:12px; line-height:1.5;">
+          상단에서 <strong>유형</strong>을 선택합니다. 지문은 ‘지문 보기’를 눌러 확인합니다.
+        </div>
+        <div class="tabs" role="tablist" aria-label="유형 선택">
+          <button class="tab" id="tab-t1" role="tab" aria-selected="true" aria-controls="page-t1">1. 짧은 글</button>
+          <button class="tab" id="tab-t2" role="tab" aria-selected="false" aria-controls="page-t2">2. 순서</button>
+          <button class="tab" id="tab-t3" role="tab" aria-selected="false" aria-controls="page-t3">3. 생활 글</button>
+          <button class="tab" id="tab-t4" role="tab" aria-selected="false" aria-controls="page-t4">4. 정보 글</button>
+          <button class="tab" id="tab-t5" role="tab" aria-selected="false" aria-controls="page-t5">5. 주제·목적</button>
+          <button class="tab" id="tab-t6" role="tab" aria-selected="false" aria-controls="page-t6">6. 문장 완성</button>
+        </div>
+      </div>
+      <div class="stats">
+        <span class="stat" id="pageStat">이 유형: 0 / 0</span>
+        <span class="stat" id="answeredStat">푼 문항: 0 / 15</span>
+      </div>
+    </div>
+
+    <!-- TYPE 1 -->
+    <section class="page active" id="page-t1" role="tabpanel" aria-labelledby="tab-t1">
+      <div class="pagehead">
+        <h2>1. 짧은 글 이해 (1–3)</h2>
+        <div class="hint">핵심 단서(행사/의미/원인·결과)를 먼저 찾고, 보기에서 가장 정확한 것을 고르세요.</div>
+      </div>
+      <div class="qgrid" id="q-t1"></div>
+      <div class="pageFooter" id="footer-t1">
+        <div class="footerRow">
+          <div class="footerMsg" id="footerMsg-t1"></div>
+          <div class="footerBtns">
+            <button class="btn" id="footerPrev-t1">이전 유형</button>
+            <button class="btn primary" id="footerNext-t1">다음 유형</button>
+          </div>
+        </div>
+        <div class="miniNote">이 유형을 모두 풀면 ‘다음 유형’ 버튼이 활성화됩니다.</div>
+      </div>
+    </section>
+
+    <!-- TYPE 2 -->
+    <section class="page" id="page-t2" role="tabpanel" aria-labelledby="tab-t2">
+      <div class="pagehead">
+        <h2>2. 순서 맞추기 (4)</h2>
+        <div class="hint">‘주제 제시 → 이유/근거 → 예외/대안 → 마무리’ 흐름을 찾으면 빠릅니다.</div>
+      </div>
+      <div class="qgrid" id="q-t2"></div>
+      <div class="pageFooter" id="footer-t2">
+        <div class="footerRow">
+          <div class="footerMsg" id="footerMsg-t2"></div>
+          <div class="footerBtns">
+            <button class="btn" id="footerPrev-t2">이전 유형</button>
+            <button class="btn primary" id="footerNext-t2">다음 유형</button>
+          </div>
+        </div>
+        <div class="miniNote">이 유형을 모두 풀면 ‘다음 유형’ 버튼이 활성화됩니다.</div>
+      </div>
+    </section>
+
+    <!-- TYPE 3 -->
+    <section class="page" id="page-t3" role="tabpanel" aria-labelledby="tab-t3">
+      <div class="pagehead">
+        <h2>3. 생활 글 읽기 (5–6)</h2>
+        <div class="hint">지문에서 ‘행동 지침(해야 한다/좋다/확인)’ 문장을 찾고 보기와 1:1로 대응시키세요.</div>
+      </div>
+      <div class="passage" id="passage-p56"></div>
+      <div class="qgrid" id="q-t3"></div>
+      <div class="pageFooter" id="footer-t3">
+        <div class="footerRow">
+          <div class="footerMsg" id="footerMsg-t3"></div>
+          <div class="footerBtns">
+            <button class="btn" id="footerPrev-t3">이전 유형</button>
+            <button class="btn primary" id="footerNext-t3">다음 유형</button>
+          </div>
+        </div>
+        <div class="miniNote">이 유형을 모두 풀면 ‘다음 유형’ 버튼이 활성화됩니다.</div>
+      </div>
+    </section>
+
+    <!-- TYPE 4 -->
+    <section class="page" id="page-t4" role="tabpanel" aria-labelledby="tab-t4">
+      <div class="pagehead">
+        <h2>4. 정보 글 읽기 (7–9)</h2>
+        <div class="hint">문법(목적/이유)과 중심 생각, 문장 삽입 위치(앞뒤 연결)를 확인하세요.</div>
+      </div>
+      <div class="passage" id="passage-p78"></div>
+      <div class="qgrid" id="q-t4a"></div>
+      <div class="passage" id="passage-p9" style="margin-top:14px;"></div>
+      <div class="qgrid" id="q-t4b"></div>
+      <div class="pageFooter" id="footer-t4">
+        <div class="footerRow">
+          <div class="footerMsg" id="footerMsg-t4"></div>
+          <div class="footerBtns">
+            <button class="btn" id="footerPrev-t4">이전 유형</button>
+            <button class="btn primary" id="footerNext-t4">다음 유형</button>
+          </div>
+        </div>
+        <div class="miniNote">이 유형을 모두 풀면 ‘다음 유형’ 버튼이 활성화됩니다.</div>
+      </div>
+    </section>
+
+    <!-- TYPE 5 -->
+    <section class="page" id="page-t5" role="tabpanel" aria-labelledby="tab-t5">
+      <div class="pagehead">
+        <h2>5. 주제·목적 파악 (10–13)</h2>
+        <div class="hint">주제는 ‘결론/마지막 문장’에 자주 있습니다. 목적은 ‘글을 왜 썼는지’(알려 주려고/설명하려고)로 정리하세요.</div>
+      </div>
+      <div class="passage" id="passage-p10"></div>
+      <div class="qgrid" id="q-t5a"></div>
+      <div class="passage" id="passage-p1113" style="margin-top:14px;"></div>
+      <div class="qgrid" id="q-t5b"></div>
+
+      <div class="pageFooter" id="footer-t5">
+        <div class="footerRow">
+          <div class="footerMsg" id="footerMsg-t5"></div>
+          <div class="footerBtns">
+            <button class="btn" id="footerPrev-t5">이전 유형</button>
+            <button class="btn primary" id="footerNext-t5">다음 유형</button>
+          </div>
+        </div>
+        <div class="miniNote">이 유형을 모두 풀면 ‘다음 유형’ 버튼이 활성화됩니다.</div>
+      </div>
+    </section>
+
+    <!-- TYPE 6 -->
+    <section class="page" id="page-t6" role="tabpanel" aria-labelledby="tab-t6">
+      <div class="pagehead">
+        <h2>6. 문장 완성 (14–15)</h2>
+        <div class="hint">원래 주관식(쓰기) 문항을 객관식으로 변환했습니다. 문맥상 자연스럽고 예의에 맞는 문장을 고르세요.</div>
+      </div>
+      <div class="passage" id="passage-p1415"></div>
+      <div class="qgrid" id="q-t6"></div>
+      <div class="pageFooter" id="footer-t6">
+        <div class="footerRow">
+          <div class="footerMsg" id="footerMsg-t6"></div>
+          <div class="footerBtns">
+            <button class="btn" id="footerPrev-t6">이전 유형</button>
+            <button class="btn primary" id="footerNext-t6">다음 유형</button>
+          </div>
+        </div>
+        <div class="miniNote">마지막 유형까지 완료하면 전체 점수가 확정됩니다.</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // ===== Shared passages =====
+    const PASSAGES = {
+      p56: {
+        title: "지문(5–6) · 월세 방을 볼 때 확인할 점",
+        text: "월세를 구하기 위해 방을 보러 갈 때에는 되도록 낮 시간에 가는 게 좋다. 밤에는 방이 밝은지 어두운지 알 수 없기 때문이다. 또 부엌과 화장실에 물이 잘 나오는지 직접 틀어 보지 않으면 안 된다. 그리고 현재 살고 있는 사람에게 불편한 점은 없는지 꼼꼼하게 물어본다. 마지막으로 계약하기 전에 전기 요금이나 수도 요금, 인터넷 사용 요금이 방값에 포함되는지 알아보고 (ㄱ)을 어떻게 납부하는지 미리 확인해 두어야 한다."
+      },
+      p78: {
+        title: "지문(7–8) · 봄철 옷차림과 건강",
+        text: "꽃샘추위가 계속되고 있지만 백화점에는 노란색과 분홍색의 봄옷이 가득하다. 옷차림에 신경을 쓰는 직장 여성들은 겨울 내내 입었던 두꺼운 겨울옷 대신 가벼운 재킷을 입기 시작했다. 그런데 한겨울 날씨보다 요즘처럼 일교차가 클 때 더 감기에 걸리기 쉬우니 조심해야 한다. 두꺼운 겨울옷이 싫다면 대신 얇은 옷을 여러 개 겹쳐 입거나 쉽게 입었다가 (ㄱ) 간편한 겉옷을 준비하는 게 좋다. 마지막으로 목에는 밝은 색의 스카프를 매면 감기 예방도 되고 패션 감각도 있는 멋진 봄철 옷차림이 될 것이다."
+      },
+      p9: {
+        title: "지문(9) · 면접 옷차림(문장 넣기)",
+        text: "면접을 보러 갈 때에는 옷차림에 신경을 써야 한다. (ㄱ) 면접장에는 검정색 정장에 흰색 셔츠를 입고 가는 게 가장 좋다. (ㄴ) 그리고 크고 화려한 액세서리를 하는 것은 좋지 않다. (ㄷ) 이러한 모습이 면접관에게 성실하지 못하다는 느낌을 줄 수 있다. (ㄹ) 여성의 경우 화장도 너무 진하지 않게 자연스럽게 하는 것이 중요하다.\n\n<보기> 옷차림이 그 사람의 첫인상을 결정하기 때문이다."
+      },
+      p10: {
+        title: "지문(10) · 도시를 떠나는 젊은이들",
+        text: "서울에서 직장 생활을 하던 김영남 씨는 곧 고향으로 내려가서 농사짓는 부모님을 도우며 살 계획이다. 그는 대학을 졸업하자마자 꽤 괜찮은 중소기업에 취직을 했기 때문에 열심히 저축하면 서울에서 집도 사고 결혼도 할 수 있을 거라고 생각했다. 그런데 그가 받는 월급에서 방값과 생활비를 빼면 은행에서 빌린 대학 등록금을 갚기에도 충분하지 않았다. 여자 친구가 생겼지만 결혼은 꿈도 꿀 수 없었고 미래를 생각하면 마음이 답답했다. 편의 시설이 부족한 시골에서의 생활이 불편할 때도 있겠지만 그는 이제 좀 더 여유 있게 살고 싶다고 한다. 이처럼 최근 도시 생활에 지쳐서 지방으로 내려가는 젊은이들이 많아지고 있다."
+      },
+      p1113: {
+        title: "지문(11–13) · 층간 소음",
+        text: "얼마 전 대전시의 한 아파트에서는 층간 소음 문제로 이웃끼리 싸우다가 경찰이 출동한 일이 있었다.\n사람들이 이처럼 소리 때문에 스트레스를 받는 이유는 무엇일까? 대부분의 사람들은 청소기나 세탁기 소리, 뛰어다니는 소리를 들으면 (ㄱ) 이것이 바로 소음이다. 어떤 사람들은 이런 소음을 계속 들으면 잠을 잘 못 자거나 스트레스를 받아서 몸과 마음에 병이 나기도 한다.\n그렇다면 층간 소음을 예방하려면 어떻게 해야 할까? 아파트는 다른 사람과 함께 사는 공간이다. 우리 집 바닥은 이웃의 천장이라는 것을 기억하지 않으면 안 된다. 만약에 아이가 있다면 이웃에게 미리 아이를 보여 주고 서로 친하게 지내는 것도 큰 도움이 된다. 이웃끼리 잘 알고 지내면 좀 시끄러워도 스트레스를 덜 받기 때문이다."
+      },
+      p1415: {
+        title: "지문(14–15) · 송년회 초대장",
+        text: "송년회에 동창 여러분을 초대합니다!\n\n사랑하는 관악 고등학교 동창회 여러분,\n달력의 첫 장을 넘긴 것이 엊그제 같은데 벌써 올해도 한 달밖에 남지 않았습니다.\n한 해 동안 기쁜 일, 슬픈 일, 즐거운 일, 괴로운 일이 많았겠지만 뒤돌아보면 모두가 감사한 일들입니다.\n우리 함께 모여서 14. (            ) 고 새해의 계획도 이야기해 봅시다.\n연말이라 모두 바쁘겠지만 15. (            )\n\n일시 : 12월 20일 오후 7시부터\n장소 : 서울 강남호텔\n회비 : 5만 원"
+      }
+    };
+
+    function escapeHtml(s){
+      return String(s)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function renderPassage(elId, key){
+      const box = document.getElementById(elId);
+      const p = PASSAGES[key];
+      if(!box || !p) return;
+      box.innerHTML = `
+        <details class="passageDetails">
+          <summary>
+            <span>지문 보기 · ${escapeHtml(p.title)}</span>
+            <span class="passageTag">탭해서 펼치기</span>
+          </summary>
+          <div class="passageText">${escapeHtml(p.text)}</div>
+        </details>
+      `;
+    }
+
+    // ===== Questions =====
+    // Each item: {id, no, prompt, choices, answer, ko{rule,completed,details}, vi{rule,completed,details}}
+    const Q = {
+      t1: [
+        {
+          id:"q1", no:1,
+          prompt:"다음은 무엇에 대한 글인지 고르십시오.\n\n은지가 태어난 지 벌써 1년이 되었습니다. 꼭 오셔서 은지의 첫 번째 생일을 축하해 주세요.",
+          choices:["송년회","돌잔치","동창회","집들이"],
+          answer:1,
+          ko:{
+            rule:"핵심 단서: ‘1년’, ‘첫 번째 생일’",
+            completed:"정답: ② 돌잔치",
+            details:"돌잔치 = 아기가 태어난 지 1년(돌)이 되었을 때 하는 첫 생일잔치입니다.\n- 송년회: 한 해를 마무리하는 모임\n- 동창회: 같은 학교 동기 모임\n- 집들이: 이사 후 새집에 손님을 초대하는 모임"
+          },
+          vi:{
+            rule:"Dấu hiệu: ‘1 năm’, ‘sinh nhật lần đầu’",
+            completed:"Đáp án: ② 돌잔치",
+            details:"돌잔치 = tiệc mừng em bé tròn 1 tuổi (sinh nhật đầu tiên).\n- 송년회: tiệc tất niên\n- 동창회: họp lớp\n- 집들이: tiệc tân gia"
+          }
+        },
+        {
+          id:"q2", no:2,
+          prompt:"다음 밑줄 친 부분과 의미가 비슷한 것을 고르십시오.\n\n내가 자주 가는 식당에서는 밥이나 반찬의 양이 부족하면 무료로 더 준다.\n(밑줄: 부족하면)",
+          choices:["남으면","대접하면","마련하면","모자라면"],
+          answer:3,
+          ko:{
+            rule:"핵심 단서: ‘부족하다’의 동의어",
+            completed:"정답: ④ 모자라면",
+            details:"‘부족하다’ ≈ ‘모자라다’(양/수량이 충분하지 않다).\n- 남다: 반대 의미(남는다)\n- 대접하다: 손님에게 잘 해 주다\n- 마련하다: 준비하다"
+          },
+          vi:{
+            rule:"Dấu hiệu: từ đồng nghĩa của ‘부족하다’",
+            completed:"Đáp án: ④ 모자라면",
+            details:"‘부족하다’ ≈ ‘모자라다’ = không đủ/thiếu.\n- 남다: còn thừa (ngược nghĩa)\n- 대접하다: tiếp đãi\n- 마련하다: chuẩn bị"
+          }
+        },
+        {
+          id:"q3", no:3,
+          prompt:"다음 글의 내용과 같은 것을 고르십시오.\n\n작년에 학생이 6명밖에 없었던 대운 초등학교는 올해 신입생이 30명으로 늘었다. 이 학교는 다른 시골 학교들처럼 학생 수가 부족해서 곧 학교 문을 닫을 예정이었다. 이 소식을 들은 동창생들은 돈을 모아 16인승 버스를 마련해서 집이 먼 학생들이 편하게 학교에 다닐 수 있도록 도왔다. 그리고 학교 1층에 작은 도서관과 컴퓨터실을 만들어 주었다. 덕분에 학교에는 학생 수가 늘었고 학교는 문을 닫지 않게 되었다.",
+          choices:[
+            "대운 초등학교는 학생 수가 부족해 문을 닫았다.",
+            "학교가 문을 닫지 않은 건 학생들이 노력했기 때문이다.",
+            "최근 초등학생 수가 많아져서 학교와 선생님이 부족하다.",
+            "동창생들은 돈을 모아서 학교에 버스와 컴퓨터실을 마련해 주었다."
+          ],
+          answer:3,
+          ko:{
+            rule:"핵심 단서: ‘동창생들이 돈을 모아’ + ‘버스 마련’ + ‘도서관/컴퓨터실’",
+            completed:"정답: ④",
+            details:"학교가 문을 닫을 뻔했지만, 동창생들이 16인승 버스를 마련하고 도서관·컴퓨터실도 만들어 주어 학교가 유지되었다고 말합니다."
+          },
+          vi:{
+            rule:"Dấu hiệu: cựu học sinh góp tiền + chuẩn bị xe buýt + phòng máy",
+            completed:"Đáp án: ④",
+            details:"Trường suýt đóng cửa vì ít học sinh, nhưng cựu học sinh góp tiền mua xe 16 chỗ và làm thư viện/phòng máy nên trường không đóng."
+          }
+        }
+      ],
+      t2: [
+        {
+          id:"q4", no:4,
+          prompt:"다음을 순서대로 맞게 나열한 것을 고르십시오.\n\n<싸게 여행 가는 방법>\n(가) 일요일에 출발하면 저렴한 가격에 남들보다 여유 있는 여행을 즐길 수 있다.\n(나) 해외여행을 싸게 가고 싶으면 늦어도 6개월 전에는 비행기 표를 예약해야 한다.\n(다) 혹시 미리 예약을 하지 못했다면 일요일에 출발하는 여행 상품을 검색해 보자.\n(라) 빨리 예약하면 예약할수록 항공료가 저렴해지기 때문이다.",
+          choices:[
+            "(가)-(다)-(라)-(나)",
+            "(나)-(라)-(다)-(가)",
+            "(나)-(가)-(라)-(다)",
+            "(가)-(라)-(다)-(나)"
+          ],
+          answer:1,
+          ko:{
+            rule:"흐름: ‘미리 예약’(나) → 이유(라) → 예외/대안(다) → 구체 팁(가)",
+            completed:"정답: ② (나)-(라)-(다)-(가)",
+            details:"(라)은 (나)의 이유(‘빨리 예약할수록 저렴’)이므로 (나) 다음에 와야 자연스럽습니다. 그리고 ‘미리 예약 못했다면’(다) 대안을 말한 뒤, 그 대안(일요일 출발)의 장점(저렴/여유)(가)로 이어집니다."
+          },
+          vi:{
+            rule:"Trình tự: đặt sớm (나) → lý do (라) → phương án khi không đặt kịp (다) → mẹo cụ thể (가)",
+            completed:"Đáp án: ② (나)-(라)-(다)-(가)",
+            details:"(라) giải thích cho (나), nên phải đứng ngay sau (나). Sau đó (다) nói ‘nếu không đặt sớm’ thì tìm tour đi Chủ nhật, và (가) nêu lợi ích của việc xuất phát Chủ nhật."
+          }
+        }
+      ],
+      t3: [
+        {
+          id:"q5", no:5,
+          prompt:"(ㄱ)에 들어갈 알맞은 것을 고르십시오.",
+          choices:["난방","지출","공과금","계약서"],
+          answer:2,
+          ko:{
+            rule:"단서: 전기/수도/인터넷 요금 → ‘공과금’",
+            completed:"정답: ③ 공과금",
+            details:"전기 요금·수도 요금·인터넷 사용 요금은 공과금에 해당합니다. 따라서 (ㄱ)=공과금입니다."
+          },
+          vi:{
+            rule:"Dấu hiệu: tiền điện/nước/internet → ‘công phí’",
+            completed:"Đáp án: ③ 공과금",
+            details:"Tiền điện, nước, internet đều là 공과금, nên (ㄱ) = 공과금."
+          }
+        },
+        {
+          id:"q6", no:6,
+          prompt:"이 글의 내용과 같은 것을 고르십시오.",
+          choices:[
+            "집을 구할 때 가장 중요한 것은 방값이다.",
+            "부엌과 화장실에 물이 잘 나오는지 확인해야 한다.",
+            "전기 요금과 수도 요금이 방값에 포함되는 곳으로 정한다.",
+            "집이 밝은지 알기 위해 낮과 밤에 한 번씩 방문해 보는 게 좋다."
+          ],
+          answer:1,
+          ko:{
+            rule:"단서 문장: ‘부엌과 화장실에 물이 잘 나오는지 … 틀어 보지 않으면 안 된다.’",
+            completed:"정답: ②",
+            details:"②는 지문에 그대로 있는 내용입니다. ④는 지문과 반대(‘낮 시간에’ 가는 게 좋다)이고, ③은 ‘포함되는지 알아본다’이지 ‘포함되는 곳으로 정한다’가 아닙니다."
+          },
+          vi:{
+            rule:"Câu then chốt: ‘phải mở thử nước ở bếp và nhà vệ sinh’",
+            completed:"Đáp án: ②",
+            details:"② đúng. ④ sai vì đoạn văn khuyên đi ban ngày. ③ sai vì đoạn văn nói ‘kiểm tra có bao gồm hay không’, không phải ‘chỉ chọn nơi có bao gồm’."
+          }
+        }
+      ],
+      t4a: [
+        {
+          id:"q7", no:7,
+          prompt:"(ㄱ)에 알맞은 말을 고르십시오.",
+          choices:["벗었던","벗을수록","벗었는데도","벗을 수 있도록"],
+          answer:3,
+          ko:{
+            rule:"구조: ‘쉽게 입었다가 ( ) 간편한 겉옷’ = 필요하면 벗을 수 있게",
+            completed:"정답: ④ 벗을 수 있도록",
+            details:"일교차가 클 때는 겹쳐 입고, 더우면 쉽게 벗을 수 있는 겉옷을 준비하라는 뜻입니다."
+          },
+          vi:{
+            rule:"Cấu trúc: ‘mặc rồi có thể cởi ra’",
+            completed:"Đáp án: ④ 벗을 수 있도록",
+            details:"Ý là nên chuẩn bị áo khoác nhẹ để có thể cởi ra khi cần."
+          }
+        },
+        {
+          id:"q8", no:8,
+          prompt:"이 글의 중심 생각을 고르십시오.",
+          choices:[
+            "봄에 두꺼운 옷을 입으면 보기에 좋지 않다.",
+            "날씨가 추워도 직장 여성들은 옷을 잘 차려 입어야 한다.",
+            "일교차가 큰 날씨에는 코트와 점퍼를 입어서 건강을 지켜야 한다.",
+            "일교차가 큰 봄철에는 건강을 위해 얇은 옷을 많이 입거나 스카프를 매는 게 좋다."
+          ],
+          answer:3,
+          ko:{
+            rule:"핵심 반복: ‘일교차 큼 → 감기 조심 → 겹쳐 입기/겉옷/스카프’",
+            completed:"정답: ④",
+            details:"봄철 일교차가 클 때 감기에 걸리기 쉬우니 얇은 옷을 겹쳐 입고 스카프를 매라고 말합니다."
+          },
+          vi:{
+            rule:"Ý chính: chênh lệch nhiệt độ → dễ cảm → mặc nhiều lớp + khăn",
+            completed:"Đáp án: ④",
+            details:"Bài khuyên mặc nhiều lớp và quàng khăn để tránh cảm khi nhiệt độ chênh lệch."
+          }
+        }
+      ],
+      t4b: [
+        {
+          id:"q9", no:9,
+          prompt:"다음 글에서 <보기>의 문장이 들어가기에 가장 알맞은 곳을 고르십시오.",
+          choices:["ㄱ","ㄴ","ㄷ","ㄹ"],
+          answer:0,
+          ko:{
+            rule:"<보기>는 ‘이유/근거’ 문장입니다.",
+            completed:"정답: ① ㄱ",
+            details:"‘옷차림에 신경을 써야 한다’ 바로 뒤에 ‘첫인상을 결정하기 때문’이라는 이유를 붙인 뒤 구체적 규칙으로 넘어가야 자연스럽습니다."
+          },
+          vi:{
+            rule:"<보기> là câu nêu lý do.",
+            completed:"Đáp án: ① ㄱ",
+            details:"Đặt ngay sau câu ‘phải chú ý trang phục’ để nêu lý do rồi mới sang hướng dẫn cụ thể là hợp nhất."
+          }
+        }
+      ],
+      t5a: [
+        {
+          id:"q10", no:10,
+          prompt:"다음 글의 주제로 가장 알맞은 것을 고르십시오.",
+          choices:[
+            "시골은 젊은 사람들이 살기에 따분하고 불편하다.",
+            "은퇴한 노인들은 평화롭고 조용한 시골에서 살기를 원한다.",
+            "젊은 사람들은 자신들의 미래를 위해서 도시에서 살기를 원한다.",
+            "최근 생활의 여유를 찾기 위해서 도시를 떠나는 젊은이들이 많아지고 있다."
+          ],
+          answer:3,
+          ko:{
+            rule:"결론 단서: 마지막 문장",
+            completed:"정답: ④",
+            details:"주거비/생활비/대출 상환 등으로 도시 생활이 힘들어 지방으로 내려가는 젊은이가 늘고 있다는 내용입니다."
+          },
+          vi:{
+            rule:"Dấu hiệu kết luận: câu cuối",
+            completed:"Đáp án: ④",
+            details:"Nội dung là giới trẻ mệt mỏi vì chi phí ở thành phố nên về địa phương ngày càng nhiều."
+          }
+        }
+      ],
+      t5b: [
+        {
+          id:"q11", no:11,
+          prompt:"(ㄱ)에 가장 알맞은 것을 고르십시오.",
+          choices:["병에 걸리는데","기분이 좋아지는데","불쾌하다고 느끼는데","스트레스가 풀리는데"],
+          answer:2,
+          ko:{
+            rule:"문맥: ‘소리를 들으면 ( ) 이것이 바로 소음이다’",
+            completed:"정답: ③ 불쾌하다고 느끼는데",
+            details:"소음은 ‘듣기 싫고 거슬리는 소리’이므로 ‘불쾌하다고 느끼는데’가 가장 자연스럽습니다."
+          },
+          vi:{
+            rule:"Ngữ cảnh: nghe tiếng thì ( ) đó là tiếng ồn",
+            completed:"Đáp án: ③ 불쾌하다고 느끼는데",
+            details:"Tiếng ồn là âm thanh gây khó chịu, nên ‘cảm thấy khó chịu’ là hợp nhất."
+          }
+        },
+        {
+          id:"q12", no:12,
+          prompt:"필자가 이 글을 쓴 목적을 고르십시오.",
+          choices:[
+            "소음의 뜻에 대해 알려 주려고",
+            "이웃과 싸우지 않는 방법을 알려 주려고",
+            "조용한 아이로 키우는 방법을 알려 주려고",
+            "층간 소음을 예방할 수 있는 방법을 알려 주려고"
+          ],
+          answer:3,
+          ko:{
+            rule:"단서: ‘층간 소음을 예방하려면 어떻게 해야 할까?’ 이후 해결 방법 제시",
+            completed:"정답: ④",
+            details:"글은 예방 방법(배려/이웃과 친하게 지내기 등)을 알려 주는 데 초점이 있습니다."
+          },
+          vi:{
+            rule:"Dấu hiệu: hỏi ‘làm sao phòng tránh’ rồi đưa giải pháp",
+            completed:"Đáp án: ④",
+            details:"Bài tập trung vào cách phòng tránh tiếng ồn giữa các tầng."
+          }
+        },
+        {
+          id:"q13", no:13,
+          prompt:"이 글의 내용과 같은 것을 고르십시오.",
+          choices:[
+            "아파트에 사는 사람들은 이웃과 친해지기 어렵다.",
+            "소음을 계속 들으면 익숙해져서 느낄 수 없게 된다.",
+            "같은 소음이라도 잘 알고 지내는 이웃의 시끄러운 소리는 참기가 쉽다.",
+            "청소기나 세탁기 같은 소음이 심한 전자 제품을 아파트에서 사용하면 안 된다."
+          ],
+          answer:2,
+          ko:{
+            rule:"단서: ‘이웃끼리 잘 알고 지내면 … 스트레스를 덜 받기 때문이다.’",
+            completed:"정답: ③",
+            details:"이웃과 친하게 지내면 같은 소음이라도 스트레스를 덜 받는다고 했으므로 ③이 맞습니다."
+          },
+          vi:{
+            rule:"Dấu hiệu: thân với hàng xóm thì ít căng thẳng hơn",
+            completed:"Đáp án: ③",
+            details:"Bài nói nếu thân với hàng xóm thì dễ chịu hơn, nên ③ đúng."
+          }
+        }
+      ],
+      t6: [
+        {
+          id:"q14", no:14,
+          prompt:"괄호에 들어갈 알맞은 말을 고르십시오.\n\n우리 함께 모여서 (            ) 고 새해의 계획도 이야기해 봅시다.",
+          choices:[
+            "그동안 못 나눈 이야기도 나누",
+            "늦게까지 술을 마시",
+            "숙제를 같이 하",
+            "교실을 정리하"
+          ],
+          answer:0,
+          ko:{
+            rule:"문맥: 동창 송년회 초대",
+            completed:"정답: ①",
+            details:"①을 넣으면 ‘나누고’가 되어 ‘근황/추억을 나누자’는 의미로 자연스럽습니다."
+          },
+          vi:{
+            rule:"Ngữ cảnh: thư mời họp mặt cuối năm",
+            completed:"Đáp án: ①",
+            details:"Chọn ① thì thành ‘나누고’ (chia sẻ câu chuyện), phù hợp nhất."
+          }
+        },
+        {
+          id:"q15", no:15,
+          prompt:"괄호에 들어갈 알맞은 말을 고르십시오.\n\n연말이라 모두 바쁘겠지만 (            ).",
+          choices:[
+            "가능하면 꼭 참석해 주세요",
+            "빨리 집에 가세요",
+            "초대장을 버리세요",
+            "회비를 내지 마세요"
+          ],
+          answer:0,
+          ko:{
+            rule:"문맥: 초대장 마무리 문장",
+            completed:"정답: ①",
+            details:"초대장 마무리는 보통 ‘참석해 주세요/오세요’처럼 참여를 요청합니다."
+          },
+          vi:{
+            rule:"Ngữ cảnh: câu kết của thiệp mời",
+            completed:"Đáp án: ①",
+            details:"Kết thư mời thường là lời mời tham dự (‘xin hãy tham dự’)."
+          }
+        }
+      ]
+    };
+
+    const PAGES = [
+      {id:"t1", title:"1. 짧은 글", containers:["q-t1"], passages:[]},
+      {id:"t2", title:"2. 순서", containers:["q-t2"], passages:[]},
+      {id:"t3", title:"3. 생활 글", containers:["q-t3"], passages:[["passage-p56","p56"]]},
+      {id:"t4", title:"4. 정보 글", containers:["q-t4a","q-t4b"], passages:[["passage-p78","p78"],["passage-p9","p9"]]},
+      {id:"t5", title:"5. 주제·목적", containers:["q-t5a","q-t5b"], passages:[["passage-p10","p10"],["passage-p1113","p1113"]]},
+      {id:"t6", title:"6. 문장 완성", containers:["q-t6"], passages:[["passage-p1415","p1415"]]}
+    ];
+
+    function allQuestions(){
+      const arr = [];
+      for(const k of Object.keys(Q)){
+        for(const q of Q[k]) arr.push(q);
+      }
+      return arr;
+    }
+
+    const state = {
+      currentId: "t1",
+      answered: new Map(), // qid -> {chosen, correct}
+      lastFooterAutoScroll: new Set(),
+    };
+
+    const el = (id)=>document.getElementById(id);
+    const toggleVI = el("toggleVI");
+    const overallStat = el("overallStat");
+    const pageStat = el("pageStat");
+    const answeredStat = el("answeredStat");
+
+    function setVietnameseUI(){
+      document.body.classList.toggle("show-vi", toggleVI.checked);
+    }
+
+    function totalCounts(){ return allQuestions().length; }
+    function scoreCounts(){
+      let score = 0;
+      for(const [_, v] of state.answered){ if(v.correct) score += 1; }
+      return score;
+    }
+
+    function pageQuestionsById(pageId){
+      if(pageId === "t1") return Q.t1;
+      if(pageId === "t2") return Q.t2;
+      if(pageId === "t3") return Q.t3;
+      if(pageId === "t4") return [...Q.t4a, ...Q.t4b];
+      if(pageId === "t5") return [...Q.t5a, ...Q.t5b];
+      if(pageId === "t6") return Q.t6;
+      return [];
+    }
+    function pageCountsByPageId(pageId){
+      const qs = pageQuestionsById(pageId);
+      let answered = 0, score = 0;
+      for(const q of qs){
+        if(state.answered.has(q.id)){
+          answered += 1;
+          if(state.answered.get(q.id).correct) score += 1;
+        }
+      }
+      return {answered, score, total: qs.length};
+    }
+
+    function buildFeedbackHTML(q, chosenIdx){
+      const correctIdx = q.answer;
+      const correct = chosenIdx === correctIdx;
+
+      const chosenText = q.choices[chosenIdx];
+      const correctText = q.choices[correctIdx];
+
+      const ko = q.ko || {};
+      const vi = q.vi || {};
+
+      const genericWrongKO =
+        "오답 처리 요령:\n(1) 지문/문장에 있는 단서(시간, 숫자, 원인·결과, 목적 표현)를 먼저 표시\n(2) 보기 4개 중 ‘범위가 딱 맞는 것’ 1개만 남기기\n(3) 남은 보기는 ‘주체/시간/의미 범위’가 어긋나는지 확인";
+      const genericWrongVI =
+        "Cách xử lý khi sai:\n(1) gạch chân dấu hiệu (thời gian, số liệu, nguyên nhân–kết quả, mục đích)\n(2) giữ lại 1 đáp án khớp phạm vi nhất\n(3) kiểm tra đáp án sai ở chủ thể/thời gian/phạm vi nghĩa";
+
+      return `
+        <div class="kblock">
+          <div><strong>${correct ? "정답" : "오답"}</strong></div>
+          <div style="margin-top:6px;">선택: <strong>${escapeHtml(chosenText)}</strong></div>
+          <div>정답: <strong>${escapeHtml(correctText)}</strong></div>
+          <div style="margin-top:10px;"><strong>해설</strong></div>
+          <div style="margin-top:6px;">${escapeHtml(ko.rule || "")}</div>
+          <div style="margin-top:8px;">${escapeHtml(ko.completed || "")}</div>
+          <div style="margin-top:8px;">${escapeHtml(ko.details || "")}</div>
+          ${correct ? "" : `<div style="margin-top:10px;"><strong>추가 팁</strong></div><div style="margin-top:6px;">${escapeHtml(genericWrongKO)}</div>`}
+        </div>
+        <div class="vblock">
+          <div style="margin-top:12px;"><strong>${correct ? "Đúng" : "Sai"}</strong></div>
+          <div style="margin-top:6px;">Bạn chọn: <strong>${escapeHtml(chosenText)}</strong></div>
+          <div>Đáp án đúng: <strong>${escapeHtml(correctText)}</strong></div>
+          <div style="margin-top:10px;"><strong>Giải thích</strong></div>
+          <div style="margin-top:6px;">${escapeHtml(vi.rule || "")}</div>
+          <div style="margin-top:8px;">${escapeHtml(vi.completed || "")}</div>
+          <div style="margin-top:8px;">${escapeHtml(vi.details || "")}</div>
+          ${correct ? "" : `<div style="margin-top:10px;"><strong>Mẹo thêm</strong></div><div style="margin-top:6px;">${escapeHtml(genericWrongVI)}</div>`}
+        </div>
+      `;
+    }
+
+    function reveal(q, qcard, chosenIdx){
+      const buttons = Array.from(qcard.querySelectorAll("button.choice"));
+      buttons.forEach(b=>b.disabled=true);
+
+      const correctIdx = q.answer;
+      buttons[correctIdx].classList.add("correct");
+      if(chosenIdx !== correctIdx) buttons[chosenIdx].classList.add("wrong");
+
+      const fb = qcard.querySelector(".feedback");
+      fb.style.display = "block";
+      fb.innerHTML = buildFeedbackHTML(q, chosenIdx);
+
+      setTimeout(()=> fb.scrollIntoView({behavior:"smooth", block:"nearest"}), 80);
+    }
+
+    function choose(q, chosenIdx, qcard){
+      if(state.answered.has(q.id)) return;
+      const correct = chosenIdx === q.answer;
+      state.answered.set(q.id, {chosen: chosenIdx, correct});
+      reveal(q, qcard, chosenIdx);
+      updateStatsAndFooters(state.currentId);
+    }
+
+    function renderQuestion(container, q){
+      const qcard = document.createElement("div");
+      qcard.className = "qcard";
+      qcard.dataset.qid = q.id;
+
+      const label = (q.no ? `번호 ${q.no}` : "문항");
+
+      const title = document.createElement("div");
+      title.className = "qtitle";
+      title.innerHTML = `
+        <div class="num">${escapeHtml(label)}</div>
+        <div class="prompt">${escapeHtml(q.prompt)}</div>
+      `;
+      qcard.appendChild(title);
+
+      const choices = document.createElement("div");
+      choices.className = "choices";
+
+      q.choices.forEach((c, cidx)=>{
+        const b = document.createElement("button");
+        b.className = "choice";
+        b.type = "button";
+        b.textContent = `${cidx+1}. ${c}`;
+        b.addEventListener("click", ()=> choose(q, cidx, qcard));
+        choices.appendChild(b);
+      });
+      qcard.appendChild(choices);
+
+      const fb = document.createElement("div");
+      fb.className = "feedback";
+      qcard.appendChild(fb);
+
+      container.appendChild(qcard);
+
+      if(state.answered.has(q.id)){
+        const {chosen} = state.answered.get(q.id);
+        const buttons = Array.from(qcard.querySelectorAll("button.choice"));
+        buttons.forEach(b=>b.disabled=true);
+        const correctIdx = q.answer;
+        buttons[correctIdx].classList.add("correct");
+        if(chosen !== correctIdx) buttons[chosen].classList.add("wrong");
+        fb.style.display = "block";
+        fb.innerHTML = buildFeedbackHTML(q, chosen);
+      }
+    }
+
+    function renderAll(){
+      // passages
+      for(const p of PAGES){
+        for(const [elId, key] of (p.passages || [])) renderPassage(elId, key);
+      }
+
+      // clear containers
+      ["q-t1","q-t2","q-t3","q-t4a","q-t4b","q-t5a","q-t5b","q-t6"].forEach(id=>{
+        const c = document.getElementById(id);
+        if(c) c.innerHTML = "";
+      });
+
+      Q.t1.forEach(q=>renderQuestion(el("q-t1"), q));
+      Q.t2.forEach(q=>renderQuestion(el("q-t2"), q));
+      Q.t3.forEach(q=>renderQuestion(el("q-t3"), q));
+      Q.t4a.forEach(q=>renderQuestion(el("q-t4a"), q));
+      Q.t4b.forEach(q=>renderQuestion(el("q-t4b"), q));
+      Q.t5a.forEach(q=>renderQuestion(el("q-t5a"), q));
+      Q.t5b.forEach(q=>renderQuestion(el("q-t5b"), q));
+      Q.t6.forEach(q=>renderQuestion(el("q-t6"), q));
+
+      setVietnameseUI();
+      updateStatsAndFooters(state.currentId);
+    }
+
+    // -------- Page switching ----------
+    function setActivePage(id){
+      state.currentId = id;
+      for(const p of PAGES){
+        const tab = document.getElementById(`tab-${p.id}`);
+        const page = document.getElementById(`page-${p.id}`);
+        const active = p.id === id;
+        tab.setAttribute("aria-selected", active ? "true" : "false");
+        page.classList.toggle("active", active);
+      }
+      updateStatsAndFooters(id);
+      window.scrollTo({top:0, behavior:"auto"});
+    }
+
+    function currentIndex(){
+      return PAGES.findIndex(p=>p.id === state.currentId);
+    }
+    function goPrevType(){
+      const i = currentIndex();
+      if(i > 0) setActivePage(PAGES[i-1].id);
+    }
+    function goNextType(){
+      const i = currentIndex();
+      if(i < PAGES.length - 1) setActivePage(PAGES[i+1].id);
+    }
+
+    // -------- Footer ----------
+    function updateFooterForPageId(pageId){
+      const pc = pageCountsByPageId(pageId);
+      const footerMsg = document.getElementById(`footerMsg-${pageId}`);
+      const prevBtn = document.getElementById(`footerPrev-${pageId}`);
+      const nextBtn = document.getElementById(`footerNext-${pageId}`);
+
+      const pageIdx = PAGES.findIndex(p=>p.id === pageId);
+      const isFirst = pageIdx === 0;
+      const isLast = pageIdx === PAGES.length - 1;
+
+      prevBtn.disabled = isFirst;
+      nextBtn.disabled = isLast || (pc.answered < pc.total);
+
+      if(pc.answered < pc.total){
+        footerMsg.innerHTML = `진행: <strong>${pc.answered} / ${pc.total}</strong> (이 유형을 모두 풀면 다음 유형으로 이동할 수 있습니다.)`;
+      }else{
+        footerMsg.innerHTML = `이 유형 <strong>완료</strong> · 점수: <strong>${pc.score} / ${pc.total}</strong>`;
+      }
+
+      if(isLast){
+        nextBtn.textContent = "마지막 유형";
+        nextBtn.disabled = true;
+        if(pc.answered === pc.total){
+          footerMsg.innerHTML = `전체 <strong>완료</strong> · 총점: <strong>${scoreCounts()} / ${totalCounts()}</strong>`;
+        }
+      }else{
+        nextBtn.textContent = "다음 유형";
+      }
+    }
+
+    function updateStatsAndFooters(triggerPageId=null){
+      const total = totalCounts();
+      const score = scoreCounts();
+      overallStat.textContent = `전체: ${score} / ${total}`;
+
+      const pc = pageCountsByPageId(state.currentId);
+      pageStat.textContent = `이 유형: ${pc.score} / ${pc.total}`;
+      answeredStat.textContent = `푼 문항: ${state.answered.size} / ${total}`;
+
+      for(const p of PAGES) updateFooterForPageId(p.id);
+
+      if(triggerPageId && triggerPageId === state.currentId){
+        const now = pageCountsByPageId(triggerPageId);
+        if(now.answered === now.total && !state.lastFooterAutoScroll.has(triggerPageId)){
+          state.lastFooterAutoScroll.add(triggerPageId);
+          const footer = document.getElementById(`footer-${triggerPageId}`);
+          if(footer){
+            setTimeout(()=> footer.scrollIntoView({behavior:"smooth", block:"start"}), 140);
+          }
+        }
+      }
+    }
+
+    // Events
+    for(const p of PAGES){
+      document.getElementById(`tab-${p.id}`).addEventListener("click", ()=> setActivePage(p.id));
+      document.getElementById(`footerPrev-${p.id}`).addEventListener("click", goPrevType);
+      document.getElementById(`footerNext-${p.id}`).addEventListener("click", goNextType);
+    }
+    toggleVI.addEventListener("change", setVietnameseUI);
+
+    document.getElementById("resetAll").addEventListener("click", ()=>{
+      state.answered.clear();
+      state.lastFooterAutoScroll.clear();
+      renderAll();
+      document.querySelectorAll(".qcard").forEach(card=>{
+        card.querySelectorAll("button.choice").forEach(b=>{
+          b.disabled = false;
+          b.classList.remove("correct","wrong");
+        });
+        const fb = card.querySelector(".feedback");
+        fb.style.display = "none";
+        fb.innerHTML = "";
+      });
+      updateStatsAndFooters(state.currentId);
+      window.scrollTo({top:0, behavior:"smooth"});
+    });
+
+    // Init
+    renderAll();
+    setActivePage("t1");
+  </script>
+</body>
+</html>

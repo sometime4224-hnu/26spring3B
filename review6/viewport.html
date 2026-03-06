@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>서울대 한국어 3B - 16~18과 복습 퀴즈</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f0f4f8;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Toggle Switch Custom Style */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #3b82f6;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #3b82f6;
+        }
+        
+        .mode-transition {
+            transition: max-width 0.3s ease-in-out, padding 0.3s ease-in-out;
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col items-center justify-center p-4">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <!-- App Container -->
+    <div id="app-container" class="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden mode-transition flex flex-col" style="min-height: 80vh;">
+        
+        <!-- Header -->
+        <header class="bg-blue-600 p-4 text-white flex justify-between items-center shrink-0">
+            <div>
+                <h1 class="text-lg font-bold">3B 복습 6 (16-18과)</h1>
+                <p class="text-xs text-blue-200">어휘 및 문법 확인</p>
+            </div>
+            
+            <!-- View Mode Toggle -->
+            <div class="flex items-center">
+                <span class="text-xs mr-2 font-medium">PC모드</span>
+                <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                    <input type="checkbox" name="toggle" id="view-toggle" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300" style="top: 2px; left: 2px;"/>
+                    <label for="view-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                </div>
+            </div>
+        </header>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-gray-200 h-2 shrink-0">
+            <div id="progress-bar" class="bg-blue-400 h-2 transition-all duration-300" style="width: 0%"></div>
+        </div>
+
+        <!-- Main Content Area -->
+        <main id="quiz-content" class="flex-grow p-6 flex flex-col justify-center relative overflow-y-auto">
+            
+            <!-- Start Screen -->
+            <div id="start-screen" class="text-center space-y-6 fade-in">
+                <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto text-4xl">
+                    📚
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800">복습 문제 풀기</h2>
+                <p class="text-gray-600 leading-relaxed">
+                    16과에서 18과까지의<br>
+                    어휘와 문법을 복습합니다.<br>
+                    (총 <span id="total-count-display">0</span>문제)
+                </p>
+                <button onclick="startQuiz()" class="w-full py-4 bg-blue-600 text-white rounded-xl font-bold shadow-lg hover:bg-blue-700 transition transform hover:-translate-y-1">
+                    시작하기
+                </button>
+            </div>
+
+            <!-- Question Card -->
+            <div id="question-card" class="hidden flex-col h-full fade-in">
+                <div class="mb-4">
+                    <span id="q-category" class="inline-block px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full mb-2">Category</span>
+                    <h3 id="q-text" class="text-xl font-bold leading-snug text-gray-800 mb-4 whitespace-pre-wrap">
+                        문제 내용이 여기에 표시됩니다.
+                    </h3>
+                </div>
+
+                <!-- Options Area -->
+                <div id="options-container" class="space-y-3 flex-grow">
+                    <!-- Options injected by JS -->
+                </div>
+
+                <!-- Feedback Area (Hidden initially) -->
+                <div id="feedback-area" class="hidden mt-4 p-4 rounded-xl bg-gray-50 border border-gray-200">
+                    <div id="feedback-icon" class="text-3xl mb-2"></div>
+                    <p id="feedback-text" class="text-sm font-medium text-gray-700"></p>
+                    <button id="next-btn" onclick="nextQuestion()" class="mt-3 w-full py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700">
+                        다음 문제 →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Result Screen -->
+            <div id="result-screen" class="hidden text-center space-y-6 fade-in my-auto">
+                <div class="w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center mx-auto text-5xl">
+                    🎉
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800">학습 완료!</h2>
+                    <p class="text-gray-600 mt-2">수고하셨습니다.</p>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200">
+                    <p class="text-sm text-gray-500 mb-1">총 점수</p>
+                    <p class="text-4xl font-black text-blue-600"><span id="score">0</span> / <span id="total-score">0</span></p>
+                </div>
+
+                <div class="flex space-x-3">
+                    <button onclick="restartQuiz()" class="flex-1 py-3 bg-white border-2 border-blue-600 text-blue-600 rounded-xl font-bold hover:bg-blue-50">
+                        다시 풀기
+                    </button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Quiz Data extracted from the provided PDF
+        const quizData = [
+            // --- 어휘 확인 1: 동사/형용사 선택 ---
+            {
+                id: 1,
+                category: "어휘 (동사)",
+                question: "빈칸에 알맞은 말을 고르세요.\n\n\"동생과 야구를 하다가 어머니가 아끼시는 꽃병을 ________서 야단맞았어요.\"",
+                options: ["깨뜨려", "깨져", "깨뜨리", "깨지"],
+                answer: 0,
+                explanation: "내가 직접 실수를 한 것이므로 사동사 '깨뜨리다'를 써서 '깨뜨려서'가 맞습니다. (피동사 '깨지다'는 자연스럽지 않습니다.)"
+            },
+            {
+                id: 2,
+                category: "어휘 (동사)",
+                question: "빈칸에 알맞은 말을 고르세요.\n\n\"유리컵이 ________기 쉬우니 특별히 신경을 써서 포장해 주세요.\"",
+                options: ["깨뜨리", "깨지", "깨뜨려", "깨져"],
+                answer: 1,
+                explanation: "유리컵의 성질을 설명하므로 피동사 '깨지다'를 써서 '깨지기'가 자연스럽습니다."
+            },
+            {
+                id: 3,
+                category: "어휘 (형용사)",
+                question: "빈칸에 알맞은 말을 고르세요.\n\n\"아기의 이불은 솜처럼 ________고 따뜻했다.\"",
+                options: ["매끄럽", "부드럽", "딱딱하", "거칠"],
+                answer: 1,
+                explanation: "솜의 촉감은 '부드럽다'가 어울립니다. (부드럽고)"
+            },
+            {
+                id: 4,
+                category: "어휘 (형용사)",
+                question: "빈칸에 알맞은 말을 고르세요.\n\n\"아이들은 ________운 얼음판 위에서 시간 가는 줄 모르고 썰매를 탔다.\"",
+                options: ["매끄러", "부드러", "거치", "친하"],
+                answer: 0,
+                explanation: "얼음판의 표면은 '매끄럽다'가 어울립니다. (매끄러운)"
+            },
+            {
+                id: 5,
+                category: "어휘 (표현)",
+                question: "빈칸에 알맞은 표현을 고르세요.\n\n\"제가 청소한 방에서 반지가 없어지다니요? ________요.\"",
+                options: ["틀림없어", "그럴 리가 없어", "맞아", "당연해"],
+                answer: 1,
+                explanation: "믿을 수 없는 상황에 대해 강하게 부정하는 표현인 '그럴 리가 없어요'가 적절합니다."
+            },
+            {
+                id: 6,
+                category: "어휘 (표현)",
+                question: "빈칸에 알맞은 표현을 고르세요.\n\n\"목소리가 떨리는 걸 보니 그 사람이 거짓말을 하고 있는 게 ________요.\"",
+                options: ["틀림없어", "그럴 리가 없어", "몰라", "아니"],
+                answer: 0,
+                explanation: "확신을 나타낼 때는 '틀림없어요'가 적절합니다."
+            },
+
+            // --- 어휘 확인 2: 반대말 및 문맥 ---
+            {
+                id: 7,
+                category: "어휘 (반의어)",
+                question: "문맥에 맞는 단어들을 순서대로 고르세요.\n\n\"여자 친구와 유학 문제로 ( ㉠ )는데 ( ㉡ )고 싶지만 방법을 모르겠어요.\"",
+                options: ["㉠ 다퉜 - ㉡ 화해하", "㉠ 화해했 - ㉡ 다투", "㉠ 친했 - ㉡ 어색하", "㉠ 어색했 - ㉡ 친하"],
+                answer: 0,
+                explanation: "싸웠지만 다시 관계를 회복하고 싶다는 내용이므로 '다투다' -> '화해하다'가 맞습니다."
+            },
+            {
+                id: 8,
+                category: "어휘 (반의어)",
+                question: "문맥에 맞는 단어들을 순서대로 고르세요.\n\n\"( ㉠ ) 떡을 전자레인지에 돌렸더니 ( ㉡ )졌다.\"",
+                options: ["㉠ 부드러운 - ㉡ 딱딱해", "㉠ 딱딱한 - ㉡ 부드러워", "㉠ 거친 - ㉡ 매끄러워", "㉠ 매끄러운 - ㉡ 거칠어"],
+                answer: 1,
+                explanation: "굳은 떡이 데워서 말랑해진 것이므로 '딱딱하다' -> '부드러워지다'가 맞습니다."
+            },
+            {
+                id: 9,
+                category: "어휘 (반의어)",
+                question: "문맥에 맞는 단어들을 순서대로 고르세요.\n\n\"그 친구를 처음 만났을 때 말도 안 통하고 ( ㉠ )는데 지금은 많이 ( ㉡ )졌다.\"",
+                options: ["㉠ 친했 - ㉡ 어색해", "㉠ 매끄러웠 - ㉡ 거칠어", "㉠ 어색했 - ㉡ 친해", "㉠ 딱딱했 - ㉡ 부드러워"],
+                answer: 2,
+                explanation: "처음에는 불편했지만 지금은 가까워졌으므로 '어색하다' -> '친해지다'가 맞습니다."
+            },
+            {
+                id: 10,
+                category: "어휘 (반의어)",
+                question: "문맥에 맞는 단어들을 순서대로 고르세요.\n\n\"건조하고 ( ㉠ ) 피부에 이 화장품을 바르면 금방 ( ㉡ )질 거예요.\"",
+                options: ["㉠ 거친 - ㉡ 매끄러워", "㉠ 매끄러운 - ㉡ 거칠어", "㉠ 부드러운 - ㉡ 딱딱해", "㉠ 친한 - ㉡ 다퉈"],
+                answer: 0,
+                explanation: "피부 결이 나쁜 상태에서 좋은 상태로 변하는 것이므로 '거칠다' -> '매끄러워지다'가 맞습니다."
+            },
+
+            // --- 문법 확인 1 ---
+            {
+                id: 11,
+                category: "문법 (16-18과)",
+                question: "대화의 빈칸에 알맞은 문법 표현을 고르세요.\n\nA: 동생이 원하던 대학교에 합격했어요?\nB: 아니요, 시험이 너무 어려워서 합격할 ________.",
+                options: ["생각도 못 했어요", "생각을 했어요", "척했어요", "만했어요"],
+                answer: 0,
+                explanation: "문법: V-(으)ㄹ 생각도 못 하다\n(전혀 예상하지 못하거나 시도조차 못함)"
+            },
+            {
+                id: 12,
+                category: "문법 (16-18과)",
+                question: "대화의 빈칸에 알맞은 문법 표현을 고르세요.\n\nA: 아직 6시밖에 안 됐는데 벌써 출발해요? 9시까지만 가면 되잖아요.\nB: 차가 막힐까 봐 일찍 ________.",
+                options: ["출발하고 말았어요", "출발하기로 유명해요", "출발하는 척해요", "출발할 만해요"],
+                answer: 0,
+                explanation: "문법: V-고 말다\n(어떤 일이 의도치 않게 일어나거나 결국 그렇게 됨을 나타냄)"
+            },
+            {
+                id: 13,
+                category: "문법 (16-18과)",
+                question: "대화의 빈칸에 알맞은 문법 표현을 고르세요.\n\nA: 민수 씨가 회사를 그만뒀대요.\nB: 그 좋은 회사를 ________?",
+                options: ["그만두다니요", "그만둘 만해요", "그만두고 말아요", "그만두는 척해요"],
+                answer: 0,
+                explanation: "문법: A/V-다니요\n(들은 사실에 대해 놀라거나 믿을 수 없을 때 사용)"
+            },
+            {
+                id: 14,
+                category: "문법 (16-18과)",
+                question: "대화의 빈칸에 알맞은 문법 표현을 고르세요.\n\nA: 지난번에 카페에서 우연히 만난 남자가 자꾸 만나자고 해서 귀찮아 죽겠어요.\nB: 싫으면 그냥 못 ________.",
+                options: ["본 척하세요", "볼 만해요", "보기로 유명해요", "보지 다니요"],
+                answer: 0,
+                explanation: "문법: V-는 척하다 / A-(으)ㄴ 척하다\n(거짓으로 꾸며서 행동함)"
+            },
+            {
+                id: 15,
+                category: "문법 (16-18과)",
+                question: "대화의 빈칸에 알맞은 문법 표현을 고르세요.\n\nA: 외국 사람들이 왜 제주도에 많이 갈까요?\nB: 제주도는 경치가 ________.",
+                options: ["아름답기로 유명하잖아요", "아름답다니요", "아름다운 척하잖아요", "아름다울 생각도 못 해요"],
+                answer: 0,
+                explanation: "문법: A/V-기로 유명하다\n(무엇으로 널리 알려져 있음)"
+            },
+            {
+                id: 16,
+                category: "문법 (16-18과)",
+                question: "대화의 빈칸에 알맞은 문법 표현을 고르세요.\n\nA: 제가 끓인 찌개 맛이 어때요? 너무 짜지 않아요?\nB: 아니요, 정말 맛있어요. ________.",
+                options: ["먹을 만해요", "먹기라니요", "먹는 척해요", "먹을 생각도 못 해요"],
+                answer: 0,
+                explanation: "문법: V-(으)ㄹ 만하다\n(어떤 행동을 할 가치가 있거나 괜찮음)"
+            },
+
+            // --- 문법 확인 2: 틀린 문장 고치기 ---
+            {
+                id: 17,
+                category: "문장 수정",
+                question: "다음 문장은 어색한 부분이 있습니다. 가장 자연스럽게 고친 문장을 고르세요.\n\n\"자리에 앉아 보니 노약자석이라서 얼른 일어났어요.\"",
+                options: ["자리에 앉고 보니 노약자석이라서 얼른 일어났어요.", "자리에 앉을 만해서 노약자석이라서 얼른 일어났어요.", "자리에 앉는 척하고 노약자석이라서 얼른 일어났어요.", "자리에 앉기로 유명해서 노약자석이라서 얼른 일어났어요."],
+                answer: 0,
+                explanation: "수정 이유: 어떤 동작을 완료한 후에 사실을 알게 되었을 때는 '-고 보니'가 더 적절합니다."
+            },
+            {
+                id: 18,
+                category: "문장 수정",
+                question: "다음 문장은 어색한 부분이 있습니다. 가장 자연스럽게 고친 문장을 고르세요.\n\n\"백화점이라고 해서 무슨 물건이나 다 비싸요.\"",
+                options: ["백화점이라고 해서 물건이 다 비싼 건 아니에요.", "백화점이라고 해서 물건이 다 비싸고 말았어요.", "백화점이라고 해서 물건이 다 비싼 척해요.", "백화점이라고 해서 물건이 다 비싸다니요."],
+                answer: 0,
+                explanation: "수정 이유: '-다고 해서' 뒤에는 주로 부정적인 내용이나 부분을 부정하는 내용(~한 건 아니다)이 자연스럽습니다."
+            },
+            {
+                id: 19,
+                category: "문장 수정",
+                question: "다음 문장은 어색한 부분이 있습니다. 가장 자연스럽게 고친 문장을 고르세요.\n\n\"휴가철에는 항공 요금이 하도 비싸서 해외여행을 갈 생각이에요.\"",
+                options: ["휴가철에는 항공 요금이 하도 비싸서 해외여행을 갈 생각도 못 해요.", "휴가철에는 항공 요금이 하도 비싸서 해외여행을 갈 만해요.", "휴가철에는 항공 요금이 하도 비싸서 해외여행을 가기로 유명해요.", "휴가철에는 항공 요금이 하도 비싸서 해외여행을 가다니요."],
+                answer: 0,
+                explanation: "수정 이유: '하도 비싸서'라는 원인 때문에 '갈 수 없다'는 부정적 결과가 와야 하므로 '갈 생각도 못 해요'가 적절합니다."
+            }
+        ];
+
+        // App State
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let isPCMode = false;
+
+        // DOM Elements
+        const appContainer = document.getElementById('app-container');
+        const viewToggle = document.getElementById('view-toggle');
+        const totalCountDisplay = document.getElementById('total-count-display');
+        
+        const startScreen = document.getElementById('start-screen');
+        const questionCard = document.getElementById('question-card');
+        const resultScreen = document.getElementById('result-screen');
+        
+        const progressBar = document.getElementById('progress-bar');
+        const qCategory = document.getElementById('q-category');
+        const qText = document.getElementById('q-text');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackArea = document.getElementById('feedback-area');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const feedbackText = document.getElementById('feedback-text');
+        const nextBtn = document.getElementById('next-btn');
+        
+        const scoreDisplay = document.getElementById('score');
+        const totalScoreDisplay = document.getElementById('total-score');
+
+        // Initialization
+        window.onload = function() {
+            totalCountDisplay.innerText = quizData.length;
+            
+            // Toggle Event Listener
+            viewToggle.addEventListener('change', function() {
+                isPCMode = this.checked;
+                updateViewMode();
+            });
+        };
+
+        function updateViewMode() {
+            if (isPCMode) {
+                appContainer.classList.remove('max-w-md');
+                appContainer.classList.add('max-w-4xl');
+                // PC모드일 때 문제 카드 레이아웃 변경 (Grid)
+                if(!questionCard.classList.contains('hidden')){
+                    questionCard.classList.add('grid', 'grid-cols-2', 'gap-8');
+                }
+            } else {
+                appContainer.classList.remove('max-w-4xl');
+                appContainer.classList.add('max-w-md');
+                questionCard.classList.remove('grid', 'grid-cols-2', 'gap-8');
+            }
+        }
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            startScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            questionCard.classList.remove('hidden');
+            questionCard.classList.add('flex');
+            updateViewMode(); // Ensure layout matches current mode
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const currentData = quizData[currentQuestionIndex];
+            
+            // Reset UI
+            feedbackArea.classList.add('hidden');
+            optionsContainer.innerHTML = '';
+            
+            // Update Progress
+            const progress = ((currentQuestionIndex) / quizData.length) * 100;
+            progressBar.style.width = `${progress}%`;
+
+            // Set Content
+            qCategory.innerText = currentData.category;
+            qText.innerText = currentData.question;
+
+            // Generate Options
+            currentData.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-all duration-200 font-medium text-gray-700 option-btn`;
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, selectedBtn) {
+            // Prevent multiple clicks
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(btn => btn.disabled = true);
+
+            const currentData = quizData[currentQuestionIndex];
+            const isCorrect = selectedIndex === currentData.answer;
+
+            // Highlight buttons
+            if (isCorrect) {
+                selectedBtn.classList.add('bg-green-100', 'border-green-500', 'text-green-800');
+                feedbackIcon.innerHTML = '🙆‍♂️ <span class="text-green-600 font-bold text-lg">정답입니다!</span>';
+                score++;
+            } else {
+                selectedBtn.classList.add('bg-red-100', 'border-red-500', 'text-red-800');
+                feedbackIcon.innerHTML = '🙅‍♀️ <span class="text-red-600 font-bold text-lg">아쉽네요.</span>';
+                // Show correct answer
+                allBtns[currentData.answer].classList.add('bg-green-50', 'border-green-400');
+            }
+
+            feedbackText.innerHTML = `<span class="block mt-2 font-normal text-gray-600">${currentData.explanation.replace(/\n/g, '<br>')}</span>`;
+            feedbackArea.classList.remove('hidden');
+            feedbackArea.classList.add('fade-in');
+            
+            // Scroll to feedback if needed (Mobile)
+            if (!isPCMode) {
+                feedbackArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            questionCard.classList.add('hidden');
+            questionCard.classList.remove('flex', 'grid');
+            
+            scoreDisplay.innerText = score;
+            totalScoreDisplay.innerText = quizData.length;
+            progressBar.style.width = '100%';
+            
+            resultScreen.classList.remove('hidden');
+        }
+
+        function restartQuiz() {
+            startQuiz();
+        }
+
+    </script>
+</body>
+</html>

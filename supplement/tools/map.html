@@ -1,0 +1,336 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>踰좏듃???꾧뎅 63媛?????李얘린</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .tap-highlight-transparent {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* ?ㅽ겕濡ㅻ컮 ?④? (源붾걫??UI) */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+    <link rel="stylesheet" href="../../assets/content-consistency.css">
+</head>
+
+<body class="text-slate-800 tap-highlight-transparent flex flex-col min-h-screen">
+
+    <!-- Global Navigation -->
+    <nav
+        class="w-full bg-white/80 backdrop-blur-md border-b border-indigo-100 sticky top-0 z-50 shadow-sm h-16 px-4 flex items-center shrink-0">
+        <a href="../index.html"
+            class="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-bold transition-colors">
+            <i class="fa-solid fa-house"></i>
+            <span>硫붿씤?쇰줈</span>
+        </a>
+    </nav>
+
+    <!-- App Header & Search -->
+    <header class="bg-white border-b border-slate-200 shadow-sm z-40 shrink-0 sticky top-16">
+        <div class="max-w-md mx-auto px-4 py-4">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-xl font-black flex items-center gap-2 text-slate-800 tracking-tight">
+                    <i data-lucide="map" class="w-6 h-6 text-indigo-600"></i>
+                    踰좏듃???꾧뎅 63媛?吏??                </h1>
+                <span
+                    class="text-xs bg-indigo-100 text-indigo-800 px-2.5 py-1 rounded-full font-black drop-shadow-sm">Total
+                    63</span>
+            </div>
+
+            <!-- 寃???낅젰李?-->
+            <div class="relative">
+                <i data-lucide="search"
+                    class="absolute left-3.5 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+                <input type="text" id="searchInput" placeholder="吏??챸 寃??(?? ?섎끂?? nghe an...)"
+                    class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-[15px] font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:bg-white transition-all placeholder:text-slate-400 placeholder:font-normal shadow-inner"
+                    onkeyup="filterList()">
+            </div>
+        </div>
+    </header>
+
+    <!-- 硫붿씤 由ъ뒪??而⑦뀒?대꼫 -->
+    <main id="regionContainer" class="max-w-md w-full mx-auto p-4 pb-24 space-y-6 flex-1">
+        <!-- ?먮컮?ㅽ겕由쏀듃濡??곗씠?곌? ?뚮뜑留??⑸땲??-->
+    </main>
+
+    <!-- ???뗮꽣 -->
+    <div
+        class="fixed bottom-0 left-0 right-0 bg-slate-800/95 backdrop-blur border-t border-slate-700 p-3.5 z-40 shrink-0">
+        <div
+            class="max-w-md mx-auto text-xs font-bold text-center text-slate-300 flex items-center justify-center gap-2">
+            <i data-lucide="info" class="w-4 h-4 text-indigo-400"></i>
+            ?숈깮??怨좏뼢??寃?됰릺吏 ?딆쑝硫??ㅽ렆留곸쓣 ?뺤씤?댁＜?몄슂.
+        </div>
+    </div>
+
+    <script>
+        // Lucide ?꾩씠肄?珥덇린??        lucide.createIcons();
+
+        // ---------------------------------------------------------
+        // ?곗씠?? 踰좏듃??63媛??????꾩껜 ?곗씠?곕쿋?댁뒪
+        // ---------------------------------------------------------
+        const regionData = [
+            {
+                id: 'north', name: '遺곷? (Mi沼걆 B梳칌)', color: 'red',
+                subRegions: [
+                    {
+                        name: '?숇턿遺 (휂척ng B梳칌 B沼?',
+                        provinces: [
+                            { kr: '?섏옣', vn: 'H횪 Giang', type: 'prov' },
+                            { kr: '源뚯삤諛?, vn: 'Cao B梳켷g', type: 'prov' },
+                            { kr: '諛뺢퉸', vn: 'B梳칌 K梳죒', type: 'prov' },
+                            { kr: '?묒꽑', vn: 'L梳죒g S퉤n', type: 'prov' },
+                            { kr: '?쒖삅苑?, vn: 'Tuy챗n Quang', type: 'prov' },
+                            { kr: '??댁쓳?곗삅', vn: 'Th찼i Nguy챗n', type: 'prov' },
+                            { kr: '?명넗', vn: 'Ph첬 Th沼?, type: 'prov' },
+                            { kr: '諛뺤옣', vn: 'B梳칌 Giang', type: 'prov' },
+                            { kr: '苑앸땶', vn: 'Qu梳즢g Ninh', type: 'prov', desc: '?섎”踰좎씠' }
+                        ]
+                    },
+                    {
+                        name: '?쒕턿遺 (T창y B梳칌 B沼?',
+                        provinces: [
+                            { kr: '?쇱삤源뚯씠', vn: 'L횪o Cai', type: 'prov', desc: '?ы뙆' },
+                            { kr: '?뚮컮??, vn: 'Y챗n B찼i', type: 'prov' },
+                            { kr: '?붿뿏鍮꾩뿏', vn: '휂i沼뇆 Bi챗n', type: 'prov' },
+                            { kr: '?쇱씠姨뚯슦', vn: 'Lai Ch창u', type: 'prov' },
+                            { kr: '?좊씪', vn: 'S퉤n La', type: 'prov' },
+                            { kr: '?몄븘鍮?, vn: 'H챵a B챙nh', type: 'prov' }
+                        ]
+                    },
+                    {
+                        name: '?띻컯 ?쇨컖二?(휂沼뱊g b梳켷g s척ng H沼뱊g)',
+                        provinces: [
+                            { kr: '?섎끂??, vn: 'H횪 N沼셢', type: 'city', desc: '?섎룄' },
+                            { kr: '?섏씠??, vn: 'H梳즜 Ph챵ng', type: 'city', desc: '??뎄 ?꾩떆' },
+                            { kr: '諛뺣땶', vn: 'B梳칌 Ninh', type: 'prov', desc: '?쇱꽦 怨듭옣' },
+                            { kr: '?섎궓', vn: 'H횪 Nam', type: 'prov' },
+                            { kr: '?섏씠利덉뿁', vn: 'H梳즜 D튼퉤ng', type: 'prov' },
+                            { kr: '?μ삅', vn: 'H튼ng Y챗n', type: 'prov' },
+                            { kr: '?⑤뵖', vn: 'Nam 휂沼땙h', type: 'prov' },
+                            { kr: '?뚮퉰', vn: 'Ninh B챙nh', type: 'prov', desc: '?≪????섎”踰좎씠' },
+                            { kr: '??대퉰', vn: 'Th찼i B챙nh', type: 'prov' },
+                            { kr: '鍮덊뫗', vn: 'V칫nh Ph첬c', type: 'prov' }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'central', name: '以묐? (Mi沼걆 Trung)', color: 'green',
+                subRegions: [
+                    {
+                        name: '遺곸쨷遺 (B梳칌 Trung B沼?',
+                        provinces: [
+                            { kr: '??명샇??, vn: 'Thanh H처a', type: 'prov' },
+                            { kr: '?묒뿉??, vn: 'Ngh沼?An', type: 'prov', desc: '?몄컡誘?怨좏뼢' },
+                            { kr: '?섎씍', vn: 'H횪 T칫nh', type: 'prov' },
+                            { kr: '苑앸퉰', vn: 'Qu梳즢g B챙nh', type: 'prov', desc: '?곷깘耳諛? },
+                            { kr: '苑앹컡', vn: 'Qu梳즢g Tr沼?, type: 'prov' },
+                            { kr: '?ъ븘?곗뿏 ?꾩뿉', vn: 'Th沼첺 Thi챗n Hu梳?, type: 'prov', desc: '???섎룄' }
+                        ]
+                    },
+                    {
+                        name: '?⑥쨷遺 ?댁븞 (Duy챗n h梳즜 Nam Trung B沼?',
+                        provinces: [
+                            { kr: '?ㅻ궘', vn: '휂횪 N梳탇g', type: 'city', desc: '愿愿??곸뾽 以묒떖' },
+                            { kr: '苑앸궓', vn: 'Qu梳즢g Nam', type: 'prov', desc: '?몄씠?? },
+                            { kr: '苑앹쓳?꾩씠', vn: 'Qu梳즢g Ng찾i', type: 'prov' },
+                            { kr: '鍮덈뵖', vn: 'B챙nh 휂沼땙h', type: 'prov', desc: '?대끉' },
+                            { kr: '?몄삅', vn: 'Ph첬 Y챗n', type: 'prov' },
+                            { kr: '移댁씤?몄븘', vn: 'Kh찼nh H챵a', type: 'prov', desc: '?섑듃?? },
+                            { kr: '?뚰닾??, vn: 'Ninh Thu梳춏', type: 'prov' },
+                            { kr: '鍮덊닾??, vn: 'B챙nh Thu梳춏', type: 'prov', desc: '臾댁씠?? }
+                        ]
+                    },
+                    {
+                        name: '?쒕? 怨좎썝 (T창y Nguy챗n)',
+                        provinces: [
+                            { kr: '肄섑댘', vn: 'Kon Tum', type: 'prov' },
+                            { kr: '吏?꾨씪??, vn: 'Gia Lai', type: 'prov' },
+                            { kr: '?λ씫', vn: '휂梳칔 L梳칔', type: 'prov' },
+                            { kr: '?λ냽', vn: '휂梳칔 N척ng', type: 'prov' },
+                            { kr: '?쇰룞', vn: 'L창m 휂沼뱊g', type: 'prov', desc: '?щ옃' }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'south', name: '?⑤? (Mi沼걆 Nam)', color: 'blue',
+                subRegions: [
+                    {
+                        name: '?숇궓遺 (휂척ng Nam B沼?',
+                        provinces: [
+                            { kr: '?몄컡誘?, vn: 'TP. H沼?Ch챠 Minh', type: 'city', desc: '寃쎌젣 ?섎룄' },
+                            { kr: '諛붾━??遺뺣뵲??, vn: 'B횪 R沼땇?밮크ng T횪u', type: 'prov' },
+                            { kr: '鍮덉쫰??, vn: 'B챙nh D튼퉤ng', type: 'prov', desc: '怨듬떒 諛吏? },
+                            { kr: '鍮덊뫗 (?⑤?)', vn: 'B챙nh Ph튼沼쌵', type: 'prov' },
+                            { kr: '?숇굹??, vn: '휂沼뱊g Nai', type: 'prov' },
+                            { kr: '?좎씠??, vn: 'T창y Ninh', type: 'prov' }
+                        ]
+                    },
+                    {
+                        name: '硫붿쉘媛??쇨컖二?(휂沼뱊g b梳켷g s척ng C沼춙 Long)',
+                        provinces: [
+                            { kr: '猿??, vn: 'C梳쬷 Th퉤', type: 'city', desc: '硫붿쉘 以묒떖' },
+                            { kr: '?덉옣', vn: 'An Giang', type: 'prov' },
+                            { kr: '諛뺣━?먯슦', vn: 'B梳죅 Li챗u', type: 'prov' },
+                            { kr: '踰ㅼ㎏', vn: 'B梳퓆 Tre', type: 'prov', desc: '肄붿퐫?? },
+                            { kr: '源뚮쭏??, vn: 'C횪 Mau', type: 'prov', desc: '理쒕궓?? },
+                            { kr: '?숉깙', vn: '휂沼뱊g Th찼p', type: 'prov' },
+                            { kr: '?섏슦??, vn: 'H梳춙 Giang', type: 'prov' },
+                            { kr: '?쇱뿏??, vn: 'Ki챗n Giang', type: 'prov', desc: '?멸씀?? },
+                            { kr: '濡깆븞', vn: 'Long An', type: 'prov' },
+                            { kr: '?띿㎟', vn: 'S처c Tr훱ng', type: 'prov' },
+                            { kr: '?좎뿏??, vn: 'Ti沼걆 Giang', type: 'prov' },
+                            { kr: '吏쒕퉰', vn: 'Tr횪 Vinh', type: 'prov' },
+                            { kr: '鍮덈”', vn: 'V칫nh Long', type: 'prov' }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        // ---------------------------------------------------------
+        // ?뚮뜑留??⑥닔
+        // ---------------------------------------------------------
+        const container = document.getElementById('regionContainer');
+
+        function renderRegions(filterText = '') {
+            container.innerHTML = '';
+            const normalizedFilter = filterText.toLowerCase().trim();
+
+            regionData.forEach(region => {
+                // ?대떦 沅뚯뿭(Region) ?댁뿉 寃?됱뼱媛 ?ы븿????Province)???덈뒗吏 ?뺤씤
+                const matchingSubRegions = region.subRegions.map(sub => {
+                    const matchingProvinces = sub.provinces.filter(p =>
+                        p.kr.includes(normalizedFilter) ||
+                        p.vn.toLowerCase().includes(normalizedFilter)
+                    );
+                    return { ...sub, provinces: matchingProvinces };
+                }).filter(sub => sub.provinces.length > 0);
+
+                // 寃?됱뼱媛 ?놁쑝硫??꾩껜 ?쒖떆, 寃?됱뼱媛 ?덉쑝硫?留ㅼ묶??寃껊쭔 ?쒖떆
+                const displaySubRegions = normalizedFilter ? matchingSubRegions : region.subRegions;
+
+                if (displaySubRegions.length > 0) {
+                    const section = document.createElement('section');
+                    section.className = "mb-8";
+
+                    // ?遺꾨쪟 ?ㅻ뜑 (遺곷?/以묐?/?⑤?)
+                    const headerColorClass = region.color === 'red' ? 'bg-rose-50 text-rose-800 border-rose-200 shadow-rose-100/50' :
+                        region.color === 'green' ? 'bg-emerald-50 text-emerald-800 border-emerald-200 shadow-emerald-100/50' :
+                            'bg-blue-50 text-blue-800 border-blue-200 shadow-blue-100/50';
+
+                    section.innerHTML = `
+                        <div class="px-5 py-3 rounded-t-2xl border ${headerColorClass} shadow-md font-black text-[17px] mt-4 z-10 relative">
+                            ${region.name}
+                        </div>
+                    `;
+
+                    // 以묐텇瑜?(沅뚯뿭) ?뚮뜑留?                    const contentDiv = document.createElement('div');
+                    contentDiv.className = "bg-white border-l border-r border-b border-slate-200 rounded-b-2xl shadow-sm overflow-hidden -mt-1 relative z-0";
+
+                    displaySubRegions.forEach((sub, subIndex) => {
+                        const subDiv = document.createElement('div');
+                        subDiv.className = "border-b border-slate-100 last:border-b-0";
+
+                        // ?꾩퐫?붿뼵 ?ㅻ뜑 (沅뚯뿭 ?대쫫)
+                        // 寃??以묒씪 ?뚮뒗 ??긽 ?쇱묠(open), ?꾨땺 ?뚮뒗 泥?踰덉㎏留??쇱튂嫄곕굹 ?レ쓬
+                        const isOpen = normalizedFilter.length > 0;
+
+                        const details = document.createElement('details');
+                        if (isOpen) details.open = true;
+                        details.className = "group";
+
+                        details.innerHTML = `
+                            <summary class="cursor-pointer p-4 bg-slate-50/50 hover:bg-slate-100/80 font-bold text-slate-800 flex justify-between items-center select-none transition-colors">
+                                <span class="text-[15px] flex items-center gap-2">
+                                    <i data-lucide="folder-tree" class="w-4 h-4 text-slate-400"></i>
+                                    ${sub.name} 
+                                    <span class="text-xs font-black text-slate-400 ml-1 bg-white px-2 py-0.5 rounded-full border border-slate-200 shadow-sm">${sub.provinces.length}</span>
+                                </span>
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform group-open:rotate-180"></i>
+                            </summary>
+                            <div class="divide-y divide-slate-50 border-t border-slate-100 bg-white">
+                                ${sub.provinces.map(prov => `
+                                    <button onclick="openMap('${prov.vn}')" class="w-full text-left p-3 pl-5 hover:bg-indigo-50/50 active:bg-indigo-100 transition-all flex items-center justify-between group/item">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-2.5 h-2.5 rounded-full ${prov.type === 'city' ? 'bg-rose-500 ring-2 ring-rose-200 shadow-sm' : 'bg-slate-300'}"></div>
+                                            <div>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="text-[15px] font-black ${prov.type === 'city' ? 'text-slate-900' : 'text-slate-700 group-hover/item:text-indigo-900 transition-colors'}">${prov.kr}</span>
+                                                    ${prov.type === 'city' ? '<span class="text-[10px] bg-slate-800 text-white px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wider">吏곹븷??/span>' : ''}
+                                                </div>
+                                                <div class="text-[13px] text-indigo-500 font-semibold mt-0.5 leading-none">${prov.vn}</div>
+                                                ${prov.desc ? `<div class="text-[11px] font-bold text-slate-400 mt-1 bg-slate-50 inline-block px-1.5 py-0.5 rounded">${prov.desc}</div>` : ''}
+                                            </div>
+                                        </div>
+                                        <div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center group-hover/item:bg-indigo-100 transition-colors border border-slate-100 group-hover/item:border-indigo-200">
+                                            <i data-lucide="map-pin" class="w-4 h-4 text-slate-400 group-hover/item:text-indigo-600"></i>
+                                        </div>
+                                    </button>
+                                `).join('')}
+                            </div>
+                        `;
+                        subDiv.appendChild(details);
+                        contentDiv.appendChild(subDiv);
+                    });
+
+                    section.appendChild(contentDiv);
+                    container.appendChild(section);
+                }
+            });
+
+            // 寃??寃곌낵 ?놁쓬 硫붿떆吏
+            if (container.innerHTML === '') {
+                container.innerHTML = `
+                    <div class="text-center py-16 bg-white rounded-3xl border border-slate-200 shadow-sm mt-4">
+                        <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-slate-400">
+                            <i data-lucide="map-pin-off" class="w-8 h-8"></i>
+                        </div>
+                        <p class="font-bold text-slate-600 text-[15px]">寃??寃곌낵媛 ?놁뒿?덈떎.</p>
+                        <p class="text-[13px] text-slate-400 mt-2">踰좏듃?⑥뼱 ?ㅽ렆留곸씠???쒓????뺤씤?댁＜?몄슂.</p>
+                    </div>
+                `;
+            }
+            lucide.createIcons();
+        }
+
+        // 寃???꾪꽣 ?⑥닔
+        function filterList() {
+            const input = document.getElementById('searchInput');
+            renderRegions(input.value);
+        }
+
+        // 援ш? 留??닿린
+        function openMap(query) {
+            const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query + ' Vietnam')}`;
+            window.open(url, '_blank');
+        }
+
+        // 珥덇린 ?뚮뜑留?        renderRegions();
+
+    </script>
+</body>
+
+</html>

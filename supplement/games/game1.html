@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>諛쒗몴??異붿꺼湲?/title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            background-color: #f8fafc;
+        }
+
+        .lottery-box {
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #e0e7ff 0%, #ede9fe 100%);
+            border: 2px dashed #a5b4fc;
+        }
+
+        .lottery-text {
+            animation: pulse-magic 2s infinite;
+        }
+
+        @keyframes pulse-magic {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.9;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+                text-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+            }
+        }
+
+        .button {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .button:active {
+            transform: scale(0.96);
+        }
+    </style>
+    <link rel="stylesheet" href="../../assets/content-consistency.css">
+</head>
+
+<body class="flex flex-col items-center min-h-screen pb-10">
+
+    <!-- Global Navigation -->
+    <nav
+        class="w-full bg-white/80 backdrop-blur-md border-b border-indigo-100 sticky top-0 z-50 shadow-sm h-16 px-4 sm:px-6 flex items-center">
+        <a href="../index.html"
+            class="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-bold transition-colors">
+            <i class="fa-solid fa-house"></i>
+            <span>硫붿씤?쇰줈</span>
+        </a>
+    </nav>
+
+    <div class="w-full max-w-sm mt-8 px-4">
+        <div
+            class="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] ring-1 ring-slate-100 p-6 sm:p-8 space-y-6 text-center">
+
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 mb-2">
+                <i class="fa-solid fa-dice text-2xl"></i>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight">諛쒗몴??異붿꺼湲?/h1>
+
+            <!-- 異붿꺼 寃곌낵 ?쒖떆 ?곸옄 -->
+            <div id="lottery-box"
+                class="lottery-box rounded-2xl shadow-inner flex items-center justify-center p-6 relative overflow-hidden">
+                <span id="result-display"
+                    class="lottery-text text-2xl md:text-3xl font-black text-indigo-600 break-words text-center">
+                    異붿꺼 踰꾪듉??br>?뚮윭二쇱꽭??
+                </span>
+            </div>
+
+            <!-- 異붿꺼 踰꾪듉 -->
+            <button id="lottery-button"
+                class="button w-full py-4 px-6 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-lg rounded-2xl shadow-lg shadow-indigo-200 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> 臾댁옉??異붿꺼
+            </button>
+
+            <!-- 異붿꺼???숈깮 紐낅떒 -->
+            <div class="text-left pt-6 border-t border-slate-100">
+                <h2 class="text-sm font-bold mb-3 text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-list"></i> 異붿꺼???숈깮??                </h2>
+                <ul id="drawn-students-list" class="space-y-2">
+                    <!-- 異붿꺼???숈깮 紐⑸줉???ш린???쒖떆?⑸땲??-->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const students = [
+            '??????, '??罹??먯븞 ??, '????? ?쒖뿁', '?묒쎂 ?묒뼲 留덉씠', '????洹??묒븘',
+            '?????붿뿏', '?묒슦????留?, '易붿뿁 ???ъ씠 由?, '痢좎뿁 諛???, '?????묒삦 ?꾩삅',
+            '吏??먯씠 ??, '????????, '遺 ?ъ씠 吏?, '?뚯슦 ??遺 ??, '??諛??꾩븞',
+            '?묒쎂 ???꾩뿏 由?, '李???誘??먯뿁', '留덉씠 ??吏?, '?????섏삤', '遺 ???ㅼ뿏',
+            '?좊???, '?꾩퓼?섍? 肄붿슦誘?
+        ];
+
+        let availableStudents = [...students];
+        const lotteryButton = document.getElementById('lottery-button');
+        const resultDisplay = document.getElementById('result-display');
+        const drawnList = document.getElementById('drawn-students-list');
+
+        lotteryButton.addEventListener('click', () => {
+            if (availableStudents.length === 0) {
+                resultDisplay.innerHTML = '紐⑤뱺 ?숈깮??br>異붿꺼?섏뿀?듬땲??';
+                resultDisplay.classList.remove('text-indigo-600');
+                resultDisplay.classList.add('text-rose-500');
+                lotteryButton.disabled = true;
+                lotteryButton.classList.add('opacity-50', 'cursor-not-allowed');
+                lotteryButton.classList.remove('hover:bg-indigo-700', 'active:scale-95');
+                return;
+            }
+
+            // Shuffle Animation
+            resultDisplay.classList.remove('lottery-text');
+            let tempIdx = 0;
+            const shuffleInterval = setInterval(() => {
+                resultDisplay.textContent = availableStudents[Math.floor(Math.random() * availableStudents.length)];
+                tempIdx++;
+                if (tempIdx > 10) {
+                    clearInterval(shuffleInterval);
+                    const randomIndex = Math.floor(Math.random() * availableStudents.length);
+                    const selectedStudent = availableStudents[randomIndex];
+
+                    resultDisplay.textContent = selectedStudent;
+                    resultDisplay.classList.add('lottery-text', 'text-4xl');
+
+                    const drawnItem = document.createElement('li');
+                    drawnItem.className = "flex items-center gap-3 bg-white border border-slate-200 p-3 rounded-xl shadow-sm text-slate-700 font-bold animate-[popIn_0.3s_ease-out]";
+                    drawnItem.innerHTML = `<span class="bg-indigo-100 text-indigo-600 w-6 h-6 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> ${selectedStudent}`;
+                    drawnList.insertBefore(drawnItem, drawnList.firstChild);
+
+                    availableStudents.splice(randomIndex, 1);
+                }
+            }, 50);
+        });
+    </script>
+</body>
+
+</html>
