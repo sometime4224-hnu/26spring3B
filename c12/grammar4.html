@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>한국어 문법: -아야/어야</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Nunito:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+        .tab-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .tab-btn.active {
+            color: #2563eb;
+            font-weight: 700;
+        }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #2563eb;
+            border-radius: 3px 3px 0 0;
+        }
+
+        .card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .speak-btn:active { transform: scale(0.9); color: #2563eb; }
+        
+        .fade-in { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="min-h-screen flex flex-col">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-30">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="bg-blue-600 text-white p-2 rounded-lg shadow-sm">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <h1 class="text-lg md:text-xl font-bold text-slate-800 tracking-tight" id="app-title">한국어 문법</h1>
+            </div>
+            
+            <div class="relative">
+                <select id="language-selector" class="appearance-none bg-slate-100 border border-slate-200 text-slate-700 py-2 pl-3 pr-8 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-colors hover:bg-slate-200">
+                    <option value="ko">🇰🇷 한국어</option>
+                    <option value="en">🇺🇸 English</option>
+                    <option value="jp">🇯🇵 日本語</option>
+                    <option value="cn">🇨🇳 中文</option>
+                    <option value="vi">🇻🇳 Tiếng Việt</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                    <i class="fas fa-chevron-down text-xs"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tabs -->
+        <nav class="flex border-b border-slate-200 bg-white">
+            <button onclick="switchTab('explanation')" id="tab-explanation" class="tab-btn active flex-1 py-3 text-slate-500 font-medium text-center hover:bg-slate-50">
+                <i class="fas fa-book-open mr-1"></i> <span data-key="tab_explanation">설명</span>
+            </button>
+            <button onclick="switchTab('practice')" id="tab-practice" class="tab-btn flex-1 py-3 text-slate-500 font-medium text-center hover:bg-slate-50">
+                <i class="fas fa-pencil-alt mr-1"></i> <span data-key="tab_practice">연습</span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow w-full max-w-5xl mx-auto p-4 md:p-6 pb-20">
+        
+        <!-- Explanation View -->
+        <div id="view-explanation" class="fade-in space-y-6">
+            
+            <!-- Intro Card -->
+            <div class="bg-blue-50 border border-blue-100 rounded-xl p-6 shadow-sm">
+                <div class="flex items-start gap-4">
+                    <i class="fas fa-info-circle text-blue-600 text-2xl mt-1"></i>
+                    <div>
+                        <h2 class="text-2xl font-bold text-blue-800 mb-2">-아야/어야</h2>
+                        <p id="content-meaning" class="text-slate-700 text-lg leading-relaxed">
+                            어떤 일이 일어나기 위해 <strong>꼭 필요한 조건</strong>을 말할 때 사용해요.
+                        </p>
+                        <div class="mt-3 inline-block bg-white/60 px-3 py-1 rounded text-sm text-blue-700 font-medium">
+                            <i class="fas fa-lightbulb mr-1 text-yellow-500"></i> "A 해야 B 할 수 있다" (Must do A to do B)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conjugation Grid -->
+            <div>
+                <h3 class="text-lg font-bold text-slate-800 mb-3 flex items-center">
+                    <i class="fas fa-link text-slate-400 mr-2"></i> <span data-key="conjugation_title">결합 정보</span>
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Rule 1 -->
+                    <div class="card bg-white p-5 rounded-xl border border-slate-200">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-sm font-bold text-slate-400 uppercase">ㅏ, ㅗ</span>
+                            <span class="bg-pink-100 text-pink-600 px-2 py-1 rounded text-sm font-bold">-아야</span>
+                        </div>
+                        <ul class="space-y-2 text-slate-600">
+                            <li class="flex justify-between items-center group cursor-pointer" onclick="speak('좋아야')">
+                                <span>좋다</span> <i class="fas fa-arrow-right text-xs text-slate-300"></i> <span class="font-medium text-slate-800 group-hover:text-blue-600">좋아야</span>
+                            </li>
+                            <li class="flex justify-between items-center group cursor-pointer" onclick="speak('가야')">
+                                <span>가다</span> <i class="fas fa-arrow-right text-xs text-slate-300"></i> <span class="font-medium text-slate-800 group-hover:text-blue-600">가야</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Rule 2 -->
+                    <div class="card bg-white p-5 rounded-xl border border-slate-200">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-sm font-bold text-slate-400 uppercase">Other Vowels</span>
+                            <span class="bg-blue-100 text-blue-600 px-2 py-1 rounded text-sm font-bold">-어야</span>
+                        </div>
+                        <ul class="space-y-2 text-slate-600">
+                            <li class="flex justify-between items-center group cursor-pointer" onclick="speak('먹어야')">
+                                <span>먹다</span> <i class="fas fa-arrow-right text-xs text-slate-300"></i> <span class="font-medium text-slate-800 group-hover:text-blue-600">먹어야</span>
+                            </li>
+                            <li class="flex justify-between items-center group cursor-pointer" onclick="speak('공부해야')">
+                                <span>하다</span> <i class="fas fa-arrow-right text-xs text-slate-300"></i> <span class="font-medium text-slate-800 group-hover:text-blue-600">해야</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Rule 3 -->
+                    <div class="card bg-white p-5 rounded-xl border border-slate-200">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-sm font-bold text-slate-400 uppercase">Noun (명사)</span>
+                            <span class="bg-purple-100 text-purple-600 px-2 py-1 rounded text-sm font-bold">-이어야/여야</span>
+                        </div>
+                        <ul class="space-y-2 text-slate-600">
+                            <li class="flex justify-between items-center group cursor-pointer" onclick="speak('학생이어야')">
+                                <span>학생</span> <i class="fas fa-arrow-right text-xs text-slate-300"></i> <span class="font-medium text-slate-800 group-hover:text-blue-600">학생이어야</span>
+                            </li>
+                            <li class="flex justify-between items-center group cursor-pointer" onclick="speak('의사여야')">
+                                <span>의사</span> <i class="fas fa-arrow-right text-xs text-slate-300"></i> <span class="font-medium text-slate-800 group-hover:text-blue-600">의사여야</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Examples -->
+            <div>
+                <h3 class="text-lg font-bold text-slate-800 mb-3 flex items-center">
+                    <i class="fas fa-quote-left text-slate-400 mr-2"></i> <span data-key="examples_title">예문</span>
+                </h3>
+                <div class="space-y-3" id="examples-list">
+                    <!-- Examples injected via JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Practice View -->
+        <div id="view-practice" class="fade-in hidden space-y-6">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-slate-800" data-key="practice_title">연습 문제</h2>
+                <p class="text-slate-500" data-key="practice_desc">문장을 완성해 보세요.</p>
+            </div>
+
+            <div class="space-y-6" id="quiz-container">
+                <!-- Quiz Items -->
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- Data ---
+        const data = {
+            ko: {
+                tab_explanation: "설명",
+                tab_practice: "연습",
+                meaning: "'A/V-아야/어야, N-(이)어야/여야'는 어떤 일이 일어나기 위해 꼭 필요한 조건을 말할 때 사용해요.",
+                conjugation_title: "결합 정보",
+                examples_title: "예문",
+                examples: [
+                    "학생증이 <strong>있어야</strong> 도서관에 들어갈 수 있어요.",
+                    "운동을 꾸준히 <strong>해야</strong> 건강을 지킬 수 있어요.",
+                    "스무 살 이상<strong>이어야</strong> 이 영화를 볼 수 있어요."
+                ],
+                practice_title: "연습 문제",
+                practice_desc: "빈칸에 알맞은 말을 써보세요.",
+                btn_hint: "힌트",
+                btn_check: "정답 확인",
+                btn_model: "모범 답안 보기",
+                your_answer: "나의 답안:",
+                model_answer: "모범 답안:",
+                quizzes: [
+                    { q: "외국어를 잘하려면 어떻게 해야 해요?", hint: "꾸준히 공부하다", model: "꾸준히 공부해야 해요." },
+                    { q: "면접을 잘 보려면 어떻게 해야 해요?", hint: "자신감을 가지다", model: "자신감을 가져야 해요." },
+                    { q: "건강하게 살려면 어떻게 해야 해요?", hint: "운동을 열심히 하다", model: "운동을 열심히 해야 해요." },
+                    { q: "라면을 맛있게 끓이려면 어떻게 해야 해요?", hint: "물을 잘 맞추다", model: "물을 잘 맞춰야 해요." }
+                ]
+            },
+            en: {
+                tab_explanation: "Explanation",
+                tab_practice: "Practice",
+                meaning: "Expresses a necessary condition for the following action/state. Equivalent to 'Must do A to do B'.",
+                conjugation_title: "Conjugation",
+                examples_title: "Examples",
+                examples: [
+                    "You <strong>must have</strong> a student ID to enter the library.",
+                    "You <strong>must exercise</strong> consistently to maintain health.",
+                    "You <strong>must be</strong> over 20 to watch this movie."
+                ],
+                practice_title: "Practice",
+                practice_desc: "Complete the sentences.",
+                btn_hint: "Hint",
+                btn_check: "Check",
+                btn_model: "Show Answer",
+                your_answer: "Your Answer:",
+                model_answer: "Model Answer:",
+                quizzes: [
+                    { q: "How can I be good at foreign languages?", hint: "study consistently", model: "꾸준히 공부해야 해요." },
+                    { q: "How can I do well in an interview?", hint: "have confidence", model: "자신감을 가져야 해요." },
+                    { q: "How can I live healthily?", hint: "exercise hard", model: "운동을 열심히 해야 해요." },
+                    { q: "How can I cook ramen deliciously?", hint: "adjust water well", model: "물을 잘 맞춰야 해요." }
+                ]
+            },
+            jp: {
+                tab_explanation: "説明",
+                tab_practice: "練習",
+                meaning: "あることが起こるために必要な条件を表します。「〜してこそ〜できる」「〜しないと〜できない」という意味です。",
+                conjugation_title: "活用",
+                examples_title: "例文",
+                examples: [
+                    "学生証が<strong>あってこそ</strong>(なければ)図書館に入れます。",
+                    "運動を着実に<strong>してこそ</strong>健康を守れます。",
+                    "20歳以上<strong>でなければ</strong>この映画は見られません。"
+                ],
+                practice_title: "練習問題",
+                practice_desc: "文章を完成させてください。",
+                btn_hint: "ヒント",
+                btn_check: "確認",
+                btn_model: "模範解答",
+                your_answer: "あなたの答え:",
+                model_answer: "模範解答:",
+                quizzes: [
+                    { q: "外国語が上手になるにはどうすればいいですか？", hint: "着実に勉強する", model: "꾸준히 공부해야 해요." },
+                    { q: "面接でうまくいくにはどうすればいいですか？", hint: "自信を持つ", model: "자신감을 가져야 해요." },
+                    { q: "健康に生きるにはどうすればいいですか？", hint: "一生懸命運動する", model: "운동을 열심히 해야 해요." },
+                    { q: "ラーメンを美味しく作るにはどうすればいいですか？", hint: "水をよく合わせる", model: "물을 잘 맞춰야 해요." }
+                ]
+            },
+            cn: {
+                tab_explanation: "说明",
+                tab_practice: "练习",
+                meaning: "表示为了实现某事必须具备的条件。相当于“只有……才……”或“必须……才能……”。",
+                conjugation_title: "结合规则",
+                examples_title: "例句",
+                examples: [
+                    "<strong>必须有</strong>学生证才能进入图书馆。",
+                    "<strong>必须</strong>坚持运动才能保持健康。",
+                    "<strong>必须</strong>是20岁以上才能看这部电影。"
+                ],
+                practice_title: "练习题",
+                practice_desc: "请完成句子。",
+                btn_hint: "提示",
+                btn_check: "确认",
+                btn_model: "查看答案",
+                your_answer: "你的回答:",
+                model_answer: "参考答案:",
+                quizzes: [
+                    { q: "想要学好外语该怎么做？", hint: "坚持学习", model: "꾸준히 공부해야 해요." },
+                    { q: "想要面试表现好该怎么做？", hint: "有自信", model: "자신감을 가져야 해요." },
+                    { q: "想要健康生活该怎么做？", hint: "努力运动", model: "운동을 열심히 해야 해요." },
+                    { q: "想要煮好拉面该怎么做？", hint: "控制好水量", model: "물을 잘 맞춰야 해요." }
+                ]
+            },
+            vi: {
+                tab_explanation: "Giải thích",
+                tab_practice: "Luyện tập",
+                meaning: "Diễn tả điều kiện cần thiết để một việc gì đó xảy ra. Tương đương với 'Phải... thì mới...'.",
+                conjugation_title: "Cách chia",
+                examples_title: "Ví dụ",
+                examples: [
+                    "<strong>Phải có</strong> thẻ sinh viên thì mới vào thư viện được.",
+                    "<strong>Phải</strong> tập thể dục đều đặn thì mới khỏe mạnh.",
+                    "<strong>Phải</strong> trên 20 tuổi thì mới được xem phim này."
+                ],
+                practice_title: "Luyện tập",
+                practice_desc: "Hãy hoàn thành câu.",
+                btn_hint: "Gợi ý",
+                btn_check: "Kiểm tra",
+                btn_model: "Đáp án mẫu",
+                your_answer: "Câu trả lời của bạn:",
+                model_answer: "Đáp án mẫu:",
+                quizzes: [
+                    { q: "Làm thế nào để giỏi ngoại ngữ?", hint: "học chăm chỉ", model: "꾸준히 공부해야 해요." },
+                    { q: "Làm thế nào để phỏng vấn tốt?", hint: "tự tin", model: "자신감을 가져야 해요." },
+                    { q: "Làm thế nào để sống khỏe mạnh?", hint: "tập thể dục chăm chỉ", model: "운동을 열심히 해야 해요." },
+                    { q: "Làm thế nào để nấu mì ngon?", hint: "căn nước chuẩn", model: "물을 잘 맞춰야 해요." }
+                ]
+            }
+        };
+
+        // --- State ---
+        let currentLang = 'ko';
+
+        // --- Functions ---
+        function speak(text) {
+            window.speechSynthesis.cancel();
+            // Remove HTML tags for clean speech
+            const cleanText = text.replace(/<[^>]*>?/gm, '');
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.lang = 'ko-KR';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            
+            document.getElementById('view-explanation').classList.add('hidden');
+            document.getElementById('view-practice').classList.add('hidden');
+            
+            document.getElementById(`view-${tabName}`).classList.remove('hidden');
+            document.getElementById(`view-${tabName}`).classList.add('fade-in');
+        }
+
+        function renderContent() {
+            const t = data[currentLang];
+            
+            // Static text
+            document.querySelectorAll('[data-key]').forEach(el => {
+                el.innerText = t[el.dataset.key];
+            });
+            document.getElementById('content-meaning').innerHTML = t.meaning;
+
+            // Render Examples
+            const exampleList = document.getElementById('examples-list');
+            exampleList.innerHTML = t.examples.map(ex => `
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:border-blue-300 transition-colors flex gap-3 items-start">
+                    <button class="speak-btn text-slate-400 hover:text-blue-500 mt-0.5 shrink-0" onclick="speak('${ex.replace(/'/g, "\\'")}')">
+                        <i class="fas fa-volume-up text-lg"></i>
+                    </button>
+                    <p class="text-slate-700 leading-relaxed">${ex}</p>
+                </div>
+            `).join('');
+
+            // Render Quiz
+            const quizContainer = document.getElementById('quiz-container');
+            // If inputs exist, try to preserve values (simple check)
+            const existingInputs = {};
+            document.querySelectorAll('.quiz-input').forEach((inp, idx) => existingInputs[idx] = inp.value);
+
+            quizContainer.innerHTML = t.quizzes.map((quiz, idx) => `
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="mb-3">
+                        <span class="text-xs font-bold text-blue-500 bg-blue-50 px-2 py-1 rounded mb-1 inline-block">Q${idx + 1}</span>
+                        <p class="text-slate-800 font-medium text-lg">${quiz.q}</p>
+                    </div>
+                    
+                    <div class="mb-4 hidden" id="hint-${idx}">
+                        <p class="text-sm text-slate-500 bg-slate-50 p-2 rounded border border-slate-100">
+                            <i class="fas fa-lightbulb text-yellow-400 mr-1"></i> Hint: ${quiz.hint}
+                        </p>
+                    </div>
+
+                    <div class="flex gap-2 mb-3">
+                        <input type="text" id="input-${idx}" class="quiz-input flex-1 border-2 border-slate-200 rounded-lg p-3 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all" placeholder="..." value="${existingInputs[idx] || ''}">
+                    </div>
+
+                    <div class="flex flex-wrap gap-2">
+                         <button onclick="toggleHint(${idx})" class="text-sm px-3 py-2 rounded-lg bg-yellow-50 text-yellow-700 hover:bg-yellow-100 font-medium transition-colors">
+                            <i class="far fa-lightbulb mr-1"></i> ${t.btn_hint}
+                        </button>
+                        <button onclick="checkAnswer(${idx})" class="text-sm px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 font-bold transition-colors shadow-sm shadow-blue-200">
+                            ${t.btn_check}
+                        </button>
+                         <button onclick="showModel(${idx})" class="text-sm px-3 py-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium transition-colors ml-auto">
+                            ${t.btn_model}
+                        </button>
+                    </div>
+
+                    <div id="feedback-${idx}" class="mt-4 hidden p-4 bg-slate-50 rounded-lg border border-slate-100 animate-pulse-fast">
+                        <!-- Feedback content -->
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleHint(idx) {
+            document.getElementById(`hint-${idx}`).classList.toggle('hidden');
+        }
+
+        function checkAnswer(idx) {
+            const input = document.getElementById(`input-${idx}`);
+            const feedback = document.getElementById(`feedback-${idx}`);
+            const val = input.value.trim();
+            const t = data[currentLang];
+
+            // Simple validation: check if it contains '야' (core grammar point)
+            const isCorrect = val.includes('야'); 
+            
+            feedback.classList.remove('hidden');
+            feedback.classList.remove('animate-pulse-fast');
+            void feedback.offsetWidth; // trigger reflow
+            feedback.classList.add('animate-pulse-fast');
+
+            if (isCorrect) {
+                feedback.innerHTML = `
+                    <div class="flex items-center text-green-600 font-bold mb-1">
+                        <i class="fas fa-check-circle mr-2"></i> Great Job!
+                    </div>
+                    <p class="text-slate-600 text-sm">${t.model_answer} <span class="text-blue-600 font-medium">${data[currentLang].quizzes[idx].model}</span></p>
+                `;
+                input.classList.add('border-green-500');
+                speak(data[currentLang].quizzes[idx].model);
+            } else {
+                feedback.innerHTML = `
+                    <div class="flex items-center text-orange-500 font-bold mb-1">
+                        <i class="fas fa-exclamation-circle mr-2"></i> Try again!
+                    </div>
+                    <p class="text-slate-500 text-sm">Don't forget to use <strong>-아야/어야</strong>.</p>
+                `;
+                input.classList.add('border-orange-300');
+            }
+        }
+
+        function showModel(idx) {
+            const feedback = document.getElementById(`feedback-${idx}`);
+            const t = data[currentLang];
+            
+            feedback.classList.remove('hidden');
+            feedback.innerHTML = `
+                <p class="text-slate-500 text-sm font-bold mb-1">${t.model_answer}</p>
+                <p class="text-blue-600 text-lg font-medium">${data[currentLang].quizzes[idx].model}</p>
+                <button class="mt-2 text-slate-400 hover:text-blue-500 text-sm" onclick="speak('${data[currentLang].quizzes[idx].model}')">
+                    <i class="fas fa-volume-up mr-1"></i> Listen
+                </button>
+            `;
+            // Trigger TTS immediately
+            speak(data[currentLang].quizzes[idx].model);
+        }
+
+        // --- Event Listeners ---
+        document.getElementById('language-selector').addEventListener('change', (e) => {
+            currentLang = e.target.value;
+            renderContent();
+        });
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderContent();
+        });
+
+    </script>
+</body>
+</html>

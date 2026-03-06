@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NB76SV96');</script>
+<!-- End Google Tag Manager -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>그땐 그랬지 (-던) 학습 게임</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .feedback-anim {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .quiz-option, .choice-btn {
+            transition: all 0.2s;
+        }
+        #review-modal {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <div id="game-container" class="bg-white w-full max-w-4xl p-6 sm:p-8 rounded-2xl shadow-lg text-center">
+        
+        <header class="mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">그땐 그랬지</h1>
+            <p id="header-subtitle" class="text-gray-500 mt-2">문장을 보고 과거에 해당하는 그림을 맞춰보세요!</p>
+        </header>
+
+        <main id="game-area">
+            <!-- 상황 설명 -->
+            <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                <p id="intro-text" class="text-gray-700 leading-relaxed"></p>
+            </div>
+
+            <!-- 1단계: 그림 선택 영역 -->
+            <div id="image-choice-area">
+                <div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-4">
+                    <div id="left-image-container" class="w-full md:w-1/2 bg-gray-200 rounded-lg border overflow-hidden" style="height: 300px;">
+                        <!-- 왼쪽 이미지 -->
+                    </div>
+                    <div id="right-image-container" class="w-full md:w-1/2 bg-gray-200 rounded-lg border overflow-hidden" style="height: 300px;">
+                        <!-- 오른쪽 이미지 -->
+                    </div>
+                </div>
+                <div id="choice-buttons" class="mt-4 flex justify-center gap-4">
+                    <button id="left-is-past-btn" class="choice-btn w-full md:w-1/2 bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 shadow-md">왼쪽 그림이 '과거'</button>
+                    <button id="right-is-past-btn" class="choice-btn w-full md:w-1/2 bg-green-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-600 shadow-md">오른쪽 그림이 '과거'</button>
+                </div>
+                <div id="image-feedback" class="mt-4 text-lg h-8"></div>
+            </div>
+            
+            <!-- 2단계: 퀴즈 영역 -->
+            <div id="quiz-area" class="hidden">
+                <p class="text-2xl font-bold mb-4">🎉 맞았어요! 이제 문장을 완성해볼까요?</p>
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-md mb-6">
+                    <p id="quiz-question" class="text-blue-800 text-lg"></p>
+                </div>
+                <div id="quiz-options" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <!-- 퀴즈 선택지가 여기에 들어갑니다 -->
+                </div>
+                <div id="quiz-feedback" class="mt-4 text-lg h-8"></div>
+                <button id="next-btn" class="hidden mt-4 bg-purple-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-purple-600 transition-colors duration-300 shadow-md">다음 문제</button>
+            </div>
+        </main>
+
+        <!-- 게임 종료 화면 -->
+        <div id="game-end-area" class="hidden">
+            <p class="text-3xl font-bold text-green-500 mb-2">🎉 모든 문제를 완료했습니다!</p>
+            <p class="text-gray-600 mb-6">결과를 확인하고 틀린 문제는 복습해보세요.</p>
+            <div id="results-table-container" class="mb-8 border rounded-lg overflow-hidden"></div>
+            <button id="restart-btn" class="bg-blue-500 text-white font-bold py-4 px-10 rounded-lg hover:bg-blue-600 transition-colors duration-300 shadow-xl text-lg">다시 시작하기</button>
+        </div>
+    </div>
+
+    <!-- 복습 모달 -->
+    <div id="review-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-4xl p-6 rounded-2xl shadow-lg relative text-center">
+            <button id="close-modal-btn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+            <h2 class="text-2xl font-bold mb-4">다시 보기</h2>
+            <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                <p id="review-intro" class="text-gray-700"></p>
+            </div>
+            <div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-4">
+                <div class="w-full md:w-1/2">
+                    <p class="font-semibold mb-2">과거 (Past)</p>
+                    <div id="review-past-img" class="bg-gray-200 rounded-lg border overflow-hidden" style="height: 250px;"></div>
+                </div>
+                 <div class="w-full md:w-1/2">
+                    <p class="font-semibold mb-2">현재 (Present)</p>
+                    <div id="review-present-img" class="bg-gray-200 rounded-lg border overflow-hidden" style="height: 250px;"></div>
+                </div>
+            </div>
+            <div class="bg-green-50 border-l-4 border-green-400 p-4 rounded-md">
+                <p class="text-green-800 text-lg font-semibold" id="review-correct-sentence"></p>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // --- SVG 그림 함수들 ---
+        const drawings = {
+            person: (size) => { const scale = size === 'big' ? 1.2 : 0.8; const yPos = size === 'big' ? 120 : 160; return `<g transform="translate(100 ${yPos}) scale(${scale})"><circle cx="20" cy="20" r="10" fill="#FAD7A0"/><path d="M 20 30 L 20 60 L 5 80 M 20 60 L 35 80" stroke="#333" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M 20 40 L 0 50 M 20 40 L 40 50" stroke="#333" stroke-width="4" fill="none" stroke-linecap="round"/></g>`; },
+            bicycle: (color) => `<g transform="translate(130 130) scale(1.5)"><circle cx="25" cy="50" r="20" fill="none" stroke="${color}" stroke-width="4"/><circle cx="95" cy="50" r="20" fill="none" stroke="${color}" stroke-width="4"/><path d="M 45 20 L 60 50 L 95 50 L 75 20 Z" fill="${color}" stroke="${color}" stroke-width="4" stroke-linejoin="round"/><path d="M 25 50 L 60 50" stroke="${color}" stroke-width="4"/><path d="M 45 20 L 35 10" stroke="${color}" stroke-width="4"/></g>`,
+            mp3: () => `<g transform="translate(150 100)"><rect x="0" y="0" width="100" height="160" rx="10" fill="#E8E8E8"/><rect x="10" y="10" width="80" height="60" fill="#70A8D8"/><circle cx="50" cy="115" r="30" fill="white" stroke="#B0B0B0" stroke-width="2"/><circle cx="50" cy="115" r="10" fill="#D0D0D0"/></g>`,
+            wiredEarphones: () => `<g transform="translate(0 30)"><path d="M 180 230 C 150 200, 250 200, 220 230" fill="none" stroke="#333" stroke-width="3"/><circle cx="180" cy="230" r="10" fill="white" stroke="black" stroke-width="2"/><circle cx="220" cy="230" r="10" fill="white" stroke="black" stroke-width="2"/></g>`,
+            smartphone: () => `<g transform="translate(140 80)"><rect x="0" y="0" width="120" height="200" rx="15" fill="#34495E"/><rect x="10" y="10" width="100" height="180" fill="black"/></g>`,
+            wirelessEarbuds: () => `<g transform="translate(0 30)"><circle cx="180" cy="230" r="10" fill="white" stroke="black" stroke-width="2"/><path d="M180 240 C 180 250, 185 250, 185 240" stroke="black" stroke-width="2" fill="none"/><circle cx="220" cy="230" r="10" fill="white" stroke="black" stroke-width="2"/><path d="M220 240 C 220 250, 225 250, 225 240" stroke="black" stroke-width="2" fill="none"/></g>`,
+            filmCamera: () => `<g transform="translate(120 120)"><rect x="0" y="0" width="160" height="100" rx="10" fill="#839192"/><rect x="15" y="-15" width="30" height="15" fill="#5D6D7E"/><circle cx="130" cy="-10" r="10" fill="#5D6D7E"/><circle cx="75" cy="50" r="30" fill="#34495E"/><circle cx="75" cy="50" r="15" fill="#5DADE2"/></g>`,
+            digitalCamera: () => `<g transform="translate(120 120)"><rect x="0" y="0" width="160" height="100" rx="10" fill="#17202A"/><rect x="70" y="10" width="80" height="80" fill="#5DADE2"/><circle cx="35" cy="50" r="25" fill="#34495E"/><circle cx="35" cy="50" r="12" fill="#808B96"/></g>`,
+            crtTV: () => `<g transform="translate(80 90)"><path d="M 0 0 H 240 V 160 H 0 Z" fill="#795548"/><rect x="20" y="15" width="150" height="110" fill="black"/><rect x="190" y="40" width="30" height="10" fill="#3E2723"/><rect x="190" y="70" width="30" height="10" fill="#3E2723"/><path d="M 240 20 L 280 0 L 280 160 L 240 140 Z" fill="#A1887F"/><path d="M 100 0 L 80 -40" stroke="#616161" stroke-width="4" /><path d="M 140 0 L 160 -40" stroke="#616161" stroke-width="4" /></g>`,
+            flatTV: () => `<g transform="translate(50 90)"><rect x="0" y="0" width="300" height="170" rx="10" fill="#212121"/><rect x="10" y="10" width="280" height="150" fill="black"/><path d="M 120 170 L 140 200 H 160 L 180 170 Z" fill="#212121"/></g>`,
+            smallStore: () => `<g transform="translate(120 130)"><rect x="0" y="20" width="160" height="100" fill="#F5B041"/><path d="M -10 20 L 170 20 L 80 -20 Z" fill="#E74C3C"/><rect x="60" y="60" width="40" height="60" fill="#873600"/></g>`,
+            tallBuilding: () => `<g transform="translate(150 50)"><rect x="0" y="0" width="100" height="220" fill="#7F8C8D"/><rect x="20" y="20" width="20" height="20" fill="white"/><rect x="60" y="20" width="20" height="20" fill="white"/><rect x="20" y="60" width="20" height="20" fill="white"/><rect x="60" y="60" width="20" height="20" fill="white"/><rect x="20" y="100" width="20" height="20" fill="white"/><rect x="60" y="100" width="20" height="20" fill="white"/><rect x="20" y="140" width="20" height="20" fill="white"/><rect x="60" y="140" width="20" height="20" fill="white"/></g>`,
+            tree: (count) => { let treeSvg = ''; if (count >= 1) treeSvg += `<g transform="translate(300 150)"><rect x="-5" y="0" width="10" height="50" fill="#784212"/><circle cx="0" cy="-20" r="30" fill="#2ECC71"/></g>`; if (count >= 3) { treeSvg += `<g transform="translate(50 200)"><rect x="-5" y="0" width="10" height="50" fill="#784212"/><circle cx="0" cy="-20" r="30" fill="#2ECC71"/></g>`; treeSvg += `<g transform="translate(320 50)"><rect x="-5" y="0" width="10" height="50" fill="#784212"/><circle cx="0" cy="-20" r="30" fill="#2ECC71"/></g>`; } return treeSvg; }
+        };
+
+        const scenarios = [
+            { intro: "이것은 제가 어릴 때 타던 자전거예요. 지금은 동생이 타고 있죠.", images: { past: { bgColor: "#A9CCE3", elements: [{ type: 'bicycle', props: '#3498DB' }, { type: 'person', props: 'big' }] }, present: { bgColor: "#F5B7B1", elements: [{ type: 'bicycle', props: '#E74C3C' }, { type: 'person', props: 'small' }] } }, quiz: { question: "이것은 제가 어릴 때 ( ) 자전거예요.", options: ["탄", "타던", "타는"], answer: "타던" } },
+            { intro: "제가 고등학생 때 매일 듣던 MP3 플레이어예요. 이젠 스마트폰으로 음악을 들어요.", images: { past: { bgColor: "#D7BDE2", elements: [{ type: 'mp3' }, { type: 'wiredEarphones' }] }, present: { bgColor: "#AAB7B8", elements: [{ type: 'smartphone' }, { type: 'wirelessEarbuds' }] } }, quiz: { question: "이것은 제가 매일 ( ) MP3 플레이어예요.", options: ["듣던", "들은", "듣는"], answer: "듣던" } },
+            { intro: "어렸을 때 살던 동네예요. 작은 가게가 있었는데 지금은 높은 빌딩이 생겼어요.", images: { past: { bgColor: "#A9DFBF", elements: [{ type: 'smallStore' }, {type: 'tree', props: 1}] }, present: { bgColor: "#CCD1D1", elements: [{ type: 'tallBuilding' }, {type: 'tree', props: 3}] } }, quiz: { question: "여기는 제가 어렸을 때 ( ) 동네예요.", options: ["산", "살던", "사는"], answer: "살던" } },
+            { intro: "이것은 아버지가 젊었을 때 쓰시던 필름 카메라예요.", images: { past: { bgColor: "#CFD8DC", elements: [{ type: 'filmCamera' }] }, present: { bgColor: "#B0BEC5", elements: [{ type: 'digitalCamera' }] } }, quiz: { question: "이것은 아버지가 ( ) 필름 카메라예요.", options: ["쓰신", "쓰던", "쓰시던"], answer: "쓰시던" } },
+            { intro: "우리 가족이 거실에서 함께 보던 텔레비전이에요.", images: { past: { bgColor: "#D7CCC8", elements: [{ type: 'crtTV' }] }, present: { bgColor: "#BDBDBD", elements: [{ type: 'flatTV' }] } }, quiz: { question: "이것은 우리가 함께 ( ) 텔레비전이에요.", options: ["본", "보던", "보는"], answer: "보던" } }
+        ];
+
+        // HTML 요소
+        const headerSubtitle = document.getElementById('header-subtitle');
+        const introText = document.getElementById('intro-text');
+        const gameArea = document.getElementById('game-area');
+        const gameEndArea = document.getElementById('game-end-area');
+        const leftImageContainer = document.getElementById('left-image-container');
+        const rightImageContainer = document.getElementById('right-image-container');
+        const imageChoiceArea = document.getElementById('image-choice-area');
+        const leftIsPastBtn = document.getElementById('left-is-past-btn');
+        const rightIsPastBtn = document.getElementById('right-is-past-btn');
+        const imageFeedback = document.getElementById('image-feedback');
+        
+        const quizArea = document.getElementById('quiz-area');
+        const quizQuestion = document.getElementById('quiz-question');
+        const quizOptions = document.getElementById('quiz-options');
+        const quizFeedback = document.getElementById('quiz-feedback');
+        const nextBtn = document.getElementById('next-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const resultsTableContainer = document.getElementById('results-table-container');
+
+        // 복습 모달 요소
+        const reviewModal = document.getElementById('review-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const reviewIntro = document.getElementById('review-intro');
+        const reviewPastImg = document.getElementById('review-past-img');
+        const reviewPresentImg = document.getElementById('review-present-img');
+        const reviewCorrectSentence = document.getElementById('review-correct-sentence');
+
+        let currentScenario;
+        let isPastOnLeft;
+        let questionCount = 0;
+        let shuffledScenarios = [];
+        let gameResults = [];
+        
+        function buildImageSvg(imageData) {
+            let elementsSvg = imageData.elements.map(el => drawings[el.type](el.props)).join('');
+            return `<svg width="100%" height="100%" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="${imageData.bgColor}" />${elementsSvg}</svg>`;
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function setupNewGame() {
+            questionCount = 0;
+            gameResults = [];
+            shuffledScenarios = [...scenarios];
+            shuffleArray(shuffledScenarios);
+            gameEndArea.style.display = 'none';
+            gameArea.style.display = 'block';
+            loadNextQuestion();
+        }
+
+        function loadNextQuestion() {
+            if (questionCount >= scenarios.length) {
+                showEndScreen();
+                return;
+            }
+
+            imageChoiceArea.style.display = 'block';
+            quizArea.style.display = 'none';
+            nextBtn.style.display = 'none';
+            imageFeedback.innerHTML = '';
+            quizFeedback.innerHTML = '';
+            headerSubtitle.textContent = `문제 ${questionCount + 1}/${scenarios.length}: 과거에 해당하는 그림을 맞춰보세요!`;
+            
+            leftIsPastBtn.disabled = false;
+            rightIsPastBtn.disabled = false;
+
+            currentScenario = shuffledScenarios[questionCount];
+            isPastOnLeft = Math.random() < 0.5;
+
+            introText.textContent = currentScenario.intro;
+            
+            const pastImageSvg = buildImageSvg(currentScenario.images.past);
+            const presentImageSvg = buildImageSvg(currentScenario.images.present);
+
+            if (isPastOnLeft) {
+                leftImageContainer.innerHTML = pastImageSvg;
+                rightImageContainer.innerHTML = presentImageSvg;
+            } else {
+                leftImageContainer.innerHTML = presentImageSvg;
+                rightImageContainer.innerHTML = pastImageSvg;
+            }
+        }
+
+        function checkImageChoice(userChoice) {
+            leftIsPastBtn.disabled = true;
+            rightIsPastBtn.disabled = true;
+
+            const isCorrect = (userChoice === 'left' && isPastOnLeft) || (userChoice === 'right' && !isPastOnLeft);
+
+            if (isCorrect) {
+                imageFeedback.textContent = '정답입니다!';
+                imageFeedback.className = 'mt-4 text-lg h-8 text-green-600 font-bold feedback-anim';
+                setTimeout(() => {
+                    imageChoiceArea.style.display = 'none';
+                    showQuiz();
+                }, 1500);
+            } else {
+                imageFeedback.textContent = '아쉬워요, 다시 생각해보세요.';
+                imageFeedback.className = 'mt-4 text-lg h-8 text-red-500 feedback-anim';
+                setTimeout(() => {
+                    leftIsPastBtn.disabled = false;
+                    rightIsPastBtn.disabled = false;
+                    imageFeedback.innerHTML = '';
+                }, 1500);
+            }
+        }
+
+        function showQuiz() {
+            quizArea.style.display = 'block';
+            headerSubtitle.textContent = `문제 ${questionCount + 1}/${scenarios.length}: 빈칸에 들어갈 알맞은 말을 골라보세요!`;
+            const quiz = currentScenario.quiz;
+            quizQuestion.textContent = quiz.question;
+            quizOptions.innerHTML = '';
+            
+            quiz.options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.className = 'quiz-option w-full p-4 border-2 rounded-lg text-lg font-semibold hover:bg-gray-100';
+                button.onclick = () => checkQuizAnswer(option, button);
+                quizOptions.appendChild(button);
+            });
+        }
+        
+        function checkQuizAnswer(selectedOption, selectedButton) {
+            Array.from(quizOptions.children).forEach(btn => btn.disabled = true);
+            const isCorrect = selectedOption === currentScenario.quiz.answer;
+            gameResults.push({ scenario: currentScenario, quizCorrect: isCorrect });
+
+            if (isCorrect) {
+                quizFeedback.textContent = '완벽해요!';
+                quizFeedback.className = 'mt-4 text-lg h-8 text-green-600 font-bold feedback-anim';
+                selectedButton.classList.add('bg-green-200', 'border-green-400');
+            } else {
+                quizFeedback.textContent = `정답은 '${currentScenario.quiz.answer}'입니다.`;
+                quizFeedback.className = 'mt-4 text-lg h-8 text-red-500 feedback-anim';
+                selectedButton.classList.add('bg-red-200', 'border-red-400');
+                Array.from(quizOptions.children).forEach(btn => {
+                    if (btn.textContent === currentScenario.quiz.answer) {
+                        btn.classList.add('bg-green-200', 'border-green-400');
+                    }
+                });
+            }
+            nextBtn.textContent = (questionCount === scenarios.length - 1) ? '결과 보기' : '다음 문제';
+            nextBtn.style.display = 'inline-block';
+        }
+
+        function showEndScreen() {
+            gameArea.style.display = 'none';
+            gameEndArea.style.display = 'block';
+            
+            let tableHTML = `
+                <table class="w-full text-left table-auto">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="p-3">문제</th>
+                            <th class="p-3 text-center">결과</th>
+                            <th class="p-3 text-center">복습</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+            
+            gameResults.forEach((result, index) => {
+                const isCorrect = result.quizCorrect;
+                tableHTML += `
+                    <tr class="border-b">
+                        <td class="p-3 text-sm">${result.scenario.intro}</td>
+                        <td class="p-3 text-center font-bold ${isCorrect ? 'text-green-500' : 'text-red-500'}">${isCorrect ? 'O' : 'X'}</td>
+                        <td class="p-3 text-center">
+                            <button class="review-btn bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm py-1 px-3 rounded-md" data-index="${index}">보기</button>
+                        </td>
+                    </tr>`;
+            });
+
+            tableHTML += `</tbody></table>`;
+            resultsTableContainer.innerHTML = tableHTML;
+        }
+        
+        function openReviewModal(index) {
+            const result = gameResults[index];
+            reviewIntro.textContent = result.scenario.intro;
+            reviewPastImg.innerHTML = buildImageSvg(result.scenario.images.past);
+            reviewPresentImg.innerHTML = buildImageSvg(result.scenario.images.present);
+            reviewCorrectSentence.textContent = result.scenario.quiz.question.replace('( )', `(${result.scenario.quiz.answer})`);
+            reviewModal.style.display = 'flex';
+        }
+
+        function closeReviewModal() {
+            reviewModal.style.display = 'none';
+        }
+
+
+
+        resultsTableContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('review-btn')) {
+                const index = e.target.dataset.index;
+                openReviewModal(index);
+            }
+        });
+
+        leftIsPastBtn.addEventListener('click', () => checkImageChoice('left'));
+        rightIsPastBtn.addEventListener('click', () => checkImageChoice('right'));
+        nextBtn.addEventListener('click', () => {
+            questionCount++;
+            loadNextQuestion();
+        });
+        restartBtn.addEventListener('click', setupNewGame);
+        closeModalBtn.addEventListener('click', closeReviewModal);
+
+        window.onload = setupNewGame;
+    </script>
+
+</body>
+</html>
+
+

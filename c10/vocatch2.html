@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>교사용 문장 완성 퀴즈 (문맥 활용)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Noto+Sans:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', 'Noto Sans', sans-serif;
+            overflow: hidden;
+            touch-action: manipulation;
+            user-select: none;
+        }
+        /* 학생용 화면 (왼쪽) - 파란색 테마 */
+        .student-screen {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            box-shadow: inset -10px 0 20px rgba(0,0,0,0.1);
+        }
+        
+        /* 빈칸 밑줄 애니메이션 */
+        @keyframes underlinePulse {
+            0% { border-bottom-color: rgba(255,255,255,0.5); }
+            50% { border-bottom-color: rgba(255,255,255,1); }
+            100% { border-bottom-color: rgba(255,255,255,0.5); }
+        }
+        .blank-space {
+            display: inline-block;
+            min-width: 150px;
+            border-bottom: 6px solid white;
+            color: #fbbf24; /* Amber-400 */
+            text-align: center;
+            animation: underlinePulse 1.5s infinite;
+            padding: 0 10px;
+        }
+
+        /* 정답 공개 애니메이션 */
+        @keyframes fillBlank {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .filled-text {
+            animation: fillBlank 0.4s ease-out forwards;
+        }
+
+        /* 오답 진동 */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        .shake { animation: shake 0.3s ease-in-out; }
+
+        /* 버튼 스타일 */
+        .choice-btn {
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            word-break: keep-all;
+            line-height: 1.3;
+        }
+        .choice-btn:active { transform: scale(0.98); }
+        .choice-btn.correct {
+            background-color: #3b82f6 !important; /* Blue-500 */
+            color: white !important;
+            border-color: #3b82f6 !important;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+        .choice-btn.wrong {
+            background-color: #ef4444 !important;
+            color: white !important;
+            border-color: #ef4444 !important;
+            opacity: 0.5;
+        }
+        
+        /* 정답 아이콘 애니메이션 */
+        @keyframes popAndVanish {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            15% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            30% { transform: translate(-50%, -50%) scale(1.0); opacity: 1; }
+            80% { transform: translate(-50%, -50%) scale(1.0); opacity: 0.8; }
+            100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+        }
+        .icon-vanish { animation: popAndVanish 1.5s ease-in-out forwards; }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="flex w-screen h-screen bg-gray-100">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <!-- 왼쪽: 학생용 화면 (65%) -->
+    <div id="student-view" class="student-screen w-[65%] h-full flex flex-col items-center relative text-center border-r-4 border-white/20">
+        
+        <!-- 진행 상황 바 -->
+        <div class="absolute top-0 left-0 w-full h-3 bg-black/10 z-10">
+            <div id="progress-bar" class="h-full bg-yellow-400 transition-all duration-500 shadow-[0_0_10px_rgba(250,204,21,0.7)]" style="width: 0%"></div>
+        </div>
+
+        <!-- 상단 가이드 메시지 -->
+        <div class="w-full flex justify-start p-6 mt-4 z-20">
+            <div onclick="toggleInstruction()" class="flex items-center gap-4 bg-black/25 text-white px-8 py-4 rounded-full border-2 border-white/20 backdrop-blur-md shadow-xl cursor-pointer hover:bg-black/30 transition-all active:scale-95 select-none">
+                <i class="ph-fill ph-chat-centered-text text-5xl text-yellow-300 animate-pulse"></i>
+                <span id="instruction-text" class="text-3xl font-black tracking-wide drop-shadow-md">문장을 완성하세요!</span>
+            </div>
+        </div>
+
+        <!-- 메인 문제 영역 (문장) -->
+        <div class="flex-1 flex flex-col items-center justify-center w-full px-8 z-0 -mt-10">
+            <!-- 한국어 문장 (빈칸 포함) -->
+            <h1 id="korean-sentence" class="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-relaxed break-keep drop-shadow-lg text-left w-full max-w-5xl">
+                <!-- 자바스크립트로 주입됨: 예) 저는 어제 여자친구에게 _____ 했어요. -->
+            </h1>
+
+            <!-- 베트남어 번역 (힌트) -->
+            <div class="mt-12 p-6 bg-black/20 rounded-2xl backdrop-blur-sm w-full max-w-5xl border border-white/10">
+                <p id="vietnamese-hint" class="text-3xl md:text-4xl text-blue-100 font-medium italic">
+                    <!-- 베트남어 번역 -->
+                </p>
+            </div>
+        </div>
+
+        <!-- 정답 아이콘 -->
+        <div id="correct-icon" class="hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-yellow-300 pointer-events-none z-30">
+            <i class="ph-fill ph-check-circle text-[25rem] drop-shadow-2xl"></i>
+        </div>
+    </div>
+
+    <!-- 오른쪽: 선생님 패널 (35%) -->
+    <div class="w-[35%] h-full bg-white flex flex-col relative z-10 shadow-2xl">
+        
+        <!-- 상단 헤더 -->
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200 flex justify-between items-center shrink-0 h-20">
+            <div class="flex items-center gap-3">
+                <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">SENTENCE</span>
+                <div class="text-3xl font-black text-blue-900 font-mono">
+                    <span id="current-index" class="text-blue-600">1</span><span class="text-gray-300 mx-1">/</span><span id="total-count" class="text-gray-400">19</span>
+                </div>
+            </div>
+            <button onclick="resetGame()" class="p-3 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-full transition-colors" title="리셋">
+                <i class="ph-bold ph-arrow-counter-clockwise text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- 중단: 보기 버튼들 -->
+        <div id="options-container" class="flex-1 p-4 flex flex-col gap-4 justify-center bg-gray-100">
+            <!-- 보기 버튼 생성 영역 -->
+        </div>
+
+        <!-- 하단: 다음 버튼 -->
+        <div class="p-4 bg-white border-t border-gray-200 shrink-0 h-24 flex items-center">
+            <button id="next-btn" onclick="nextQuestion()" class="w-full h-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-2xl font-bold text-3xl shadow-lg transition-all transform active:scale-[0.98] flex items-center justify-center gap-3 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none">
+                <span>다음</span> <i class="ph-bold ph-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 데이터셋: { id, part1(앞문장), answer(정답단어), part2(뒷문장), vietnamese(베트남어뜻), distractors(오답목록) }
+        const sentenceData = [
+            { 
+                id: 1, 
+                part1: "용기를 내서 그 사람에게", 
+                answer: "고백했어요", 
+                part2: ".", 
+                vietnamese: "Tôi đã lấy hết can đảm để tỏ tình với người ấy.",
+                distractors: ["약속했어요", "사과했어요"]
+            },
+            { 
+                id: 2, 
+                part1: "발표하기 전에 너무 떨려서", 
+                answer: "가슴이 두근거렸어요", 
+                part2: ".", 
+                vietnamese: "Trước khi phát biểu, tôi run quá nên tim đập thình thịch.",
+                distractors: ["머리가 아팠어요", "기분이 좋았어요"]
+            },
+            { 
+                id: 3, 
+                part1: "버스에서 친구와", 
+                answer: "나란히 앉았어요", 
+                part2: ".", 
+                vietnamese: "Tôi đã ngồi cạnh bạn trên xe buýt.",
+                distractors: ["멀리 앉았어요", "마주 보고 앉았어요"]
+            },
+            { 
+                id: 4, 
+                part1: "제 여자친구는 정말", 
+                answer: "마음씨가 착해요", 
+                part2: ".", 
+                vietnamese: "Bạn gái tôi thực sự rất tốt bụng.",
+                distractors: ["성격이 급해요", "키가 작아요"]
+            },
+            { 
+                id: 5, 
+                part1: "우리는 취미가 같아서", 
+                answer: "말이 잘 통해요", 
+                part2: ".", 
+                vietnamese: "Chúng tôi có cùng sở thích nên nói chuyện rất hợp.",
+                distractors: ["자주 싸워요", "연락을 안 해요"]
+            },
+            { 
+                id: 6, 
+                part1: "그 배우는 웃는 모습이", 
+                answer: "매력이 있어요", 
+                part2: ".", 
+                vietnamese: "Diễn viên đó cười trông rất có sức hút.",
+                distractors: ["무서워요", "평범해요"]
+            },
+            { 
+                id: 7, 
+                part1: "드라마 속 주인공처럼", 
+                answer: "사랑에 빠졌어요", 
+                part2: ".", 
+                vietnamese: "Tôi đã rơi vào lưới tình giống như nhân vật chính trong phim.",
+                distractors: ["길을 잃었어요", "화를 냈어요"]
+            },
+            { 
+                id: 8, 
+                part1: "우리 오늘부터", 
+                answer: "사귀기로 했어요", 
+                part2: ".", 
+                vietnamese: "Chúng tôi quyết định hẹn hò từ hôm nay.",
+                distractors: ["헤어지기로 했어요", "공부하기로 했어요"]
+            },
+            { 
+                id: 9, 
+                part1: "가장 친한 친구와 저는", 
+                answer: "성격이 잘 맞아요", 
+                part2: ".", 
+                vietnamese: "Tôi và người bạn thân nhất rất hợp tính cách.",
+                distractors: ["이름이 같아요", "고향이 달라요"]
+            },
+            { 
+                id: 10, 
+                part1: "부모님의 권유로", 
+                answer: "선을 봤어요", 
+                part2: ".", 
+                vietnamese: "Tôi đã đi xem mắt theo lời khuyên của bố mẹ.",
+                distractors: ["영화를 봤어요", "쇼핑을 했어요"]
+            },
+            { 
+                id: 11, 
+                part1: "주말에 친구의 소개로", 
+                answer: "소개팅을 했어요", 
+                part2: ".", 
+                vietnamese: "Cuối tuần tôi đã đi xem mắt qua lời giới thiệu của bạn.",
+                distractors: ["동창회를 했어요", "회의를 했어요"]
+            },
+            { 
+                id: 12, 
+                part1: "길을 걸을 때 여자친구의", 
+                answer: "손을 잡았어요", 
+                part2: ".", 
+                vietnamese: "Khi đi bộ, tôi đã nắm tay bạn gái.",
+                distractors: ["발을 밟았어요", "가방을 들었어요"]
+            },
+            { 
+                id: 13, 
+                part1: "피곤해서 남자친구의", 
+                answer: "어깨에 기대었어요", 
+                part2: ".", 
+                vietnamese: "Vì mệt nên tôi đã tựa vào vai bạn trai.",
+                distractors: ["등을 때렸어요", "다리를 찼어요"]
+            },
+            { 
+                id: 14, 
+                part1: "부끄러워서", 
+                answer: "얼굴이 빨개졌어요", 
+                part2: ".", 
+                vietnamese: "Vì ngại nên tôi đã đỏ mặt.",
+                distractors: ["얼굴이 하얘졌어요", "눈물이 났어요"]
+            },
+            { 
+                id: 15, 
+                part1: "대학생이 되면 꼭", 
+                answer: "연애하고 싶어요", 
+                part2: ".", 
+                vietnamese: "Nếu trở thành sinh viên đại học, tôi nhất định muốn hẹn hò.",
+                distractors: ["결혼하고 싶어요", "취직하고 싶어요"]
+            },
+            { 
+                id: 16, 
+                part1: "그 사람은 웃는", 
+                answer: "인상이 좋아요", 
+                part2: ".", 
+                vietnamese: "Người đó có ấn tượng (nụ cười) rất tốt.",
+                distractors: ["기분이 나빠요", "성격이 급해요"]
+            },
+            { 
+                id: 17, 
+                part1: "결혼 상대는 저와", 
+                answer: "조건이 맞아야 해요", 
+                part2: ".", 
+                vietnamese: "Đối tượng kết hôn phải hợp điều kiện với tôi.",
+                distractors: ["나이가 같아야 해요", "집이 멀어야 해요"]
+            },
+            { 
+                id: 18, 
+                part1: "그녀를 보고", 
+                answer: "첫눈에 반했어요", 
+                part2: ".", 
+                vietnamese: "Tôi đã yêu cô ấy từ cái nhìn đầu tiên.",
+                distractors: ["실망했어요", "깜짝 놀랐어요"]
+            },
+            { 
+                id: 19, 
+                part1: "다정하게", 
+                answer: "팔짱을 꼈어요", 
+                part2: ".", 
+                vietnamese: "Tôi đã khoác tay một cách tình cảm.",
+                distractors: ["악수를 했어요", "인사를 했어요"]
+            }
+        ];
+
+        let quizQueue = [];
+        let currentData = null;
+        let currentIndex = 0;
+        let isAnswerRevealed = false;
+        
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            if (type === 'correct') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+                oscillator.frequency.exponentialRampToValueAtTime(783.99, audioCtx.currentTime + 0.1); 
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'wrong') {
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.2);
+            }
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function initGame() {
+            quizQueue = shuffle([...sentenceData]);
+            currentIndex = 0;
+            document.getElementById('total-count').textContent = quizQueue.length;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            isAnswerRevealed = false;
+            currentData = quizQueue[currentIndex];
+            
+            document.getElementById('current-index').textContent = currentIndex + 1;
+            document.getElementById('progress-bar').style.width = `${((currentIndex) / quizQueue.length) * 100}%`;
+            
+            // 학생 화면 렌더링
+            const sentenceEl = document.getElementById('korean-sentence');
+            // part1 + 빈칸 + part2
+            sentenceEl.innerHTML = `${currentData.part1} <span id="blank-slot" class="blank-space">_______</span> ${currentData.part2}`;
+            
+            document.getElementById('vietnamese-hint').textContent = currentData.vietnamese;
+            
+            // 아이콘 리셋
+            const correctIcon = document.getElementById('correct-icon');
+            correctIcon.classList.add('hidden');
+            correctIcon.classList.remove('icon-vanish');
+            
+            // 다음 버튼 비활성화
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.disabled = true;
+            nextBtn.classList.add('bg-gray-300', 'text-gray-500');
+            nextBtn.classList.remove('bg-blue-600', 'text-white', 'hover:bg-blue-700', 'active:bg-blue-800');
+
+            // 보기 생성 (정답 + 오답 2개)
+            const options = shuffle([currentData.answer, ...currentData.distractors]);
+            renderOptions(options);
+        }
+
+        function renderOptions(options) {
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            options.forEach((optText) => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn flex-1 w-full bg-white border-[3px] border-gray-200 rounded-3xl text-3xl xl:text-4xl font-black text-gray-700 shadow-sm hover:border-blue-400 hover:bg-blue-50 hover:text-blue-900 hover:shadow-md relative overflow-hidden group';
+                btn.innerHTML = `<span class="relative z-10 px-4">${optText}</span>`;
+                
+                btn.dataset.isCorrect = (optText === currentData.answer);
+                btn.onclick = () => checkAnswer(btn, optText);
+                container.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(btn, selectedText) {
+            if (isAnswerRevealed) return;
+
+            if (btn.dataset.isCorrect === 'true') {
+                isAnswerRevealed = true;
+                
+                // 버튼 스타일
+                btn.classList.remove('border-gray-200', 'text-gray-700', 'hover:bg-blue-50');
+                btn.classList.add('correct');
+                
+                // 다른 버튼 비활성화
+                const allBtns = document.querySelectorAll('.choice-btn');
+                allBtns.forEach(b => {
+                    b.disabled = true;
+                    if (b !== btn) {
+                        b.classList.add('opacity-30', 'scale-95');
+                        b.style.filter = 'grayscale(100%)';
+                    }
+                });
+
+                // 학생 화면 빈칸 채우기
+                const blankSlot = document.getElementById('blank-slot');
+                blankSlot.classList.remove('blank-space');
+                blankSlot.classList.add('text-yellow-300', 'filled-text', 'border-b-0'); // 밑줄 제거, 색상 강조
+                blankSlot.textContent = selectedText;
+
+                // 정답 아이콘
+                const correctIcon = document.getElementById('correct-icon');
+                correctIcon.classList.remove('hidden');
+                void correctIcon.offsetWidth; 
+                correctIcon.classList.add('icon-vanish');
+                
+                playSound('correct');
+
+                // 다음 버튼 활성화
+                const nextBtn = document.getElementById('next-btn');
+                nextBtn.disabled = false;
+                nextBtn.classList.remove('bg-gray-300', 'text-gray-500');
+                nextBtn.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700', 'active:bg-blue-800', 'animate-pulse');
+                setTimeout(() => nextBtn.classList.remove('animate-pulse'), 1000);
+
+            } else {
+                btn.classList.add('wrong', 'shake');
+                playSound('wrong');
+                setTimeout(() => btn.classList.remove('shake'), 500);
+            }
+        }
+
+        function nextQuestion() {
+            currentIndex++;
+            
+            // 무한 루프
+            if (currentIndex >= quizQueue.length) {
+                quizQueue = shuffle([...sentenceData]);
+                currentIndex = 0;
+            }
+            loadQuestion();
+        }
+
+        function resetGame() {
+            if(confirm('퀴즈를 1번부터 다시 시작할까요?')) {
+                initGame();
+            }
+        }
+
+        function toggleInstruction() {
+            const textElement = document.getElementById('instruction-text');
+            if (textElement.textContent.includes("문장")) {
+                textElement.textContent = "Hãy hoàn thành câu!";
+            } else {
+                textElement.textContent = "문장을 완성하세요!";
+            }
+        }
+
+        initGame();
+    </script>
+</body>
+</html>

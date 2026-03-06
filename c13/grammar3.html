@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 문법 학습: A/V-았/었어야 했는데</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+        }
+        .lang-btn {
+            transition: all 0.3s ease;
+            width: 2.75rem; /* 44px */
+            height: 2.75rem; /* 44px */
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #374151; /* text-gray-700 */
+            background-color: #ffffff; /* bg-white */
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        }
+        .lang-btn:hover {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transform: translateY(-2px);
+        }
+        .lang-btn.active {
+            background-color: #4f46e5;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .practice-input {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            transition: border-color 0.3s ease;
+        }
+        .practice-input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.3);
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+        <!-- Header and Language Selector -->
+        <header class="text-center mb-8">
+            <h1 id="app-title" class="text-3xl md:text-4xl font-bold text-indigo-700 mb-4">쉽게 배우는 한국어 문법</h1>
+            <div id="lang-selector" class="flex justify-center space-x-3">
+                <button class="lang-btn active" data-lang="ko">한</button>
+                <button class="lang-btn" data-lang="en">영</button>
+                <button class="lang-btn" data-lang="vi">베</button>
+                <button class="lang-btn" data-lang="ja">일</button>
+                <button class="lang-btn" data-lang="zh">중</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Grammar Point Card -->
+            <div class="card">
+                <h2 class="text-2xl font-bold text-indigo-600 mb-4" data-key="grammar_title">A/V-았/었어야 했는데</h2>
+                <div id="grammar-explanation">
+                    <p class="text-lg font-semibold mb-2" data-key="explanation_title">무슨 뜻일까요?</p>
+                    <p data-key="explanation_content" class="text-gray-700 leading-relaxed">
+                        이미 끝난 일에 대해 그렇게 하지 못해서 아쉬움이나 후회를 나타낼 때 사용해요.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Dialogue Card -->
+            <div class="card">
+                <h3 class="text-xl font-bold mb-4" data-key="dialogue_title">대화 예시</h3>
+                <div class="space-y-4">
+                    <div class="flex items-start space-x-3">
+                        <div class="bg-blue-100 text-blue-800 font-bold rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">A</div>
+                        <div class="bg-gray-100 p-3 rounded-lg flex-1">
+                            <p>어제 회식에 올 줄 알았는데 안 보이던데요.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="bg-pink-100 text-pink-800 font-bold rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">B</div>
+                        <div class="bg-gray-100 p-3 rounded-lg flex-1">
+                            <p>제가 꼭 갔어야 했는데 사정이 있었어요.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Example Sentences Card -->
+            <div class="card">
+                <h3 class="text-xl font-bold mb-4" data-key="examples_title">문장 예시</h3>
+                <ul class="space-y-3 list-disc list-inside text-gray-700">
+                    <li>꼭 사야 하는 책이 다 팔리고 없다. 미리 샀어야 했는데…….</li>
+                    <li>어제 보고서를 다 쓰고 퇴근했어야 했는데, 죄송합니다.</li>
+                    <li>위험한 곳에 간 게 내 실수다. 가지 말았어야 했는데…….</li>
+                </ul>
+            </div>
+
+            <!-- Practice Card -->
+            <div class="card bg-indigo-50 border border-indigo-200">
+                <h3 class="text-xl font-bold mb-2" data-key="practice_title">연습</h3>
+                <p class="text-gray-600 mb-6" data-key="practice_instruction">하지 못해서 후회되는 일에 대해 이야기해 보세요.</p>
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="font-semibold">보기: 어렸을 때</label>
+                        <div class="flex flex-col sm:flex-row sm:items-center mt-2">
+                             <input type="text" class="practice-input" value="어렸을 때 책을 더 많이 읽었어야 했는데…….">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="font-semibold">1. 고등학교 때</label>
+                         <div class="flex flex-col sm:flex-row sm:items-center mt-2">
+                            <input type="text" class="practice-input" data-key="practice_placeholder" placeholder="문장을 만들어 보세요...">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="font-semibold">2. 작년</label>
+                        <div class="flex flex-col sm:flex-row sm:items-center mt-2">
+                            <input type="text" class="practice-input" data-key="practice_placeholder" placeholder="문장을 만들어 보세요...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <script>
+        const translations = {
+            ko: {
+                "app-title": "쉽게 배우는 한국어 문법",
+                "grammar_title": "A/V-았/었어야 했는데",
+                "explanation_title": "무슨 뜻일까요?",
+                "explanation_content": "이미 끝난 일에 대해 그렇게 하지 못해서 아쉬움이나 후회를 나타낼 때 사용해요.",
+                "dialogue_title": "대화 예시",
+                "examples_title": "문장 예시",
+                "practice_title": "연습",
+                "practice_instruction": "하지 못해서 후회되는 일에 대해 이야기해 보세요.",
+                "practice_placeholder": "문장을 만들어 보세요...",
+            },
+            en: {
+                "app-title": "Easy Korean Grammar",
+                "grammar_title": "A/V-ass/eoss-eoya haessneunde",
+                "explanation_title": "What does it mean?",
+                "explanation_content": "It's used to express regret or disappointment about something that you should have done in the past but didn't.",
+                "dialogue_title": "Dialogue Example",
+                "examples_title": "Example Sentences",
+                "practice_title": "Practice",
+                "practice_instruction": "Talk about something you regret not having done.",
+                "practice_placeholder": "Make a sentence...",
+            },
+            vi: {
+                "app-title": "Ngữ pháp tiếng Hàn dễ dàng",
+                "grammar_title": "A/V-았/었어야 했는데",
+                "explanation_title": "Nó có nghĩa là gì?",
+                "explanation_content": "Được sử dụng khi biểu thị sự nuối tiếc hoặc hối hận về một việc đã kết thúc mà bạn đã không thể làm được.",
+                "dialogue_title": "Ví dụ hội thoại",
+                "examples_title": "Ví dụ câu",
+                "practice_title": "Luyện tập",
+                "practice_instruction": "Hãy nói về điều bạn hối tiếc vì đã không làm được.",
+                "practice_placeholder": "Tạo một câu...",
+            },
+            ja: {
+                "app-title": "やさしい韓国語文法",
+                "grammar_title": "A/V-았/었어야 했는데",
+                "explanation_title": "どういう意味ですか？",
+                "explanation_content": "すでに終わったことについて、そうすることができなかった残念な気持ちや後悔を表すときに使います。",
+                "dialogue_title": "会話の例",
+                "examples_title": "例文",
+                "practice_title": "練習",
+                "practice_instruction": "できなかったことについて後悔していることを話してみてください。",
+                "practice_placeholder": "文章を作ってみてください...",
+            },
+            zh: {
+                "app-title": "轻松学韩语语法",
+                "grammar_title": "A/V-았/었어야 했는데",
+                "explanation_title": "是什么意思？",
+                "explanation_content": "用于对已经结束但未能做到的事情表示惋惜或后悔。",
+                "dialogue_title": "对话示例",
+                "examples_title": "例句",
+                "practice_title": "练习",
+                "practice_instruction": "谈谈你后悔没做的事。",
+                "practice_placeholder": "请造句...",
+            }
+        };
+
+        function changeLanguage(lang) {
+            // Translate elements with data-key
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang] && translations[lang][key]) {
+                    // For input placeholders, we need to set the attribute, not innerHTML
+                    if (el.tagName === 'INPUT' && key.includes('placeholder')) {
+                        el.placeholder = translations[lang][key];
+                    } else {
+                        el.innerHTML = translations[lang][key];
+                    }
+                }
+            });
+        }
+
+        document.getElementById('lang-selector').addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                const selectedLang = e.target.getAttribute('data-lang');
+                changeLanguage(selectedLang);
+            }
+        });
+        
+        // Initialize with default language
+        changeLanguage('ko');
+    </script>
+</body>
+</html>
+

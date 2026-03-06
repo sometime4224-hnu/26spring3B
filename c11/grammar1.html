@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+     <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NB76SV96');</script>
+<!-- End Google Tag Manager -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 사동사 학습 앱</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+        }
+        .feedback-correct {
+            color: #28a745; /* Green */
+        }
+        .feedback-incorrect {
+            color: #dc3545; /* Red */
+        }
+        .lang-btn.active {
+            background-color: #3B82F6; /* blue-600 */
+            color: white;
+            border-color: #3B82F6;
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
+        <!-- Header -->
+        <header class="text-center mb-6 md:mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">한국어 사동사(使動詞) 학습</h1>
+            <p class="text-sm md:text-md text-gray-600 mt-2">Causative Verbs Practice</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="space-y-6 md:space-y-8">
+            <!-- Explanation Section -->
+            <section class="bg-white p-5 sm:p-6 rounded-lg shadow-md">
+                <h2 class="text-xl md:text-2xl font-semibold mb-3 text-blue-600">사동사란 무엇일까요? 🤔</h2>
+                <p class="text-base">
+                    사동사는 문장의 주체가 다른 대상에게 어떤 행동이나 동작을 하도록 '시키는' 또는 '만드는' 것을 나타내는 동사입니다. 영어의 "make", "let", "have"와 비슷한 역할을 합니다.
+                    <br class="hidden sm:block">
+                    예를 들어, '아이가 옷을 <strong>입다</strong>'는 아이 스스로 하는 행동이지만, '엄마가 아이에게 옷을 <strong>입히다</strong>'는 엄마가 아이에게 옷을 입도록 시키는 행동을 의미합니다.
+                </p>
+            </section>
+
+            <!-- Formation Rules Section -->
+            <section class="bg-white p-5 sm:p-6 rounded-lg shadow-md">
+                <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4">
+                    <h2 class="text-xl md:text-2xl font-semibold text-blue-600 mb-3 sm:mb-0">사동사는 어떻게 만드나요? 🛠️</h2>
+                    <div id="lang-switcher" class="flex items-center space-x-1 border border-gray-300 rounded-md p-0.5">
+                        <button data-lang="en" class="lang-btn active text-xs px-2 py-1 rounded-md transition-colors duration-200">ENG</button>
+                        <button data-lang="vi" class="lang-btn text-xs px-2 py-1 rounded-md transition-colors duration-200">VIE</button>
+                        <button data-lang="ja" class="lang-btn text-xs px-2 py-1 rounded-md transition-colors duration-200">JPN</button>
+                        <button data-lang="zh" class="lang-btn text-xs px-2 py-1 rounded-md transition-colors duration-200">CHN</button>
+                    </div>
+                </div>
+                <p class="mb-4 text-base">
+                    일반 동사(능동사)의 어간에 접미사 <strong>-이-, -히-, -리-, -기-, -우-, -구-, -추-</strong> 등을 붙여서 만듭니다. 어떤 접미사가 붙는지는 동사마다 다르기 때문에, 익숙해지는 것이 중요합니다.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-base">
+                    <!-- Note: Added translation spans with data attributes -->
+                    <div class="border p-4 rounded-md">
+                        <h3 class="font-bold text-lg mb-2">① -이-</h3>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>먹다 → <span class="font-semibold text-blue-700">먹이다</span> <span class="translation text-sm text-gray-500" data-en="(to feed)" data-vi="(cho ăn)" data-ja="(食べさせる)" data-zh="(喂)"></span></li>
+                            <li>보다 → <span class="font-semibold text-blue-700">보이다</span> <span class="translation text-sm text-gray-500" data-en="(to show)" data-vi="(cho xem)" data-ja="(見せる)" data-zh="(给看)"></span></li>
+                            <li>죽다 → <span class="font-semibold text-blue-700">죽이다</span> <span class="translation text-sm text-gray-500" data-en="(to kill)" data-vi="(giết)" data-ja="(殺す)" data-zh="(杀)"></span></li>
+                            <li>속다 → <span class="font-semibold text-blue-700">속이다</span> <span class="translation text-sm text-gray-500" data-en="(to deceive)" data-vi="(lừa dối)" data-ja="(騙す)" data-zh="(欺骗)"></span></li>
+                        </ul>
+                    </div>
+                    <div class="border p-4 rounded-md">
+                        <h3 class="font-bold text-lg mb-2">② -히-</h3>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>입다 → <span class="font-semibold text-blue-700">입히다</span> <span class="translation text-sm text-gray-500" data-en="(to dress)" data-vi="(mặc cho)" data-ja="(着せる)" data-zh="(给...穿)"></span></li>
+                            <li>앉다 → <span class="font-semibold text-blue-700">앉히다</span> <span class="translation text-sm text-gray-500" data-en="(to seat)" data-vi="(cho ngồi)" data-ja="(座らせる)" data-zh="(使坐下)"></span></li>
+                            <li>읽다 → <span class="font-semibold text-blue-700">읽히다</span> <span class="translation text-sm text-gray-500" data-en="(to make read)" data-vi="(bắt đọc)" data-ja="(読ませる)" data-zh="(使阅读)"></span></li>
+                            <li>넓다 → <span class="font-semibold text-blue-700">넓히다</span> <span class="translation text-sm text-gray-500" data-en="(to widen)" data-vi="(mở rộng)" data-ja="(広げる)" data-zh="(加宽)"></span></li>
+                        </ul>
+                    </div>
+                    <div class="border p-4 rounded-md">
+                        <h3 class="font-bold text-lg mb-2">③ -리-</h3>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>살다 → <span class="font-semibold text-blue-700">살리다</span> <span class="translation text-sm text-gray-500" data-en="(to save)" data-vi="(cứu sống)" data-ja="(生かす)" data-zh="(救活)"></span></li>
+                            <li>알다 → <span class="font-semibold text-blue-700">알리다</span> <span class="translation text-sm text-gray-500" data-en="(to inform)" data-vi="(cho biết)" data-ja="(知らせる)" data-zh="(通知)"></span></li>
+                            <li>울다 → <span class="font-semibold text-blue-700">울리다</span> <span class="translation text-sm text-gray-500" data-en="(to make cry)" data-vi="(làm khóc)" data-ja="(泣かせる)" data-zh="(弄哭)"></span></li>
+                            <li>놀다 → <span class="font-semibold text-blue-700">놀리다</span> <span class="translation text-sm text-gray-500" data-en="(to tease)" data-vi="(trêu chọc)" data-ja="(からかう)" data-zh="(戏弄)"></span></li>
+                        </ul>
+                    </div>
+                     <div class="border p-4 rounded-md">
+                        <h3 class="font-bold text-lg mb-2">④ -기-</h3>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>신다 → <span class="font-semibold text-blue-700">신기다</span> <span class="translation text-sm text-gray-500" data-en="(to put shoes on)" data-vi="(mang giày cho)" data-ja="(履かせる)" data-zh="(给...穿鞋)"></span></li>
+                            <li>웃다 → <span class="font-semibold text-blue-700">웃기다</span> <span class="translation text-sm text-gray-500" data-en="(to make laugh)" data-vi="(làm cười)" data-ja="(笑わせる)" data-zh="(逗笑)"></span></li>
+                            <li>맡다 → <span class="font-semibold text-blue-700">맡기다</span> <span class="translation text-sm text-gray-500" data-en="(to entrust)" data-vi="(giao phó)" data-ja="(任せる)" data-zh="(委托)"></span></li>
+                            <li>벗다 → <span class="font-semibold text-blue-700">벗기다</span> <span class="translation text-sm text-gray-500" data-en="(to undress)" data-vi="(cởi đồ cho)" data-ja="(脱がせる)" data-zh="(给...脱衣服)"></span></li>
+                        </ul>
+                    </div>
+                    <div class="border p-4 rounded-md">
+                        <h3 class="font-bold text-lg mb-2">⑤ -우- / -구- / -추-</h3>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>자다 → <span class="font-semibold text-blue-700">재우다</span> <span class="translation text-sm text-gray-500" data-en="(to put to sleep)" data-vi="(cho ngủ)" data-ja="(寝かせる)" data-zh="(哄睡)"></span></li>
+                            <li>서다 → <span class="font-semibold text-blue-700">세우다</span> <span class="translation text-sm text-gray-500" data-en="(to make stand)" data-vi="(dựng lên)" data-ja="(立たせる)" data-zh="(使站立)"></span></li>
+                            <li>타다 → <span class="font-semibold text-blue-700">태우다</span> <span class="translation text-sm text-gray-500" data-en="(to give a ride)" data-vi="(cho đi nhờ)" data-ja="(乗せる)" data-zh="(搭载)"></span></li>
+                            <li>맞다 → <span class="font-semibold text-blue-700">맞추다</span> <span class="translation text-sm text-gray-500" data-en="(to make fit)" data-vi="(làm cho khớp)" data-ja="(合わせる)" data-zh="(使...适合)"></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Interactive Quiz Section -->
+            <section id="quiz" class="bg-white p-5 sm:p-6 rounded-lg shadow-md">
+                <h2 class="text-xl md:text-2xl font-semibold mb-4 text-blue-600">연습 문제 ✍️</h2>
+                <div class="bg-gray-50 p-4 rounded-lg text-center">
+                    <p class="text-base mb-2">다음 문장의 괄호 안 동사를 알맞은 사동사로 바꿔 빈칸을 채우세요.</p>
+                    <p id="question-sentence" class="text-lg md:text-xl font-bold my-4 min-h-[3rem] flex items-center justify-center"></p>
+                    
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-2">
+                        <input type="text" id="answer-input" class="w-full sm:w-64 px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-base" placeholder="정답을 입력하세요">
+                        <button id="submit-button" class="w-full sm:w-auto bg-blue-600 text-white font-bold py-2 px-6 rounded-md hover:bg-blue-700 transition duration-200">확인</button>
+                    </div>
+
+                    <div id="feedback" class="mt-4 min-h-[1.75rem] text-base md:text-lg font-semibold"></div>
+                </div>
+                 <div class="mt-4 text-center">
+                    <button id="next-button" class="bg-gray-700 text-white font-bold py-2 px-8 rounded-md hover:bg-gray-800 transition duration-200 hidden">다음 문제</button>
+                 </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // --- Language Switcher ---
+        const langSwitcher = document.getElementById('lang-switcher');
+        const translationSpans = document.querySelectorAll('.translation');
+
+        function setLanguage(lang) {
+            translationSpans.forEach(span => {
+                span.textContent = span.dataset[lang] || '';
+            });
+            // Update active button
+            langSwitcher.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+        }
+
+        langSwitcher.addEventListener('click', (event) => {
+            if (event.target.matches('.lang-btn')) {
+                const lang = event.target.dataset.lang;
+                setLanguage(lang);
+            }
+        });
+        
+        // --- Quiz Logic ---
+        const questions = [
+            { baseVerb: '먹다', grammar: '-아/어요', sentence: '엄마가 아이에게 밥을 {}.', answer: '먹여요' },
+            { baseVerb: '입다', grammar: '-았/었어요', sentence: '날씨가 추워서 동생에게 외투를 {}.', answer: '입혔어요' },
+            { baseVerb: '보다', grammar: '-어 주다, -시-, -았/었어요', sentence: '선생님께서 학생들에게 사진을 {}.', answer: '보여주셨어요' },
+            { baseVerb: '앉다', grammar: '-어 드리다, -았/었어요', sentence: '할머니를 의자에 편하게 {}.', answer: '앉혀드렸어요' },
+            { baseVerb: '신다', grammar: '-시-, -았/었어요', sentence: '아이 혼자 양말을 못 신어서 엄마가 {}.', answer: '신기셨어요' },
+            { baseVerb: '울다', grammar: '-았/었어요', sentence: '슬픈 영화가 저를 {}.', answer: '울렸어요' },
+            { baseVerb: '자다', grammar: '-았/었어요', sentence: '아기가 안 자서 아빠가 아기를 {}.', answer: '재웠어요' },
+            { baseVerb: '알다', grammar: '-어 주다, -았/었어요', sentence: '친구에게 제 전화번호를 {}.', answer: '알려줬어요' },
+            { baseVerb: '웃다', grammar: '-아/어요', sentence: '그 코미디언은 항상 사람들을 {}.', answer: '웃겨요' },
+            { baseVerb: '타다', grammar: '-어 주다, -았/었어요', sentence: '친구가 저를 집에 {}.', answer: '태워줬어요' }
+        ];
+
+        let currentQuestionIndex = 0;
+
+        const questionSentenceEl = document.getElementById('question-sentence');
+        const answerInputEl = document.getElementById('answer-input');
+        const submitButtonEl = document.getElementById('submit-button');
+        const nextButtonEl = document.getElementById('next-button');
+        const feedbackEl = document.getElementById('feedback');
+        
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function loadQuestion() {
+            answerInputEl.style.display = 'block';
+            submitButtonEl.style.display = 'block';
+
+            if (currentQuestionIndex >= questions.length) {
+                questionSentenceEl.textContent = '🎉 모든 문제를 다 풀었습니다! 🎉';
+                answerInputEl.style.display = 'none';
+                submitButtonEl.style.display = 'none';
+                nextButtonEl.textContent = '다시 시작';
+                nextButtonEl.classList.remove('hidden');
+                currentQuestionIndex = 0; 
+                shuffle(questions); // Reshuffle for a new round
+                return;
+            }
+
+            const currentQuestion = questions[currentQuestionIndex];
+            const sentencePlaceholder = `___ (${currentQuestion.baseVerb}, ${currentQuestion.grammar})`;
+            questionSentenceEl.innerHTML = currentQuestion.sentence.replace('{}', `<span class="font-mono bg-gray-200 px-2 py-1 rounded text-base md:text-lg">${sentencePlaceholder}</span>`);
+
+            answerInputEl.value = '';
+            answerInputEl.disabled = false;
+            answerInputEl.focus();
+            feedbackEl.textContent = '';
+            feedbackEl.className = 'mt-4 min-h-[1.75rem] text-base md:text-lg font-semibold';
+            submitButtonEl.disabled = false;
+            submitButtonEl.classList.remove('hidden');
+            nextButtonEl.classList.add('hidden');
+        }
+
+        function checkAnswer() {
+            const userAnswer = answerInputEl.value.trim().replace('.', ''); 
+            const correctAnswer = questions[currentQuestionIndex].answer;
+
+            if (userAnswer === correctAnswer) {
+                feedbackEl.textContent = `정답입니다! 😄 (정답: ${correctAnswer})`;
+                feedbackEl.classList.add('feedback-correct');
+            } else {
+                feedbackEl.textContent = `틀렸습니다. 정답은 "${correctAnswer}" 입니다. 😕`;
+                feedbackEl.classList.add('feedback-incorrect');
+            }
+
+            answerInputEl.disabled = true;
+            submitButtonEl.disabled = true;
+            nextButtonEl.classList.remove('hidden');
+            nextButtonEl.textContent = currentQuestionIndex === questions.length - 1 ? '결과 보기' : '다음 문제';
+        }
+
+        function goToNextQuestion() {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        // --- Event Listeners ---
+        submitButtonEl.addEventListener('click', checkAnswer);
+        nextButtonEl.addEventListener('click', goToNextQuestion);
+        answerInputEl.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                if (!submitButtonEl.disabled) {
+                    checkAnswer();
+                } else {
+                    goToNextQuestion();
+                }
+            }
+        });
+        
+        // --- Initial Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            setLanguage('en'); // Set default language on load
+            shuffle(questions);
+            loadQuestion();
+        });
+
+    </script>
+</body>
+</html>
+

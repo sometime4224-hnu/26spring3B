@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사동 표현 비교 (단형 vs 장형)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .lang-btn.active {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            border: 2px solid white;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%; max-width: 600px; /* 테이블 최소 너비 보장 */
+        }
+        th, td {
+            border: 1px solid #e5e7eb; /* gray-200 */
+            padding: 0.75rem 1rem;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f9fafb; /* gray-50 */
+            font-weight: 700;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f3f4f6; /* gray-100 */
+        }
+        .example-box {
+            background-color: #f3f4f6; /* gray-100 */
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-gray-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+    <div class="max-w-4xl mx-auto">
+
+        <!-- 헤더 -->
+        <header class="text-center mb-12">
+            <h1 data-key="title" class="text-4xl font-bold text-blue-600">사동 표현 비교</h1>
+            <p data-key="subtitle" class="text-3xl font-bold text-gray-800 mt-2">단형 사동 vs 장형 사동 (V-게 하다)</p>
+            <p data-key="description" class="text-xl text-gray-600 mt-4">주어가 다른 대상에게 동작을 시키는 두 가지 방법을 비교합니다.</p>
+        </header>
+
+        <!-- 언어 선택 버튼 -->
+        <div class="flex flex-wrap justify-center gap-3 my-8">
+            <button data-lang="ko" class="lang-btn px-4 py-2 font-semibold text-white bg-blue-500 rounded-md shadow-md hover:bg-blue-600 transition-all duration-300 active">한국어</button>
+            <button data-lang="en" class="lang-btn px-4 py-2 font-semibold text-white bg-teal-500 rounded-md shadow-md hover:bg-teal-600 transition-all duration-300">English</button>
+            <button data-lang="vi" class="lang-btn px-4 py-2 font-semibold text-white bg-green-500 rounded-md shadow-md hover:bg-green-600 transition-all duration-300">Tiếng Việt</button>
+            <button data-lang="ja" class="lang-btn px-4 py-2 font-semibold text-white bg-purple-500 rounded-md shadow-md hover:bg-purple-600 transition-all duration-300">日本語</button>
+            <button data-lang="zh" class="lang-btn px-4 py-2 font-semibold text-white bg-red-500 rounded-md shadow-md hover:bg-red-600 transition-all duration-300">中文</button>
+        </div>
+
+        <!-- 1. 공통점 -->
+        <section class="mb-12">
+            <h2 data-key="common_title" class="text-3xl font-bold text-gray-800 mb-6">1. 공통점</h2>
+            <div class="bg-white p-8 rounded-xl shadow-lg space-y-4">
+                <p data-key="common_desc" class="text-lg text-gray-700">두 형태 모두 기본적으로 "주어가 (~가) 목적어에게 (~에게/를) ...하도록 시키다/만들다"라는 사동의 의미를 가집니다.</p>
+                <div class="example-box">
+                    <p data-key="common_ex_1" class="text-lg text-gray-800">엄마가 아이에게 밥을 <strong class="text-blue-600">먹인다</strong>. (단형)</p>
+                    <p data-key="common_ex_2" class="text-lg text-gray-800">엄마가 아이에게 밥을 <strong class="text-blue-600">먹게 한다</strong>. (장형)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. 차이점 -->
+        <section class="mb-12">
+            <h2 data-key="diff_title" class="text-3xl font-bold text-gray-800 mb-6">2. 차이점</h2>
+            <div class="bg-white p-8 rounded-xl shadow-lg overflow-x-auto">
+                <table>
+                    <thead>
+                        <tr>
+                            <th data-key="th_criteria">비교 기준</th>
+                            <th data-key="th_short">단형 사동 (이/히/리/기...)</th>
+                            <th data-key="th_long">장형 사동 (V-게 하다)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-key="row_form_title" class="font-bold">형태</td>
+                            <td data-key="row_form_short">동사 어간에 <strong>접미사</strong>가 붙어 하나의 새로운 단어(사동사)가 됨.</td>
+                            <td data-key="row_form_long">동사 어간에 <strong>문법 표현 '-게 하다'</strong>가 붙음. (두 단어)</td>
+                        </tr>
+                        <tr>
+                            <td data-key="row_use_title" class="font-bold">활용</td>
+                            <td data-key="row_use_short"><strong>제한적임.</strong><br/>일부 동사(주로 타동사)에만 붙을 수 있음.<br/>(예: 가다 → 가게 하다 O, 가이다/가히다 X)</td>
+                            <td data-key="row_use_long"><strong>매우 자유로움.</strong><br/>대부분의 동사 및 형용사에 붙을 수 있음.<br/>(예: 가게 하다, 예쁘게 하다, 공부하게 하다)</td>
+                        </tr>
+                        <tr>
+                            <td data-key="row_mean_title" class="font-bold">의미 (직접/간접)</td>
+                            <td data-key="row_mean_short"><strong>직접적 사동</strong>의 의미가 강함.<br/>주어가 동작에 직접 참여하는 뉘앙스.<br/><br/>*예: 엄마가 아이에게 옷을 <strong>입혔다</strong>.*<br/>(엄마가 직접 아이에게 옷을 입혀주는 행동)</td>
+                            <td data-key="row_mean_long"><strong>간접적 사동</strong>의 의미가 강함.<br/>주어가 말이나 지시로 동작을 하도록 만듦.<br/><br/>*예: 엄마가 아이에게 옷을 <strong>입게 했다</strong>.*<br/>(엄마가 '옷 입어'라고 말해서 아이 스스로 입는 행동)</td>
+                        </tr>
+                        <tr>
+                            <td data-key="row_ambig_title" class="font-bold">중의성 (모호함)</td>
+                            <td data-key="row_ambig_short"><strong>모호할 수 있음.</strong><br/>일부 단어는 피동(passive)과 형태가 같음.<br/><br/>*예: 보이다*<br/>1. (사동) 친구에게 사진을 <strong>보이다</strong>. (to show)<br/>2. (피동) 산이 <strong>보이다</strong>. (to be seen)</td>
+                            <td data-key="row_ambig_long"><strong>모호하지 않음.</strong><br/>항상 사동(causative)의 의미만 가짐.<br/><br/>*예: 보게 하다*<br/>(사동) 친구에게 사진을 <strong>보게 하다</strong>. (to make someone see)</td>
+                        </tr>
+                        <tr>
+                            <td data-key="row_intent_title" class="font-bold">주어의 의도</td>
+                            <td data-key="row_intent_short">주어의 의도가 <strong>강하게</strong> 작용함.<br/>(예: 아기를 <strong>울리다</strong> - 의도를 갖고 울게 만듦)</td>
+                            <td data-key="row_intent_long">주어의 의도가 없거나 <strong>약할 수 있음</strong>.<br/>(예: 아기를 <strong>울게 하다</strong> - 의도치 않게 울게 됨)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 3. 요약 및 예시 -->
+        <section class="mb-12">
+            <h2 data-key="summary_title" class="text-3xl font-bold text-gray-800 mb-6">3. 요약 및 예시</h2>
+            <div class="bg-white p-8 rounded-xl shadow-lg overflow-x-auto">
+                <table>
+                    <thead>
+                        <tr>
+                            <th data-key="th_situation">상황</th>
+                            <th data-key="th_short_ex">단형 사동 (직접적 / 하나의 단어)</th>
+                            <th data-key="th_long_ex">장형 사동 (간접적 / 서술적)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-key="summary_ex_eat" class="font-bold">(먹다)</td>
+                            <td>엄마가 아기에게 밥을 <strong>먹인다</strong>. (직접 숟가락으로)</td>
+                            <td>엄마가 아기에게 밥을 <strong>먹게 한다</strong>. (스스로 먹도록 시킴)</td>
+                        </tr>
+                        <tr>
+                            <td data-key="summary_ex_read" class="font-bold">(읽다)</td>
+                            <td>선생님이 학생에게 책을 <strong>읽힌다</strong>. (강제성, 직접적 느낌)</td>
+                            <td>선생님이 학생에게 책을 <strong>읽게 한다</strong>. (숙제로 내주거나 지시함)</td>
+                        </tr>
+                        <tr>
+                            <td data-key="summary_ex_sleep" class="font-bold">(자다)</td>
+                            <td>엄마가 아기를 <strong>재운다</strong>. (직접 안아서)</td>
+                            <td>엄마가 아기를 (방에 들어가) <strong>자게 한다</strong>. (혼자 자도록 지시/유도)</td>
+                        </tr>
+                        <tr>
+                            <td data-key="summary_ex_go" class="font-bold">(가다)</td>
+                            <td>(단형 사동 불가능)</td>
+                            <td>사장님이 직원을 출장 <strong>가게 했다</strong>.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        
+        <!-- 4. 결론 -->
+        <section>
+            <h2 data-key="conclusion_title" class="text-3xl font-bold text-gray-800 mb-6">4. 결론</h2>
+            <div class="bg-white p-8 rounded-xl shadow-lg space-y-4">
+                <ul class="list-disc list-inside space-y-2 text-lg text-gray-700">
+                    <li data-key="conclusion_1"><strong>단형 사동</strong>은 이미 굳어진 하나의 단어처럼 쓰이며, 주로 <strong>직접적인 행동</strong>을 의미합니다. (예: 먹이다, 입히다, 재우다)</li>
+                    <li data-key="conclusion_2"><strong>장형 사동 (-게 하다)</strong>은 더 문법적이고 서술적이며, <strong>간접적인 지시</strong>나 <strong>허락</strong>을 의미할 때, 혹은 단형 사동이 없는 동사(예: 가다, 공부하다)에 폭넓게 사용됩니다.</li>
+                </ul>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const translations = {
+                'ko': {
+                    'title': '사동 표현 비교',
+                    'subtitle': '단형 사동 vs 장형 사동 (V-게 하다)',
+                    'description': '주어가 다른 대상에게 동작을 시키는 두 가지 방법을 비교합니다.',
+                    'common_title': '1. 공통점',
+                    'common_desc': '두 형태 모두 기본적으로 "주어가 (~가) 목적어에게 (~에게/를) ...하도록 시키다/만들다"라는 사동의 의미를 가집니다.',
+                    'common_ex_1': '엄마가 아이에게 밥을 <strong class="text-blue-600">먹인다</strong>. (단형)',
+                    'common_ex_2': '엄마가 아이에게 밥을 <strong class="text-blue-600">먹게 한다</strong>. (장형)',
+                    'diff_title': '2. 차이점',
+                    'th_criteria': '비교 기준',
+                    'th_short': '단형 사동 (이/히/리/기...)',
+                    'th_long': '장형 사동 (V-게 하다)',
+                    'row_form_title': '형태',
+                    'row_form_short': "동사 어간에 <strong>접미사</strong>가 붙어 하나의 새로운 단어(사동사)가 됨.",
+                    'row_form_long': "동사 어간에 <strong>문법 표현 '-게 하다'</strong>가 붙음. (두 단어)",
+                    'row_use_title': '활용',
+                    'row_use_short': '<strong>제한적임.</strong><br/>일부 동사(주로 타동사)에만 붙을 수 있음.<br/>(예: 가다 → 가게 하다 O, 가이다/가히다 X)',
+                    'row_use_long': '<strong>매우 자유로움.</strong><br/>대부분의 동사 및 형용사에 붙을 수 있음.<br/>(예: 가게 하다, 예쁘게 하다, 공부하게 하다)',
+                    'row_mean_title': '의미 (직접/간접)',
+                    'row_mean_short': '<strong>직접적 사동</strong>의 의미가 강함.<br/>주어가 동작에 직접 참여하는 뉘앙스.<br/><br/>*예: 엄마가 아이에게 옷을 <strong>입혔다</strong>.*<br/>(엄마가 직접 아이에게 옷을 입혀주는 행동)',
+                    'row_mean_long': '<strong>간접적 사동</strong>의 의미가 강함.<br/>주어가 말이나 지시로 동작을 하도록 만듦.<br/><br/>*예: 엄마가 아이에게 옷을 <strong>입게 했다</strong>.*<br/>(엄마가 \'옷 입어\'라고 말해서 아이 스스로 입는 행동)',
+                    'row_ambig_title': '중의성 (모호함)',
+                    'row_ambig_short': '<strong>모호할 수 있음.</strong><br/>일부 단어는 피동(passive)과 형태가 같음.<br/><br/>*예: 보이다*<br/>1. (사동) 친구에게 사진을 <strong>보이다</strong>. (to show)<br/>2. (피동) 산이 <strong>보이다</strong>. (to be seen)',
+                    'row_ambig_long': '<strong>모호하지 않음.</strong><br/>항상 사동(causative)의 의미만 가짐.<br/><br/>*예: 보게 하다*<br/>(사동) 친구에게 사진을 <strong>보게 하다</strong>. (to make someone see)',
+                    'row_intent_title': '주어의 의도',
+                    'row_intent_short': '주어의 의도가 <strong>강하게</strong> 작용함.<br/>(예: 아기를 <strong>울리다</strong> - 의도를 갖고 울게 만듦)',
+                    'row_intent_long': '주어의 의도가 없거나 <strong>약할 수 있음</strong>.<br/>(예: 아기를 <strong>울게 하다</strong> - 의도치 않게 울게 됨)',
+                    'summary_title': '3. 요약 및 예시',
+                    'th_situation': '상황',
+                    'th_short_ex': '단형 사동 (직접적 / 하나의 단어)',
+                    'th_long_ex': '장형 사동 (간접적 / 서술적)',
+                    'summary_ex_eat': '(먹다)',
+                    'summary_ex_read': '(읽다)',
+                    'summary_ex_sleep': '(자다)',
+                    'summary_ex_go': '(가다)',
+                    'conclusion_title': '4. 결론',
+                    'conclusion_1': '<strong>단형 사동</strong>은 이미 굳어진 하나의 단어처럼 쓰이며, 주로 <strong>직접적인 행동</strong>을 의미합니다. (예: 먹이다, 입히다, 재우다)',
+                    'conclusion_2': '<strong>장형 사동 (-게 하다)</strong>은 더 문법적이고 서술적이며, <strong>간접적인 지시</strong>나 <strong>허락</strong>을 의미할 때, 혹은 단형 사동이 없는 동사(예: 가다, 공부하다)에 폭넓게 사용됩니다.'
+                },
+                'en': {
+                    'title': 'Causative Comparison',
+                    'subtitle': 'Short-form vs. Long-form (V-게 하다)',
+                    'description': 'Comparing two ways to express making someone do an action.',
+                    'common_title': '1. Commonalities',
+                    'common_desc': 'Both forms fundamentally share the causative meaning of "The subject makes/has the object do something."',
+                    'common_ex_1': 'Mom feeds (먹인다) the baby. (Short)',
+                    'common_ex_2': 'Mom makes (먹게 한다) the baby eat. (Long)',
+                    'diff_title': '2. Differences',
+                    'th_criteria': 'Criteria',
+                    'th_short': 'Short-form Causative (이/히/리/기...)',
+                    'th_long': 'Long-form Causative (V-게 하다)',
+                    'row_form_title': 'Form',
+                    'row_form_short': 'A <strong>suffix</strong> is attached to the verb stem, creating a new single word (causative verb).',
+                    'row_form_long': 'The <strong>grammar pattern "-게 하다"</strong> is attached to the verb stem. (Two words)',
+                    'row_use_title': 'Usage',
+                    'row_use_short': '<strong>Limited.</strong><br/>Can only be attached to certain verbs (mostly transitive).<br/>(e.g., 가다 → 가게 하다 O, 가이다/가히다 X)',
+                    'row_use_long': '<strong>Very flexible.</strong><br/>Can be attached to most verbs and adjectives.<br/>(e.g., 가게 하다, 예쁘게 하다, 공부하게 하다)',
+                    'row_mean_title': 'Meaning (Direct/Indirect)',
+                    'row_mean_short': 'Strong <strong>direct causative</strong> meaning.<br/>Nuance that the subject participates directly.<br/><br/>*e.g., 엄마가 아이에게 옷을 <strong>입혔다</strong>.*<br/>(Mom physically put the clothes on the child)',
+                    'row_mean_long': 'Strong <strong>indirect causative</strong> meaning.<br/>The subject makes the object act via words or instruction.<br/><br/>*e.g., 엄마가 아이에게 옷을 <strong>입게 했다</strong>.*<br/>(Mom told the child to get dressed, and the child did it themselves)',
+                    'row_ambig_title': 'Ambiguity',
+                    'row_ambig_short': '<strong>Can be ambiguous.</strong><br/>Some forms are identical to the passive form.<br/><br/>*e.g., 보이다*<br/>1. (Causative) <strong>Show</strong> (보이다) a picture to a friend.<br/>2. (Passive) The mountain <strong>can be seen</strong> (보이다).',
+                    'row_ambig_long': '<strong>Not ambiguous.</strong><br/>Always has only the causative meaning.<br/><br/>*e.g., 보게 하다*<br/>(Causative) <strong>Make someone see</strong> (보게 하다) a picture.',
+                    'row_intent_title': "Subject's Intention",
+                    'row_intent_short': 'The subject\'s intention is <strong>strong</strong>.<br/>(e.g., 아기를 <strong>울리다</strong> - To make a baby cry <strong>intentionally</strong>)',
+                    'row_intent_long': 'The subject\'s intention may be <strong>weak or non-existent</strong>.<br/>(e.g., 아기를 <strong>울게 하다</strong> - To cause a baby to cry, <strong>even unintentionally</strong>)',
+                    'summary_title': '3. Summary & Examples',
+                    'th_situation': 'Situation',
+                    'th_short_ex': 'Short-form (Direct / Single Word)',
+                    'th_long_ex': 'Long-form (Indirect / Descriptive)',
+                    'summary_ex_eat': '(eat)',
+                    'summary_ex_read': '(read)',
+                    'summary_ex_sleep': '(sleep)',
+                    'summary_ex_go': '(go)',
+                    'conclusion_title': '4. Conclusion',
+                    'conclusion_1': '<strong>Short-form causatives</strong> are used like single, established words, implying a <strong>direct action</strong>. (e.g., 먹이다, 입히다, 재우다)',
+                    'conclusion_2': '<strong>Long-form causatives (-게 하다)</strong> are more grammatical and descriptive, used widely for <strong>indirect instructions</strong> or <strong>permission</strong>, or for verbs that lack a short-form (e.g., 가다, 공부하다).'
+                },
+                'vi': {
+                    'title': 'So sánh Thể sai khiến',
+                    'subtitle': 'Dạng ngắn vs. Dạng dài (V-게 하다)',
+                    'description': 'So sánh hai cách diễn đạt việc khiến ai đó làm một hành động.',
+                    'common_title': '1. Điểm chung',
+                    'common_desc': 'Cả hai dạng về cơ bản đều mang ý nghĩa sai khiến "Chủ ngữ bắt/khiến/cho phép (~가) đối tượng (~에게/를) làm gì đó ..."',
+                    'common_ex_1': 'Mẹ cho bé ăn (먹인다). (Dạng ngắn)',
+                    'common_ex_2': 'Mẹ bắt bé ăn (먹게 한다). (Dạng dài)',
+                    'diff_title': '2. Điểm khác biệt',
+                    'th_criteria': 'Tiêu chí so sánh',
+                    'th_short': 'Thể sai khiến dạng ngắn (이/히/리/기...)',
+                    'th_long': 'Thể sai khiến dạng dài (V-게 하다)',
+                    'row_form_title': 'Hình thức',
+                    'row_form_short': 'Gắn <strong>hậu tố</strong> vào gốc động từ, tạo thành một từ mới (động từ sai khiến).',
+                    'row_form_long': 'Gắn <strong>cấu trúc ngữ pháp \'-게 하다\'</strong> vào gốc động từ. (Hai từ)',
+                    'row_use_title': 'Cách dùng',
+                    'row_use_short': '<strong>Hạn chế.</strong><br/>Chỉ có thể gắn vào một số động từ (chủ yếu là ngoại động từ).<br/>(VD: 가다 → 가게 하다 O, 가이다/가히다 X)',
+                    'row_use_long': '<strong>Rất linh hoạt.</strong><br/>Có thể gắn vào hầu hết các động từ và tính từ.<br/>(VD: 가게 하다, 예쁘게 하다, 공부하게 하다)',
+                    'row_mean_title': 'Ý nghĩa (Trực tiếp/Gián tiếp)',
+                    'row_mean_short': 'Ý nghĩa <strong>sai khiến trực tiếp</strong> mạnh mẽ.<br/>Ngụ ý chủ ngữ tham gia trực tiếp vào hành động.<br/><br/>*VD: Mẹ <strong>mặc (입혔다)</strong> áo cho con.*<br/>(Hành động mẹ trực tiếp mặc áo cho con)',
+                    'row_mean_long': 'Ý nghĩa <strong>sai khiến gián tiếp</strong> mạnh mẽ.<br/>Chủ ngữ ra lệnh hoặc chỉ thị để đối tượng tự thực hiện hành động.<br/><br/>*VD: Mẹ <strong>bảo (입게 했다)</strong> con mặc áo.*<br/>(Mẹ nói \'Con mặc áo vào\' và con tự mặc)',
+                    'row_ambig_title': 'Tính mơ hồ',
+                    'row_ambig_short': '<strong>Có thể mơ hồ.</strong><br/>Một số từ có hình thức giống hệt thể bị động.<br/><br/>*VD: 보이다*<br/>1. (Sai khiến) <strong>Cho</strong> (보이다) bạn xem ảnh.<br/>2. (Bị động) Núi <strong>có thể được nhìn thấy</strong> (보이다).',
+                    'row_ambig_long': '<strong>Không mơ hồ.</strong><br/>Luôn chỉ mang ý nghĩa sai khiến.<br/><br/>*VD: 보게 하다*<br/>(Sai khiến) <strong>Bắt/Cho</strong> (보게 하다) bạn xem ảnh.',
+                    'row_intent_title': 'Ý định của chủ ngữ',
+                    'row_intent_short': 'Ý định của chủ ngữ rất <strong>mạnh mẽ</strong>.<br/>(VD: <strong>Làm cho</strong> (울리다) em bé khóc - cố ý làm cho khóc)',
+                    'row_intent_long': 'Ý định của chủ ngữ có thể <strong>yếu hoặc không có</strong>.<br/>(VD: <strong>Làm cho</strong> (울게 하다) em bé khóc - vô tình làm cho khóc)',
+                    'summary_title': '3. Tóm tắt và Ví dụ',
+                    'th_situation': 'Tình huống',
+                    'th_short_ex': 'Dạng ngắn (Trực tiếp / Một từ)',
+                    'th_long_ex': 'Dạng dài (Gián tiếp / Diễn giải)',
+                    'summary_ex_eat': '(ăn)',
+                    'summary_ex_read': '(đọc)',
+                    'summary_ex_sleep': '(ngủ)',
+                    'summary_ex_go': '(đi)',
+                    'conclusion_title': '4. Kết luận',
+                    'conclusion_1': '<strong>Thể sai khiến dạng ngắn</strong> được dùng như một từ cố định, chủ yếu mang ý nghĩa <strong>hành động trực tiếp</strong>. (VD: 먹이다, 입히다, 재우다)',
+                    'conclusion_2': '<strong>Thể sai khiến dạng dài (-게 하다)</strong> mang tính ngữ pháp và diễn giải hơn, được sử dụng rộng rãi khi mang ý nghĩa <strong>chỉ thị gián tiếp</strong> hoặc <strong>cho phép</strong>, hoặc dùng với các động từ không có dạng ngắn (VD: 가다, 공부하다).'
+                },
+                'ja': {
+                    'title': '使役表現の比較',
+                    'subtitle': '短形使役 vs 長形使役 (V-게 하다)',
+                    'description': '主語が他の対象に動作をさせる二つの方法を比較します。',
+                    'common_title': '1. 共通点',
+                    'common_desc': 'どちらの形も基本的に「主語が（〜が）目的語に（〜に/を）...させる/するようにする」という使役の意味を持ちます。',
+                    'common_ex_1': '母が子供にご飯を食べさせる (먹인다)。 (短形)',
+                    'common_ex_2': '母が子供にご飯を食べるようにする (먹게 한다)。 (長形)',
+                    'diff_title': '2. 相違点',
+                    'th_criteria': '比較基準',
+                    'th_short': '短形使役 (이/히/리/기...)',
+                    'th_long': '長形使役 (V-게 하다)',
+                    'row_form_title': '形態',
+                    'row_form_short': '動詞の語幹に<strong>接尾辞</strong>が付き、一つの新しい単語（使役動詞）になる。',
+                    'row_form_long': '動詞の語幹に<strong>文法表現「-게 하다」</strong>が付く。（二つの単語）',
+                    'row_use_title': '活用',
+                    'row_use_short': '<strong>限定的。</strong><br/>一部の動詞（主に他動詞）にのみ付く。<br/>(例: 가다 → 가게 하다 O, 가이다/가히다 X)',
+                    'row_use_long': '<strong>非常に自由。</strong><br/>ほとんどの動詞や形容詞に付くことができる。<br/>(例: 가게 하다, 예쁘게 하다, 공부하게 하다)',
+                    'row_mean_title': '意味 (直接/間接)',
+                    'row_mean_short': '<strong>直接的な使役</strong>の意味が強い。<br/>主語が動作に直接関与するニュアンス。<br/><br/>*例: 母が子供に服を<strong>着せた (입혔다)</strong>。*<br/>(母が直接子供に服を着せる行動)',
+                    'row_mean_long': '<strong>間接的な使役</strong>の意味が強い。<br/>主語が言葉や指示で動作をさせる。<br/><br/>*例: 母が子供に服を<strong>着るようにさせた (입게 했다)</strong>。*<br/>(母が「服を着なさい」と言って、子供が自分で着る行動)',
+                    'row_ambig_title': '曖昧さ',
+                    'row_ambig_short': '<strong>曖昧になることがある。</strong><br/>一部の単語は受動(受け身)と同じ形。<br/><br/>*例: 보이다*<br/>1. (使役) 友達に写真を<strong>見せる (보이다)</strong>。<br/>2. (受動) 山が<strong>見える (보이다)</strong>。',
+                    'row_ambig_long': '<strong>曖昧ではない。</strong><br/>常に使役の意味だけを持つ。<br/><br/>*例: 보게 하다*<br/>(使役) 友達に写真を<strong>見させる (보게 하다)</strong>。',
+                    'row_intent_title': '主語の意図',
+                    'row_intent_short': '主語の意図が<strong>強く</strong>作用する。<br/>(例: 赤ちゃんを<strong>泣かす (울리다)</strong> - <strong>意図的に</strong>)',
+                    'row_intent_long': '主語の意図が<strong>弱い</strong>、またはない場合がある。<br/>(例: 赤ちゃんを<strong>泣かせる (울게 하다)</strong> - <strong>意図せず</strong>)',
+                    'summary_title': '3. 要約と例文',
+                    'th_situation': '状況',
+                    'th_short_ex': '短形 (直接的 / 一単語)',
+                    'th_long_ex': '長形 (間接的 / 叙述的)',
+                    'summary_ex_eat': '(食べる)',
+                    'summary_ex_read': '(読む)',
+                    'summary_ex_sleep': '(寝る)',
+                    'summary_ex_go': '(行く)',
+                    'conclusion_title': '4. 結論',
+                    'conclusion_1': '<strong>短形使役</strong>は、定着した一つの単語のように使われ、主に<strong>直接的な行動</strong>を意味します。(例: 먹이다, 입히다, 재우다)',
+                    'conclusion_2': '<strong>長形使役 (-게 하다)</strong>は、より文法的・叙述的で、<strong>間接的な指示</strong>や<strong>許可</strong>を意味する場合、または短形使役がない動詞(例: 가다, 공부하다)に幅広く使われます。'
+                },
+                'zh': {
+                    'title': '使动表现比较',
+                    'subtitle': '短型使动 vs 长型使动 (V-게 하다)',
+                    'description': '比较主语让其他对象进行动作的两种方法。',
+                    'common_title': '1. 共同点',
+                    'common_desc': '两种形式基本上都具有“主语（~가）让/使/令宾语（~에게/를）做...”的使动含义。',
+                    'common_ex_1': '妈妈给孩子喂（먹인다）饭。(短型)',
+                    'common_ex_2': '妈妈让（먹게 한다）孩子吃饭。(长型)',
+                    'diff_title': '2. 差异',
+                    'th_criteria': '比较标准',
+                    'th_short': '短型使动 (이/히/리/기...)',
+                    'th_long': '长型使动 (V-게 하다)',
+                    'row_form_title': '形态',
+                    'row_form_short': '在动词词干上附加<strong>后缀</strong>，形成一个新的单词（使动词）。',
+                    'row_form_long': '在动词词干上附加<strong>语法表现“-게 하다”</strong>。（两个词）',
+                    'row_use_title': '用法',
+                    'row_use_short': '<strong>有限。</strong><br/>只能附加在部分动词（主要是他动词）上。<br/>(例: 가다 → 가게 하다 O, 가이다/가히다 X)',
+                    'row_use_long': '<strong>非常自由。</strong><br/>可以附加在大多数动词和形容词上。<br/>(例: 가게 하다, 예쁘게 하다, 공부하게 하다)',
+                    'row_mean_title': '意义 (直接/间接)',
+                    'row_mean_short': '<strong>直接使动</strong>的意义更强。<br/>有主语直接参与动作的语感。<br/><br/>*例: 妈妈给孩子<strong>穿（입혔다）</strong>了衣服。*<br/>(妈妈亲自给孩子穿衣服的行动)',
+                    'row_mean_long': '<strong>间接使动</strong>的意义更强。<br/>主语通过言语或指示让对象行动。<br/><br/>*例: 妈妈让（입게 했다）孩子穿衣服。*<br/>(妈妈说“穿衣服”，孩子自己穿的行动)',
+                    'row_ambig_title': '歧义性',
+                    'row_ambig_short': '<strong>可能有歧义。</strong><br/>部分单词与被动形态相同。<br/><br/>*例: 보이다*<br/>1. (使动) 给朋友<strong>看（보이다）</strong>照片。<br/>2. (被动) <strong>能看见（보이다）</strong>山。',
+                    'row_ambig_long': '<strong>没有歧义。</strong><br/>始终只具有使动意义。<br/><br/>*例: 보게 하다*<br/>(使动) <strong>让（보게 하다）</strong>朋友看照片。',
+                    'row_intent_title': '主语的意图',
+                    'row_intent_short': '主语的意T图<strong>很强</strong>。<br/>(例: 把孩子<strong>弄哭（울리다）</strong> - <strong>故意</strong>使其哭)',
+                    'row_intent_long': '主语的意图可能<strong>较弱或没有</strong>。<br/>(例: <strong>让（울게 하다）</strong>孩子哭了 - <strong>非故意</strong>)',
+                    'summary_title': '3. 总结与示例',
+                    'th_situation': '情景',
+                    'th_short_ex': '短型 (直接 / 一个词)',
+                    'th_long_ex': '长型 (间接 / 叙述性)',
+                    'summary_ex_eat': '(吃)',
+                    'summary_ex_read': '(读)',
+                    'summary_ex_sleep': '(睡)',
+                    'summary_ex_go': '(去)',
+                    'conclusion_title': '4. 结论',
+                    'conclusion_1': '<strong>短型使动</strong>像一个固定的单词一样使用，主要表示<strong>直接的行动</strong>。(例: 먹이다, 입히다, 재우다)',
+                    'conclusion_2': '<strong>长型使动 (-게 하다)</strong> 更具语法性和叙述性，广泛用于表示<strong>间接的指示</strong>或<strong>允许</strong>，或用于没有短型使动的动词 (例: 가다, 공부하다)。'
+                }
+            };
+
+            let currentLang = 'ko';
+            const langButtons = document.querySelectorAll('.lang-btn');
+
+            function updateLanguage(lang) {
+                if (!translations[lang]) return;
+                currentLang = lang;
+
+                document.querySelectorAll('[data-key]').forEach(el => {
+                    const key = el.dataset.key;
+                    if (translations[lang][key]) {
+                        // 'innerHTML'을 사용하여 <br> 태그와 <strong> 태그가 렌더링되도록 함
+                        el.innerHTML = translations[lang][key];
+                    }
+                });
+
+                // 버튼 활성 상태 업데이트
+                langButtons.forEach(btn => {
+                    if (btn.dataset.lang === lang) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+            }
+
+            langButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const lang = button.dataset.lang;
+                    updateLanguage(lang);
+                });
+            });
+            
+            // Initialize
+            updateLanguage('ko');
+        });
+    </script>
+
+</body>
+</html>
+
+

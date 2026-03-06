@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 문법 종합 퀴즈</title>
+    <!-- Tailwind CSS 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        /* 선택지 버튼 기본 스타일 */
+        .option-btn {
+            transition: all 0.2s ease-in-out;
+            border: 2px solid #e5e7eb; /* gray-200 */
+        }
+        /* 선택지 호버 스타일 */
+        .option-btn:hover:not(:disabled) {
+            background-color: #f3f4f6; /* gray-100 */
+            border-color: #9ca3af; /* gray-400 */
+        }
+        /* 선택지 비활성화 스타일 */
+        .option-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        /* 정답 버튼 스타일 */
+        .option-btn.correct {
+            background-color: #dcfce7; /* green-100 */
+            border-color: #22c55e; /* green-600 */
+            color: #15803d; /* green-800 */
+            font-weight: 700;
+        }
+        /* 오답 버튼 스타일 */
+        .option-btn.incorrect {
+            background-color: #fee2e2; /* red-100 */
+            border-color: #ef4444; /* red-600 */
+            color: #b91c1c; /* red-800 */
+            font-weight: 500;
+        }
+        /* 문제 텍스트의 줄바꿈을 CSS로 처리 */
+        .question-text {
+            white-space: pre-wrap;
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-2xl">
+        
+        <!-- 퀴즈 진행 화면 -->
+        <div id="quiz-container">
+            <!-- 퀴즈 헤더 -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <h1 class="text-xl sm:text-2xl font-bold text-blue-700">한국어 문법 종합 퀴즈</h1>
+                    <span id="progress-text" class="text-sm font-semibold text-gray-500 bg-gray-100 px-3 py-1 rounded-full"></span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- 문제 표시 영역 -->
+            <div>
+                <p id="question-text" class="question-text text-lg sm:text-xl font-semibold text-gray-800 mb-6 min-h-[100px]"></p>
+                
+                <!-- 선택지 버튼 영역 -->
+                <div id="options-container" class="space-y-3">
+                    <!-- Javascript로 선택지 버튼이 채워집니다 -->
+                </div>
+
+                <!-- 피드백 및 다음 버튼 영역 -->
+                <div id="feedback-container" class="mt-6 min-h-[100px]">
+                    <div id="feedback-box" class="hidden p-4 rounded-lg">
+                        <p id="feedback-rationale" class="text-sm sm:text-base"></p>
+                    </div>
+                    <button id="next-btn" class="hidden w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200 mt-4">
+                        다음 문제로
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 퀴즈 결과 화면 -->
+        <div id="result-container" class="hidden text-center">
+            <h1 class="text-3xl font-bold text-blue-700 mb-4">퀴즈 완료!</h1>
+            <p class="text-xl text-gray-700 mb-2">총 <span id="total-questions"></span>문제 중 <span id="score" class="font-bold text-blue-600"></span>문제를 맞혔습니다.</p>
+            <p id="score-percentage" class="text-4xl font-bold text-gray-800 mb-8"></p>
+            
+            <button id="restart-btn" class_name="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                퀴즈 다시 풀기
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // 1. 퀴즈 데이터 (제공된 JSON 구조)
+            const quizData = {
+                "Uk": [
+                    { "hBa": 0, "question": "빈칸에 가장 알맞은 것을 고르세요.\n\n가: 왜 그렇게 피곤해 보여요?\n나: 일이 ______ 많아서 그래요.", "hint": "'너무 많이'와 비슷하게 이유를 강조하는 말을 찾아보세요. (gram1.html 참고)", "PE": [{ "text": "하도", "Wr": true, "M8": "'하도'는 '너무'와 비슷하게 뒤에 오는 이유의 정도가 심함을 강조할 때 사용합니다. '일이 하도 많아서'는 '일이 너무 많아서'라는 의미입니다." }, { "text": "만약", "Wr": false, "M8": "'만약'은 가정을 나타낼 때 사용합니다." }, { "text": "벌써", "Wr": false, "M8": "'벌써'는 시간이 빠르다는 것을 의미합니다." }, { "text": "가끔", "Wr": false, "M8": "'가끔'은 빈도를 나타내는 말로, 이유를 강조하는 맥락과는 어울리지 않습니다." }], "pS": 0 },
+                    { "hBa": 0, "question": "'길이 하도 _____ 요즘은 지하철을 타고 다녀요.'의 빈칸에 알맞은 말은?", "hint": "'하도'는 이유를 나타내는 '-(아/어)서'와 함께 쓰여 이유를 강조합니다. (gram1.html 참고)", "PE": [{ "text": "막히지만", "Wr": false, "M8": "'하도'는 이유를 나타내는 '-(아/어)서'와 함께 쓰이며, 반대를 나타내는 '-지만'과는 함께 쓰지 않습니다." }, { "text": "막히거나", "Wr": false, "M8": "'하도'는 이유를 나타내는 '-(아/어)서'와 함께 쓰이며, 선택을 나타내는 '-(이)거나'와는 함께 쓰지 않습니다." }, { "text": "막혀서", "Wr": true, "M8": "'하도 -아서/어서'는 '너무 ~해서'라는 의미로, 이유를 강조할 때 사용합니다. '길이 하도 막혀서'가 올바른 형태입니다." }, { "text": "막힐수록", "Wr": false, "M8": "'-(으)ㄹ수록'은 정도가 심해짐을 나타내지만, '하도'와 함께 쓰이지 않습니다." }], "pS": 0 },
+                    { "hBa": 0, "question": "다음 중 문법이 *틀린* 문장을 고르세요.", "hint": "'나'의 감정은 형용사를, '다른 사람'의 감정은 '-아/어하다'를 사용합니다. (gram3.html 참고)", "PE": [{ "text": "동생이 강아지를 무서워해요.", "Wr": false, "M8": "3인칭 '동생'의 감정을 '무서워해요'로 표현한 올바른 문장입니다." }, { "text": "저는 그 영화가 무서워요.", "Wr": false, "M8": "1인칭 '저'의 감정은 형용사 '무서워요'를 사용하므로 올바른 문장입니다." }, { "text": "저는 어제 정말 기뻐했어요.", "Wr": true, "M8": "'나(1인칭)'의 감정을 말할 때는 '-아/어하다'를 쓰지 않고, '기뻤어요'처럼 형용사를 바로 씁니다." }, { "text": "친구가 선물을 받고 기뻐해요.", "Wr": false, "M8": "3인칭 '친구'의 감정은 '-아/어하다'를 사용하므로 올바른 문장입니다." }], "pS": 0 },
+                    { "hBa": 0, "question": "빈칸에 알맞은 말을 고르세요.\n\n'아이가 장난감을 받지 못해서 ______. (기본형: 슬프다)'", "hint": "'아이'는 3인칭입니다. 3인칭의 감정을 나타내는 동사 형태는 무엇일까요? (gram3.html 참고)", "PE": [{ "text": "슬퍼요", "Wr": false, "M8": "'슬퍼요'는 '나(1인칭)'의 감정을 말할 때 주로 사용합니다." }, { "text": "슬퍼해요", "Wr": true, "M8": "'아이(3인칭)'의 감정을 묘사하므로 '슬프다'가 '-어하다'와 결합하여 '슬퍼해요'가 됩니다." }, { "text": "슬펐던", "Wr": false, "M8": "'슬펐던'은 과거를 회상하는 관형사 형태입니다." }, { "text": "슬프면", "Wr": false, "M8": "'슬프면'은 조건을 나타냅니다." }], "pS": 0 },
+                    { "hBa": 0, "question": "'한국어는 ______ 어려운 것 같아요.'의 빈칸에 알맞은 말은?", "hint": "'정도'가 더 심해진다는 의미를 가진 문법을 찾아보세요. (gram4.html 참고)", "PE": [{ "text": "배우면 배울수록", "Wr": true, "M8": "'-(으)면 -(으)ㄹ수록'은 앞의 행동을 할수록 뒤의 상태가 더 심해짐을 나타냅니다." }, { "text": "배우거나", "Wr": false, "M8": "'-(이)거나'는 선택을 의미합니다." }, { "text": "배워야", "Wr": false, "M8": "'-아야/어야'는 의무나 필요를 의미합니다." }, { "text": "배웠지만", "Wr": false, "M8": "'-았/었지만'은 반대되는 사실을 의미합니다." }], "pS": 0 },
+                    { "hBa": 0, "question": "'듣다' (to listen)를 '-(으)면 -(으)ㄹ수록' 문법에 맞게 바꾼 것은?", "hint": "'듣다'는 'ㄷ' 불규칙 동사입니다. 모음 앞에서 'ㄷ'이 어떻게 변하는지 생각해 보세요. (gram4.html 참고)", "PE": [{ "text": "듣으면 들을수록", "Wr": false, "M8": "'ㄷ'이 'ㄹ'로 바뀌지 않아서 틀렸습니다." }, { "text": "들면 들수록", "Wr": false, "M8": "'듣다'의 'ㄷ'이 'ㄹ'로 바뀌지만, 받침이 있으므로 '-으면'이 와야 합니다." }, { "text": "들으면 들을수록", "Wr": true, "M8": "'듣다'는 'ㄷ' 불규칙 동사로, 뒤에 모음('으면')이 오면 'ㄷ'이 'ㄹ'로 바뀝니다." }, { "text": "듣면 들수록", "Wr": false, "M8": "'듣다'는 받침이 있으므로 '-으면'을 사용해야 합니다." }], "pS": 0 },
+                    { "hBa": 0, "question": "빈칸에 가장 알맞은 것을 고르세요.\n\n가: 이 빵 정말 맛있네요!\n나: 여기는 제가 학생 때 자주 ____ 빵집이에요.", "hint": "'자주'처럼 과거에 '반복했던' 행동을 회상할 때 어떤 표현을 쓰나요? (gram2.html 참고)", "PE": [{ "text": "가던", "Wr": true, "M8": "'자주'처럼 과거에 여러 번 반복했던 행동을 회상할 때는 '-던'을 사용하는 것이 가장 자연스럽습니다." }, { "text": "갔었던", "Wr": false, "M8": "'-았/었던'은 과거에 끝난 경험을 말하지만, '자주'라는 반복의 느낌은 '-던'이 더 잘 살립니다." }, { "text": "간", "Wr": false, "M8": "'-ㄴ/은'은 단순 과거 사실을 전달하는 느낌이 강합니다." }, { "text": "갈", "Wr": false, "M8": "'-(으)ㄹ'은 미래를 나타냅니다." }], "pS": 0 },
+                    { "hBa": 0, "question": "'이 집은 제가 5년 전에 ______ 곳이에요. (지금은 살지 않아요)'의 빈칸에 알맞은 말은?", "hint": "과거에 살았지만 '지금은 살지 않는' 완전히 끝난 경험을 회상할 때 사용합니다. (gram2.html 참고)", "PE": [{ "text": "살던", "Wr": false, "M8": "'살던'은 과거에 살았다는 의미는 있지만, '완전히 끝났다'는 느낌보다는 '살곤 했다'는 반복의 느낌을 줄 수 있습니다." }, { "text": "사는", "Wr": false, "M8": "'사는'은 '지금' 살고 있다는 현재 시제입니다." }, { "text": "살", "Wr": false, "M8": "'살'은 '살 것이다' 또는 '살 사람' 등 미래나 가능성을 나타냅니다." }, { "text": "살았던", "Wr": true, "M8": "과거에 살았고 '지금은 살지 않는', 완전히 끝난 경험을 회상할 때 '-았/었던'을 사용합니다." }], "pS": 0 }
+                ]
+            };
+
+            // 2. DOM 요소 가져오기
+            const quizContainer = document.getElementById('quiz-container');
+            const resultContainer = document.getElementById('result-container');
+            
+            const progressText = document.getElementById('progress-text');
+            const progressBar = document.getElementById('progress-bar');
+            
+            const questionText = document.getElementById('question-text');
+            const optionsContainer = document.getElementById('options-container');
+            
+            const feedbackContainer = document.getElementById('feedback-container');
+            const feedbackBox = document.getElementById('feedback-box');
+            const feedbackRationale = document.getElementById('feedback-rationale');
+            const nextBtn = document.getElementById('next-btn');
+            
+            const totalQuestionsEl = document.getElementById('total-questions');
+            const scoreEl = document.getElementById('score');
+            const scorePercentageEl = document.getElementById('score-percentage');
+            const restartBtn = document.getElementById('restart-btn');
+
+            // 3. 퀴즈 상태 변수
+            let currentQuestionIndex = 0;
+            let score = 0;
+            const questions = quizData.Uk;
+            const totalQuestions = questions.length;
+
+            // 4. 퀴즈 시작 함수
+            function startQuiz() {
+                currentQuestionIndex = 0;
+                score = 0;
+                quizContainer.classList.remove('hidden');
+                resultContainer.classList.add('hidden');
+                showQuestion(currentQuestionIndex);
+            }
+
+            // 5. 문제 표시 함수
+            function showQuestion(index) {
+                // 이전 피드백 숨기기
+                feedbackBox.classList.add('hidden');
+                nextBtn.classList.add('hidden');
+
+                // 문제 데이터 가져오기
+                const questionData = questions[index];
+                
+                // 진행 상태 업데이트
+                progressText.textContent = `문제 ${index + 1} / ${totalQuestions}`;
+                progressBar.style.width = `${((index + 1) / totalQuestions) * 100}%`;
+                
+                // 문제 텍스트 설정
+                questionText.innerHTML = questionData.question.replace(/\*/g, '<em class="italic not-italic font-semibold text-red-500">'); // 이탤릭 처리
+
+                // 선택지 버튼 생성
+                optionsContainer.innerHTML = ''; // 이전 선택지 삭제
+                questionData.PE.forEach(option => {
+                    const button = document.createElement('button');
+                    button.textContent = option.text;
+                    button.className = 'option-btn w-full p-4 text-left text-gray-700 bg-white rounded-lg shadow-sm font-medium';
+                    
+                    button.addEventListener('click', () => selectAnswer(option, button));
+                    
+                    optionsContainer.appendChild(button);
+                });
+            }
+
+            // 6. 답안 선택 함수
+            function selectAnswer(selectedOption, selectedButton) {
+                const isCorrect = selectedOption.Wr;
+                const rationale = selectedOption.M8;
+
+                // 모든 버튼 비활성화
+                Array.from(optionsContainer.children).forEach(btn => {
+                    btn.disabled = true;
+                });
+
+                // 피드백 표시
+                feedbackRationale.textContent = rationale;
+                if (isCorrect) {
+                    score++;
+                    selectedButton.classList.add('correct');
+                    feedbackBox.className = 'p-4 rounded-lg bg-green-50 text-green-800';
+                } else {
+                    selectedButton.classList.add('incorrect');
+                    feedbackBox.className = 'p-4 rounded-lg bg-red-50 text-red-800';
+                    
+                    // 정답 버튼도 표시
+                    const correctButton = Array.from(optionsContainer.children).find(btn => {
+                        const optionText = btn.textContent;
+                        const correctOption = questions[currentQuestionIndex].PE.find(opt => opt.Wr === true);
+                        return optionText === correctOption.text;
+                    });
+                    if (correctButton) {
+                        correctButton.classList.add('correct');
+                    }
+                }
+
+                feedbackBox.classList.remove('hidden');
+                nextBtn.classList.remove('hidden');
+
+                // 다음 버튼 텍스트 변경
+                if (currentQuestionIndex === totalQuestions - 1) {
+                    nextBtn.textContent = '결과 보기';
+                } else {
+                    nextBtn.textContent = '다음 문제로';
+                }
+            }
+
+            // 7. 다음 문제로/결과 보기 버튼 클릭 이벤트
+            nextBtn.addEventListener('click', () => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < totalQuestions) {
+                    showQuestion(currentQuestionIndex);
+                } else {
+                    showResults();
+                }
+            });
+
+            // 8. 결과 표시 함수
+            function showResults() {
+                quizContainer.classList.add('hidden');
+                resultContainer.classList.remove('hidden');
+                
+                totalQuestionsEl.textContent = totalQuestions;
+                scoreEl.textContent = score;
+                const percentage = Math.round((score / totalQuestions) * 100);
+                scorePercentageEl.textContent = `${percentage}%`;
+            }
+
+            // 9. 다시 풀기 버튼 클릭 이벤트
+            restartBtn.addEventListener('click', startQuiz);
+
+            // 10. 퀴즈 시작
+            startQuiz();
+        });
+    </script>
+</body>
+</html>

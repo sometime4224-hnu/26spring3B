@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate-key="page_title">한국어 문법 학습</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .lang-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .lang-btn.active {
+            background-color: #3B82F6;
+            color: white;
+            font-weight: 700;
+        }
+        .chapter {
+            scroll-margin-top: 20px;
+        }
+        .quiz-option {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .quiz-option:hover {
+            background-color: #eff6ff;
+        }
+        .correct {
+            background-color: #dbeafe !important;
+            border-color: #3b82f6 !important;
+        }
+        .incorrect {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <div class="max-w-4xl mx-auto p-4 sm:p-6 md:p-8">
+
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-blue-600" data-translate-key="app_title">한국어 문법 정복하기 🚀</h1>
+            <p class="mt-2 text-gray-600" data-translate-key="app_subtitle">'-았/었던' 부터 차근차근 배워봐요!</p>
+            
+            <!-- Language Switcher -->
+            <div class="mt-6 flex justify-center items-center space-x-2 flex-wrap">
+                <button onclick="changeLanguage('ko')" class="lang-btn active px-4 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-full" lang="ko">한국어</button>
+                <button onclick="changeLanguage('vi')" class="lang-btn px-4 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-full" lang="vi">Tiếng Việt</button>
+                <button onclick="changeLanguage('ja')" class="lang-btn px-4 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-full" lang="ja">日本語</button>
+                <button onclick="changeLanguage('zh')" class="lang-btn px-4 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-full" lang="zh">中文</button>
+            </div>
+        </header>
+
+        <main class="space-y-8">
+            <!-- Chapter 1: -았/었던 -->
+            <section id="chapter-1" class="chapter bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-bold text-gray-900"><span class="text-blue-500">Chapter 1.</span> <span data-translate-key="chapter1_title">A/V-았/었던</span></h2>
+                
+                <div class="mt-4 space-y-3 text-gray-700">
+                    <p data-translate-key="c1_exp1">'-았/었던'은 과거에 있었던 일이지만, 지금은 끝나거나 달라진 것을 말할 때 사용해요. 과거의 경험을 회상하는 느낌을 줘요.</p>
+                    <p data-translate-key="c1_exp2">'명사 + -이었던/였던' 형태로도 사용할 수 있어요.</p>
+                </div>
+
+                <div class="mt-6">
+                    <h3 class="font-bold text-lg" data-translate-key="examples">예문</h3>
+                    <ul class="mt-2 list-disc list-inside space-y-2 bg-gray-50 p-4 rounded-md">
+                        <li>어렸을 때 <span class="font-bold text-blue-600">친했던</span> 친구와 다시 연락하게 됐어요.</li>
+                        <li>여기는 제가 작년에 <span class="font-bold text-blue-600">살았던</span> 동네예요. (지금은 살지 않아요)</li>
+                        <li>졸업 여행 때 <span class="font-bold text-blue-600">찍었던</span> 사진을 보니까 옛날 생각이 나요.</li>
+                        <li>저 사람은 예전에 유명한 <span class="font-bold text-blue-600">가수였던</span> 사람이에요. (지금은 가수가 아니에요)</li>
+                    </ul>
+                </div>
+
+                <div class="mt-8">
+                    <h3 class="font-bold text-lg" data-translate-key="quiz">깜짝 퀴즈!</h3>
+                    <div class="mt-2 p-4 border-2 border-blue-100 rounded-lg">
+                        <p class="font-semibold" data-translate-key="c1_q1">빈칸에 들어갈 알맞은 말은?</p>
+                        <p class="mt-2 bg-gray-100 p-3 rounded text-center text-lg">이 노래는 제가 고등학생 때 자주 ______ 노래예요.</p>
+                        <div id="c1-quiz" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+                            <div onclick="checkAnswer(this, false)" class="quiz-option border p-3 rounded-md text-center">듣는</div>
+                            <div onclick="checkAnswer(this, true)" class="quiz-option border p-3 rounded-md text-center">들었던</div>
+                        </div>
+                        <p id="c1-feedback" class="mt-3 text-sm text-blue-700 font-medium hidden" data-translate-key="c1_feedback">'들었던'이 정답이에요! 고등학생 때 자주 들었지만, 지금은 그렇지 않다는 과거의 경험을 회상하고 있어요.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chapter 2: Comparison -->
+            <section id="chapter-2" class="chapter bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-bold text-gray-900"><span class="text-blue-500">Chapter 2.</span> <span data-translate-key="chapter2_title">'-았/었-' vs '-던' vs '-았/었던' 비교하기</span></h2>
+
+                <p class="mt-4 text-gray-700" data-translate-key="c2_intro">세 가지 표현은 모두 과거를 나타내지만, 의미에 미묘한 차이가 있어요. 어떻게 다른지 알아볼까요?</p>
+
+                <div class="mt-6 overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr>
+                                <th class="border-b-2 border-blue-500 p-3 text-lg font-bold" data-translate-key="c2_table_col1">문법</th>
+                                <th class="border-b-2 border-blue-500 p-3 text-lg font-bold" data-translate-key="c2_table_col2">의미</th>
+                                <th class="border-b-2 border-blue-500 p-3 text-lg font-bold" data-translate-key="c2_table_col3">예시</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b">
+                                <td class="p-3 font-mono align-top font-semibold">-았/었-</td>
+                                <td class="p-3 align-top" data-translate-key="c2_desc1">과거에 한 번 일어난 일이 완전히 끝났음을 나타내요. 단순한 과거 사실을 전달해요.</td>
+                                <td class="p-3 align-top">어제 <span class="font-bold text-blue-600">본</span> 영화</td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="p-3 font-mono align-top font-semibold">-던</td>
+                                <td class="p-3 align-top" data-translate-key="c2_desc2">과거에 여러 번 반복했거나, 아직 끝나지 않은 행동을 회상할 때 써요. '...하곤 했다'의 느낌이에요.</td>
+                                <td class="p-3 align-top">어릴 때 자주 <span class="font-bold text-blue-600">보던</span> 만화책</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-mono align-top font-semibold">-았/었던</td>
+                                <td class="p-3 align-top" data-translate-key="c2_desc3">과거에 경험한 일이 지금은 완전히 끝났다는 것을 강조하며 회상할 때 써요. '-았/었-'보다 회상의 느낌이 강해요.</td>
+                                <td class="p-3 align-top">작년에 재미있게 <span class="font-bold text-blue-600">봤었던</span> 영화</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                 <div class="mt-8">
+                    <h3 class="font-bold text-lg" data-translate-key="quiz">깜짝 퀴즈!</h3>
+                    <div class="mt-2 p-4 border-2 border-blue-100 rounded-lg">
+                        <p class="font-semibold" data-translate-key="c2_q1">"이 옷은 작아져서 못 입어요." 라는 상황에 가장 자연스러운 말은?</p>
+                        <div id="c2-quiz" class="space-y-3 mt-4">
+                            <div onclick="checkAnswer(this, false)" class="quiz-option border p-3 rounded-md">이 옷은 내가 자주 <span class="font-bold">입는</span> 옷이야.</div>
+                            <div onclick="checkAnswer(this, true)" class="quiz-option border p-3 rounded-md">이 옷은 내가 자주 <span class="font-bold">입던</span> 옷이야.</div>
+                            <div onclick="checkAnswer(this, false)" class="quiz-option border p-3 rounded-md">이 옷은 내가 어제 <span class="font-bold">입었던</span> 옷이야.</div>
+                        </div>
+                        <p id="c2-feedback" class="mt-3 text-sm text-blue-700 font-medium hidden" data-translate-key="c2_feedback">'입던'이 정답이에요! 과거에 '자주' 반복해서 입었지만, 지금은 작아져서 입지 않는다는 의미를 가장 잘 나타내요.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Chapter 3: In-depth Study -->
+            <section id="chapter-3" class="chapter bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-bold text-gray-900"><span class="text-blue-500">Chapter 3.</span> <span data-translate-key="chapter3_title">심층 학습</span></h2>
+
+                <p class="mt-4 text-gray-700" data-translate-key="c3_intro">이제 세 문법의 미묘한 차이를 더 자세히 알아봅시다. 어떤 상황에 어떤 표현을 써야 할까요?</p>
+
+                <div class="mt-6 space-y-6">
+                    <div>
+                        <h4 class="font-bold text-lg text-blue-700" data-translate-key="c3_subtitle1">Point 1: 한 번 vs 여러 번</h4>
+                        <p class="mt-1" data-translate-key="c3_desc1">가장 큰 차이는 '행동의 횟수'예요. '-았/었-'은 보통 과거의 '한 번'의 행동을, '-던'은 '여러 번' 반복된 행동을 말해요.</p>
+                        <ul class="mt-2 text-sm list-disc list-inside bg-blue-50 p-3 rounded-md">
+                            <li>어제 친구가 <span class="font-semibold">입은</span> 옷 (어제 딱 한 번 입음)</li>
+                            <li>학생 때 자주 <span class="font-semibold">입던</span> 옷 (학생 때 여러 번 반복해서 입음)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg text-green-700" data-translate-key="c3_subtitle2">Point 2: 끝난 일 vs 끝나지 않은 일</h4>
+                        <p class="mt-1" data-translate-key="c3_desc2">'-던'은 과거에 시작했지만 아직 끝나지 않았거나, 중간에 멈춘 행동을 말할 때도 써요.</p>
+                        <ul class="mt-2 text-sm list-disc list-inside bg-green-50 p-3 rounded-md">
+                            <li>제가 <span class="font-semibold">마시던</span> 커피 어디 갔어요? (아직 다 안 마셨는데)</li>
+                            <li>어제 <span class="font-semibold">읽던</span> 책을 마저 읽어야 해요. (어제 읽기 시작해서 아직 다 못 읽음)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg text-purple-700" data-translate-key="c3_subtitle3">Point 3: 단순 사실 vs 경험 회상</h4>
+                        <p class="mt-1" data-translate-key="c3_desc3">'-았/었-'은 단순한 과거 사실을 전달하지만, '-았/었던'은 그 사실이 지금과는 다른 '과거의 특별한 경험'이었다는 느낌을 강조해요.</p>
+                         <ul class="mt-2 text-sm list-disc list-inside bg-purple-50 p-3 rounded-md">
+                            <li>여기는 우리가 처음 <span class="font-semibold">만난</span> 곳이야. (단순 사실 전달)</li>
+                            <li>여기는 우리가 처음 <span class="font-semibold">만났었던</span> 곳이야. (지금은 헤어졌거나 관계가 변한 상황에서, 과거를 회상하며 아련하게 말하는 느낌)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <h3 class="font-bold text-lg" data-translate-key="quiz">최종 점검 퀴즈!</h3>
+                     <div class="mt-2 p-4 border-2 border-blue-100 rounded-lg">
+                        <p class="font-semibold" data-translate-key="c3_q1">A: 이 그림 정말 잘 그렸네요! <br> B: 아, 이건 제가 대학교 때 ______ 동아리에서 그린 거예요.</p>
+                        <div id="c3-quiz" class="space-y-3 mt-4">
+                            <div onclick="checkAnswer(this, false)" class="quiz-option border p-3 rounded-md">다니는</div>
+                            <div onclick="checkAnswer(this, false)" class="quiz-option border p-3 rounded-md">다니던</div>
+                            <div onclick="checkAnswer(this, true)" class="quiz-option border p-3 rounded-md">다녔던</div>
+                        </div>
+                        <p id="c3-feedback" class="mt-3 text-sm text-blue-700 font-medium hidden" data-translate-key="c3_feedback">'다녔던'이 가장 자연스러워요. 대학교 때 동아리 활동을 '했었고, 지금은 끝난' 과거의 경험을 회상하며 말하는 것이기 때문이에요. '다니던'은 '다니다가 그만둔' 느낌이 강해서 조금 어색할 수 있어요.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Navigation -->
+        <footer class="mt-8 text-center">
+            <button id="next-chapter-btn" onclick="goToNextChapter()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-transform transform hover:scale-105">
+                <span data-translate-key="next_chapter_btn">다음 챕터로!</span> →
+            </button>
+        </footer>
+
+    </div>
+
+    <script>
+        const translations = {
+            // Page Meta
+            "page_title": { ko: "한국어 문법 학습", vi: "Học Ngữ pháp tiếng Hàn", ja: "韓国語文法学習", zh: "韩语语法学习" },
+            // Header
+            "app_title": { ko: "한국어 문법 정복하기 🚀", vi: "Chinh phục ngữ pháp tiếng Hàn 🚀", ja: "韓国語文法をマスターしよう 🚀", zh: "征服韩语语法 🚀" },
+            "app_subtitle": { ko: "'-았/었던' 부터 차근차근 배워봐요!", vi: "Hãy bắt đầu học từ '-았/었던'!", ja: "「-았/었던」からじっくり学びましょう！", zh: "从'-았/었던'开始循序渐진地学习吧！" },
+            // Common
+            "examples": { ko: "예문", vi: "Ví dụ", ja: "例文", zh: "例句" },
+            "quiz": { ko: "깜짝 퀴즈!", vi: "Câu đố!", ja: "抜き打ちクイズ！", zh: "惊喜小测验！" },
+            // Chapter 1
+            "chapter1_title": { ko: "A/V-았/었던", vi: "A/V-았/었던", ja: "A/V-았/었던", zh: "A/V-았/었던" },
+            "c1_exp1": { ko: "'-았/었던'은 과거에 있었던 일이지만, 지금은 끝나거나 달라진 것을 말할 때 사용해요. 과거의 경험을 회상하는 느낌을 줘요.", vi: "'-았/었던' được sử dụng khi nói về một việc đã xảy ra trong quá khứ nhưng bây giờ đã kết thúc hoặc thay đổi. Nó mang lại cảm giác hồi tưởng về kinh nghiệm trong quá khứ.", ja: "「-았/었던」は、過去にあったことですが、今は終わったり変わったりしたことを話すときに使います。過去の経験を回想するニュアンスがあります。", zh: "'-았/었던' 用于谈论过去发生但现在已经结束或改变的事情。它给人一种回忆过去经历的感觉。" },
+            "c1_exp2": { ko: "'명사 + -이었던/였던' 형태로도 사용할 수 있어요.", vi: "Cũng có thể sử dụng dưới dạng 'Danh từ + -이었던/였던'.", ja: "「名詞 + -이었던/였던」の形でも使えます。", zh: "也可以用'名词 + -이었던/였던'的形式。" },
+            "c1_q1": { ko: "빈칸에 들어갈 알맞은 말은?", vi: "Từ nào phù hợp để điền vào chỗ trống?", ja: "空欄に当てはまる言葉は？", zh: "请在空格中填入合适的词语？" },
+            "c1_feedback": { ko: "'들었던'이 정답이에요! 고등학생 때 자주 들었지만, 지금은 그렇지 않다는 과거의 경험을 회상하고 있어요.", vi: "Đáp án đúng là '들었던'! Nó hồi tưởng lại kinh nghiệm trong quá khứ là thường xuyên nghe khi còn là học sinh trung học, nhưng bây giờ thì không.", ja: "「들었던」が正解です！高校生の時によく聞いたけれど、今はそうではないという過去の経験を回想しています。", zh: "正确答案是'들었던'！这表示正在回忆高中时经常听，但现在不听了的过去经历。" },
+            // Chapter 2
+            "chapter2_title": { ko: "'-았/었-' vs '-던' vs '-았/었던' 비교하기", vi: "So sánh '-았/었-' vs '-던' vs '-았/었던'", ja: "「-았/었-」 vs 「-던」 vs 「-았/었던」の比較", zh: "比较 '-았/었-', '-던', 和 '-았/었던'" },
+            "c2_intro": { ko: "세 가지 표현은 모두 과거를 나타내지만, 의미에 미묘한 차이가 있어요. 어떻게 다른지 알아볼까요?", vi: "Cả ba biểu hiện đều chỉ quá khứ, nhưng có sự khác biệt tinh tế về ý nghĩa. Chúng ta cùng tìm hiểu xem chúng khác nhau như thế nào nhé?", ja: "これら3つの表現はすべて過去を表しますが、意味には微妙な違いがあります。どのように違うのか見てみましょうか？", zh: "这三种表达方式都表示过去，但在意思上有细微的差别。我们来看看它们有何不同吧？" },
+            "c2_table_col1": { ko: "문법", vi: "Ngữ pháp", ja: "文法", zh: "语法" },
+            "c2_table_col2": { ko: "의미", vi: "Ý nghĩa", ja: "意味", zh: "意思" },
+            "c2_table_col3": { ko: "예시", vi: "Ví dụ", ja: "例", zh: "例子" },
+            "c2_desc1": { ko: "과거에 한 번 일어난 일이 완전히 끝났음을 나타내요. 단순한 과거 사실을 전달해요.", vi: "Diễn tả một sự việc xảy ra một lần trong quá khứ và đã hoàn toàn kết thúc. Truyền đạt một sự thật đơn giản trong quá khứ.", ja: "過去に一度起きたことが完全に終わったことを示します。単純な過去の事実を伝えます。", zh: "表示过去发生过一次的事情已经完全结束。传达单纯的过去事实。" },
+            "c2_desc2": { ko: "과거에 여러 번 반복했거나, 아직 끝나지 않은 행동을 회상할 때 써요. '...하곤 했다'의 느낌이에요.", vi: "Dùng khi hồi tưởng về một hành động đã lặp đi lặp lại nhiều lần trong quá khứ hoặc chưa kết thúc. Mang ý nghĩa 'đã từng...'.", ja: "過去に何度も繰り返したか、まだ終わっていない行動を回想する時に使います。「〜したりしていた」という感じです。", zh: "用于回忆过去多次重复或尚未结束的行动。有'...常做'的感觉。" },
+            "c2_desc3": { ko: "과거에 경험한 일이 지금은 완전히 끝났다는 것을 강조하며 회상할 때 써요. '-았/었-'보다 회상의 느낌이 강해요.", vi: "Dùng khi hồi tưởng và nhấn mạnh rằng một trải nghiệm trong quá khứ bây giờ đã hoàn toàn kết thúc. Cảm giác hồi tưởng mạnh hơn '-았/었-'.", ja: "過去に経験したことが今は完全に終わったことを強調して回想する時に使います。「-았/었-」よりも回想のニュアンスが強いです。", zh: "用于回忆并强调过去的经历现在已经完全结束。比'-았/었-'的回忆感更强。" },
+            "c2_q1": { ko: "\"이 옷은 작아져서 못 입어요.\" 라는 상황에 가장 자연스러운 말은?", vi: "Câu nào tự nhiên nhất trong tình huống \"Tôi không thể mặc chiếc áo này vì nó đã bị nhỏ đi.\"", ja: "「この服は小さくなったので着られません」という状況で最も自然な言葉は？", zh: "在“这件衣服变小了，穿不了了”的情况下，最自然的话是？" },
+            "c2_feedback": { ko: "'입던'이 정답이에요! 과거에 '자주' 반복해서 입었지만, 지금은 작아져서 입지 않는다는 의미를 가장 잘 나타내요.", vi: "Đáp án đúng là '입던'! Nó thể hiện rõ nhất ý nghĩa là đã mặc 'thường xuyên' lặp đi lặp lại trong quá khứ, nhưng bây giờ không mặc nữa vì áo đã bị nhỏ.", ja: "「입던」が正解です！過去に「頻繁に」繰り返し着ていたが、今は小さくなって着ないという意味を最もよく表しています。", zh: "正确答案是'입던'！它最贴切地表达了过去“经常”反复穿，但现在因为变小了而不穿了的意思。" },
+            // Chapter 3
+            "chapter3_title": { ko: "심층 학습", vi: "Học chuyên sâu", ja: "深層学習", zh: "深入学习" },
+            "c3_intro": { ko: "이제 세 문법의 미묘한 차이를 더 자세히 알아봅시다. 어떤 상황에 어떤 표현을 써야 할까요?", vi: "Bây giờ, chúng ta hãy tìm hiểu kỹ hơn về sự khác biệt tinh tế của ba ngữ pháp. Nên sử dụng biểu hiện nào trong tình huống nào?", ja: "では、3つの文法の微妙な違いをさらに詳しく見ていきましょう。どのような状況でどの表現を使うべきでしょうか？", zh: "现在让我们更详细地了解这三种语法的细微差别。在什么情况下应该使用哪种表达方式呢？" },
+            "c3_subtitle1": { ko: "Point 1: 한 번 vs 여러 번", vi: "Point 1: Một lần vs Nhiều lần", ja: "Point 1: 一回 vs 何回も", zh: "要点 1: 一次 vs 多次" },
+            "c3_desc1": { ko: "가장 큰 차이는 '행동의 횟수'예요. '-았/었-'은 보통 과거의 '한 번'의 행동을, '-던'은 '여러 번' 반복된 행동을 말해요.", vi: "Sự khác biệt lớn nhất là 'số lần hành động'. '-았/었-' thường nói về hành động 'một lần' trong quá khứ, còn '-던' nói về hành động lặp đi lặp lại 'nhiều lần'.", ja: "最大の違いは「行動の回数」です。「-았/었-」は通常、過去の「一回」の行動を、「-던」は「何度も」繰り返された行動を指します。", zh: "最大的区别在于“行为的次数”。'-았/었-' 通常指过去“一次”的行为，而 '-던' 指“多次”重复的行为。" },
+            "c3_subtitle2": { ko: "Point 2: 끝난 일 vs 끝나지 않은 일", vi: "Point 2: Việc đã kết thúc vs Việc chưa kết thúc", ja: "Point 2: 終わったこと vs 終わっていないこと", zh: "要点 2: 已结束的事 vs 未结束的事" },
+            "c3_desc2": { ko: "'-던'은 과거에 시작했지만 아직 끝나지 않았거나, 중간에 멈춘 행동을 말할 때도 써요.", vi: "'-던' cũng được dùng để chỉ một hành động bắt đầu trong quá khứ nhưng chưa kết thúc, hoặc đã dừng lại giữa chừng.", ja: "「-던」は、過去に始まったがまだ終わっていない、または途中で止まった行動を言う時にも使います。", zh: "'-던' 也用于指过去开始但尚未结束，或中途停止的行动。" },
+            "c3_subtitle3": { ko: "Point 3: 단순 사실 vs 경험 회상", vi: "Point 3: Sự thật đơn giản vs Hồi tưởng kinh nghiệm", ja: "Point 3: 単純な事実 vs 経験の回想", zh: "要点 3: 单纯事实 vs 经验回忆" },
+            "c3_desc3": { ko: "'-았/었-'은 단순한 과거 사실을 전달하지만, '-았/었던'은 그 사실이 지금과는 다른 '과거의 특별한 경험'이었다는 느낌을 강조해요.", vi: "'-았/었-' truyền đạt một sự thật đơn giản trong quá khứ, nhưng '-았/었던' nhấn mạnh cảm giác rằng sự thật đó là một 'kinh nghiệm đặc biệt trong quá khứ' khác với hiện tại.", ja: "「-았/었-」は単純な過去の事実を伝えますが、「-았/었던」はその事実が今とは違う「過去の特別な経験」であったというニュアンスを強調します。", zh: "'-았/었-' 传达的是单纯的过去事实，而 '-았/었던' 则强调该事实是与现在不同的“过去的特殊经历”的感觉。" },
+            "c3_q1": { ko: "A: 이 그림 정말 잘 그렸네요! <br> B: 아, 이건 제가 대학교 때 ______ 동아리에서 그린 거예요.", vi: "A: Bức tranh này vẽ đẹp thật! <br> B: À, cái này là tôi vẽ ở câu lạc bộ ______ hồi đại học.", ja: "A: この絵、本当に上手ですね！<br> B: ああ、これは私が大学の時に＿＿＿＿サークルで描いたものです。", zh: "A: 这幅画画得真好！<br> B: 啊，这是我上大学时在 ______ 社团画的。" },
+            "c3_feedback": { ko: "'다녔던'이 가장 자연스러워요. 대학교 때 동아리 활동을 '했었고, 지금은 끝난' 과거의 경험을 회상하며 말하는 것이기 때문이에요. '다니던'은 '다니다가 그만둔' 느낌이 강해서 조금 어색할 수 있어요.", vi: "Đáp án '다녔던' là tự nhiên nhất. Bởi vì nó đang hồi tưởng về kinh nghiệm trong quá khứ là 'đã' tham gia hoạt động câu lạc bộ thời đại học và 'bây giờ đã kết thúc'. '다니던' có cảm giác mạnh mẽ là 'đang tham gia thì nghỉ' nên có thể hơi thiếu tự nhiên.", ja: "「다녔던」が最も自然です。大学時代にサークル活動を「していて、今は終わった」過去の経験を回想して話しているからです。「다니던」は「通っていたが途中でやめた」というニュアンスが強く、少し不自然に聞こえることがあります。", zh: "“다녔던”最自然。因为它是在回忆大学时参加过社团活动，而现在已经结束的过去经历。“다니던”有“上着上着就没上了”的强烈感觉，所以可能会有点不自然。" },
+            // Footer button
+            "next_chapter_btn": { ko: "다음 챕터로!", vi: "Chương tiếp theo!", ja: "次のチャプターへ！", zh: "下一章！" },
+            "in_depth_btn": { ko: "심층 학습으로!", vi: "Học chuyên sâu!", ja: "深層学習へ！", zh: "进入深入学习！" },
+            "start_over_btn": { ko: "처음으로 돌아가기", vi: "Quay lại từ đầu", ja: "最初に戻る", zh: "返回首页" }
+        };
+
+        let currentLanguage = 'ko';
+        let currentChapter = 1;
+
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            document.documentElement.lang = lang;
+            
+            document.querySelectorAll('[data-translate-key]').forEach(el => {
+                const key = el.dataset.translateKey;
+                if (translations[key] && translations[key][lang]) {
+                    el.innerHTML = translations[key][lang];
+                }
+            });
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.lang === lang);
+            });
+            
+            // Also update the navigation button text on language change
+            updateNavButton();
+        }
+        
+        function checkAnswer(selectedOption, isCorrect) {
+            const quizContainer = selectedOption.parentElement;
+            const options = quizContainer.querySelectorAll('.quiz-option');
+            const feedbackEl = document.getElementById(quizContainer.id.replace('quiz', 'feedback'));
+
+            options.forEach(opt => {
+                opt.classList.remove('correct', 'incorrect');
+                opt.onclick = null;
+            });
+
+            selectedOption.classList.add(isCorrect ? 'correct' : 'incorrect');
+            if (!isCorrect) {
+                const correctOption = Array.from(options).find(opt => opt.getAttribute('onclick').includes('true'));
+                if(correctOption) correctOption.classList.add('correct');
+            }
+            
+            if(feedbackEl) feedbackEl.classList.remove('hidden');
+        }
+
+        function updateNavButton() {
+            const nextButton = document.getElementById('next-chapter-btn');
+            const span = nextButton.querySelector('span');
+            let key, content;
+
+            if (currentChapter === 1) {
+                key = 'next_chapter_btn';
+                content = `${translations[key][currentLanguage]} →`;
+            } else if (currentChapter === 2) {
+                key = 'in_depth_btn';
+                content = `${translations[key][currentLanguage]} →`;
+            } else { // currentChapter === 3
+                key = 'start_over_btn';
+                content = `&#8634; ${translations[key][currentLanguage]}`;
+            }
+            span.dataset.translateKey = key;
+            span.innerHTML = content;
+        }
+        
+        function goToNextChapter() {
+            if (currentChapter === 1) {
+                document.getElementById('chapter-2').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                currentChapter = 2;
+            } else if (currentChapter === 2) {
+                document.getElementById('chapter-3').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                currentChapter = 3;
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                currentChapter = 1;
+            }
+            updateNavButton();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            changeLanguage('ko');
+        });
+
+    </script>
+</body>
+</html>
+

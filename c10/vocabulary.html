@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NB76SV96');</script>
+<!-- End Google Tag Manager -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>10과 어휘 카드 게임 v2.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons for Speaker/Shuffle -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', 'Noto Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent; /* 모바일 터치 하이라이트 제거 */
+        }
+        .card-container { 
+            perspective: 1000px; 
+            cursor: pointer; 
+        }
+        .card-inner { 
+            position: relative; 
+            width: 100%; 
+            height: 100%; 
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); 
+            transform-style: preserve-3d;
+        }
+        .card-container.flipped .card-inner { 
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            position: absolute; 
+            width: 100%; 
+            height: 100%; 
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+            text-align: center;
+            padding: 1.25rem; 
+            border-radius: 1rem; 
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            transition: box-shadow 0.3s ease;
+        }
+        .card-container:hover .card-front, 
+        .card-container:hover .card-back {
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
+        }
+        .card-back { 
+            transform: rotateY(180deg); 
+        }
+        .lang-btn.active {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 2px rgba(255,255,255,1), 0 0 15px rgba(0,0,0,0.2);
+            font-weight: 700;
+        }
+        /* TTS Button Style */
+        .tts-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            padding: 6px;
+            transition: background 0.2s, transform 0.2s;
+            z-index: 10;
+        }
+        .card-front .tts-btn {
+            background: rgba(0, 0, 0, 0.05);
+            color: #4b5563;
+        }
+        .card-back .tts-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        .tts-btn:hover {
+            transform: scale(1.1);
+        }
+        .tts-btn:active {
+            transform: scale(0.9);
+        }
+        /* Sticky Header Glassmorphism */
+        .sticky-header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-indigo-50 min-h-screen flex flex-col items-center pt-0 transition-colors duration-500">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <!-- Sticky Header for Controls -->
+    <header class="sticky-header sticky top-0 w-full z-50 px-4 py-3 shadow-sm mb-6 flex flex-col items-center">
+        <div class="w-full max-w-6xl flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="text-center sm:text-left">
+                <h1 class="text-xl sm:text-2xl font-bold text-indigo-600 leading-tight">첫 만남부터 고백까지</h1>
+                <p class="text-xs sm:text-sm text-gray-500">10과 어휘 카드 게임</p>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-3 items-center w-full sm:w-auto">
+                <!-- Language Selector -->
+                <div id="language-selector" class="flex flex-wrap justify-center gap-2 p-1 rounded-lg bg-gray-100">
+                    <button data-lang="korean" class="lang-btn px-3 py-1.5 text-xs sm:text-sm font-medium text-white bg-indigo-500 rounded-md shadow-sm hover:bg-indigo-600 transition-all">한국어 뜻</button>
+                    <button data-lang="vietnamese" class="lang-btn px-3 py-1.5 text-xs sm:text-sm font-medium text-white bg-green-500 rounded-md shadow-sm hover:bg-green-600 transition-all">베트남어</button>
+                    <button data-lang="japanese" class="lang-btn px-3 py-1.5 text-xs sm:text-sm font-medium text-white bg-blue-500 rounded-md shadow-sm hover:bg-blue-600 transition-all">일본어</button>
+                    <button data-lang="chinese" class="lang-btn px-3 py-1.5 text-xs sm:text-sm font-medium text-white bg-red-500 rounded-md shadow-sm hover:bg-red-600 transition-all">중국어</button>
+                </div>
+                
+                <!-- Utility Buttons -->
+                <button id="shuffle-btn" class="flex items-center justify-center gap-1 px-4 py-1.5 text-xs sm:text-sm font-bold text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-indigo-600 transition-colors shadow-sm whitespace-nowrap">
+                    <i class="ph ph-shuffle text-lg"></i> 섞기
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Game Board -->
+    <main class="w-full px-4 pb-12 flex justify-center">
+        <div id="game-board" class="w-full max-w-6xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
+            <!-- Cards will be injected here -->
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const allVocabulary = {
+                korean: {
+                    themeColor: 'indigo',
+                    langCode: 'ko-KR',
+                    data: [
+                        { korean: "고백하다", foreign: "사랑하는 마음을 말로 표현하는 것.", foreignLangCode: 'ko-KR' },
+                        { korean: "가슴이 두근거리다", foreign: "좋아하거나 놀랐을 때 심장이 빨리 뛰는 것.", foreignLangCode: 'ko-KR' },
+                        { korean: "나란히 앉다", foreign: "옆으로 같이 앉는 것.", foreignLangCode: 'ko-KR' },
+                        { korean: "마음씨가 착하다", foreign: "마음이 따뜻하고 좋은 것.", foreignLangCode: 'ko-KR' },
+                        { korean: "말(생각)이 잘 통하다", foreign: "서로의 생각이나 이야기가 잘 이해되는 것.", foreignLangCode: 'ko-KR' },
+                        { korean: "매력이 있다", foreign: "사람의 마음을 끄는 힘이 있는 것.", foreignLangCode: 'ko-KR' },
+                        { korean: "사랑에 빠지다", foreign: "누군가를 아주 많이 좋아하게 되는 것.", foreignLangCode: 'ko-KR' },
+                        { korean: "사귀다", foreign: "서로 좋아하는 사이가 되어 만나는 것.", foreignLangCode: 'ko-KR' },
+                        { korean: "성격(마음)이 잘 맞다", foreign: "두 사람의 성격이 비슷해서 잘 어울리는 것.", foreignLangCode: 'ko-KR' },
+                        { korean: "선보다", foreign: "결혼할 사람을 정하기 위해 소개로 만나는 것.", foreignLangCode: 'ko-KR' },
+                        { korean: "소개팅하다", foreign: "다른 사람이 소개해 줘서 처음 만나는 것.", foreignLangCode: 'ko-KR' },
+                        { korean: "손을 잡다", foreign: "한 사람이 다른 사람의 손을 잡는 것.", foreignLangCode: 'ko-KR' },
+                        { korean: "어깨에 기대다", foreign: "다른 사람의 어깨에 머리를 편하게 두는 것.", foreignLangCode: 'ko-KR' },
+                        { korean: "얼굴이 빨개지다", foreign: "부끄럽거나 당황할 때 얼굴이 붉게 변하는 것.", foreignLangCode: 'ko-KR' },
+                        { korean: "연애하다", foreign: "좋아하는 사람과 사귀는 관계를 이어가는 것.", foreignLangCode: 'ko-KR' },
+                        { korean: "인상이 좋다", foreign: "처음 봤을 때 느껴지는 이미지가 좋은 것.", foreignLangCode: 'ko-KR' },
+                        { korean: "조건이 맞다", foreign: "서로 원하는 상황이나 환경이 잘 맞는 것.", foreignLangCode: 'ko-KR' },
+                        { korean: "첫눈에 반하다", foreign: "처음 보자마자 바로 좋아하게 되는 것.", foreignLangCode: 'ko-KR' },
+                        { korean: "팔짱을 끼다", foreign: "한 사람이 다른 사람의 팔에 자기 팔을 거는 것.", foreignLangCode: 'ko-KR' }
+                    ]
+                },
+                vietnamese: {
+                    themeColor: 'green',
+                    langCode: 'vi-VN',
+                    data: [
+                        { korean: "고백하다", foreign: "tỏ tình", foreignLangCode: 'vi-VN' }, 
+                        { korean: "가슴이 두근거리다", foreign: "tim đập rộn ràng (hồi hộp)", foreignLangCode: 'vi-VN' }, // "thình thịch" -> "rộn ràng" (more positive/romantic context)
+                        { korean: "나란히 앉다", foreign: "ngồi cạnh nhau", foreignLangCode: 'vi-VN' }, 
+                        { korean: "마음씨가 착하다", foreign: "tốt bụng / hiền lành", foreignLangCode: 'vi-VN' }, // Simplified
+                        { korean: "말(생각)이 잘 통하다", foreign: "nói chuyện hợp nhau", foreignLangCode: 'vi-VN' }, 
+                        { korean: "매력이 있다", foreign: "có sức hút / quyến rũ", foreignLangCode: 'vi-VN' }, 
+                        { korean: "사랑에 빠지다", foreign: "phải lòng / rơi vào lưới tình", foreignLangCode: 'vi-VN' }, // Added "phải lòng"
+                        { korean: "사귀다", foreign: "hẹn hò / yêu nhau", foreignLangCode: 'vi-VN' }, 
+                        { korean: "성격(마음)이 잘 맞다", foreign: "hợp tính cách", foreignLangCode: 'vi-VN' }, 
+                        { korean: "선보다", foreign: "đi xem mắt (để kết hôn)", foreignLangCode: 'vi-VN' }, 
+                        { korean: "소개팅하다", foreign: "đi xem mắt (qua giới thiệu)", foreignLangCode: 'vi-VN' }, 
+                        { korean: "손을 잡다", foreign: "nắm tay", foreignLangCode: 'vi-VN' }, 
+                        { korean: "어깨에 기대다", foreign: "tựa vào vai", foreignLangCode: 'vi-VN' }, 
+                        { korean: "얼굴이 빨개지다", foreign: "đỏ mặt", foreignLangCode: 'vi-VN' }, 
+                        { korean: "연애하다", foreign: "hẹn hò / yêu đương", foreignLangCode: 'vi-VN' }, 
+                        { korean: "인상이 좋다", foreign: "có ấn tượng tốt", foreignLangCode: 'vi-VN' }, 
+                        { korean: "조건이 맞다", foreign: "hợp điều kiện", foreignLangCode: 'vi-VN' }, 
+                        { korean: "첫눈에 반하다", foreign: "yêu từ cái nhìn đầu tiên", foreignLangCode: 'vi-VN' }, 
+                        { korean: "팔짱을 끼다", foreign: "khoác tay", foreignLangCode: 'vi-VN' }
+                    ]
+                },
+                japanese: {
+                    themeColor: 'blue',
+                    langCode: 'ja-JP',
+                    data: [
+                        { korean: "고백하다", foreign: "告白する", foreignLangCode: 'ja-JP' }, 
+                        { korean: "가슴이 두근거리다", foreign: "胸がドキドキする", foreignLangCode: 'ja-JP' }, 
+                        { korean: "나란히 앉다", foreign: "隣に座る", foreignLangCode: 'ja-JP' }, 
+                        { korean: "마음씨가 착하다", foreign: "心が優しい", foreignLangCode: 'ja-JP' }, 
+                        { korean: "말(생각)이 잘 통하다", foreign: "話(考え)がよく通じる", foreignLangCode: 'ja-JP' }, 
+                        { korean: "매력이 있다", foreign: "魅力がある", foreignLangCode: 'ja-JP' }, 
+                        { korean: "사랑에 빠지다", foreign: "恋に落ちる", foreignLangCode: 'ja-JP' }, 
+                        { korean: "사귀다", foreign: "付き合う", foreignLangCode: 'ja-JP' }, 
+                        { korean: "성격(마음)이 잘 맞다", foreign: "性格(心)がよく合う", foreignLangCode: 'ja-JP' }, 
+                        { korean: "선보다", foreign: "お見合いする", foreignLangCode: 'ja-JP' }, 
+                        { korean: "소개팅하다", foreign: "紹介で会う", foreignLangCode: 'ja-JP' }, 
+                        { korean: "손을 잡다", foreign: "手を繋ぐ", foreignLangCode: 'ja-JP' }, 
+                        { korean: "어깨에 기대다", foreign: "肩にもたれる", foreignLangCode: 'ja-JP' }, 
+                        { korean: "얼굴이 빨개지다", foreign: "顔が赤くなる", foreignLangCode: 'ja-JP' }, 
+                        { korean: "연애하다", foreign: "恋愛する", foreignLangCode: 'ja-JP' }, 
+                        { korean: "인상이 좋다", foreign: "印象が良い", foreignLangCode: 'ja-JP' }, 
+                        { korean: "조건이 맞다", foreign: "条件が合う", foreignLangCode: 'ja-JP' }, 
+                        { korean: "첫눈에 반하다", foreign: "一目惚れする", foreignLangCode: 'ja-JP' }, 
+                        { korean: "팔짱을 끼다", foreign: "腕を組む", foreignLangCode: 'ja-JP' }
+                    ]
+                },
+                chinese: {
+                    themeColor: 'red',
+                    langCode: 'zh-CN',
+                    data: [
+                        { korean: "고백하다", foreign: "告白", foreignLangCode: 'zh-CN' }, 
+                        { korean: "가슴이 두근거리다", foreign: "心怦怦跳", foreignLangCode: 'zh-CN' }, 
+                        { korean: "나란히 앉다", foreign: "并排坐", foreignLangCode: 'zh-CN' }, 
+                        { korean: "마음씨가 착하다", foreign: "心地善良", foreignLangCode: 'zh-CN' }, 
+                        { korean: "말(생각)이 잘 통하다", foreign: "话(想法)很投机", foreignLangCode: 'zh-CN' }, 
+                        { korean: "매력이 있다", foreign: "有魅力", foreignLangCode: 'zh-CN' }, 
+                        { korean: "사랑에 빠지다", foreign: "坠入爱河", foreignLangCode: 'zh-CN' }, 
+                        { korean: "사귀다", foreign: "交往", foreignLangCode: 'zh-CN' }, 
+                        { korean: "성격(마음)이 잘 맞다", foreign: "性格(内心)很合得来", foreignLangCode: 'zh-CN' }, 
+                        { korean: "선보다", foreign: "(以结婚为目的)相亲", foreignLangCode: 'zh-CN' }, 
+                        { korean: "소개팅하다", foreign: "联谊, 相亲", foreignLangCode: 'zh-CN' }, 
+                        { korean: "손을 잡다", foreign: "牵手", foreignLangCode: 'zh-CN' }, 
+                        { korean: "어깨에 기대다", foreign: "靠在肩膀上", foreignLangCode: 'zh-CN' }, 
+                        { korean: "얼굴이 빨개지다", foreign: "脸红", foreignLangCode: 'zh-CN' }, 
+                        { korean: "연애하다", foreign: "谈恋爱", foreignLangCode: 'zh-CN' }, 
+                        { korean: "인상이 좋다", foreign: "印象很好", foreignLangCode: 'zh-CN' }, 
+                        { korean: "조건이 맞다", foreign: "条件合适", foreignLangCode: 'zh-CN' }, 
+                        { korean: "첫눈에 반하다", foreign: "一见钟情", foreignLangCode: 'zh-CN' }, 
+                        { korean: "팔짱을 끼다", foreign: "挽着胳膊", foreignLangCode: 'zh-CN' }
+                    ]
+                }
+            };
+
+            const gameBoard = document.getElementById('game-board');
+            const langButtons = document.querySelectorAll('.lang-btn');
+            const shuffleBtn = document.getElementById('shuffle-btn');
+            const body = document.body;
+            
+            let currentLang = 'korean';
+            let currentVocabulary = [];
+
+            const colorMap = {
+                indigo: { bg: 'bg-indigo-50', text: 'text-indigo-800', cardBack: 'bg-indigo-500' },
+                green: { bg: 'bg-green-50', text: 'text-green-800', cardBack: 'bg-green-500' },
+                blue: { bg: 'bg-blue-50', text: 'text-blue-800', cardBack: 'bg-blue-500' },
+                red: { bg: 'bg-red-50', text: 'text-red-800', cardBack: 'bg-red-500' }
+            };
+
+            function speak(text, lang) {
+                if (!window.speechSynthesis) return;
+                window.speechSynthesis.cancel(); // 현재 재생 중인 오디오 중단
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = lang;
+                utterance.rate = 0.9; // 약간 천천히 명확하게
+                window.speechSynthesis.speak(utterance);
+            }
+
+            function createCard(item, colors, targetLangData) {
+                const cardContainer = document.createElement('div');
+                cardContainer.className = 'card-container h-48 sm:h-56 select-none'; // 높이 조정 및 드래그 방지
+                
+                const cardInner = document.createElement('div');
+                cardInner.className = 'card-inner';
+
+                // Front Side (Korean)
+                const cardFront = document.createElement('div');
+                cardFront.className = `card-front bg-white ${colors.text}`;
+                
+                // Front TTS Button
+                const frontTtsBtn = document.createElement('button');
+                frontTtsBtn.className = 'tts-btn';
+                frontTtsBtn.innerHTML = '<i class="ph ph-speaker-high text-xl"></i>';
+                frontTtsBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    speak(item.korean, 'ko-KR');
+                };
+
+                const koreanText = document.createElement('h2');
+                koreanText.className = 'text-xl sm:text-2xl font-bold break-keep px-2';
+                koreanText.textContent = item.korean;
+                
+                cardFront.appendChild(frontTtsBtn);
+                cardFront.appendChild(koreanText);
+
+                // Back Side (Foreign Language)
+                const cardBack = document.createElement('div');
+                cardBack.className = `card-back text-white ${colors.cardBack}`;
+
+                // Back TTS Button
+                const backTtsBtn = document.createElement('button');
+                backTtsBtn.className = 'tts-btn';
+                backTtsBtn.innerHTML = '<i class="ph ph-speaker-high text-xl"></i>';
+                backTtsBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    speak(item.foreign, targetLangData.langCode); // Use correct lang code
+                };
+
+                const foreignText = document.createElement('p');
+                foreignText.className = 'text-lg sm:text-xl font-semibold break-keep px-2';
+                foreignText.textContent = item.foreign;
+                
+                cardBack.appendChild(backTtsBtn);
+                cardBack.appendChild(foreignText);
+                
+                cardInner.appendChild(cardFront);
+                cardInner.appendChild(cardBack);
+                cardContainer.appendChild(cardInner);
+
+                cardContainer.addEventListener('click', () => {
+                    cardContainer.classList.toggle('flipped');
+                    // Optional: Play click sound or vibration here for mobile
+                    if (navigator.vibrate) navigator.vibrate(10);
+                });
+
+                return cardContainer;
+            }
+
+            function renderBoard() {
+                gameBoard.innerHTML = '';
+                const langData = allVocabulary[currentLang];
+                const colors = colorMap[langData.themeColor];
+                
+                // Update body background
+                body.className = `min-h-screen flex flex-col items-center pt-0 transition-colors duration-500 ${colors.bg}`;
+
+                currentVocabulary.forEach(item => {
+                    const card = createCard(item, colors, langData);
+                    gameBoard.appendChild(card);
+                });
+            }
+
+            function shuffleAndRender() {
+                // Fisher-Yates shuffle
+                for (let i = currentVocabulary.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [currentVocabulary[i], currentVocabulary[j]] = [currentVocabulary[j], currentVocabulary[i]];
+                }
+                renderBoard();
+                
+                // Add temporary visual feedback to shuffle button
+                const icon = shuffleBtn.querySelector('i');
+                icon.classList.add('animate-spin');
+                setTimeout(() => icon.classList.remove('animate-spin'), 500);
+            }
+
+            function setLanguage(lang) {
+                currentLang = lang;
+                // Clone data to avoid mutating original source when shuffling
+                currentVocabulary = [...allVocabulary[lang].data];
+                
+                // Default Sort: Korean Alphabetical initially
+                currentVocabulary.sort((a, b) => a.korean.localeCompare(b.korean, 'ko'));
+                
+                renderBoard();
+            }
+
+            // Event Listeners
+            langButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    langButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    setLanguage(button.dataset.lang);
+                });
+            });
+
+            shuffleBtn.addEventListener('click', shuffleAndRender);
+
+            // Initialize
+            document.querySelector('[data-lang="korean"]').classList.add('active');
+            setLanguage('korean');
+        });
+    </script>
+</body>
+</html>

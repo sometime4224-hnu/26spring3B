@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 문법 학습: -잖아요</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        .animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col max-w-md mx-auto shadow-xl">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <!-- Header -->
+    <header class="bg-white px-6 py-4 shadow-sm border-b border-gray-100 sticky top-0 z-10">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-lg font-bold text-gray-900 flex items-center">
+                    한국어 문법
+                </h1>
+                <p class="text-xs text-gray-500 mt-1">3과: 확인과 이유 (-잖아요)</p>
+            </div>
+            <button id="translation-btn" class="flex items-center px-3 py-1.5 rounded-full text-xs font-medium transition-all bg-gray-100 text-gray-500 border border-gray-200">
+                <i data-lucide="globe" class="w-3 h-3 mr-1"></i>
+                <span id="translation-text">Tiếng Việt OFF</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="flex border-b border-gray-200 bg-white">
+        <button onclick="setTab('learn')" id="tab-learn" class="flex items-center justify-center flex-1 py-3 text-sm font-medium transition-colors duration-200 text-blue-600 border-b-2 border-blue-600 bg-blue-50">
+            <i data-lucide="book" class="w-4 h-4 mr-2"></i>
+            공부해요 (Học)
+        </button>
+        <button onclick="setTab('practice')" id="tab-practice" class="flex items-center justify-center flex-1 py-3 text-sm font-medium transition-colors duration-200 text-gray-500 hover:text-gray-700">
+            <i data-lucide="graduation-cap" class="w-4 h-4 mr-2"></i>
+            연습해요 (Luyện tập)
+        </button>
+    </div>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-1 p-4 pb-12">
+        <!-- Content will be injected here by JavaScript -->
+    </main>
+
+    <!-- Footer Tip Area (Only for Learn Tab) -->
+    <div id="footer-tip" class="px-4 pb-6 hidden">
+        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <h4 class="text-sm font-bold text-yellow-800 mb-1">💡 선생님의 팁</h4>
+            <p class="text-xs text-yellow-700 mb-2">
+                화를 내거나 짜증을 낼 때도 쓸 수 있어요. ("내가 말했잖아요!" = I told you so!) <br/>
+                하지만 보통은 부드럽게 확인하는 의미예요.
+            </p>
+            <div id="tip-translation" class="hidden text-xs text-yellow-600 border-t border-yellow-200 pt-2">
+                Cũng có thể dùng khi tức giận hoặc khó chịu ("Tôi đã nói rồi mà!"). <br/>
+                Nhưng thông thường mang ý nghĩa xác nhận một cách nhẹ nhàng.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Data ---
+        const grammarPoint = {
+            title: "A/V-잖아요",
+            meaning_kr: "알잖아요 / 알지? (확인)",
+            meaning_vn: "...mà / Chẳng phải là...sao (Xác nhận)",
+            description_kr: "듣는 사람도 이미 알고 있는 사실을 말할 때 써요. \n또는 듣는 사람이 잊어버린 것을 다시 알려줄 때 써요.",
+            description_vn: "Dùng khi nói về một sự thật mà người nghe cũng đã biết. Hoặc dùng để nhắc nhở lại điều mà người nghe đã quên.",
+            examples: [
+                {
+                    kr: "유진 씨는 영어를 참 잘하네요.",
+                    vn: "Yujin nói tiếng Anh giỏi thật đấy.",
+                    answer_kr: "미국에서 왔잖아요.",
+                    answer_vn: "Cô ấy đến từ Mỹ mà.",
+                    context_kr: "유진 씨가 미국 사람인 것을 상대방도 알아요.",
+                    context_vn: "Người nghe cũng biết Yujin là người Mỹ.",
+                },
+                {
+                    kr: "지금은 지하철을 타는 게 나아요.",
+                    vn: "Bây giờ đi tàu điện ngầm thì tốt hơn.",
+                    answer_kr: "길이 막히잖아요.",
+                    answer_vn: "Đường đang tắc mà.",
+                    context_kr: "길이 막히는 것을 모두 알아요.",
+                    context_vn: "Ai cũng biết là đường đang tắc.",
+                }
+            ]
+        };
+
+        const quizData = [
+            {
+                id: 1,
+                item: "한글날 (Ngày Hangeul)",
+                icon: "📅",
+                question: "10월 9일에 왜 학교에 안 가요?",
+                answer_prefix: "그 날은 ",
+                options: ["한글날이잖아요", "한글날인데요", "한글날이라서"],
+                correct: "한글날이잖아요",
+                explanation_kr: "한국 달력에 빨간 날(휴일)인 것을 모두 알아요.",
+                explanation_vn: "Ai cũng biết đó là ngày lễ (ngày đỏ) trên lịch Hàn Quốc."
+            },
+            {
+                id: 2,
+                item: "김밥 (Kimbap)",
+                icon: "🍙",
+                question: "정우 씨는 김밥을 자주 먹네요.",
+                answer_prefix: "싸고 ",
+                options: ["맛있어서요", "맛있잖아요", "맛있는데"],
+                correct: "맛있잖아요",
+                explanation_kr: "김밥이 싸고 맛있는 것은 모두가 아는 사실이에요.",
+                explanation_vn: "Việc Kimbap rẻ và ngon là sự thật mà ai cũng biết."
+            },
+            {
+                id: 3,
+                item: "프랑스어 (Tiếng Pháp)",
+                icon: "🇫🇷",
+                question: "누가 프랑스어를 할 수 있어요?",
+                answer_prefix: "줄리앙 씨에게 물어보세요. ",
+                options: ["프랑스 사람이잖아요", "프랑스 사람이라서요", "프랑스 사람인데요"],
+                correct: "프랑스 사람이잖아요",
+                explanation_kr: "줄리앙 씨가 프랑스 사람인 것을 잊지 마세요.",
+                explanation_vn: "Đừng quên rằng Julien là người Pháp (bạn biết mà)."
+            },
+            {
+                id: 4,
+                item: "드라마 (Phim truyền hình)",
+                icon: "📺",
+                question: "한국 드라마를 왜 많이 봐요?",
+                answer_prefix: "",
+                options: ["재미있어서", "재미있잖아요", "재미있고"],
+                correct: "재미있잖아요",
+                explanation_kr: "한국 드라마가 재미있는 것은 당연해요(알잖아요).",
+                explanation_vn: "Phim Hàn Quốc hay là điều đương nhiên (bạn biết mà)."
+            }
+        ];
+
+        // --- State ---
+        let state = {
+            activeTab: 'learn',
+            showTranslation: false,
+            quizScore: 0,
+            currentQuizIndex: 0,
+            showResult: false,
+            selectedAnswer: null,
+            quizFinished: false
+        };
+
+        // --- Render Functions ---
+
+        function renderApp() {
+            const contentDiv = document.getElementById('app-content');
+            const footerTip = document.getElementById('footer-tip');
+            
+            // Update Tab Styles
+            const learnTab = document.getElementById('tab-learn');
+            const practiceTab = document.getElementById('tab-practice');
+            
+            if (state.activeTab === 'learn') {
+                learnTab.className = "flex items-center justify-center flex-1 py-3 text-sm font-medium transition-colors duration-200 text-blue-600 border-b-2 border-blue-600 bg-blue-50";
+                practiceTab.className = "flex items-center justify-center flex-1 py-3 text-sm font-medium transition-colors duration-200 text-gray-500 hover:text-gray-700";
+                contentDiv.innerHTML = renderLearnSection();
+                footerTip.classList.remove('hidden');
+                updateTranslationVisibility();
+            } else {
+                learnTab.className = "flex items-center justify-center flex-1 py-3 text-sm font-medium transition-colors duration-200 text-gray-500 hover:text-gray-700";
+                practiceTab.className = "flex items-center justify-center flex-1 py-3 text-sm font-medium transition-colors duration-200 text-blue-600 border-b-2 border-blue-600 bg-blue-50";
+                contentDiv.innerHTML = renderPracticeSection();
+                footerTip.classList.add('hidden');
+            }
+            
+            // Update Translation Button
+            const transBtn = document.getElementById('translation-btn');
+            const transText = document.getElementById('translation-text');
+            if (state.showTranslation) {
+                transBtn.className = "flex items-center px-3 py-1.5 rounded-full text-xs font-medium transition-all bg-blue-100 text-blue-700 border border-blue-200 cursor-pointer";
+                transText.textContent = "Tiếng Việt ON";
+            } else {
+                transBtn.className = "flex items-center px-3 py-1.5 rounded-full text-xs font-medium transition-all bg-gray-100 text-gray-500 border border-gray-200 cursor-pointer";
+                transText.textContent = "Tiếng Việt OFF";
+            }
+
+            // Re-initialize icons
+            lucide.createIcons();
+        }
+
+        function renderLearnSection() {
+            const vnClass = state.showTranslation ? "block animate-fade-in" : "hidden";
+            return `
+                <div class="space-y-6">
+                    <!-- Concept -->
+                    <div class="bg-gradient-to-br from-blue-50 to-white border border-blue-100 rounded-xl p-6 shadow-sm">
+                        <h2 class="text-2xl font-bold text-blue-800 mb-2">${grammarPoint.title}</h2>
+                        <p class="text-gray-800 font-bold mb-1">${grammarPoint.meaning_kr}</p>
+                        <p class="text-blue-600 font-medium mb-4 text-sm ${vnClass}">${grammarPoint.meaning_vn}</p>
+                        
+                        <div class="bg-white p-4 rounded-lg border border-blue-100 text-sm text-gray-700 leading-relaxed mt-2 whitespace-pre-line">
+                            <p>${grammarPoint.description_kr}</p>
+                            <p class="text-blue-600 mt-2 pt-2 border-t border-blue-50 ${vnClass}">${grammarPoint.description_vn}</p>
+                        </div>
+                    </div>
+
+                    <!-- Example -->
+                    <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600 mr-3">
+                                <i data-lucide="volume-2" class="w-5 h-5"></i>
+                            </div>
+                            <h3 class="font-bold text-gray-800">상황: 유진 씨 (Tình huống: Yujin)</h3>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-gray-50 p-4 rounded-lg relative">
+                                <div class="absolute -left-2 top-4 w-1 h-8 bg-blue-500 rounded-r"></div>
+                                <div class="space-y-3">
+                                    <div>
+                                        <p class="text-gray-600 text-sm">A: ${grammarPoint.examples[0].kr}</p>
+                                        <p class="text-gray-400 text-xs ${vnClass}">${grammarPoint.examples[0].vn}</p>
+                                    </div>
+                                    <div class="pl-4 border-l-2 border-blue-200">
+                                        <p class="text-gray-800 font-bold">B: "${grammarPoint.examples[0].answer_kr}"</p>
+                                        <p class="text-blue-600 text-xs ${vnClass}">${grammarPoint.examples[0].answer_vn}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 text-xs bg-blue-100 text-blue-800 px-3 py-2 rounded-lg inline-block w-full">
+                                    <span class="font-bold">이유:</span> ${grammarPoint.examples[0].context_kr}
+                                    <span class="mt-1 pt-1 border-t border-blue-200 text-blue-700 ${state.showTranslation ? 'block' : 'hidden'}">${grammarPoint.examples[0].context_vn}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rule -->
+                    <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+                        <h3 class="font-bold text-gray-800 mb-4 flex items-center">
+                           <i data-lucide="graduation-cap" class="w-5 h-5 mr-2 text-green-600"></i>
+                           만드는 법 (Quy tắc)
+                        </h3>
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="bg-gray-50 p-3 rounded-lg text-center">
+                                <span class="block text-xs text-gray-500 uppercase tracking-wide">동사/형용사</span>
+                                <span class="font-bold text-gray-800">가다 / 좋다</span>
+                            </div>
+                            <div class="bg-blue-50 p-3 rounded-lg text-center border border-blue-100">
+                                <span class="block text-xs text-blue-500 uppercase tracking-wide">+ 잖아요</span>
+                                <span class="font-bold text-blue-800">가잖아요 / 좋잖아요</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-gray-50 p-3 rounded-lg text-center">
+                                <span class="block text-xs text-gray-500 uppercase tracking-wide">명사 (이다)</span>
+                                <span class="font-bold text-gray-800">학생 / 가수</span>
+                            </div>
+                            <div class="bg-blue-50 p-3 rounded-lg text-center border border-blue-100">
+                                <span class="block text-xs text-blue-500 uppercase tracking-wide">+ (이)잖아요</span>
+                                <span class="font-bold text-blue-800">학생이잖아요 / 가수잖아요</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderPracticeSection() {
+            if (state.quizFinished) {
+                return `
+                    <div class="text-center py-12">
+                        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 text-green-600">
+                            <i data-lucide="check" class="w-10 h-10"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-2">참 잘했어요!</h2>
+                        <p class="text-gray-500 text-sm mb-2 ${state.showTranslation ? 'block' : 'hidden'}">Làm tốt lắm!</p>
+                        <p class="text-gray-600 mb-8">점수: ${state.quizScore} / ${quizData.length}</p>
+                        <button onclick="resetQuiz()" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center mx-auto">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4 mr-2"></i>
+                            다시 하기
+                        </button>
+                    </div>
+                `;
+            }
+
+            const currentQuiz = quizData[state.currentQuizIndex];
+            const vnClass = state.showTranslation ? "block" : "hidden";
+
+            let optionsHtml = currentQuiz.options.map(option => {
+                let btnClass = "border-gray-200 hover:border-blue-300 hover:bg-blue-50 text-gray-700";
+                let iconHtml = "";
+
+                if (state.showResult) {
+                    if (option === currentQuiz.correct) {
+                        btnClass = "border-green-500 bg-green-50 text-green-700";
+                        iconHtml = '<i data-lucide="check" class="w-5 h-5 text-green-600"></i>';
+                    } else if (option === state.selectedAnswer) {
+                        btnClass = "border-red-300 bg-red-50 text-red-700";
+                        iconHtml = '<i data-lucide="x" class="w-5 h-5 text-red-500"></i>';
+                    } else {
+                        btnClass = "border-gray-100 text-gray-400";
+                    }
+                }
+
+                return `
+                    <button 
+                        onclick="handleAnswer('${option}')" 
+                        ${state.showResult ? 'disabled' : ''}
+                        class="w-full p-4 rounded-lg border-2 text-left transition-all mb-3 flex justify-between items-center ${btnClass}">
+                        <span class="font-medium">${option}</span>
+                        ${iconHtml}
+                    </button>
+                `;
+            }).join('');
+
+            return `
+                <div class="space-y-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm font-medium text-gray-500">문제 ${state.currentQuizIndex + 1}/${quizData.length}</span>
+                        <span class="text-sm font-medium text-blue-600">점수: ${state.quizScore}</span>
+                    </div>
+
+                    <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+                        <!-- Visual Aid -->
+                        <div class="flex justify-center mb-6">
+                            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center text-5xl shadow-inner">
+                                ${currentQuiz.icon}
+                            </div>
+                        </div>
+                        
+                        <h3 class="text-center text-gray-500 text-sm mb-4 uppercase tracking-wide font-semibold">${currentQuiz.item}</h3>
+
+                        <!-- Question -->
+                        <div class="mb-6 text-center">
+                            <p class="text-gray-600 mb-2 text-sm">Q: ${currentQuiz.question}</p>
+                            <p class="text-lg font-bold text-gray-800">
+                            A: ${currentQuiz.answer_prefix}
+                            <span class="text-blue-600 border-b-2 border-blue-400 px-1 inline-block min-w-[80px]">
+                                ${state.selectedAnswer || "_______"}
+                            </span>
+                            </p>
+                        </div>
+
+                        <!-- Options -->
+                        <div class="grid grid-cols-1">
+                            ${optionsHtml}
+                        </div>
+
+                        <!-- Explanation -->
+                        ${state.showResult ? `
+                            <div class="mt-6 animate-fade-in">
+                                <div class="bg-blue-50 p-4 rounded-lg mb-4 text-sm text-blue-800 flex items-start flex-col">
+                                    <div class="flex items-start mb-2">
+                                        <i data-lucide="help-circle" class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5"></i>
+                                        <span>${currentQuiz.explanation_kr}</span>
+                                    </div>
+                                    <div class="pl-7 pt-2 border-t border-blue-200 text-blue-600 w-full ${vnClass}">
+                                        ${currentQuiz.explanation_vn}
+                                    </div>
+                                </div>
+                                <button onclick="nextQuiz()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center justify-center">
+                                    다음 문제
+                                    <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Logic Handlers ---
+
+        function setTab(tab) {
+            state.activeTab = tab;
+            renderApp();
+        }
+
+        function toggleTranslation() {
+            state.showTranslation = !state.showTranslation;
+            updateTranslationVisibility();
+            // Re-render button state and any visible content that depends on it
+            renderApp();
+        }
+
+        function updateTranslationVisibility() {
+            const transElements = document.querySelectorAll('.animate-fade-in, .text-blue-600.text-xs, .text-gray-400.text-xs');
+            // Re-render handles most of this, but footer tip needs specific handling if outside main render
+            const tipTrans = document.getElementById('tip-translation');
+            if (tipTrans) {
+                if (state.showTranslation) tipTrans.classList.remove('hidden');
+                else tipTrans.classList.add('hidden');
+            }
+        }
+
+        function handleAnswer(option) {
+            if (state.showResult) return;
+            state.selectedAnswer = option;
+            state.showResult = true;
+            if (option === quizData[state.currentQuizIndex].correct) {
+                state.quizScore++;
+            }
+            renderApp();
+        }
+
+        function nextQuiz() {
+            state.selectedAnswer = null;
+            state.showResult = false;
+            if (state.currentQuizIndex < quizData.length - 1) {
+                state.currentQuizIndex++;
+            } else {
+                state.quizFinished = true;
+            }
+            renderApp();
+        }
+
+        function resetQuiz() {
+            state.quizScore = 0;
+            state.currentQuizIndex = 0;
+            state.showResult = false;
+            state.selectedAnswer = null;
+            state.quizFinished = false;
+            renderApp();
+        }
+
+        // --- Initial Render & Events ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderApp();
+            
+            // Translation Toggle Event
+            document.getElementById('translation-btn').addEventListener('click', toggleTranslation);
+        });
+
+    </script>
+</body>
+</html>

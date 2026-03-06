@@ -1,0 +1,1516 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>시간수사관: 시제 복구 작전</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --card:#121a33;
+      --text:#e9eeff;
+      --muted:#b8c1ff;
+      --line:rgba(233,238,255,.12);
+      --good:#2bd576;
+      --bad:#ff4d4d;
+      --accent:#7aa7ff;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius:16px;
+      --tap: 48px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR", sans-serif;
+      background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(122,167,255,.18), transparent 55%),
+        radial-gradient(900px 500px at 90% 20%, rgba(43,213,118,.12), transparent 60%),
+        var(--bg);
+      color:var(--text);
+    }
+    .wrap{
+      width: 100%; max-width: 560px;
+      margin: 0 auto;
+      padding: 12px 12px calc(72px + env(safe-area-inset-bottom));
+    }
+    .topbar{
+      position: sticky;
+      top: 8px;
+      z-index: 10;
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(18,26,51,.92), rgba(15,23,48,.92));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      padding: 12px;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      justify-content:space-between;
+    }
+    .title{
+      display:flex; gap:10px; align-items:center;
+      min-width: 0;
+    }
+    .logo{
+      width:38px; height:38px;
+      border-radius: 12px;
+      background:
+        radial-gradient(16px 16px at 30% 30%, rgba(255,255,255,.18), transparent 55%),
+        linear-gradient(135deg, rgba(122,167,255,.9), rgba(43,213,118,.75));
+      border:1px solid rgba(255,255,255,.12);
+      flex: 0 0 auto;
+    }
+    .titleText{min-width:0}
+    .titleText .h1{
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: -.2px;
+      margin:0;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    .titleText .sub{
+      margin-top: 2px;
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+
+    .right{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      align-items:flex-end;
+    }
+    .stats{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .pill{
+      display:flex; gap:6px; align-items:center;
+      padding: 6px 10px;
+      border:1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.03);
+      font-size: 12px;
+      white-space:nowrap;
+    }
+    .pill small{color:var(--muted)}
+    .pill b{font-weight:900}
+
+    .seg{
+      display:flex;
+      border:1px solid var(--line);
+      border-radius: 999px;
+      overflow:hidden;
+      background: rgba(255,255,255,.03);
+    }
+    .seg button{
+      appearance:none;
+      border:none;
+      background: transparent;
+      color: var(--muted);
+      padding: 6px 10px;
+      font-weight: 900;
+      font-size: 12px;
+      cursor:pointer;
+      min-height: 34px;
+    }
+    .seg button.active{
+      background: rgba(122,167,255,.25);
+      color: var(--text);
+    }
+
+    .card{
+      margin-top: 12px;
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(18,26,51,.90), rgba(15,23,48,.90));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card .hd{
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .card .hd h2{
+      margin:0;
+      font-size: 14px;
+      letter-spacing: -.2px;
+      font-weight: 950;
+    }
+    .card .hd p{
+      margin: 6px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+    .card .bd{padding: 12px;}
+
+    .stageList{display:grid; gap:10px;}
+    .stage{
+      padding: 12px;
+      border:1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,.03);
+      display:flex; gap:10px; align-items:center; justify-content:space-between;
+    }
+    .stage .meta{min-width:0}
+    .stage .t{
+      display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+      font-weight: 950; font-size: 13px;
+      letter-spacing: -.2px;
+    }
+    .badge{
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.02);
+      color: var(--muted);
+      font-weight: 900;
+    }
+    .badge.lock{opacity:.65}
+    .stage .d{
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.35;
+      white-space: normal;
+    }
+
+    .btn{
+      appearance:none;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-weight: 950;
+      cursor:pointer;
+      min-height: var(--tap);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      user-select:none;
+    }
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(122,167,255,.92), rgba(122,167,255,.65));
+      border-color: rgba(122,167,255,.55);
+      color: #06102a;
+    }
+    .btn.good{
+      background: linear-gradient(135deg, rgba(43,213,118,.92), rgba(43,213,118,.62));
+      border-color: rgba(43,213,118,.55);
+      color: #041c10;
+    }
+    .btn.warn{
+      background: linear-gradient(135deg, rgba(255,180,60,.95), rgba(255,180,60,.55));
+      border-color: rgba(255,180,60,.55);
+      color:#201200;
+    }
+    .btn:disabled{opacity:.6; cursor:not-allowed}
+    .btn.small{
+      min-height: 44px;
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: 13px;
+    }
+
+    .hud{
+      display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;
+      margin-bottom: 10px;
+    }
+    .progress{
+      flex: 1;
+      min-width: 210px;
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      overflow:hidden;
+    }
+    .bar{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, rgba(122,167,255,.95), rgba(43,213,118,.78));
+    }
+
+    .qbox{
+      border:1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255,255,255,.03);
+      padding: 12px;
+    }
+    .hint{
+      font-size: 12px;
+      color: var(--muted);
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-bottom: 8px;
+    }
+    .hint .tag{
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.02);
+      color: var(--muted);
+      font-weight: 900;
+    }
+    .contextLine{
+      margin: 6px 0 10px;
+      padding: 10px;
+      border: 1px dashed rgba(233,238,255,.18);
+      border-radius: 14px;
+      background: rgba(0,0,0,.10);
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .stem{
+      font-size: 18px;
+      line-height: 1.55;
+      letter-spacing: -.2px;
+      padding: 6px 0 2px;
+    }
+    .choices{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
+      margin-top: 12px;
+    }
+    .choiceBtn{
+      text-align:left;
+      padding: 12px;
+      border-radius: 14px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      cursor:pointer;
+      font-weight: 950;
+      min-height: var(--tap);
+    }
+
+    .feedback{
+      margin-top: 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      padding: 12px;
+      background: rgba(0,0,0,.12);
+      display:none;
+    }
+    .fbTitle{
+      font-weight: 950;
+      letter-spacing: -.2px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .dot{
+      width:10px; height:10px; border-radius:999px;
+      background: var(--muted);
+    }
+    .dot.good{background: var(--good)}
+    .dot.bad{background: var(--bad)}
+    .fbText{
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .fbText b{color: var(--text)}
+    .actions{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      margin-top: 12px;
+    }
+    .actions.single{grid-template-columns: 1fr}
+    .actions .btn{width:100%}
+
+    .kpi{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:10px;
+      margin-top: 10px;
+    }
+    .kpi .box{
+      border:1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,.03);
+      padding: 12px;
+    }
+    .kpi .n{
+      font-weight: 950;
+      font-size: 20px;
+      letter-spacing: -.2px;
+    }
+    .kpi .l{
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .hr{height:1px;background:var(--line);margin:12px 0;}
+    .mini{font-size:12px;color:var(--muted);line-height:1.55}
+    ul.mini{margin:8px 0 0 18px; padding:0;}
+    ul.mini li{margin:6px 0;}
+
+    .bbar{
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      background: rgba(11,16,32,.75);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(233,238,255,.10);
+      z-index: 20;
+    }
+    .bbar .row{
+      width: 100%; max-width: 560px;
+      margin: 0 auto;
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:10px;
+    }
+
+    .modal{
+      position: fixed;
+      inset:0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      align-items:flex-end;
+      justify-content:center;
+      padding: 10px 10px calc(10px + env(safe-area-inset-bottom));
+      z-index: 40;
+    }
+    .panel{
+      width: min(560px, 100%);
+      max-height: 86vh;
+      overflow:auto;
+      border:1px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(18,26,51,.98), rgba(15,23,48,.98));
+      box-shadow: var(--shadow);
+    }
+    .panel .ph{
+      position: sticky;
+      top: 0;
+      background: inherit;
+      border-bottom: 1px solid var(--line);
+      padding: 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      z-index: 1;
+    }
+    .panel .ph h3{
+      margin:0;
+      font-size: 14px;
+      font-weight: 950;
+      letter-spacing: -.2px;
+    }
+    .panel .pb{padding: 12px;}
+    .ruleCard{
+      padding: 12px;
+      border:1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,.03);
+      margin-bottom: 10px;
+    }
+    .ruleCard .rt{
+      display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+      font-weight: 950;
+      font-size: 13px;
+      letter-spacing: -.2px;
+      margin:0 0 6px;
+    }
+    .ruleCard .rd{
+      margin:0;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+  </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+
+<body>
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+  <div class="wrap">
+    <div class="topbar">
+      <div class="title">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="titleText">
+          <p class="h1">시간수사관: 시제 복구 작전</p>
+          <div class="sub">1-3 반말 · 4-5 존댓말 · 스테이지당 5문제 · 연속 진행</div>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="stats">
+          <div class="pill"><small>Lv</small> <b id="level">1</b></div>
+          <div class="pill"><small>XP</small> <b id="xp">0</b></div>
+          <div class="pill"><small>콤보</small> <b id="combo">0</b></div>
+        </div>
+        <div class="seg" aria-label="설명 언어">
+          <button id="langKR" class="active" type="button">KR</button>
+          <button id="langVI" type="button">VI</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="mainCard">
+      <div class="hd">
+        <div>
+          <h2 id="mainTitle">스테이지 선택</h2>
+          <p id="mainDesc">각 스테이지 5문제. 정답률 75% 이상(4-5개)이면 다음 스테이지 해금.</p>
+        </div>
+        <div class="badge" id="unlockInfo">해금: 1</div>
+      </div>
+      <div class="bd" id="mainBody"></div>
+    </div>
+  </div>
+
+  <div class="bbar">
+    <div class="row">
+      <button class="btn small" id="btnHome" type="button">홈</button>
+      <button class="btn small" id="btnRules" type="button">규칙</button>
+      <button class="btn small" id="btnNotes" type="button">노트</button>
+    </div>
+  </div>
+
+  <div class="modal" id="rulesModal" role="dialog" aria-modal="true">
+    <div class="panel">
+      <div class="ph">
+        <h3 id="rulesTitle">규칙 카드</h3>
+        <button class="btn small" id="btnCloseRules" type="button">닫기</button>
+      </div>
+      <div class="pb" id="rulesBody"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="notesModal" role="dialog" aria-modal="true">
+    <div class="panel">
+      <div class="ph">
+        <h3 id="notesTitle">수사 노트</h3>
+        <button class="btn small" id="btnCloseNotes" type="button">닫기</button>
+      </div>
+      <div class="pb" id="notesBody"></div>
+    </div>
+  </div>
+
+<script>
+/* =========================
+   핵심 개선
+   - -겠었- 제거: stage4는 -었겠- (과거 추정) + -(으)려고 했었- (과거 계획)
+   - 스테이지당 5문제
+   - 스테이지 종료 후: 핵심 정리(요약 화면) -> 다음 스테이지로 연속 진행
+   - KR/VI 토글 유지
+   - -았/었- vs -았었-: 관대 채점(중복 정답 허용) 옵션 유지
+========================= */
+
+const STORAGE_KEY = "tense_detective_v4";
+let uiLang = "kr"; // 'kr' | 'vi'
+
+function defaultState(){
+  return {
+    xp: 0,
+    unlockedStage: 1,
+    tagStats: {},
+    gradingMode: "lenient", // lenient | strict
+    lastPlayedAt: null
+  };
+}
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return defaultState();
+    const obj = JSON.parse(raw);
+    return {...defaultState(), ...obj, tagStats: obj.tagStats || {}};
+  }catch{
+    return defaultState();
+  }
+}
+let state = loadState();
+function saveState(){
+  state.lastPlayedAt = new Date().toISOString();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function esc(s){
+  return String(s)
+    .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+}
+function levelFromXp(xp){ return Math.floor(xp / 200) + 1; }
+function isStrict(){ return state.gradingMode === "strict"; }
+function updateHeader(){
+  document.getElementById("xp").textContent = state.xp;
+  document.getElementById("level").textContent = levelFromXp(state.xp);
+  document.getElementById("unlockInfo").textContent = "해금: " + state.unlockedStage;
+}
+function updateTagStat(tag, correct){
+  if(!state.tagStats[tag]) state.tagStats[tag] = {seen:0, correct:0};
+  state.tagStats[tag].seen += 1;
+  if(correct) state.tagStats[tag].correct += 1;
+}
+function tagErrorRate(tag){
+  const s = state.tagStats[tag];
+  if(!s || s.seen === 0) return 0.45;
+  return Math.max(0, 1 - (s.correct / s.seen));
+}
+function topWeakTags(n=6){
+  const tags = Object.keys(state.tagStats);
+  tags.sort((a,b)=> tagErrorRate(b) - tagErrorRate(a));
+  return tags.slice(0,n);
+}
+
+/* =========================
+   스테이지(핵심 요약 포함)
+========================= */
+const STAGES = [
+  {
+    id:1, level:"low",
+    titleKr:"기본 시제 1", titleVi:"Thì cơ bản 1",
+    descKr:"-았/었-(과거) vs -(으)ㄴ/는-(현재: 한다/는다) [반말]",
+    descVi:"-았/었-(quá khứ) vs -(으)ㄴ/는-(hiện tại: 한다/는다) [thân mật]",
+    keyKr:[
+      "‘어제/방금/지난주’ 같은 과거 단서는 -았/었-.",
+      "‘매일/항상/보통’ 같은 습관 단서는 -(으)ㄴ/는-(한다/는다).",
+      "문장 말투(반말)와 선택지 말투는 반드시 일치."
+    ],
+    keyVi:[
+      "Dấu hiệu quá khứ (hôm qua, vừa nãy, tuần trước) -> -았/었-.",
+      "Dấu hiệu thói quen (mỗi ngày, luôn luôn) -> -(으)ㄴ/는- (한다/는다).",
+      "Phong cách câu và lựa chọn phải khớp."
+    ]
+  },
+  {
+    id:2, level:"low",
+    titleKr:"기본 시제 2", titleVi:"Thì cơ bản 2",
+    descKr:"-겠-(추측/의지) [반말]",
+    descVi:"-겠-(phỏng đoán/ý chí) [thân mật]",
+    keyKr:[
+      "‘아마/분명’ + 미래/추측 -> -겠- (오겠다).",
+      "‘내가/오늘부터/꼭’ + 결심/의지 -> -겠- (하겠다).",
+      "추측(-겠-)과 단순 현재(한다/온다) 구분."
+    ],
+    keyVi:[
+      "‘Có lẽ/Chắc’ + suy đoán -> -겠-.",
+      "Quyết tâm/ý chí -> -겠-.",
+      "Phân biệt -겠- (suy đoán/ý chí) với hiện tại."
+    ]
+  },
+  {
+    id:3, level:"low",
+    titleKr:"복합 과거: -았었-", titleVi:"Quá khứ kép: -았었-",
+    descKr:"-았었-(과거 기준보다 더 이전/회상 강조) [반말] - 관대 채점 권장",
+    descVi:"-았었-(nhấn mạnh ‘đã… trước một mốc quá khứ’/hồi tưởng) [thân mật] - khuyến nghị chấm ‘dễ’",
+    keyKr:[
+      "-았었-은 ‘과거 기준 시점 + 그보다 더 이전 완료/회상’ 뉘앙스가 강함.",
+      "자연문에서는 -았/었-도 가능해 혼동이 생길 수 있음.",
+      "게임은 관대 채점에서 중복 정답을 허용해 혼동을 줄임(엄격은 시험용)."
+    ],
+    keyVi:[
+      "-았었- nhấn mạnh ‘đã xong trước một mốc quá khứ’ hoặc hồi tưởng.",
+      "Trong câu tự nhiên, quá khứ đơn (-았/었-) đôi khi cũng được dùng.",
+      "Chế độ ‘dễ’ cho phép nhiều đáp án để tránh rối (nghiêm dùng cho kiểm tra)."
+    ]
+  },
+  {
+    id:4, level:"high",
+    titleKr:"과거 추정과 과거 계획", titleVi:"Suy đoán quá khứ & dự định quá khứ",
+    descKr:"-었겠-(과거 추정) + -(으)려고 했었-(과거 계획/의도) [존댓말]",
+    descVi:"-었겠-(phỏng đoán quá khứ) + -(으)려고 했었-(dự định/ý định trong quá khứ) [lịch sự]",
+    keyKr:[
+      "현재 단서(흔적/상황)로 과거를 추정할 때 -었겠-: 왔겠어요, 힘들었겠어요.",
+      "과거의 계획/의도(실현 여부 대비)에는 -(으)려고 했었-: 하려고 했었어요.",
+      "존댓말 문장과 선택지 말투 일치."
+    ],
+    keyVi:[
+      "Suy đoán quá khứ từ dấu vết -> -었겠-.",
+      "Kế hoạch/ý định trong quá khứ -> -(으)려고 했었-.",
+      "Phong cách lịch sự phải khớp."
+    ]
+  },
+  {
+    id:5, level:"high",
+    titleKr:"관형형 시제", titleVi:"Định ngữ",
+    descKr:"-ㄴ/-는/-ㄹ/-던/-았던 [존댓말 문장 + 관형형]",
+    descVi:"-ㄴ/-는/-ㄹ/-던/-았던 [câu lịch sự + định ngữ]",
+    keyKr:[
+      "동사 관형: -ㄴ(과거 완료), -는(현재), -ㄹ(미래).",
+      "-던(과거 회상: 진행/습관), -았던(과거 회상+완료).",
+      "시간 부사(어제/지금/내일/예전에)와 결합해 판단."
+    ],
+    keyVi:[
+      "Động từ định ngữ: -ㄴ (đã...), -는 (đang/thường), -ㄹ (sẽ...).",
+      "-던 (hồi tưởng: đang/thường), -았던 (hồi tưởng + đã xong).",
+      "Dựa vào trạng từ thời gian để chọn."
+    ]
+  },
+];
+
+/* =========================
+   규칙 카드(요약)
+========================= */
+const RULE_CARDS = [
+  {
+    titleKr:"채점 모드", titleVi:"Chế độ chấm",
+    bodyKr:"관대: 문맥상 둘 다 자연스러운 경우 중복 정답 허용(학습용).\n엄격: 대표 정답만 정답 처리(시험용).",
+    bodyVi:"Dễ: cho phép nhiều đáp án nếu đều tự nhiên (học).\nNghiêm: chỉ chấp nhận đáp án đại diện (kiểm tra)."
+  },
+  {
+    titleKr:"-았/었- vs -았었-", titleVi:"-았/었- vs -았었-",
+    bodyKr:"자연문에서 둘 다 가능한 경우가 많음.\n-았었-은 ‘과거 기준 + 더 이전 완료/회상/대비’ 강조.\n혼동 문항은 관대 채점에서 중복 정답 허용.",
+    bodyVi:"Trong câu tự nhiên, đôi khi cả hai đều đúng.\n-았었- nhấn mạnh ‘trước một mốc quá khứ/hồi tưởng’.\nDùng chế độ ‘dễ’ để tránh rối."
+  },
+  {
+    titleKr:"-겠-의 기능", titleVi:"Chức năng của -겠-",
+    bodyKr:"추측: 아마/분명 + 미래/예측.\n의지: 결심/선언(내가 꼭...).",
+    bodyVi:"Phỏng đoán: có lẽ/chắc + dự đoán.\nÝ chí: quyết tâm/tuyên bố."
+  },
+  {
+    titleKr:"-었겠- / -(으)려고 했었-", titleVi:"-었겠- / -(으)려고 했었-",
+    bodyKr:"-었겠-: 현재 단서로 과거를 추정.\n-(으)려고 했었-: 과거의 계획/의도(결과 대비와 함께).",
+    bodyVi:"-었겠-: suy đoán quá khứ.\n-(으)려고 했었-: dự định/ý định trong quá khứ."
+  },
+  {
+    titleKr:"관형형 요약", titleVi:"Tóm tắt định ngữ",
+    bodyKr:"동사: -ㄴ(과거), -는(현재), -ㄹ(미래)\n회상: -던(진행/습관), -았던(완료).",
+    bodyVi:"Động từ: -ㄴ (qu reopen), -는 (hiện tại), -ㄹ (tương lai)\nHồi tưởng: -던, -았던."
+  },
+];
+
+/* =========================
+   문제 은행
+   - 스테이지당 최소 5문항 제공
+   - stage 3: 일부 문항은 lenient에서 복수 정답 허용
+========================= */
+const QUESTION_BANK = [
+  /* ---------- Stage 1: 반말 (과거 vs 현재) ---------- */
+  {
+    id:"S1-01", stage:1,
+    hintKr:"시간 단서: 어제", hintVi:"Dấu hiệu: hôm qua",
+    sentence:"나는 어제 집에 { }.",
+    choices:["갔다","간다","가겠다","갔었다"],
+    answer:"갔다",
+    fbKr:{rule:"‘어제’는 과거 단서 -> -았/었-.", ex:"나는 어제 집에 <b>갔다</b>."},
+    fbVi:{rule:"‘Hôm qua’ -> quá khứ -았/었-.", ex:"나는 어제 집에 <b>갔다</b>."}
+  },
+  {
+    id:"S1-02", stage:1,
+    hintKr:"시간 단서: 방금", hintVi:"Dấu hiệu: vừa nãy",
+    sentence:"나는 방금 점심을 { }.",
+    choices:["먹었다","먹는다","먹겠다","먹었었다"],
+    answer:"먹었다",
+    fbKr:{rule:"‘방금’은 직전 과거 -> -았/었-.", ex:"나는 방금 점심을 <b>먹었다</b>."},
+    fbVi:{rule:"‘Vừa nãy’ -> quá khứ gần.", ex:"나는 방금 점심을 <b>먹었다</b>."}
+  },
+  {
+    id:"S1-03", stage:1,
+    hintKr:"시간 단서: 매일", hintVi:"Dấu hiệu: mỗi ngày",
+    sentence:"나는 매일 아침에 운동을 { }.",
+    choices:["했다","한다","하겠다","했었다"],
+    answer:"한다",
+    fbKr:{rule:"‘매일’은 습관/일반 현재 -> 한다/는다.", ex:"나는 매일 운동을 <b>한다</b>."},
+    fbVi:{rule:"‘Mỗi ngày’ -> hiện tại thói quen.", ex:"나는 매일 운동을 <b>한다</b>."}
+  },
+  {
+    id:"S1-04", stage:1,
+    hintKr:"시간 단서: 항상", hintVi:"Dấu hiệu: luôn luôn",
+    sentence:"이 길은 학교 앞을 항상 { }.",
+    choices:["지났다","지난다","지나겠다","지났었다"],
+    answer:"지난다",
+    fbKr:{rule:"‘항상’은 일반 사실/습관 -> 현재.", ex:"이 길은 학교 앞을 <b>지난다</b>."},
+    fbVi:{rule:"‘Luôn luôn’ -> hiện tại.", ex:"이 길은 학교 앞을 <b>지난다</b>."}
+  },
+  {
+    id:"S1-05", stage:1,
+    hintKr:"시간 단서: 지금", hintVi:"Dấu hiệu: bây giờ",
+    sentence:"지금 밖에 눈이 { }.",
+    choices:["왔다","온다","오겠다","왔었다"],
+    answer:"온다",
+    fbKr:{rule:"‘지금’은 현재 상황 -> 현재.", ex:"지금 눈이 <b>온다</b>."},
+    fbVi:{rule:"‘Bây giờ’ -> hiện tại.", ex:"지금 눈이 <b>온다</b>."}
+  },
+
+  /* ---------- Stage 2: 반말 (-겠- 추측/의지) ---------- */
+  {
+    id:"S2-01", stage:2,
+    hintKr:"단서: 아마(추측)", hintVi:"Dấu hiệu: có lẽ",
+    sentence:"하늘이 흐리다. 아마 비가 { }.",
+    choices:["온다","오겠다","왔다","왔었다"],
+    answer:"오겠다",
+    fbKr:{rule:"‘아마’는 추측 신호 -> -겠-.", ex:"아마 비가 <b>오겠다</b>."},
+    fbVi:{rule:"‘Có lẽ’ -> -겠- (phỏng đoán).", ex:"아마 비가 <b>오겠다</b>."}
+  },
+  {
+    id:"S2-02", stage:2,
+    hintKr:"단서: 결심(의지)", hintVi:"Dấu hiệu: quyết tâm",
+    sentence:"오늘부터 나는 담배를 { }.",
+    choices:["끊는다","끊겠다","끊었다","끊었었다"],
+    answer:"끊겠다",
+    fbKr:{rule:"결심/선언 -> -겠-.", ex:"오늘부터 담배를 <b>끊겠다</b>."},
+    fbVi:{rule:"Quyết tâm -> -겠-.", ex:"오늘부터 담배를 <b>끊겠다</b>."}
+  },
+  {
+    id:"S2-03", stage:2,
+    hintKr:"단서: 내일(계획/의지)", hintVi:"Dấu hiệu: ngày mai (kế hoạch)",
+    sentence:"내일은 꼭 일찍 일어나{ }.",
+    choices:["겠다","는다","었다","었었다"],
+    answer:"겠다",
+    fbKr:{rule:"미래 계획/의지 -> -겠-.", ex:"내일은 일찍 일어나<b>겠다</b>."},
+    fbVi:{rule:"Kế hoạch/ý chí -> -겠-.", ex:"내일은 일찍 일어나<b>겠다</b>."}
+  },
+  {
+    id:"S2-04", stage:2,
+    hintKr:"단서: 분명(추측)", hintVi:"Dấu hiệu: chắc chắn (suy đoán)",
+    sentence:"불이 꺼져 있다. 분명 다들 집에 { }.",
+    choices:["갔다","간다","가겠다","갔었다"],
+    answer:"갔다",
+    fbKr:{rule:"추측이더라도 ‘이미 끝난 상태’ 근거가 강하면 과거가 정답일 수 있다.", ex:"불이 꺼져 있네. 다들 집에 <b>갔다</b>."},
+    fbVi:{rule:"Nếu có căn cứ ‘đã xong’ thì quá khứ có thể là đáp án.", ex:"다들 집에 <b>갔다</b>."}
+  },
+  {
+    id:"S2-05", stage:2,
+    hintKr:"단서: 아마(추측) + 미래 결과", hintVi:"Có lẽ + kết quả tương lai",
+    sentence:"도로가 막힌다. 아마 지각{ }.",
+    choices:["한다","하겠다","했다","했었다"],
+    answer:"하겠다",
+    fbKr:{rule:"미래 결과에 대한 추측 -> -겠-.", ex:"아마 지각<b>하겠다</b>."},
+    fbVi:{rule:"Suy đoán kết quả tương lai -> -겠-.", ex:"아마 지각<b>하겠다</b>."}
+  },
+
+  /* ---------- Stage 3: 반말 (-았었-) ---------- */
+  {
+    id:"S3-01", stage:3,
+    hintKr:"기준 과거: 전화했을 때", hintVi:"Mốc quá khứ: lúc gọi điện",
+    contextKr:"어제 10시에 전화했을 때를 떠올려라(그때가 기준).",
+    contextVi:"Nhớ lúc gọi điện lúc 10 giờ tối hôm qua (đó là mốc).",
+    sentence:"그때는 이미 문을 { }.",
+    choices:["열었다","연다","열겠다","열었었다"],
+    answers:["열었다","열었었다"],
+    preferred:"열었었다",
+    noteKr:"둘 다 자연스럽다. -았었다는 ‘기준 과거보다 더 이전 완료’를 더 강하게 강조한다.",
+    noteVi:"Cả hai đều tự nhiên. -았었- nhấn mạnh ‘đã xong trước mốc đó’ rõ hơn.",
+    fbKr:{rule:"‘그때’ 같은 과거 기준 + ‘이미’가 있으면 -았었-가 자주 쓰이지만 단순 과거도 가능.", ex:"그때는 이미 문을 <b>열었었다</b>."},
+    fbVi:{rule:"Có mốc quá khứ + ‘đã rồi’ thì -았었- hay dùng, nhưng quá khứ đơn cũng có thể.", ex:"문을 <b>열었었다</b>."}
+  },
+  {
+    id:"S3-02", stage:3,
+    hintKr:"기준 과거: 도착했을 때", hintVi:"Mốc quá khứ: khi đến",
+    contextKr:"‘도착’보다 ‘출발’이 더 이전 사건이다.",
+    contextVi:"Việc ‘tàu chạy’ xảy ra trước mốc ‘đến nơi’.",
+    sentence:"역에 도착했을 때, 기차는 벌써 { }.",
+    choices:["떠났다","떠난다","떠나겠다","떠났었다"],
+    answers:["떠났다","떠났었다"],
+    preferred:"떠났었다",
+    noteKr:"둘 다 가능. -았었다는 ‘이미 떠난 상태였음(회상/대비)’을 더 강조한다.",
+    noteVi:"Cả hai đều có thể đúng. -았었- nhấn mạnh trạng thái ‘đã rời đi rồi’.",
+    fbKr:{rule:"‘~했을 때’는 과거 기준을 만들지만 한국어에서는 단순 과거도 자주 사용.", ex:"도착했을 때 기차가 이미 <b>떠났었다</b>."},
+    fbVi:{rule:"‘Khi…’ tạo mốc, nhưng quá khứ đơn cũng hay dùng.", ex:"기차가 이미 <b>떠났었다</b>."}
+  },
+  {
+    id:"S3-03", stage:3,
+    hintKr:"회상 강조", hintVi:"Nhấn mạnh hồi tưởng",
+    contextKr:"지금은 안 하지만, 과거를 ‘회상’하는 말이다.",
+    contextVi:"Bây giờ không còn vậy, đang hồi tưởng quá khứ.",
+    sentence:"나는 예전에 이 동네에서 { }.",
+    choices:["살았다","산다","살겠다","살았었다"],
+    answers:["살았다","살았었다"],
+    preferred:"살았었다",
+    noteKr:"둘 다 가능. -았었다는 ‘그 시절을 떠올리는’ 느낌이 더 난다.",
+    noteVi:"Cả hai đều có thể. -았었- tạo cảm giác ‘hồi tưởng’ rõ hơn.",
+    fbKr:{rule:"회상 맥락이 있으면 -았었-가 자연스러워진다.", ex:"나는 예전에 여기서 <b>살았었다</b>."},
+    fbVi:{rule:"Nếu có ngữ cảnh hồi tưởng, -았었- tự nhiên hơn.", ex:"여기서 <b>살았었다</b>."}
+  },
+  {
+    id:"S3-04", stage:3,
+    hintKr:"과거 기준 + 이전 완료(대비)", hintVi:"Mốc quá khứ + đã xong (đối chiếu)",
+    contextKr:"그때는 이미 끝난 상태였고, 그 뒤에 일이 이어진다.",
+    contextVi:"Lúc đó đã xong, rồi sau đó chuyện khác xảy ra.",
+    sentence:"회의가 시작했을 때, 자료는 이미 { }.",
+    choices:["준비됐다","준비된다","준비되겠다","준비됐었다"],
+    answers:["준비됐다","준비됐었다"],
+    preferred:"준비됐었다",
+    fbKr:{rule:"과거 기준(회의 시작)보다 더 이전에 완료된 상태를 강조하면 -았었-가 더 적합.", ex:"자료는 이미 <b>준비됐었다</b>."},
+    fbVi:{rule:"Nhấn mạnh ‘đã xong trước mốc’ -> -았었- phù hợp hơn.", ex:"이미 <b>준비됐었다</b>."}
+  },
+  {
+    id:"S3-05", stage:3,
+    hintKr:"과거 기준: 들어갔을 때", hintVi:"Mốc quá khứ: khi vào",
+    contextKr:"‘들어갔을 때’가 기준. 그 이전에 불이 켜져 있었다.",
+    contextVi:"Mốc là ‘khi vào’. Trước đó đèn đã bật.",
+    sentence:"방에 들어갔을 때, 불은 이미 { }.",
+    choices:["켜졌다","켜진다","켜지겠다","켜졌었다"],
+    answers:["켜졌다","켜졌었다"],
+    preferred:"켜졌었다",
+    fbKr:{rule:"과거 기준 + ‘이미’로 ‘그보다 앞선 완료’를 만들면 -았었-가 자연스러움(단, 단순 과거도 가능).", ex:"불은 이미 <b>켜졌었다</b>."},
+    fbVi:{rule:"Mốc quá khứ + ‘đã rồi’ -> -았었- tự nhiên (nhưng quá khứ đơn cũng có thể).", ex:"이미 <b>켜졌었다</b>."}
+  },
+
+  /* ---------- Stage 4: 존댓말 (-었겠- / -(으)려고 했었-) ---------- */
+  {
+    id:"S4-01", stage:4,
+    hintKr:"현재 단서 -> 과거 추정", hintVi:"Dấu vết hiện tại -> suy đoán quá khứ",
+    sentence:"바닥이 젖어 있어요. 밤에 비가 { }.",
+    choices:["왔겠어요","오겠어요","왔어요","와요"],
+    answer:"왔겠어요",
+    fbKr:{rule:"현재 흔적을 근거로 과거를 추정 -> -었겠-.", ex:"밤에 비가 <b>왔겠어요</b>."},
+    fbVi:{rule:"Suy đoán quá khứ từ dấu vết -> -었겠-.", ex:"비가 <b>왔겠어요</b>."}
+  },
+  {
+    id:"S4-02", stage:4,
+    hintKr:"과거 상황 추정", hintVi:"Suy đoán tình huống quá khứ",
+    sentence:"그때는 정말 많이 힘들{ }.",
+    choices:["었겠어요","겠어요","었어요","어요"],
+    answer:"었겠어요",
+    fbKr:{rule:"과거 상황을 ‘그랬을 것이다’로 추정 -> -었겠-.", ex:"그때는 많이 힘들<b>었겠어요</b>."},
+    fbVi:{rule:"Suy đoán tình huống quá khứ -> -었겠-.", ex:"힘들<b>었겠어요</b>."}
+  },
+  {
+    id:"S4-03", stage:4,
+    hintKr:"현재 단서: 연락 없음", hintVi:"Dấu hiệu: không liên lạc",
+    sentence:"연락이 없네요. 많이 바쁘{ }.",
+    choices:["었겠어요","겠어요","었어요","어요"],
+    answer:"었겠어요",
+    fbKr:{rule:"현재 단서로 과거 상태를 추정 -> -었겠-.", ex:"많이 바쁘<b>었겠어요</b>."},
+    fbVi:{rule:"Suy đoán trạng thái quá khứ -> -었겠-.", ex:"바쁘<b>었겠어요</b>."}
+  },
+  {
+    id:"S4-04", stage:4,
+    hintKr:"과거 계획 + 결과 대비", hintVi:"Dự định quá khứ + đối chiếu kết quả",
+    sentence:"그때는 혼자서 다 해결{ }(는데), 결국 도움을 받았어요.",
+    choices:["했어요","하려고 했었어요","했겠어요","해요"],
+    answer:"하려고 했었어요",
+    fbKr:{rule:"과거의 계획/의도(실현 여부 대비) -> -(으)려고 했었-.", ex:"해결<b>하려고 했었어요</b>."},
+    fbVi:{rule:"Dự định trong quá khứ -> -(으)려고 했었-.", ex:"해결<b>하려고 했었어요</b>."}
+  },
+  {
+    id:"S4-05", stage:4,
+    hintKr:"과거 계획 + 미실현", hintVi:"Dự định quá khứ + không thực hiện",
+    sentence:"어제는 일찍 자{ }(는데), 일이 생겨서 못 잤어요.",
+    choices:["려고 했었어요","자고 있었어요","잘 거예요","잤겠어요"],
+    answer:"려고 했었어요",
+    fbKr:{rule:"‘(으)려고 했었어요’는 과거 계획/의도. 뒤에 ‘못 했어요’와 잘 결합.", ex:"일찍 자<b>려고 했었어요</b>."},
+    fbVi:{rule:"‘(으)려고 했었어요’ = dự định trong quá khứ; hay đi với ‘không làm được’.", ex:"자<b>려고 했었어요</b>."}
+  },
+
+  /* ---------- Stage 5: 존댓말 (관형형) ---------- */
+  {
+    id:"S5-01", stage:5,
+    hintKr:"시간 단서: 어제(완료)", hintVi:"Dấu hiệu: hôm qua (đã xong)",
+    sentence:"어제 { } 사람을 오늘 또 만났어요.",
+    choices:["만난","만나는","만날","만나던","만났던"],
+    answer:"만난",
+    fbKr:{rule:"동사 관형 -ㄴ: 과거 완료.", ex:"어제 <b>만난</b> 사람"},
+    fbVi:{rule:"-ㄴ: đã… (quá khứ hoàn tất).", ex:"어제 <b>만난</b> 사람"}
+  },
+  {
+    id:"S5-02", stage:5,
+    hintKr:"시간 단서: 지금(현재)", hintVi:"Dấu hiệu: bây giờ (hiện tại)",
+    sentence:"지금 { } 사람은 제 친구예요.",
+    choices:["만난","만나는","만날","만나던","만났던"],
+    answer:"만나는",
+    fbKr:{rule:"동사 관형 -는: 현재.", ex:"지금 <b>만나는</b> 사람"},
+    fbVi:{rule:"-는: hiện tại.", ex:"지금 <b>만나는</b> 사람"}
+  },
+  {
+    id:"S5-03", stage:5,
+    hintKr:"시간 단서: 내일(미래)", hintVi:"Dấu hiệu: ngày mai (tương lai)",
+    sentence:"내일 { } 사람에게 메일을 보낼 거예요.",
+    choices:["만난","만나는","만날","만나던","만났던"],
+    answer:"만날",
+    fbKr:{rule:"동사 관형 -ㄹ: 미래/예정.", ex:"내일 <b>만날</b> 사람"},
+    fbVi:{rule:"-ㄹ: tương lai.", ex:"내일 <b>만할</b> 사람".replace("만할","만날")}
+  },
+  {
+    id:"S5-04", stage:5,
+    hintKr:"회상(습관/진행)", hintVi:"Hồi tưởng (thói quen/đang)",
+    sentence:"예전에 자주 { } 카페가 있었어요.",
+    choices:["가던","갔던","가는","갈","간"],
+    answer:"가던",
+    fbKr:{rule:"-던: 과거 회상(자주/하던).", ex:"예전에 자주 <b>가던</b> 카페"},
+    fbVi:{rule:"-던: hồi tưởng (hay/đang).", ex:"자주 <b>가던</b> 카페"}
+  },
+  {
+    id:"S5-05", stage:5,
+    hintKr:"회상(완료)", hintVi:"Hồi tưởng (đã xong)",
+    sentence:"작년에 한 번 { } 곳을 올해 다시 갔어요.",
+    choices:["가던","갔던","가는","갈","간"],
+    answer:"갔던",
+    fbKr:{rule:"-았던: 과거 회상 + 완료.", ex:"한 번 <b>갔던</b> 곳"},
+    fbVi:{rule:"-았던: hồi tưởng + đã hoàn tất.", ex:"한 번 <b>갔던</b> 곳"}
+  },
+];
+
+/* =========================
+   모달(규칙/노트)
+========================= */
+const rulesModal = document.getElementById("rulesModal");
+const notesModal = document.getElementById("notesModal");
+document.getElementById("btnCloseRules").addEventListener("click", ()=>closeModal(rulesModal));
+document.getElementById("btnCloseNotes").addEventListener("click", ()=>closeModal(notesModal));
+rulesModal.addEventListener("click",(e)=>{ if(e.target===rulesModal) closeModal(rulesModal); });
+notesModal.addEventListener("click",(e)=>{ if(e.target===notesModal) closeModal(notesModal); });
+function openModal(modal){ modal.style.display="flex"; }
+function closeModal(modal){ modal.style.display="none"; }
+
+function openRulesModal(){
+  const body = document.getElementById("rulesBody");
+  body.innerHTML = `
+    <p class="mini">${uiLang==="kr"
+      ? "게임 진행 중 헷갈리면 여기서 규칙을 확인합니다."
+      : "Nếu thấy rối khi chơi, xem quy tắc ở đây."
+    }</p>
+    ${RULE_CARDS.map(rc=>`
+      <div class="ruleCard">
+        <div class="rt"><span>${esc(uiLang==="kr"?rc.titleKr:rc.titleVi)}</span></div>
+        <p class="rd">${esc(uiLang==="kr"?rc.bodyKr:rc.bodyVi).replaceAll("\n","<br>")}</p>
+      </div>
+    `).join("")}
+  `;
+  openModal(rulesModal);
+}
+
+function openNotesModal(){
+  const body = document.getElementById("notesBody");
+  const weak = topWeakTags(6);
+
+  const gradingLabel = uiLang==="kr" ? "채점 기준" : "Chấm điểm";
+  const lenientLabel = uiLang==="kr" ? "관대" : "Dễ";
+  const strictLabel  = uiLang==="kr" ? "엄격" : "Nghiêm";
+  const gradingDesc  = uiLang==="kr"
+    ? "관대: 학습용(중복 정답 허용) / 엄격: 시험용(대표 정답만)"
+    : "Dễ: học (cho nhiều đáp án) / Nghiêm: kiểm tra (chỉ đáp án đại diện)";
+
+  const weakHtml = weak.length
+    ? weak.map(t=>{
+        const s = state.tagStats[t];
+        const acc = s && s.seen ? Math.round((s.correct/s.seen)*100) : 0;
+        return `
+          <div class="ruleCard">
+            <div class="rt"><span>${esc(t)}</span><span class="badge">${uiLang==="kr"?"정답률":"Tỉ lệ đúng"} ${acc}%</span></div>
+            <p class="rd">${uiLang==="kr"
+              ? "이 유형에서 오답이 많습니다. 규칙 카드로 돌아가 핵심을 다시 확인하세요."
+              : "Bạn hay sai dạng này. Xem lại quy tắc."
+            }</p>
+          </div>
+        `;
+      }).join("")
+    : `<div class="ruleCard"><p class="rd">${uiLang==="kr" ? "약점 데이터가 아직 없습니다." : "Chưa có dữ liệu điểm yếu."}</p></div>`;
+
+  body.innerHTML = `
+    <div class="ruleCard">
+      <div class="rt">${gradingLabel}</div>
+      <div class="seg" style="margin-top:8px;">
+        <button type="button" id="gradeLenient" class="${state.gradingMode==="lenient" ? "active":""}">${lenientLabel}</button>
+        <button type="button" id="gradeStrict" class="${state.gradingMode==="strict" ? "active":""}">${strictLabel}</button>
+      </div>
+      <p class="rd" style="margin-top:8px;">${gradingDesc}</p>
+    </div>
+    <div class="hr"></div>
+    ${weakHtml}
+  `;
+
+  body.querySelector("#gradeLenient").addEventListener("click", ()=>{
+    state.gradingMode = "lenient";
+    saveState();
+    openNotesModal();
+  });
+  body.querySelector("#gradeStrict").addEventListener("click", ()=>{
+    state.gradingMode = "strict";
+    saveState();
+    openNotesModal();
+  });
+
+  openModal(notesModal);
+}
+
+/* =========================
+   KR/VI 토글
+========================= */
+const btnKR = document.getElementById("langKR");
+const btnVI = document.getElementById("langVI");
+btnKR.addEventListener("click", ()=>setLang("kr"));
+btnVI.addEventListener("click", ()=>setLang("vi"));
+function setLang(lang){
+  uiLang = lang;
+  btnKR.classList.toggle("active", uiLang==="kr");
+  btnVI.classList.toggle("active", uiLang==="vi");
+  render();
+}
+
+/* =========================
+   하단 바
+========================= */
+document.getElementById("btnHome").addEventListener("click", ()=>{ screen="home"; round=null; document.getElementById("combo").textContent="0"; render(); });
+document.getElementById("btnRules").addEventListener("click", openRulesModal);
+document.getElementById("btnNotes").addEventListener("click", openNotesModal);
+
+/* =========================
+   문제 선택(5문제 고정)
+========================= */
+function pickQuestions(stageId, count=5){
+  const pool = QUESTION_BANK.filter(q=>q.stage===stageId);
+
+  // 가중치: 약점 태그 반영(있으면)
+  const weights = pool.map(q=>{
+    const tags = q.tags || [];
+    const er = tags.length ? tags.reduce((s,t)=>s+tagErrorRate(t),0)/tags.length : 0.35;
+    return 0.2 + er;
+  });
+
+  const chosen = [];
+  const used = new Set();
+
+  const N = Math.min(count, pool.length);
+  for(let k=0;k<N;k++){
+    let total = 0;
+    for(let i=0;i<pool.length;i++) if(!used.has(i)) total += weights[i];
+    let r = Math.random() * total;
+    let pick = -1;
+    for(let i=0;i<pool.length;i++){
+      if(used.has(i)) continue;
+      r -= weights[i];
+      if(r <= 0){ pick=i; break; }
+    }
+    if(pick === -1){
+      for(let i=0;i<pool.length;i++){ if(!used.has(i)){ pick=i; break; } }
+    }
+    used.add(pick);
+    chosen.push(pool[pick]);
+  }
+  return chosen;
+}
+
+/* =========================
+   채점: answer 또는 answers 지원
+========================= */
+function getAcceptedAnswers(q){
+  if(isStrict()){
+    if(q.preferred) return [q.preferred];
+    if(q.answer) return [q.answer];
+    if(Array.isArray(q.answers) && q.answers.length) return [q.answers[0]];
+    return [];
+  }
+  if(Array.isArray(q.answers) && q.answers.length) return q.answers;
+  if(q.answer) return [q.answer];
+  return [];
+}
+
+/* =========================
+   화면/라운드 상태
+========================= */
+let screen = "home"; // home | play | stageSummary
+let round = null;
+
+const mainTitle = document.getElementById("mainTitle");
+const mainDesc  = document.getElementById("mainDesc");
+const mainBody  = document.getElementById("mainBody");
+const elCombo   = document.getElementById("combo");
+
+/* =========================
+   라운드 시작
+========================= */
+function startStage(stageId){
+  const stage = STAGES.find(s=>s.id===stageId);
+  const questions = pickQuestions(stageId, 5);
+
+  round = {
+    stageId,
+    stage,
+    questions,
+    idx: 0,
+    score: 0,
+    correct: 0,
+    wrong: 0,
+    combo: 0,
+    maxCombo: 0,
+    lastAnswered: null
+  };
+  elCombo.textContent = "0";
+  screen = "play";
+  render();
+}
+
+function answerChoice(choice){
+  const q = round.questions[round.idx];
+  const accepted = getAcceptedAnswers(q);
+  const ok = accepted.includes(choice);
+
+  if(ok){
+    round.correct++;
+    round.combo++;
+    round.maxCombo = Math.max(round.maxCombo, round.combo);
+    const gain = 10 + Math.min(10, round.combo);
+    round.score += gain;
+    state.xp += gain;
+  }else{
+    round.wrong++;
+    round.combo = 0;
+    round.score = Math.max(0, round.score - 2);
+  }
+
+  (q.tags || []).forEach(t=>updateTagStat(t, ok));
+  saveState();
+  updateHeader();
+  elCombo.textContent = String(round.combo);
+
+  round.lastAnswered = {choice, ok};
+
+  // 피드백 열기
+  const fb = document.getElementById("feedback");
+  const dot = document.getElementById("fbDot");
+  const label = document.getElementById("fbLabel");
+  const text = document.getElementById("fbText");
+
+  dot.className = "dot " + (ok ? "good" : "bad");
+  label.textContent = ok ? (uiLang==="kr" ? "정답" : "Đúng") : (uiLang==="kr" ? "오답" : "Sai");
+
+  const fbData = uiLang==="kr" ? (q.fbKr || {}) : (q.fbVi || {});
+  const preferred = q.preferred || q.answer || (q.answers ? q.answers[0] : (accepted[0] || ""));
+  const multi = (!isStrict() && Array.isArray(q.answers) && q.answers.length > 1);
+
+  const acceptedLine = multi
+    ? (uiLang==="kr"
+        ? `<div style="margin-top:8px;"><b>가능한 정답:</b> ${q.answers.map(a=>esc(a)).join(", ")}<br><b>권장:</b> ${esc(preferred)}</div>`
+        : `<div style="margin-top:8px;"><b>Có thể đúng:</b> ${q.answers.map(a=>esc(a)).join(", ")}<br><b>Gợi ý:</b> ${esc(preferred)}</div>`
+      )
+    : (uiLang==="kr"
+        ? `<div style="margin-top:8px;"><b>정답:</b> ${esc(preferred)}</div>`
+        : `<div style="margin-top:8px;"><b>Đáp án:</b> ${esc(preferred)}</div>`
+      );
+
+  const note = uiLang==="kr" ? q.noteKr : q.noteVi;
+  const noteHtml = note ? `<div style="margin-top:8px;"><b>${uiLang==="kr"?"참고":"Ghi chú"}:</b> ${note}</div>` : "";
+
+  text.innerHTML = `
+    <div><b>${uiLang==="kr" ? "내 선택" : "Bạn chọn"}:</b> ${esc(choice)}</div>
+    ${acceptedLine}
+    <div style="margin-top:10px;"><b>${uiLang==="kr" ? "설명" : "Giải thích"}:</b> ${esc(fbData.rule || "")}</div>
+    <div style="margin-top:8px;"><b>${uiLang==="kr" ? "예문" : "Ví dụ"}:</b> ${fbData.ex || ""}</div>
+    ${noteHtml}
+    <div style="margin-top:10px;"><span class="badge">${uiLang==="kr" ? "채점" : "Chấm"}: ${isStrict() ? (uiLang==="kr"?"엄격":"Nghiêm") : (uiLang==="kr"?"관대":"Dễ")}</span></div>
+  `;
+
+  fb.style.display = "block";
+  document.querySelectorAll(".choiceBtn").forEach(b=>b.disabled = true);
+}
+
+function nextQuestion(){
+  round.idx++;
+  if(round.idx >= round.questions.length){
+    endStage();
+    return;
+  }
+  render();
+}
+
+function endStage(){
+  const total = round.questions.length;
+  const acc = total ? (round.correct / total) : 0;
+  const accPct = Math.round(acc * 100);
+
+  // 75% 이상 -> 다음 스테이지 해금 (5문제면 4개 이상)
+  let unlockedNow = false;
+  if(acc >= 0.75 && round.stageId === state.unlockedStage && state.unlockedStage < STAGES.length){
+    state.unlockedStage++;
+    unlockedNow = true;
+    saveState();
+  }
+
+  round.result = {accPct, unlockedNow};
+  screen = "stageSummary";
+  render();
+}
+
+/* =========================
+   렌더 도우미
+========================= */
+function renderBlank(sentence){
+  const parts = sentence.split("{ }");
+  if(parts.length === 1) return esc(sentence);
+  return `${esc(parts[0])}<span style="display:inline-block;min-width:72px;border-bottom:2px solid rgba(233,238,255,.35);padding:0 6px;margin:0 4px;border-radius:4px;">&nbsp;</span>${esc(parts[1])}`;
+}
+
+/* =========================
+   화면 렌더
+========================= */
+function renderHome(){
+  mainTitle.textContent = uiLang==="kr" ? "스테이지 선택" : "Chọn màn";
+  mainDesc.textContent  = uiLang==="kr"
+    ? "스테이지는 연속 진행 가능. 홈은 언제든 돌아올 수 있음."
+    : "Có thể chơi liên tiếp qua các màn. Có thể về Home bất cứ lúc nào.";
+
+  mainBody.innerHTML = `
+    <div class="stageList">
+      ${STAGES.map(st=>{
+        const locked = st.id > state.unlockedStage;
+        const title = uiLang==="kr" ? st.titleKr : st.titleVi;
+        const desc  = uiLang==="kr" ? st.descKr  : st.descVi;
+        return `
+          <div class="stage">
+            <div class="meta">
+              <div class="t">
+                <span>${esc(title)}</span>
+                <span class="badge">${esc("Stage " + st.id)}</span>
+                <span class="badge ${locked ? "lock":""}">${locked ? (uiLang==="kr"?"잠김":"Khóa") : (uiLang==="kr"?"가능":"Mở")}</span>
+              </div>
+              <div class="d">${esc(desc)}</div>
+            </div>
+            <button class="btn ${locked ? "" : "primary"}" ${locked ? "disabled":""} data-start="${st.id}">
+              ${locked ? (uiLang==="kr"?"해금 필요":"Cần mở") : (uiLang==="kr"?"시작":"Bắt đầu")}
+            </button>
+          </div>
+        `;
+      }).join("")}
+    </div>
+    <div class="hr"></div>
+    <div class="mini">
+      ${uiLang==="kr"
+        ? "노트에서 채점 기준(관대/엄격)을 바꿀 수 있습니다."
+        : "Có thể đổi chế độ chấm (dễ/nghiêm) trong mục ‘노트’."
+      }
+    </div>
+  `;
+
+  mainBody.querySelectorAll("[data-start]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = Number(btn.getAttribute("data-start"));
+      if(id <= state.unlockedStage) startStage(id);
+    });
+  });
+}
+
+function renderPlay(){
+  const q = round.questions[round.idx];
+  const st = round.stage;
+  const title = uiLang==="kr" ? st.titleKr : st.titleVi;
+  const hint = uiLang==="kr" ? q.hintKr : q.hintVi;
+  const context = uiLang==="kr" ? q.contextKr : q.contextVi;
+
+  mainTitle.textContent = uiLang==="kr"
+    ? `진행 중 - ${title}`
+    : `Đang chơi - ${title}`;
+
+  mainDesc.textContent  = uiLang==="kr"
+    ? "선택 후 피드백을 확인하고 ‘다음’으로 진행."
+    : "Chọn đáp án, xem phản hồi, rồi bấm ‘Tiếp’.";
+
+  const progressPct = Math.round((round.idx / round.questions.length) * 100);
+
+  mainBody.innerHTML = `
+    <div class="hud">
+      <div class="progress"><div class="bar" style="width:${progressPct}%"></div></div>
+      <div class="pill"><small>${uiLang==="kr"?"문항":"Câu"}</small> <b>${round.idx+1}</b>/<b>${round.questions.length}</b></div>
+      <div class="pill"><small>${uiLang==="kr"?"점수":"Điểm"}</small> <b>${round.score}</b></div>
+      <div class="pill"><small>${uiLang==="kr"?"채점":"Chấm"}</small> <b>${isStrict() ? (uiLang==="kr"?"엄격":"Nghiêm") : (uiLang==="kr"?"관대":"Dễ")}</b></div>
+    </div>
+
+    <div class="qbox">
+      <div class="hint">
+        <span class="tag">${uiLang==="kr"?"힌트":"Gợi ý"}</span>
+        <span>${esc(hint || "")}</span>
+      </div>
+
+      ${context ? `<div class="contextLine"><b>${uiLang==="kr"?"문맥":"Ngữ cảnh"}:</b> ${esc(context)}</div>` : ``}
+
+      <div class="stem">${renderBlank(q.sentence)}</div>
+
+      <div class="choices">
+        ${q.choices.map((ch,i)=>`
+          <button class="choiceBtn" type="button" data-idx="${i}">${esc(ch)}</button>
+        `).join("")}
+      </div>
+
+      <div class="feedback" id="feedback">
+        <div class="fbTitle"><span id="fbDot" class="dot"></span><span id="fbLabel">${uiLang==="kr"?"피드백":"Phản hồi"}</span></div>
+        <div class="fbText" id="fbText"></div>
+        <div class="actions">
+          <button class="btn" type="button" id="btnExplain">${uiLang==="kr"?"규칙":"Quy tắc"}</button>
+          <button class="btn primary" type="button" id="btnNext">${uiLang==="kr"?"다음":"Tiếp"}</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  mainBody.querySelectorAll(".choiceBtn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const idx = Number(btn.getAttribute("data-idx"));
+      answerChoice(q.choices[idx]);
+    });
+  });
+  mainBody.querySelector("#btnExplain").addEventListener("click", openRulesModal);
+  mainBody.querySelector("#btnNext").addEventListener("click", nextQuestion);
+}
+
+function renderStageSummary(){
+  const st = round.stage;
+  const r = round.result;
+  const keyList = uiLang==="kr" ? st.keyKr : st.keyVi;
+
+  const nextId = Math.min(STAGES.length, st.id + 1);
+  const canGoNext = (st.id < STAGES.length) && (nextId <= state.unlockedStage);
+
+  mainTitle.textContent = uiLang==="kr" ? "스테이지 요약" : "Tóm tắt màn";
+  mainDesc.textContent  = uiLang==="kr"
+    ? "핵심 내용을 확인한 뒤 다음 스테이지로 진행."
+    : "Xem điểm chính rồi sang màn tiếp theo.";
+
+  mainBody.innerHTML = `
+    <div class="kpi">
+      <div class="box"><div class="n">${r.accPct}%</div><div class="l">${uiLang==="kr"?"정답률":"Tỉ lệ đúng"}</div></div>
+      <div class="box"><div class="n">${round.maxCombo}</div><div class="l">${uiLang==="kr"?"최대 콤보":"Combo cao nhất"}</div></div>
+      <div class="box"><div class="n">${round.score}</div><div class="l">${uiLang==="kr"?"이번 점수":"Điểm ván này"}</div></div>
+      <div class="box"><div class="n">${state.xp}</div><div class="l">${uiLang==="kr"?"누적 XP":"XP tổng"}</div></div>
+    </div>
+
+    <div class="hr"></div>
+
+    <div class="ruleCard">
+      <div class="rt">
+        <span>${esc(uiLang==="kr" ? st.titleKr : st.titleVi)}</span>
+        <span class="badge">${esc("Stage " + st.id)}</span>
+        ${r.unlockedNow ? `<span class="badge">${uiLang==="kr"?"해금 성공":"Mở khóa OK"}</span>` : ``}
+      </div>
+      <p class="rd">
+        ${uiLang==="kr"
+          ? `정답 <b>${round.correct}</b> / 오답 <b>${round.wrong}</b> (총 ${round.questions.length}문제)`
+          : `Đúng <b>${round.correct}</b> / Sai <b>${round.wrong}</b> (tổng ${round.questions.length} câu)`
+        }
+      </p>
+
+      <div class="hr"></div>
+
+      <p class="mini"><b>${uiLang==="kr" ? "핵심 정리" : "Điểm chính"}</b></p>
+      <ul class="mini">
+        ${keyList.map(x=>`<li>${esc(x)}</li>`).join("")}
+      </ul>
+
+      ${st.id===3 ? `
+        <div class="hr"></div>
+        <p class="mini">
+          <span class="badge">${uiLang==="kr"?"권장":"Gợi ý"}</span>
+          ${uiLang==="kr"
+            ? "-았/었- vs -았었- 혼동은 자연스러운 현상입니다. 학습용이면 ‘관대’ 채점을 권장합니다."
+            : "Việc rối giữa -았/었- và -았었- là bình thường. Nên dùng chế độ ‘dễ’ khi học."
+          }
+        </p>
+      ` : ``}
+    </div>
+
+    <div class="actions">
+      <button class="btn" type="button" id="btnRetry">${uiLang==="kr"?"이 스테이지 다시":"Chơi lại"}</button>
+      <button class="btn ${canGoNext ? "good" : ""}" type="button" id="btnNextStage" ${canGoNext ? "" : "disabled"}>
+        ${st.id < STAGES.length ? (uiLang==="kr"?"다음 스테이지":"Màn tiếp") : (uiLang==="kr"?"완료":"Hoàn tất")}
+      </button>
+    </div>
+
+    <div class="actions" style="margin-top:10px;">
+      <button class="btn primary" type="button" id="btnStageList">${uiLang==="kr"?"스테이지 목록":"Danh sách"}</button>
+      <button class="btn warn" type="button" id="btnRules2">${uiLang==="kr"?"규칙 보기":"Xem quy tắc"}</button>
+    </div>
+
+    ${(!canGoNext && st.id < STAGES.length) ? `
+      <div class="hr"></div>
+      <div class="mini">
+        ${uiLang==="kr"
+          ? "다음 스테이지가 잠겨 있습니다. (정답률 75% 이상 필요)"
+          : "Màn tiếp theo đang khóa. (Cần ≥ 75% đúng)"
+        }
+      </div>
+    ` : ``}
+  `;
+
+  mainBody.querySelector("#btnRetry").addEventListener("click", ()=>startStage(st.id));
+  mainBody.querySelector("#btnStageList").addEventListener("click", ()=>{
+    screen="home"; round=null; elCombo.textContent="0"; render();
+  });
+  mainBody.querySelector("#btnRules2").addEventListener("click", openRulesModal);
+
+  const btnNext = mainBody.querySelector("#btnNextStage");
+  btnNext.addEventListener("click", ()=>{
+    if(st.id >= STAGES.length){
+      screen="home"; round=null; elCombo.textContent="0"; render();
+      return;
+    }
+    if(nextId <= state.unlockedStage) startStage(nextId);
+  });
+}
+
+function render(){
+  updateHeader();
+
+  if(screen==="home") renderHome();
+  else if(screen==="play") renderPlay();
+  else renderStageSummary();
+}
+
+/* 초기 실행 */
+render();
+</script>
+</body>
+</html>

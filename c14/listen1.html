@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>듣기 스크립트 - 빈칸 채우기</title>
+    <!-- Tailwind CSS 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter 폰트 로드 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* 기본 폰트 설정 */
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+        }
+
+        /* 빈칸 스타일 */
+        .blank {
+            background-color: #fef9c3; /* yellow-100 */
+            color: #713f12; /* yellow-900 */
+            border: 1px solid #fde047; /* yellow-400 */
+            padding: 2px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background-color 0.2s;
+        }
+        .blank:hover {
+            background-color: #fef08a; /* yellow-200 */
+        }
+
+        /* 정답 맞춘 후 스타일 */
+        .correct {
+            background-color: #dcfce7; /* green-100 */
+            color: #14532d; /* green-900 */
+            border: 1px solid #86efac; /* green-300 */
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        /* 오답 선택 시 임시 스타일 (JS로 제어) */
+        .wrong-flash {
+            animation: flash-red 0.5s;
+        }
+        @keyframes flash-red {
+            0%, 100% { background-color: #fef9c3; border-color: #fde047; } /* yellow-100, yellow-400 */
+            50% { background-color: #fee2e2; border-color: #fca5a5; } /* red-100, red-300 */
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <!-- 옵션 선택 컨테이너 (상단 고정) -->
+    <div id="options-container" class="sticky top-0 z-10 bg-white shadow-lg p-6 rounded-b-xl transition-all hidden">
+        <h2 id="question-title" class="text-lg font-semibold text-gray-800 mb-4 text-center">"..."의 빈칸에 알맞은 말은?</h2>
+        <div class="flex flex-col sm:flex-row justify-center sm:space-x-4 space-y-2 sm:space-y-0">
+            <button class="option-btn bg-blue-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-600 transition-all transform hover:scale-105"></button>
+            <button class="option-btn bg-blue-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-600 transition-all transform hover:scale-105"></button>
+            <button class="option-btn bg-blue-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-600 transition-all transform hover:scale-105"></button>
+        </div>
+    </div>
+
+    <!-- 메인 컨텐츠 (스크립트) -->
+    <div class="max-w-3xl mx-auto p-4 sm:p-8">
+        <div class="bg-white shadow-2xl rounded-xl overflow-hidden">
+            <div class="p-6 sm:p-10">
+                <div class="flex justify-between items-center mb-6 pb-4 border-b">
+                    <h1 class="text-3xl font-bold text-gray-900">듣기 1</h1>
+                    <span class="text-sm font-medium text-gray-500">track 52 / p.130</span>
+                </div>
+
+                <!-- 스크립트 내용 -->
+                <div id="script-container" class="space-y-5 text-lg leading-relaxed">
+                    <p>
+                        <strong class="text-pink-600">여:</strong>
+                        고구마 좀 쪄 왔는데 드셔 보세요. 제가 직접
+                        <span class="blank" 
+                              data-answer="키운" 
+                              data-option1="사온" 
+                              data-option2="받은"
+                              data-question="제가 직접 [빈칸] 거예요.">
+                              [빈칸]
+                        </span>
+                        거예요.
+                    </p>
+                    <p>
+                        <strong class="text-blue-600">남:</strong>
+                        이걸 직접
+                        <span class="blank" 
+                              data-answer="키웠다고요?" 
+                              data-option1="만들었다고요?" 
+                              data-option2="가져왔다고요?"
+                              data-question="이걸 직접 [빈칸]?">
+                              [빈칸]
+                        </span>
+                    </p>
+                    <p>
+                        <strong class="text-pink-600">여:</strong>
+                        네, 얼마 전에 조카들하고 심었던 고구마인데 생각보다 잘
+                        <span class="blank" 
+                              data-answer="자랐어요." 
+                              data-option1="됐어요." 
+                              data-option2="익었어요."
+                              data-question="생각보다 잘 [빈칸]">
+                              [빈칸]
+                        </span>
+                    </p>
+                    <p>
+                        <strong class="text-blue-600">남:</strong>
+                        아파트에 산다고 들었는데 어디에서 고구마
+                        <span class="blank" 
+                              data-answer="농사" 
+                              data-option1="재배" 
+                              data-option2="공부"
+                              data-question="고구마 [빈칸]를 지었어요?">
+                              [빈칸]
+                        </span>
+                        를 지었어요?
+                    </p>
+                    <p>
+                        <strong class="text-pink-600">여:</strong>
+                        요즘 집 근처에서 하는 주말농장 프로그램에
+                        <span class="blank" 
+                              data-answer="참가하고" 
+                              data-option1="신청하고" 
+                              data-option2="운영하고"
+                              data-question="프로그램에 [빈칸] 있어요.">
+                              [빈칸]
+                        </span>
+                        있어요.
+                    </p>
+                    <p>
+                        <strong class="text-blue-600">남:</strong>
+                        주말농장이요? 그런
+                        <span class="blank" 
+                              data-answer="곳" 
+                              data-option1="프로그램" 
+                              data-option2="농장"
+                              data-question="그런 [빈칸]이 있어요?">
+                              [빈칸]
+                        </span>
+                        이 있어요?
+                    </p>
+                    <p>
+                        <strong class="text-pink-600">여:</strong>
+                        네, 은퇴 후에 시골에 가서 살 준비를 하는 사람들이나 저처럼 농사를 짓고 싶어 하는 도시 사람들이 농사도 배우고 직접
+                        <span class="blank" 
+                              data-answer="키워" 
+                              data-option1="심어" 
+                              data-option2="팔아"
+                              data-question="직접 [빈칸] 보기도 하는 곳이에요.">
+                              [빈칸]
+                        </span>
+                        보기도 하는 곳이에요.
+                    </p>
+                    <p>
+                        <strong class="text-blue-600">남:</strong>
+                        농사를 지어 보니까
+                        <span class="blank" 
+                              data-answer="어때요?" 
+                              data-option1="힘들어요?" 
+                              data-option2="재미있어요?"
+                              data-question="농사를 지어 보니까 [빈칸]?">
+                              [빈칸]
+                        </span>
+                    </p>
+                    <p>
+                        <strong class="text-pink-600">여:</strong>
+                        배우면 배울수록 더 어려운 것 같아요. 하지만 도시에 살면서 자연을 느낄 수 있어서 참
+                        <span class="blank" 
+                              data-answer="좋아요." 
+                              data-option1="편해요." 
+                              data-option2="신기해요."
+                              data-question="자연을 느낄 수 있어서 참 [빈칸]">
+                              [빈칸]
+                        </span>
+                        그동안 쌓였던 스트레스도 풀리는 것 같고요.
+                    </p>
+                    <p>
+                        <strong class="text-blue-600">남:</strong>
+                        그래요? 그런데 저처럼 도시에서만 살던 사람도 농사를 지을 수
+                        <span class="blank" 
+                              data-answer="있을까요?" 
+                              data-option1="좋아할까요?" 
+                              data-option2="배울까요?"
+                              data-question="농사를 지을 수 [빈칸]?">
+                              [빈칸]
+                        </span>
+                    </p>
+                    <p>
+                        <strong class="text-pink-600">여:</strong>
+                        물론이지요. 저하고 같이 주말농장을 하는 사람들도 대부분 농사 경험이 없어요. 처음에는 좀 힘들겠지만 직접 심은 채소가 크는 걸 보면서 보람을 느낄 수 있을
+                        <span class="blank" 
+                              data-answer="거예요." 
+                              data-option1="있어요." 
+                              data-option2="알아요."
+                              data-question="보람을 느낄 수 있을 [빈칸]">
+                              [빈칸]
+                        </span>
+                        이번 주말에도 주말농장에 가니까 시간 되면 놀러 오세요.
+                    </p>
+                    <p>
+                        <strong class="text-blue-600">남:</strong>
+                        그럼 그럴까요?
+                        <span class="blank" 
+                              data-answer="구경해" 
+                              data-option1="참가해" 
+                              data-option2="도와줘"
+                              data-question="[빈칸] 보고 싶은데요.">
+                              [빈칸]
+                        </span>
+                        보고 싶은데요.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const optionsContainer = document.getElementById('options-container');
+            const questionTitle = document.getElementById('question-title');
+            const optionButtons = document.querySelectorAll('.option-btn');
+            const blanks = document.querySelectorAll('.blank');
+            
+            let activeBlank = null;
+
+            // 배열 섞기 헬퍼 함수
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            // 빈칸 클릭 시 옵션 표시
+            function showOptions(blankEl) {
+                // 이미 정답을 맞춘 빈칸은 무시
+                if (blankEl.classList.contains('correct')) return;
+
+                activeBlank = blankEl;
+                
+                const answer = activeBlank.dataset.answer;
+                const option1 = activeBlank.dataset.option1;
+                const option2 = activeBlank.dataset.option2;
+                const question = activeBlank.dataset.question;
+
+                questionTitle.textContent = `"${question}"의 빈칸에 알맞은 말은?`;
+
+                const options = shuffleArray([answer, option1, option2]);
+
+                optionButtons.forEach((button, index) => {
+                    button.textContent = options[index];
+                    button.dataset.isCorrect = (options[index] === answer);
+                });
+
+                optionsContainer.classList.remove('hidden');
+                // 옵션 컨테이너로 스크롤
+                optionsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            // 옵션 버튼 클릭 시 정답 확인
+            function checkAnswer(buttonEl) {
+                if (!activeBlank) return;
+
+                const isCorrect = buttonEl.dataset.isCorrect === 'true';
+
+                if (isCorrect) {
+                    // 정답 처리
+                    activeBlank.textContent = activeBlank.dataset.answer;
+                    activeBlank.classList.remove('blank');
+                    activeBlank.classList.add('correct');
+                    // 더 이상 클릭되지 않도록 이벤트 리스너 제거 (혹은 pointer-events none)
+                    activeBlank.style.pointerEvents = 'none';
+                } else {
+                    // 오답 처리 (빨간색으로 반짝임)
+                    activeBlank.classList.add('wrong-flash');
+                    setTimeout(() => {
+                        activeBlank.classList.remove('wrong-flash');
+                    }, 500);
+                }
+
+                // 옵션 컨테이너 숨기기
+                optionsContainer.classList.add('hidden');
+                activeBlank = null;
+            }
+
+            // 모든 빈칸에 클릭 이벤트 리스너 추가
+            blanks.forEach(blank => {
+                blank.addEventListener('click', () => showOptions(blank));
+            });
+
+            // 모든 옵션 버튼에 클릭 이벤트 리스D스너 추가
+            optionButtons.forEach(button => {
+                button.addEventListener('click', () => checkAnswer(button));
+            });
+        });
+    </script>
+
+</body>
+</html>

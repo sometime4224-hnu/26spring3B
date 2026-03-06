@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 문법 배우기: -는 길에</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Noto Sans KR 폰트를 기본으로 사용하고, Inter는 영어 등에 사용 */
+        body {
+            font-family: 'Noto Sans KR', 'Inter', sans-serif;
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-gray-100 p-4 sm:p-8">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <div class="max-w-3xl mx-auto bg-white p-6 sm:p-10 rounded-2xl shadow-lg">
+        
+        <!-- 앱 제목 -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-blue-600">'-는 길에' 배우기</h1>
+            <p class="text-lg text-gray-600 mt-2">"On the way to..."</p>
+        </header>
+
+        <!-- 1. 쉬운 설명 -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-3">뜻 (Meaning) 💡</h2>
+            <p class="text-lg text-gray-700 leading-relaxed">
+                <span class="font-bold text-blue-500">'-는 길에'</span>는 [장소 A]에서 [장소 B]로 갈 때 사용해요.
+                <br>
+                <strong class="font-medium">이동하는 중간에</strong> 다른 행동을 할 때 말해요.
+            </p>
+        </section>
+
+        <!-- 2. 도식 (Diagram) -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">도식 (Diagram) 🗺️</h2>
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                <p class="text-lg text-center mb-4">"학교에 가는 길에 서점에 들렀어요."</p>
+                
+                <div class="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0 sm:space-x-4">
+                    <!-- 출발지 -->
+                    <div class="text-center">
+                        <div class="bg-blue-100 text-blue-800 text-lg font-medium p-4 rounded-lg shadow-md w-32">
+                            학교
+                            <span class="block text-sm">(School)</span>
+                        </div>
+                        <span class="text-gray-600 mt-1">출발 (Start)</span>
+                    </div>
+                    
+                    <!-- 화살표 (중간 행동) -->
+                    <div class="text-center">
+                        <span class="text-gray-500 text-3xl font-light">→</span>
+                        <div class="bg-green-100 text-green-800 text-lg font-medium p-4 rounded-lg shadow-md mt-2 w-32">
+                            서점
+                            <span class="block text-sm">(Bookstore)</span>
+                        </div>
+                        <span class="text-gray-600 mt-1">중간 행동 (Action)</span>
+                    </div>
+                    
+                    <!-- 화살표 -->
+                    <span class="text-gray-500 text-3xl font-light hidden sm:block">→</span>
+
+                    <!-- 도착지 -->
+                    <div class="text-center">
+                        <div class="bg-blue-100 text-blue-800 text-lg font-medium p-4 rounded-lg shadow-md w-32">
+                            집
+                            <span class="block text-sm">(Home)</span>
+                        </div>
+                        <span class="text-gray-600 mt-1">도착 (End)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. 어떻게 만들어요? (Usage) -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-3">어떻게 만들어요? (How to use) 🛠️</h2>
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                <p class="text-lg text-gray-700 mb-4">동사(Verb) 뒤에 <strong class="text-blue-500">'-는 길에'</strong>를 붙여요.</p>
+                <ul class="list-disc list-inside space-y-2 text-lg">
+                    <li>가다 (to go) + -는 길에 &nbsp; → &nbsp; <strong class="font-medium">가는 길에</strong></li>
+                    <li>오다 (to come) + -는 길에 &nbsp; → &nbsp; <strong class="font-medium">오는 길에</strong></li>
+                    <li>출근하다 (to go to work) + -는 길에 &nbsp; → &nbsp; <strong class="font-medium">출근하는 길에</strong></li>
+                    <li>퇴근하다 (to leave work) + -는 길에 &nbsp; → &nbsp; <strong class="font-medium">퇴근하는 길에</strong></li>
+                </ul>
+            </div>
+        </section>
+        
+        <!-- 4. 예문 (Examples) -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-3">예문 (Examples) ✏️</h2>
+            <ul class="space-y-3 text-lg">
+                <li class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+                    <span class="text-blue-600 font-medium">집에 오는 길에</span> 빵을 샀어요.
+                    <p class="text-sm text-gray-500">(On my way home, I bought bread.)</p>
+                </li>
+                <li class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+                    <span class="text-blue-600 font-medium">학교에 가는 길에</span> 친구를 만났어요.
+                    <p class="text-sm text-gray-500">(On my way to school, I met a friend.)</p>
+                </li>
+                <li class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+                    <span class="text-blue-600 font-medium">퇴근하는 길에</span> 우유를 살 거예요.
+                    <p class="text-sm text-gray-500">(I'm going to buy milk on my way home from work.)</p>
+                </li>
+            </ul>
+        </section>
+
+        <!-- 5. 번역 (Translation) -->
+        <section>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">번역 (Translation) 🌍</h2>
+            
+            <!-- 번역 버튼 -->
+            <div class="flex flex-wrap gap-2 mb-4">
+                <button id="btn-ko" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition">
+                    한국어
+                </button>
+                <button id="btn-vi" class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition">
+                    Tiếng Việt (베트남어)
+                </button>
+                <button id="btn-ja" class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition">
+                    日本語 (일본어)
+                </button>
+                <button id="btn-zh" class="bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-4 rounded-lg transition">
+                    中文 (중국어)
+                </button>
+            </div>
+
+            <!-- 번역 내용이 나오는 곳 -->
+            <div id="translation-output" class="bg-gray-100 border border-gray-200 rounded-lg p-6 min-h-[150px]">
+                <!-- 자바스크립트로 내용이 채워집니다 -->
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // 번역할 내용을 객체로 저장합니다.
+        const translations = {
+            ko: {
+                title: "'-는 길에' 설명",
+                desc: "'-는 길에'는 [장소 A]에서 [장소 B]로 갈 때 사용해요. 이동하는 중간에 다른 행동을 할 때 말해요.",
+                ex_title: "예문:",
+                ex1: "집에 오는 길에 빵을 샀어요.",
+                ex2: "학교에 가는 길에 친구를 만났어요."
+            },
+            vi: {
+                title: "Giải thích '-는 길에'",
+                desc: "'-는 길에' được sử dụng khi đi từ [Địa điểm A] đến [Địa điểm B]. Dùng khi bạn thực hiện một hành động khác giữa chừng khi đang di chuyển.",
+                ex_title: "Ví dụ:",
+                ex1: "집에 오는 길에 빵을 샀어요. (Trên đường về nhà, tôi đã mua bánh mì.)",
+                ex2: "학교에 가는 길에 친구를 만났어요. (Trên đường đến trường, tôi đã gặp bạn.)"
+            },
+            ja: {
+                title: "「-는 길에」の説明",
+                desc: "「-는 길에」は、[場所A]から[場所B]へ行くときに使います。移動の途中で、別の行動をするときに使います。",
+                ex_title: "例文:",
+                ex1: "집에 오는 길에 빵을 샀어요。 (家に帰る途中でパンを買いました。)",
+                ex2: "학교에 가는 길에 친구를 만났어요。 (学校へ行く途中で友達に会いました。)"
+            },
+            zh: {
+                title: "'-는 길에' 说明",
+                desc: "'-는 길에' 是指从 [地点A] 去 [地点B] 时使用。表示在移动的途中做了其他事情。",
+                ex_title: "例子:",
+                ex1: "집에 오는 길에 빵을 샀어요。 (在回家的路上买了面包。)",
+                ex2: "학교에 가는 길에 친구를 만났어요。 (在去学校的路上遇见了朋友。)"
+            }
+        };
+
+        const outputDiv = document.getElementById('translation-output');
+
+        // 번역 내용을 보여주는 함수
+        function showTranslation(lang) {
+            const t = translations[lang];
+            outputDiv.innerHTML = `
+                <h3 class="font-semibold text-xl mb-3">${t.title}</h3>
+                <p class="text-lg mb-4">${t.desc}</p>
+                <h4 class="font-semibold text-lg mb-2">${t.ex_title}</h4>
+                <ul class="list-disc list-inside space-y-1 text-lg">
+                    <li>${t.ex1}</li>
+                    <li>${t.ex2}</li>
+                </ul>
+            `;
+        }
+
+        // 버튼에 클릭 이벤트 추가
+        document.getElementById('btn-ko').addEventListener('click', () => showTranslation('ko'));
+        document.getElementById('btn-vi').addEventListener('click', () => showTranslation('vi'));
+        document.getElementById('btn-ja').addEventListener('click', () => showTranslation('ja'));
+        document.getElementById('btn-zh').addEventListener('click', () => showTranslation('zh'));
+
+        // 페이지가 처음 열릴 때 한국어 설명을 기본으로 보여줍니다.
+        showTranslation('ko');
+    </script>
+
+</body>
+</html>
+

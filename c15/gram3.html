@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>쉬운 한국어 문법</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter 폰트 (기본 폰트) -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap');
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+            /* 페이지 전환 시 부드러운 효과를 위해 */
+            #page-1, #page-2 {
+                transition: opacity 0.3s ease-in-out;
+            }
+        }
+        /* 활성 탭 스타일 */
+        .tab-active {
+            @apply bg-blue-600 text-white shadow-md;
+        }
+        /* 비활성 탭 스타일 */
+        .tab-inactive {
+            @apply bg-gray-200 text-gray-700 hover:bg-gray-300;
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-gray-100">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <!-- 전체 앱 컨테이너 -->
+    <div class="max-w-4xl mx-auto p-4 md:p-8 bg-white rounded-lg shadow-2xl my-8 min-h-screen">
+
+        <!-- 헤더: 제목 및 페이지 탭 -->
+        <header class="mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-blue-700 mb-6 pb-4 border-b-2 border-blue-100">
+                쉬운 한국어 문법 배우기 🇰🇷
+            </h1>
+            <nav class="flex space-x-2">
+                <button id="tab-1" class="tab-active py-2 px-4 md:px-6 rounded-t-lg font-semibold text-lg focus:outline-none" onclick="showPage('page-1')">
+                    1. 문법 배우기
+                </button>
+                <button id="tab-2" class="tab-inactive py-2 px-4 md:px-6 rounded-t-lg font-semibold text-lg focus:outline-none" onclick="showPage('page-2')">
+                    2. 연습 문제
+                </button>
+            </nav>
+        </header>
+
+        <!-- 페이지 콘텐츠 영역 -->
+        <main id="page-content">
+
+            <!-- ======================= -->
+            <!--        PAGE 1: 문법 설명 -->
+            <!-- ======================= -->
+            <div id="page-1">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6">문법 1: "-(으)면 안 되다" (금지)</h2>
+                
+                <!-- 문법 카드 1 -->
+                <div class="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg mb-8 shadow-md">
+                    <h3 class="text-2xl font-semibold text-red-800 mb-3">"-(으)면 안 되다"</h3>
+                    
+                    <p class="text-lg text-gray-800 mb-4">
+                        이 문법은 어떤 행동을 하면 안 될 때 사용해요. 
+                        <br>"이것은 나빠요", "이것은 금지예요"라는 의미입니다.
+                    </p>
+
+                    <!-- 사용 방법 -->
+                    <div class="bg-white p-4 rounded-md shadow-sm mb-4">
+                        <h4 class="font-semibold text-md text-gray-700 mb-2">어떻게 만드나요?</h4>
+                        <ul class="space-y-2">
+                            <li><span class="font-mono bg-red-100 px-2 py-1 rounded">먹다</span> (동사) + <span class="font-mono bg-red-100 px-2 py-1 rounded">으면 안 되다</span> → <span class="font-bold">먹으면 안 되다</span> (받침 O)</li>
+                            <li><span class="font-mono bg-red-100 px-2 py-1 rounded">가다</span> (동사) + <span class="font-mono bg-red-100 px-2 py-1 rounded">면 안 되다</span> → <span class="font-bold">가면 안 되다</span> (받침 X)</li>
+                            <li><span class="font-mono bg-red-100 px-2 py-1 rounded">놀다</span> (동사) + <span class="font-mono bg-red-100 px-2 py-1 rounded">면 안 되다</span> → <span class="font-bold">놀면 안 되다</span> (받침 'ㄹ')</li>
+                        </ul>
+                    </div>
+
+                    <!-- 예문 -->
+                    <div>
+                        <h4 class="font-semibold text-md text-gray-700 mb-2">예를 들어볼게요</h4>
+                        <ul class="list-disc list-inside ml-4 space-y-2 text-gray-700 text-lg">
+                            <li>수업 시간에 <span class="font-semibold text-red-700">자면 안 돼요.</span></li>
+                            <li>도서관에서 크게 <span class="font-semibold text-red-700">말하면 안 돼요.</span></li>
+                            <li>쓰레기를 아무데나 <span class="font-semibold text-red-700">버리면 안 돼요.</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6">문법 2: "-지 않으면 안 되다" (필수)</h2>
+
+                <!-- 문법 카드 2 -->
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-lg mb-8 shadow-md">
+                    <h3 class="text-2xl font-semibold text-blue-800 mb-3">"-지 않으면 안 되다"</h3>
+                    
+                    <p class="text-lg text-gray-800 mb-4">
+                        이 문법은 꼭 해야 하는 일에 사용해요. 
+                        <br>"이것을 꼭 해야 해요"라는 의미입니다. <strong>"-아/어야 해요"와 의미가 비슷합니다.</strong>
+                    </p>
+
+                    <!-- 사용 방법 -->
+                    <div class="bg-white p-4 rounded-md shadow-sm mb-4">
+                        <h4 class="font-semibold text-md text-gray-700 mb-2">어떻게 만드나요?</h4>
+                        <ul class="space-y-2">
+                            <li>동사/형용사 기본형 + <span class="font-mono bg-blue-100 px-2 py-1 rounded">지 않으면 안 되다</span></li>
+                            <li><span class="font-mono bg-blue-100 px-2 py-1 rounded">먹다</span> → <span class="font-bold">먹지 않으면 안 되다</span></li>
+                            <li><span class="font-mono bg-blue-100 px-2 py-1 rounded">가다</span> → <span class="font-bold">가지 않으면 안 되다</span></li>
+                            <li><span class="font-mono bg-blue-100 px-2 py-1 rounded">예쁘다</span> → <span class="font-bold">예쁘지 않으면 안 되다</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- 예문 -->
+                    <div>
+                        <h4 class="font-semibold text-md text-gray-700 mb-2">예를 들어볼게요</h4>
+                        <ul class="list-disc list-inside ml-4 space-y-2 text-gray-700 text-lg">
+                            <li>내일 시험이 있어서 오늘 <span class="font-semibold text-blue-700">공부하지 않으면 안 돼요.</span></li>
+                            <li>자는 침대가 <span class="font-semibold text-blue-700">편하지 않으면 안 돼요.</span> (이미지 예문)</li>
+                            <li>수강 신청은 27일까지 <span class="font-semibold text-blue-700">하지 않으면 안 돼요.</span> (이미지 예문)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 번역 섹션 -->
+                <div class="mt-10 bg-gray-50 p-4 rounded-md border border-gray-200">
+                    <h4 class="font-semibold text-gray-700 mb-3">다른 언어로 번역하기</h4>
+                    <p class="text-sm text-gray-600 mb-2">
+                        이 문법의 설명은 다른 언어로도 번역될 수 있습니다.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-yellow-200 text-yellow-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">🇻🇳 Tiếng Việt (베트남어) - [번역된 설명]</span>
+                        <span class="bg-red-200 text-red-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">🇨🇳 中文 (중국어) - [翻译说明]</span>
+                        <span class="bg-purple-200 text-purple-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">🇯🇵 日本語 (일본어) - [翻訳された説明]</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ======================= -->
+            <!--      PAGE 2: 연습 문제     -->
+            <!-- ======================= -->
+            <div id="page-2" class="hidden">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6">연습 문제: 문장 바꾸기</h2>
+                <p class="text-lg text-gray-700 mb-8 bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded-md">
+                    <strong>지시:</strong> 다음 <strong>"-아/어야 해요/돼요"</strong> 문장을 <strong>"-지 않으면 안 되다"</strong>를 사용해서 바꿔 보세요.
+                </p>
+
+                <div class="space-y-5">
+                    
+                    <!-- 연습 문제 템플릿 -->
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <p class="text-lg font-medium text-gray-900 mb-3">1. 숙제를 해야 해요.</p>
+                        <button class="py-1 px-3 bg-green-500 text-white rounded-md text-sm hover:bg-green-600 focus:outline-none" onclick="toggleAnswer(this)">정답 보기</button>
+                        <div class="hidden bg-green-100 text-green-800 p-3 rounded-md mt-3 font-semibold">
+                            숙제를 하지 않으면 안 돼요.
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <p class="text-lg font-medium text-gray-900 mb-3">2. 일찍 일어나야 해요.</p>
+                        <button class="py-1 px-3 bg-green-500 text-white rounded-md text-sm hover:bg-green-600 focus:outline-none" onclick="toggleAnswer(this)">정답 보기</button>
+                        <div class="hidden bg-green-100 text-green-800 p-3 rounded-md mt-3 font-semibold">
+                            일찍 일어나지 않으면 안 돼요.
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <p class="text-lg font-medium text-gray-900 mb-3">3. 밥을 먹어야 해요.</p>
+                        <button class="py-1 px-3 bg-green-500 text-white rounded-md text-sm hover:bg-green-600 focus:outline-none" onclick="toggleAnswer(this)">정답 보기</button>
+                        <div class="hidden bg-green-100 text-green-800 p-3 rounded-md mt-3 font-semibold">
+                            밥을 먹지 않으면 안 돼요.
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <p class="text-lg font-medium text-gray-900 mb-3">4. 한국어를 공부해야 해요.</p>
+                        <button class="py-1 px-3 bg-green-500 text-white rounded-md text-sm hover:bg-green-600 focus:outline-none" onclick="toggleAnswer(this)">정답 보기</button>
+                        <div class="hidden bg-green-100 text-green-800 p-3 rounded-md mt-3 font-semibold">
+                            한국어를 공부하지 않으면 안 돼요.
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <p class="text-lg font-medium text-gray-900 mb-3">5. 돈을 아껴 써야 해요. (이미지 참고)</p>
+                        <button class="py-1 px-3 bg-green-500 text-white rounded-md text-sm hover:bg-green-600 focus:outline-none" onclick="toggleAnswer(this)">정답 보기</button>
+                        <div class="hidden bg-green-100 text-green-800 p-3 rounded-md mt-3 font-semibold">
+                            돈을 아껴 쓰지 않으면 안 돼요.
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <p class="text-lg font-medium text-gray-900 mb-3">6. 친구에게 전화해야 해요.</p>
+                        <button class="py-1 px-3 bg-green-500 text-white rounded-md text-sm hover:bg-green-600 focus:outline-none" onclick="toggleAnswer(this)">정답 보기</button>
+                        <div class="hidden bg-green-100 text-green-800 p-3 rounded-md mt-3 font-semibold">
+                            친구에게 전화하지 않으면 안 돼요.
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <p class="text-lg font-medium text-gray-900 mb-3">7. 표를 예매해야 돼요.</p>
+                        <button class="py-1 px-3 bg-green-500 text-white rounded-md text-sm hover:bg-green-600 focus:outline-none" onclick="toggleAnswer(this)">정답 보기</button>
+                        <div class="hidden bg-green-100 text-green-800 p-3 rounded-md mt-3 font-semibold">
+                            표를 예매하지 않으면 안 돼요.
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <p class="text-lg font-medium text-gray-900 mb-3">8. 책을 읽어야 돼요.</p>
+                        <button class="py-1 px-3 bg-green-500 text-white rounded-md text-sm hover:bg-green-600 focus:outline-none" onclick="toggleAnswer(this)">정답 보기</button>
+                        <div class="hidden bg-green-100 text-green-800 p-3 rounded-md mt-3 font-semibold">
+                            책을 읽지 않으면 안 돼요.
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <p class="text-lg font-medium text-gray-900 mb-3">9. 열심히 운동해야 돼요.</p>
+                        <button class="py-1 px-3 bg-green-500 text-white rounded-md text-sm hover:bg-green-600 focus:outline-none" onclick="toggleAnswer(this)">정답 보기</button>
+                        <div class="hidden bg-green-100 text-green-800 p-3 rounded-md mt-3 font-semibold">
+                            열심히 운동하지 않으면 안 돼요.
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <p class="text-lg font-medium text-gray-900 mb-3">10. 방을 청소해야 해요.</p>
+                        <button class="py-1 px-3 bg-green-500 text-white rounded-md text-sm hover:bg-green-600 focus:outline-none" onclick="toggleAnswer(this)">정답 보기</button>
+                        <div class="hidden bg-green-100 text-green-800 p-3 rounded-md mt-3 font-semibold">
+                            방을 청소하지 않으면 안 돼요.
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <p class="text-lg font-medium text-gray-900 mb-3">11. 부모님께 선물을 보내야 해요.</p>
+                        <button class="py-1 px-3 bg-green-500 text-white rounded-md text-sm hover:bg-green-600 focus:outline-none" onclick="toggleAnswer(this)">정답 보기</button>
+                        <div class="hidden bg-green-100 text-green-800 p-3 rounded-md mt-3 font-semibold">
+                            부모님께 선물을 보내지 않으면 안 돼요.
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        const page1 = document.getElementById('page-1');
+        const page2 = document.getElementById('page-2');
+        const tab1 = document.getElementById('tab-1');
+        const tab2 = document.getElementById('tab-2');
+
+        // 페이지를 보여주는 함수
+        function showPage(pageId) {
+            // 모든 페이지 숨기기
+            page1.classList.add('hidden');
+            page1.style.opacity = 0;
+            page2.classList.add('hidden');
+            page2.style.opacity = 0;
+
+            // 모든 탭 비활성 스타일로 변경
+            tab1.classList.remove('tab-active');
+            tab1.classList.add('tab-inactive');
+            tab2.classList.remove('tab-active');
+            tab2.classList.add('tab-inactive');
+
+            // 선택된 페이지 보여주기
+            let selectedPage;
+            let selectedTab;
+
+            if (pageId === 'page-1') {
+                selectedPage = page1;
+                selectedTab = tab1;
+            } else {
+                selectedPage = page2;
+                selectedTab = tab2;
+            }
+
+            selectedPage.classList.remove('hidden');
+            // 부드러운 fade-in 효과
+            setTimeout(() => {
+                selectedPage.style.opacity = 1;
+            }, 50); // 아주 잠깐의 딜레이 후 opacity 변경
+
+            // 선택된 탭 활성 스타일로 변경
+            selectedTab.classList.remove('tab-inactive');
+            selectedTab.classList.add('tab-active');
+        }
+
+        // 정답 보이기/숨기기 함수
+        function toggleAnswer(button) {
+            // 버튼 다음의 정답 div 요소를 찾습니다.
+            const answerDiv = button.nextElementSibling;
+            
+            // 'hidden' 클래스를 토글합니다.
+            answerDiv.classList.toggle('hidden');
+
+            // 버튼 텍스트를 변경합니다.
+            if (answerDiv.classList.contains('hidden')) {
+                button.textContent = '정답 보기';
+            } else {
+                button.textContent = '정답 닫기';
+            }
+        }
+
+        // 페이지 로드 시 1번 페이지를 기본으로 보여줌
+        document.addEventListener('DOMContentLoaded', () => {
+            showPage('page-1');
+        });
+    </script>
+
+</body>
+</html>
+

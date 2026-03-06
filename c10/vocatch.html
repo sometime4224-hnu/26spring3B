@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>교사용 어휘 퀴즈 (갤럭시탭 S7+ 최적화)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Noto+Sans:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', 'Noto Sans', sans-serif;
+            overflow: hidden; /* 스크롤 방지 */
+            touch-action: manipulation; /* 터치 지연 제거 */
+            user-select: none; /* 텍스트 선택 방지 */
+        }
+        /* 학생용 화면 (왼쪽) */
+        .student-screen {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: inset -10px 0 20px rgba(0,0,0,0.1);
+        }
+        /* 정답 텍스트 공개 애니메이션 (유지) */
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            80% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .answer-reveal {
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* 정답 아이콘 등장 후 소멸 애니메이션 (신규) */
+        @keyframes popAndVanish {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            15% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            30% { transform: translate(-50%, -50%) scale(1.0); opacity: 1; }
+            80% { transform: translate(-50%, -50%) scale(1.0); opacity: 0.8; }
+            100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+        }
+        .icon-vanish {
+            animation: popAndVanish 1.5s ease-in-out forwards;
+        }
+
+        /* 오답 진동 효과 */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        .shake {
+            animation: shake 0.3s ease-in-out;
+        }
+        /* 버튼 스타일 */
+        .choice-btn {
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* 가운데 정렬 */
+            text-align: center;
+            word-break: keep-all;
+            line-height: 1.2;
+        }
+        .choice-btn:active {
+            transform: scale(0.98);
+        }
+        .choice-btn.correct {
+            background-color: #10b981 !important;
+            color: white !important;
+            border-color: #10b981 !important;
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+        }
+        .choice-btn.wrong {
+            background-color: #ef4444 !important;
+            color: white !important;
+            border-color: #ef4444 !important;
+            opacity: 0.5;
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="flex w-screen h-screen bg-gray-100">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <!-- 왼쪽: 문제 화면 (65%) -->
+    <div id="student-view" class="student-screen w-[65%] h-full flex flex-col items-center p-6 relative text-center border-r-4 border-white/20">
+        
+        <!-- 진행 상황 바 (상단) -->
+        <div class="absolute top-0 left-0 w-full h-3 bg-black/10 z-10">
+            <div id="progress-bar" class="h-full bg-yellow-400 transition-all duration-500 shadow-[0_0_10px_rgba(250,204,21,0.7)]" style="width: 0%"></div>
+        </div>
+
+        <!-- 구술 유도 문구 (좌상단 영역 확보) -->
+        <!-- absolute 제거 후 flex flow 내에 배치하여 겹침 방지 -->
+        <div class="w-full flex justify-start mb-4 mt-2 z-20">
+            <div onclick="toggleInstruction()" class="flex items-center gap-4 bg-black/25 text-white px-8 py-4 rounded-full border-2 border-white/20 backdrop-blur-md shadow-xl cursor-pointer hover:bg-black/30 transition-all active:scale-95 select-none" title="터치하여 번역 보기">
+                <i class="ph-fill ph-chat-teardrop-dots text-5xl text-yellow-300 animate-pulse"></i>
+                <span id="instruction-text" class="text-3xl font-black tracking-wide drop-shadow-md">한국어로 말해보세요!</span>
+            </div>
+        </div>
+
+        <!-- 문제 (베트남어) -->
+        <div class="flex-1 flex items-end justify-center pb-8 w-full z-0">
+            <h1 id="question-text" class="text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black text-white leading-tight break-keep drop-shadow-lg tracking-tight">
+                <!-- 베트남어 문제 -->
+            </h1>
+        </div>
+
+        <!-- 구분선 -->
+        <div class="w-48 h-2 bg-white/30 rounded-full my-6 shrink-0"></div>
+
+        <!-- 정답 공개 영역 (한국어) -->
+        <div class="flex-1 flex items-start justify-center pt-2 w-full h-40 z-0">
+            <div id="answer-display" class="hidden text-6xl md:text-7xl font-black text-yellow-300 drop-shadow-md bg-black/25 px-10 py-6 rounded-3xl backdrop-blur-md border-2 border-white/20 transform scale-110">
+                <!-- 정답 한국어 -->
+            </div>
+            <div id="thinking-placeholder" class="text-white/60 text-4xl animate-pulse font-bold">
+                학생들이 생각 중...
+            </div>
+        </div>
+
+        <!-- 정답 아이콘 (애니메이션 변경됨: 등장 후 소멸) -->
+        <div id="correct-icon" class="hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-yellow-300 pointer-events-none z-30">
+            <i class="ph-fill ph-check-circle text-[25rem] drop-shadow-2xl"></i>
+        </div>
+    </div>
+
+    <!-- 오른쪽: 보기 패널 (35%) -->
+    <div class="w-[35%] h-full bg-white flex flex-col relative z-10 shadow-2xl">
+        
+        <!-- 상단: 컨트롤 -->
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200 flex justify-between items-center shrink-0 h-20">
+            <div class="flex items-center gap-3">
+                <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">QUIZ</span>
+                <div class="text-3xl font-black text-indigo-900 font-mono">
+                    <span id="current-index" class="text-indigo-600">1</span><span class="text-gray-300 mx-1">/</span><span id="total-count" class="text-gray-400">19</span>
+                </div>
+            </div>
+            <button onclick="resetGame()" class="p-3 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors" title="리셋 (처음부터)">
+                <i class="ph-bold ph-arrow-counter-clockwise text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- 중단: 보기 버튼들 (3개) -->
+        <div id="options-container" class="flex-1 p-4 flex flex-col gap-4 justify-center bg-gray-100">
+            <!-- 자바스크립트로 생성됨 -->
+        </div>
+
+        <!-- 하단: 다음 문제 버튼 -->
+        <div class="p-4 bg-white border-t border-gray-200 shrink-0 h-24 flex items-center">
+            <button id="next-btn" onclick="nextQuestion()" class="w-full h-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-2xl font-bold text-3xl shadow-lg transition-all transform active:scale-[0.98] flex items-center justify-center gap-3 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none">
+                <span>다음</span> <i class="ph-bold ph-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 데이터 (베트남어 - 한국어)
+        const vocabularyData = [
+            { korean: "고백하다", foreign: "tỏ tình" }, 
+            { korean: "가슴이 두근거리다", foreign: "tim đập rộn ràng (hồi hộp)" },
+            { korean: "나란히 앉다", foreign: "ngồi cạnh nhau" }, 
+            { korean: "마음씨가 착하다", foreign: "tốt bụng / hiền lành" }, 
+            { korean: "말(생각)이 잘 통하다", foreign: "nói chuyện hợp nhau" }, 
+            { korean: "매력이 있다", foreign: "có sức hút / quyến rũ" }, 
+            { korean: "사랑에 빠지다", foreign: "phải lòng / rơi vào lưới tình" }, 
+            { korean: "사귀다", foreign: "hẹn hò / yêu nhau" }, 
+            { korean: "성격(마음)이 잘 맞다", foreign: "hợp tính cách" }, 
+            { korean: "선보다", foreign: "đi xem mắt (để kết hôn)" }, 
+            { korean: "소개팅하다", foreign: "đi xem mắt (qua giới thiệu)" }, 
+            { korean: "손을 잡다", foreign: "nắm tay" }, 
+            { korean: "어깨에 기대다", foreign: "tựa vào vai" }, 
+            { korean: "얼굴이 빨개지다", foreign: "đỏ mặt" }, 
+            { korean: "연애하다", foreign: "hẹn hò / yêu đương" }, 
+            { korean: "인상이 좋다", foreign: "có ấn tượng tốt" }, 
+            { korean: "조건이 맞다", foreign: "hợp điều kiện" }, 
+            { korean: "첫눈에 반하다", foreign: "yêu từ cái nhìn đầu tiên" }, 
+            { korean: "팔짱을 끼다", foreign: "khoác tay" }
+        ];
+
+        let quizQueue = [];
+        let currentQuestion = null;
+        let currentIndex = 0;
+        let isAnswerRevealed = false;
+        
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            if (type === 'correct') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+                oscillator.frequency.exponentialRampToValueAtTime(783.99, audioCtx.currentTime + 0.1); 
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'wrong') {
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.2);
+            }
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function initGame() {
+            quizQueue = shuffle([...vocabularyData]);
+            currentIndex = 0;
+            document.getElementById('total-count').textContent = quizQueue.length;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            // 종료 조건 삭제됨: 무한 루프 방식
+            isAnswerRevealed = false;
+            currentQuestion = quizQueue[currentIndex];
+            
+            // 인덱스 및 프로그레스 업데이트
+            document.getElementById('current-index').textContent = currentIndex + 1;
+            document.getElementById('progress-bar').style.width = `${((currentIndex) / quizQueue.length) * 100}%`;
+            
+            const qText = document.getElementById('question-text');
+            qText.textContent = currentQuestion.foreign;
+            qText.classList.remove('answer-reveal');
+
+            document.getElementById('answer-display').classList.add('hidden');
+            document.getElementById('thinking-placeholder').classList.remove('hidden');
+            
+            // 정답 아이콘 초기화
+            const correctIcon = document.getElementById('correct-icon');
+            correctIcon.classList.add('hidden');
+            correctIcon.classList.remove('icon-vanish');
+            
+            // 다음 버튼 비활성화
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.disabled = true;
+            nextBtn.classList.add('bg-gray-300', 'text-gray-500');
+            nextBtn.classList.remove('bg-indigo-600', 'text-white', 'hover:bg-indigo-700', 'active:bg-indigo-800');
+
+            const options = generateOptions(currentQuestion);
+            renderOptions(options);
+        }
+
+        function nextQuestion() {
+            currentIndex++;
+            
+            // 19개 문제를 모두 풀었으면 다시 섞어서 1번으로 리셋 (무한 반복)
+            if (currentIndex >= quizQueue.length) {
+                quizQueue = shuffle([...vocabularyData]);
+                currentIndex = 0;
+                
+                // 리셋 시각적 피드백 (선택사항: 프로그레스바가 0으로 가는 것만으로도 충분함)
+            }
+            
+            loadQuestion();
+        }
+
+        function generateOptions(correctItem) {
+            const others = vocabularyData.filter(item => item.korean !== correctItem.korean);
+            const distractors = shuffle(others).slice(0, 2);
+            return shuffle([correctItem, ...distractors]);
+        }
+
+        function renderOptions(options) {
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            options.forEach((opt) => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn flex-1 w-full bg-white border-[3px] border-gray-200 rounded-3xl text-3xl xl:text-4xl font-black text-gray-700 shadow-sm hover:border-indigo-400 hover:bg-indigo-50 hover:text-indigo-900 hover:shadow-md relative overflow-hidden group';
+                
+                // 단순 텍스트만 표시
+                btn.innerHTML = `<span class="relative z-10 px-4">${opt.korean}</span>`;
+                
+                btn.dataset.isCorrect = (opt.korean === currentQuestion.korean);
+                btn.onclick = () => checkAnswer(btn, opt);
+                container.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(btn, selectedOpt) {
+            if (isAnswerRevealed) return;
+
+            if (btn.dataset.isCorrect === 'true') {
+                isAnswerRevealed = true;
+                
+                btn.classList.remove('border-gray-200', 'text-gray-700', 'hover:bg-indigo-50');
+                btn.classList.add('correct');
+                
+                const allBtns = document.querySelectorAll('.choice-btn');
+                allBtns.forEach(b => {
+                    b.disabled = true;
+                    if (b !== btn) {
+                        b.classList.add('opacity-30', 'scale-95');
+                        b.style.filter = 'grayscale(100%)';
+                    }
+                });
+
+                const answerDisplay = document.getElementById('answer-display');
+                answerDisplay.textContent = currentQuestion.korean;
+                answerDisplay.classList.remove('hidden');
+                answerDisplay.classList.add('answer-reveal');
+                
+                document.getElementById('thinking-placeholder').classList.add('hidden');
+                
+                // 정답 아이콘 등장 후 소멸
+                const correctIcon = document.getElementById('correct-icon');
+                correctIcon.classList.remove('hidden');
+                void correctIcon.offsetWidth; 
+                correctIcon.classList.add('icon-vanish');
+                
+                playSound('correct');
+
+                const nextBtn = document.getElementById('next-btn');
+                nextBtn.disabled = false;
+                nextBtn.classList.remove('bg-gray-300', 'text-gray-500');
+                nextBtn.classList.add('bg-indigo-600', 'text-white', 'hover:bg-indigo-700', 'active:bg-indigo-800', 'animate-pulse');
+                setTimeout(() => nextBtn.classList.remove('animate-pulse'), 1000);
+
+            } else {
+                btn.classList.add('wrong', 'shake');
+                playSound('wrong');
+                setTimeout(() => btn.classList.remove('shake'), 500);
+            }
+        }
+
+        function resetGame() {
+            if(confirm('퀴즈 순서를 섞고 1번부터 다시 시작할까요?')) {
+                initGame();
+            }
+        }
+
+        // 구술 유도 문구 언어 토글 함수
+        function toggleInstruction() {
+            const textElement = document.getElementById('instruction-text');
+            // 현재 텍스트가 한국어면 베트남어로, 아니면 다시 한국어로 변경
+            if (textElement.textContent.includes("한국어")) {
+                textElement.textContent = "Hãy nói bằng tiếng Hàn!";
+            } else {
+                textElement.textContent = "한국어로 말해보세요!";
+            }
+        }
+
+        initGame();
+    </script>
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 어휘 퀴즈 - 사진 보고 단어 맞추기</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #fdf2f8; /* Soft pink background */
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body>
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Icons Components (Inline SVG)
+        const Heart = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+        );
+        const RefreshCw = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+        );
+        const Star = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        );
+
+        // Data with Real Unsplash Images
+        const vocabularyData = [
+            // Image 1: Dating Actions
+            { id: 1, term: "소개팅하다", meaning: "Go on a blind date", category: "만남", imageUrl: "https://images.unsplash.com/photo-1594191942004-984423788755?auto=format&fit=crop&w=800&q=80" },
+            { id: 2, term: "첫눈에 반하다", meaning: "Fall in love at first sight", category: "만남", imageUrl: "https://images.unsplash.com/photo-1520696781216-92f703e22606?auto=format&fit=crop&w=800&q=80" },
+            { id: 3, term: "사귀다", meaning: "Date / Go out with", category: "연애", imageUrl: "https://images.unsplash.com/photo-1529156069898-1d78b8a8bd5d?auto=format&fit=crop&w=800&q=80" },
+            { id: 4, term: "사랑에 빠지다", meaning: "Fall in love", category: "연애", imageUrl: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&q=80" },
+            { id: 5, term: "고백하다", meaning: "Confess one's love", category: "연애", imageUrl: "https://images.unsplash.com/photo-1585647505295-888497645199?auto=format&fit=crop&w=800&q=80" },
+            { id: 6, term: "연애하다", meaning: "Have a romantic relationship", category: "연애", imageUrl: "https://images.unsplash.com/photo-1523307730650-594bc29c9d43?auto=format&fit=crop&w=800&q=80" },
+            { id: 7, term: "선보다", meaning: "Have a matchmaking meeting", category: "만남", imageUrl: "https://images.unsplash.com/photo-1551505378-c529f77f52f8?auto=format&fit=crop&w=800&q=80" },
+            { id: 8, term: "청혼하다", meaning: "Propose marriage", category: "결혼", imageUrl: "https://images.unsplash.com/photo-1513277334460-1729729d3c5f?auto=format&fit=crop&w=800&q=80" },
+            
+            // Image 1: Ideal Types (Abstract concepts visualized)
+            { id: 9, term: "성격이 잘 맞다", meaning: "Personalities match well", category: "이상형", imageUrl: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=800&q=80" },
+            { id: 10, term: "말이 잘 통하다", meaning: "Communicate well", category: "이상형", imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80" },
+            { id: 11, term: "조건이 맞다", meaning: "Meet the conditions", category: "이상형", imageUrl: "https://images.unsplash.com/photo-1586281380349-45906c3006c8?auto=format&fit=crop&w=800&q=80" },
+            { id: 12, term: "인상이 좋다", meaning: "Have a good impression", category: "이상형", imageUrl: "https://images.unsplash.com/photo-1554151228-14d9def656ec?auto=format&fit=crop&w=800&q=80" },
+            { id: 13, term: "매력이 있다", meaning: "Be charming/attractive", category: "이상형", imageUrl: "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=80" },
+            { id: 14, term: "마음씨가 착하다", meaning: "Have a kind heart", category: "이상형", imageUrl: "https://images.unsplash.com/photo-1512356508933-289b53365922?auto=format&fit=crop&w=800&q=80" },
+
+            // Image 2: Physical Touch & Feelings
+            { id: 15, term: "나란히 앉다", meaning: "Sit side by side", category: "스킨십", imageUrl: "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=800&q=80" },
+            { id: 16, term: "얼굴이 빨개지다", meaning: "Face turns red (blush)", category: "감정", imageUrl: "https://images.unsplash.com/photo-1483909796554-be1951582099?auto=format&fit=crop&w=800&q=80" },
+            { id: 17, term: "손을 잡다", meaning: "Hold hands", category: "스킨십", imageUrl: "https://images.unsplash.com/photo-1621350669223-74d39c97b81b?auto=format&fit=crop&w=800&q=80" },
+            { id: 18, term: "어깨에 기대다", meaning: "Lean on someone's shoulder", category: "스킨십", imageUrl: "https://images.unsplash.com/photo-1494774157365-9e04c6720e47?auto=format&fit=crop&w=800&q=80" },
+            { id: 19, term: "가슴이 두근거리다", meaning: "Heart beats fast/flutters", category: "감정", imageUrl: "https://images.unsplash.com/photo-1516575334481-f85287c2c81d?auto=format&fit=crop&w=800&q=80" },
+            { id: 20, term: "팔짱을 끼다", meaning: "Link arms", category: "스킨십", imageUrl: "https://images.unsplash.com/photo-1475714093748-80253d81d69d?auto=format&fit=crop&w=800&q=80" },
+
+            // Image 2: Marriage
+            { id: 21, term: "신혼여행", meaning: "Honeymoon", category: "결혼", imageUrl: "https://images.unsplash.com/photo-1544023249-c11d04427506?auto=format&fit=crop&w=800&q=80" },
+            { id: 22, term: "중매결혼", meaning: "Arranged marriage", category: "결혼", imageUrl: "https://images.unsplash.com/photo-1506500441671-55767b43f9cb?auto=format&fit=crop&w=800&q=80" },
+            { id: 23, term: "연애결혼", meaning: "Love marriage", category: "결혼", imageUrl: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=800&q=80" },
+            { id: 24, term: "청첩장", meaning: "Wedding invitation", category: "결혼", imageUrl: "https://images.unsplash.com/photo-1612473489370-967b07849e79?auto=format&fit=crop&w=800&q=80" },
+            { id: 25, term: "예식장", meaning: "Wedding hall", category: "결혼", imageUrl: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80" }
+        ];
+
+        // --- Component: Picture Quiz ---
+        const PictureQuiz = ({ data }) => {
+            const [currentQuestion, setCurrentQuestion] = useState(0);
+            const [score, setScore] = useState(0);
+            const [showScore, setShowScore] = useState(false);
+            const [selectedAnswer, setSelectedAnswer] = useState(null);
+            const [isCorrect, setIsCorrect] = useState(null);
+            
+            // Generate random options
+            const generateOptions = (correctAnswer) => {
+                const incorrect = data
+                    .filter(item => item.id !== correctAnswer.id)
+                    .sort(() => 0.5 - Math.random())
+                    .slice(0, 3);
+                return [...incorrect, correctAnswer].sort(() => 0.5 - Math.random());
+            };
+
+            const [options, setOptions] = useState([]);
+
+            useEffect(() => {
+                if (currentQuestion < data.length) {
+                    setOptions(generateOptions(data[currentQuestion]));
+                    setSelectedAnswer(null);
+                    setIsCorrect(null);
+                }
+            }, [currentQuestion, data]);
+
+            const handleAnswerClick = (option) => {
+                if (selectedAnswer !== null) return;
+                
+                setSelectedAnswer(option);
+                const correct = option.id === data[currentQuestion].id;
+                setIsCorrect(correct);
+                
+                if (correct) {
+                    setScore(score + 1);
+                }
+
+                setTimeout(() => {
+                    const nextQuestion = currentQuestion + 1;
+                    if (nextQuestion < 10) { // Limit quiz to 10 questions
+                        setCurrentQuestion(nextQuestion);
+                    } else {
+                        setShowScore(true);
+                    }
+                }, 1500);
+            };
+
+            const resetQuiz = () => {
+                setCurrentQuestion(0);
+                setScore(0);
+                setShowScore(false);
+                setSelectedAnswer(null);
+                setIsCorrect(null);
+            };
+
+            if (showScore) {
+                return (
+                    <div className="text-center p-8 bg-white rounded-xl shadow-lg max-w-md mx-auto mt-10 fade-in">
+                        <Star className="w-20 h-20 text-yellow-400 mx-auto mb-4" />
+                        <h2 className="text-3xl font-bold mb-4 text-gray-800">퀴즈 완료!</h2>
+                        <p className="text-xl mb-8">당신의 점수는 <br/><span className="text-4xl font-bold text-pink-600">{score}</span> / 10 입니다.</p>
+                        <button 
+                            onClick={resetQuiz}
+                            className="bg-pink-500 text-white px-8 py-3 rounded-xl hover:bg-pink-600 transition flex items-center justify-center gap-2 mx-auto text-lg font-bold shadow-md"
+                        >
+                            <RefreshCw size={24} /> 다시 풀기
+                        </button>
+                    </div>
+                );
+            }
+
+            const questionItem = data[currentQuestion];
+
+            return (
+                <div className="w-full max-w-md mx-auto p-4 fade-in">
+                    <div className="bg-white p-6 rounded-2xl shadow-xl border-2 border-pink-100">
+                        <div className="flex justify-between items-center mb-6">
+                            <span className="text-gray-500 font-bold bg-gray-100 px-3 py-1 rounded-full text-sm">문제 {currentQuestion + 1} / 10</span>
+                            <div className="flex items-center gap-1 text-pink-600 font-bold">
+                                <Star size={18} className="fill-current" />
+                                <span>{score}</span>
+                            </div>
+                        </div>
+                        
+                        <div className="mb-8 text-center bg-gray-50 rounded-xl overflow-hidden shadow-inner">
+                            {/* Image Container */}
+                            <div className="relative w-full h-64 sm:h-72 bg-gray-200">
+                                <img 
+                                    src={questionItem.imageUrl} 
+                                    alt="Quiz Image"
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-2">
+                                    <p className="text-white text-xs font-light">이미지 제공: Unsplash</p>
+                                </div>
+                            </div>
+                            
+                            <div className="p-4">
+                                <p className="text-gray-500 text-sm font-medium mb-1">다음 사진에 알맞은 단어는?</p>
+                                {/* Only show meaning AFTER answering */}
+                                <div className={`h-6 text-pink-600 font-bold transition-opacity ${selectedAnswer ? 'opacity-100' : 'opacity-0'}`}>
+                                    "{questionItem.meaning}"
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-3">
+                            {options.map((option, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => handleAnswerClick(option)}
+                                    className={`w-full p-4 text-left rounded-xl border-2 transition-all duration-200 relative overflow-hidden shadow-sm ${
+                                        selectedAnswer === null 
+                                            ? 'border-gray-200 hover:border-pink-400 hover:bg-pink-50' 
+                                            : selectedAnswer === option 
+                                                ? (isCorrect ? 'border-green-500 bg-green-50 ring-2 ring-green-200' : 'border-red-500 bg-red-50 ring-2 ring-red-200')
+                                                : (option.id === questionItem.id ? 'border-green-500 bg-green-50' : 'border-gray-200 opacity-50')
+                                    }`}
+                                >
+                                    <div className="flex items-center justify-between">
+                                        <span className="font-bold text-lg text-gray-800">{option.term}</span>
+                                        {selectedAnswer !== null && option.id === questionItem.id && (
+                                            <span className="text-green-600 text-xl">✓</span>
+                                        )}
+                                        {selectedAnswer === option && !isCorrect && (
+                                            <span className="text-red-500 text-xl">✕</span>
+                                        )}
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- Main App ---
+        const App = () => {
+            return (
+                <div className="min-h-screen pb-10">
+                    <header className="bg-white shadow-sm sticky top-0 z-10 mb-6">
+                        <div className="max-w-md mx-auto px-4 py-4 flex items-center justify-center">
+                            <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                                <Heart className="text-pink-500 fill-current" size={28} />
+                                그림 어휘 퀴즈
+                            </h1>
+                        </div>
+                    </header>
+
+                    <main className="container mx-auto">
+                        <PictureQuiz data={vocabularyData} />
+                    </main>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

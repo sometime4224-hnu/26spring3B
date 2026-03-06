@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문법 학습: V-게 하다</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .speech-bubble {
+            position: relative;
+            padding: 1rem;
+            border-radius: 0.75rem;
+        }
+        .speech-bubble.a {
+            background-color: #f3f4f6; /* gray-100 */
+        }
+        .speech-bubble.b {
+            background-color: #e0f2fe; /* light-blue-100 */
+        }
+        .quiz-option.correct {
+            background-color: #dcfce7; /* green-100 */
+            border-color: #22c55e; /* green-500 */
+            color: #166534; /* green-800 */
+        }
+        .quiz-option.wrong {
+            background-color: #fee2e2; /* red-100 */
+            border-color: #ef4444; /* red-500 */
+            color: #991b1b; /* red-800 */
+        }
+        .quiz-option:disabled {
+            opacity: 0.8;
+            cursor: not-allowed;
+        }
+        .lang-btn.active {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            border: 2px solid white;
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-gray-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+    <div class="max-w-4xl mx-auto">
+
+        <!-- 헤더 -->
+        <header class="text-center mb-12">
+            <h1 data-key="title" class="text-4xl font-bold text-blue-600">문법 및 표현 1</h1>
+            <p data-key="grammar_name" class="text-5xl font-bold text-gray-800 mt-2">V-게 하다</p>
+            <p data-key="description" class="text-xl text-gray-600 mt-4">'다른 사람에게 어떤 행동을 하도록 시키거나 허락함'을 나타냅니다.</p>
+            <p data-key="description_en" class="text-lg text-gray-500 mt-1">(To make, have, or let someone do something)</p>
+        </header>
+
+        <!-- 언어 선택 버튼 -->
+        <div class="flex flex-wrap justify-center gap-3 my-8">
+            <button data-lang="ko" class="lang-btn px-4 py-2 font-semibold text-white bg-blue-500 rounded-md shadow-md hover:bg-blue-600 transition-all duration-300 active">한국어</button>
+            <button data-lang="en" class="lang-btn px-4 py-2 font-semibold text-white bg-teal-500 rounded-md shadow-md hover:bg-teal-600 transition-all duration-300">English</button>
+            <button data-lang="vi" class="lang-btn px-4 py-2 font-semibold text-white bg-green-500 rounded-md shadow-md hover:bg-green-600 transition-all duration-300">Tiếng Việt</button>
+            <button data-lang="ja" class="lang-btn px-4 py-2 font-semibold text-white bg-purple-500 rounded-md shadow-md hover:bg-purple-600 transition-all duration-300">日本語</button>
+            <button data-lang="zh" class="lang-btn px-4 py-2 font-semibold text-white bg-red-500 rounded-md shadow-md hover:bg-red-600 transition-all duration-300">中文</button>
+        </div>
+
+        <!-- 1. 대화 (Dialog) -->
+        <section class="mb-12">
+            <h2 data-key="dialog_title" class="text-3xl font-bold text-gray-800 mb-6">대화</h2>
+            <div class="bg-white p-6 rounded-xl shadow-lg space-y-4">
+                <div class="flex items-start gap-4">
+                    <span class="flex-shrink-0 w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-xl font-bold">A</span>
+                    <div class="speech-bubble a w-full">
+                        <p class="text-lg text-gray-700">죄송하지만 아이들이 식당에서 뛰어다니지 <strong class="text-blue-600">못하게 해</strong> 주시겠어요?</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4">
+                    <span class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-xl font-bold">B</span>
+                    <div class="speech-bubble b w-full">
+                        <p class="text-lg text-gray-700">미안해요. 그럴게요.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. 예문 (Examples) -->
+        <section class="mb-12">
+            <h2 data-key="example_title" class="text-3xl font-bold text-gray-800 mb-6">예문</h2>
+            <div class="bg-white p-8 rounded-xl shadow-lg space-y-5">
+                <ul class="list-disc list-inside space-y-4 text-lg text-gray-700">
+                    <li>너무 바빠서 이사할 집을 동생에게 <strong class="text-blue-600">구하게 했어요.</strong></li>
+                    <li>선생님이 학생들에게 큰 소리로 책을 <strong class="text-blue-600">읽게 하십니다.</strong></li>
+                    <li>아버지가 짧은 치마를 <strong class="text-blue-600">못 입게 하셔서</strong> 속상해요.</li>
+                    <li>
+                        A: 아이가 피아노를 잘 치네요.<br>
+                        B: 네, 하루에 한 시간씩 꼭 <strong class="text-blue-600">연습하게 했어요.</strong>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 3. 문법 퀴즈 (Grammar Quiz) -->
+        <section class="mb-12">
+            <h2 data-key="quiz_title" class="text-3xl font-bold text-gray-800 mb-6">문법 퀴즈</h2>
+            <div id="quiz-container" class="bg-white p-8 rounded-xl shadow-lg space-y-8">
+                <!-- 퀴즈 1 -->
+                <div class="quiz-item" data-correct="B">
+                    <p class="text-xl font-semibold mb-4">1. 'I was busy, so I had my brother clean.'을 한국어로 바르게 옮긴 것은?</p>
+                    <div class="space-y-3">
+                        <button class="quiz-option w-full text-left p-4 rounded-lg border-2 border-gray-200 hover:bg-gray-100 transition">
+                            (A) 바빠서 동생이 청소했어요.
+                        </button>
+                        <button class="quiz-option w-full text-left p-4 rounded-lg border-2 border-gray-200 hover:bg-gray-100 transition">
+                            (B) 바빠서 동생에게 청소하게 했어요.
+                        </button>
+                        <button class="quiz-option w-full text-left p-4 rounded-lg border-2 border-gray-200 hover:bg-gray-100 transition">
+                            (C) 바빠서 동생은 청소할 거예요.
+                        </button>
+                    </div>
+                    <p class="feedback mt-3 text-lg font-medium hidden"></p>
+                </div>
+
+                <!-- 퀴즈 2 -->
+                <div class="quiz-item" data-correct="A">
+                    <p class="text-xl font-semibold mb-4">2. 'The teacher made the students read the book.'을 한국어로 바르게 옮긴 것은?</p>
+                    <div class="space-y-3">
+                        <button class="quiz-option w-full text-left p-4 rounded-lg border-2 border-gray-200 hover:bg-gray-100 transition">
+                            (A) 선생님이 학생들에게 책을 읽게 하셨어요.
+                        </button>
+                        <button class="quiz-option w-full text-left p-4 rounded-lg border-2 border-gray-200 hover:bg-gray-100 transition">
+                            (B) 선생님이 학생들을 책을 읽고 싶어요.
+                        </button>
+                        <button class="quiz-option w-full text-left p-4 rounded-lg border-2 border-gray-200 hover:bg-gray-100 transition">
+                            (C) 선생님이 학생들과 책을 읽었어요.
+                        </button>
+                    </div>
+                    <p class="feedback mt-3 text-lg font-medium hidden"></p>
+                </div>
+
+                <!-- 퀴즈 3 -->
+                <div class="quiz-item" data-correct="C">
+                    <p class="text-xl font-semibold mb-4">3. 'My mom doesn't let me play games.'을 한국어로 바르게 옮긴 것은?</p>
+                    <div class="space-y-3">
+                        <button class="quiz-option w-full text-left p-4 rounded-lg border-2 border-gray-200 hover:bg-gray-100 transition">
+                            (A) 엄마는 게임을 해요.
+                        </button>
+                        <button class="quiz-option w-full text-left p-4 rounded-lg border-2 border-gray-200 hover:bg-gray-100 transition">
+                            (B) 엄마가 저하고 게임을 안 해요.
+                        </button>
+                        <button class="quiz-option w-full text-left p-4 rounded-lg border-2 border-gray-200 hover:bg-gray-100 transition">
+                            (C) 엄마가 저를 게임을 못 하게 해요.
+                        </button>
+                    </div>
+                    <p class="feedback mt-3 text-lg font-medium hidden"></p>
+                </div>
+                
+                <!-- 퀴즈 4 -->
+                <div class="quiz-item" data-correct="B">
+                    <p class="text-xl font-semibold mb-4">4. 'I make my child study every day.'을 한국어로 바르게 옮긴 것은?</p>
+                    <div class="space-y-3">
+                        <button class="quiz-option w-full text-left p-4 rounded-lg border-2 border-gray-200 hover:bg-gray-100 transition">
+                            (A) 아이가 매일 공부해요.
+                        </button>
+                        <button class="quiz-option w-full text-left p-4 rounded-lg border-2 border-gray-200 hover:bg-gray-100 transition">
+                            (B) 아이에게 매일 공부하게 해요.
+                        </button>
+                        <button class="quiz-option w-full text-left p-4 rounded-lg border-2 border-gray-200 hover:bg-gray-100 transition">
+                            (C) 아이가 매일 공부하고 싶어요.
+                        </button>
+                    </div>
+                    <p class="feedback mt-3 text-lg font-medium hidden"></p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 4. 연습 (Practice) -->
+        <section>
+            <h2 data-key="practice_title" class="text-3xl font-bold text-gray-800 mb-6">연습</h2>
+            <div class="bg-white p-8 rounded-xl shadow-lg space-y-6">
+                <p data-key="practice_instruction" class="text-lg text-gray-700">[보기]와 같이 이야기해 보세요.</p>
+                <!-- 보기 -->
+                <div class="bg-yellow-100 border-l-4 border-yellow-400 p-4 rounded-r-lg">
+                    <p data-key="practice_box_title" class="font-bold">보기</p>
+                    <p class="text-lg text-gray-800 mt-2">어렸을 때 우리 엄마는 음식을 먹기 전에 항상 손을 <strong class="text-blue-600">씻게 하셨어요.</strong></sppan>
+                </div>
+                
+                <!-- 연습 질문 -->
+                <ul class="list-none space-y-4 text-lg text-gray-800">
+                    <li class="bg-gray-100 p-4 rounded-lg">
+                        <span class="font-bold text-blue-600">1)</span> 어렸을 때 부모님/선생님이 매일 무엇을 <strong class="text-blue-600">하게 했습니까?</strong>
+                    </li>
+                    <li class="bg-gray-100 p-4 rounded-lg">
+                        <span class="font-bold text-blue-600">2)</span> 부모님/선생님이 절대로 <strong class="text-blue-600">못 하게 한</strong> 일이 있습니까?
+                    </li>
+                    <li class="bg-gray-100 p-4 rounded-lg">
+                        <span class="font-bold text-blue-600">3)</span> 아이들에게 무엇을 <strong class="text-blue-600">배우게 하면</strong> 좋겠습니까?
+                    </li>
+                    <li class="bg-gray-100 p-4 rounded-lg">
+                        <span class="font-bold text-blue-600">4)</span> 이웃집 앞에 쓰레기를 버린 사람에게 무엇을 <strong class="text-blue-600">하게 하면</strong> 좋겠습니까?
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const translations = {
+                'ko': {
+                    'title': '문법 및 표현 1',
+                    'grammar_name': 'V-게 하다',
+                    'description': "'다른 사람에게 어떤 행동을 하도록 시키거나 허락함'을 나타냅니다.",
+                    'description_en': '(To make, have, or let someone do something)',
+                    'dialog_title': '대화',
+                    'example_title': '예문',
+                    'quiz_title': '문법 퀴즈',
+                    'practice_title': '연습',
+                    'practice_instruction': '[보기]와 같이 이야기해 보세요.',
+                    'practice_box_title': '보기',
+                    'feedback_correct': '정답입니다! 👏',
+                    'feedback_wrong': '아쉽네요. 정답은 ({correct}) 입니다.'
+                },
+                'en': {
+                    'title': 'Grammar and Expression 1',
+                    'grammar_name': 'V-게 하다',
+                    'description': 'Indicates making or letting someone do an action.',
+                    'description_en': '(To make, have, or let someone do something)',
+                    'dialog_title': 'Dialog',
+                    'example_title': 'Examples',
+                    'quiz_title': 'Grammar Quiz',
+                    'practice_title': 'Practice',
+                    'practice_instruction': 'Talk as in the [Example].',
+                    'practice_box_title': 'Example',
+                    'feedback_correct': 'Correct! 👏',
+                    'feedback_wrong': 'Not quite. The answer is ({correct}).'
+                },
+                'vi': {
+                    'title': 'Ngữ pháp và Biểu hiện 1',
+                    'grammar_name': 'V-게 하다',
+                    'description': 'Thể hiện việc ra lệnh hoặc cho phép người khác làm một hành động nào đó.',
+                    'description_en': '(To make, have, or let someone do something)',
+                    'dialog_title': 'Hội thoại',
+                    'example_title': 'Ví dụ',
+                    'quiz_title': 'Câu đố Ngữ pháp',
+                    'practice_title': 'Luyện tập',
+                    'practice_instruction': 'Hãy nói chuyện như trong [Ví dụ].',
+                    'practice_box_title': 'Ví dụ',
+                    'feedback_correct': 'Chính xác! 👏',
+                    'feedback_wrong': 'Tiếc quá. Đáp án là ({correct}).'
+                },
+                'ja': {
+                    'title': '文法と表現 1',
+                    'grammar_name': 'V-게 하다',
+                    'description': '他の人に特定の行動をさせるか、許可することを表します。',
+                    'description_en': '(To make, have, or let someone do something)',
+                    'dialog_title': '会話',
+                    'example_title': '例文',
+                    'quiz_title': '文法クイズ',
+                    'practice_title': '練習',
+                    'practice_instruction': '【例】のように話してみてください。',
+                    'practice_box_title': '例',
+                    'feedback_correct': '正解です！👏',
+                    'feedback_wrong': '残念です。正解は ({correct}) です。'
+                },
+                'zh': {
+                    'title': '语法与表达 1',
+                    'grammar_name': 'V-게 하다',
+                    'description': '表示“让”或“允许”他人做某事。',
+                    'description_en': '(To make, have, or let someone do something)',
+                    'dialog_title': '对话',
+                    'example_title': '例句',
+                    'quiz_title': '语法测验',
+                    'practice_title': '练习',
+                    'practice_instruction': '请像[示例]一样对话。',
+                    'practice_box_title': '示例',
+                    'feedback_correct': '正确！👏',
+                    'feedback_wrong': '很遗憾。正确答案是 ({correct})。'
+                }
+            };
+
+            let currentLang = 'ko';
+            const langButtons = document.querySelectorAll('.lang-btn');
+            const quizItems = document.querySelectorAll('.quiz-item');
+
+            function updateLanguage(lang) {
+                if (!translations[lang]) return;
+                currentLang = lang;
+
+                document.querySelectorAll('[data-key]').forEach(el => {
+                    const key = el.dataset.key;
+                    if (translations[lang][key]) {
+                        el.textContent = translations[lang][key];
+                    }
+                });
+
+                // 버튼 활성 상태 업데이트
+                langButtons.forEach(btn => {
+                    if (btn.dataset.lang === lang) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+            }
+
+            langButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const lang = button.dataset.lang;
+                    updateLanguage(lang);
+                });
+            });
+
+            quizItems.forEach(item => {
+                const options = item.querySelectorAll('.quiz-option');
+                const feedbackEl = item.querySelector('.feedback');
+                const correctAnswer = item.dataset.correct;
+
+                options.forEach(option => {
+                    option.addEventListener('click', () => {
+                        // 중복 클릭 방지
+                        const parent = option.closest('.quiz-item');
+                        if (parent.dataset.answered === 'true') {
+                            return;
+                        }
+                        parent.dataset.answered = 'true';
+
+                        // 모든 버튼 비활성화
+                        parent.querySelectorAll('.quiz-option').forEach(btn => btn.disabled = true);
+
+                        const selectedAnswer = option.textContent.match(/\(A\)|\(B\)|\(C\)/)[0].replace(/[\(\)]/g, '');
+
+                        if (selectedAnswer === correctAnswer) {
+                            option.classList.add('correct');
+                            feedbackEl.textContent = translations[currentLang].feedback_correct;
+                            feedbackEl.className = 'feedback mt-3 text-lg font-medium text-green-600';
+                        } else {
+                            option.classList.add('wrong');
+                            feedbackEl.textContent = translations[currentLang].feedback_wrong.replace('{correct}', correctAnswer);
+                            feedbackEl.className = 'feedback mt-3 text-lg font-medium text-red-600';
+                            
+                            // 정답 버튼 하이라이트
+                            parent.querySelector(`.quiz-option:nth-child(${['A','B','C'].indexOf(correctAnswer) + 1})`).classList.add('correct');
+                        }
+                        feedbackEl.classList.remove('hidden');
+                    });
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
+
+

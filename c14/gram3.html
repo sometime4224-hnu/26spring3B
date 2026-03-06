@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 문법 학습: -아/어하다</title>
+    <!-- Tailwind CSS 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Inter 폰트 (Tailwind의 기본 sans 폰트와 유사) */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&family=Be+Vietnam+Pro:wght@400;500;700&display=swap');
+        
+        body {
+            /* 언어별로 적절한 폰트가 적용되도록 폰트 스택 설정 */
+            font-family: 'Inter', 'Noto Sans KR', 'Be Vietnam Pro', 'Noto Sans JP', 'Noto Sans SC', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* 활성 탭 스타일 */
+        .lang-btn.active {
+            background-color: #2563eb; /* blue-600 */
+            color: white;
+            font-weight: 600;
+        }
+        /* 비활성 탭 스타일 */
+        .lang-btn {
+            background-color: #e5e7eb; /* gray-200 */
+            color: #374151; /* gray-700 */
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .lang-btn:hover {
+            background-color: #d1d5db; /* gray-300 */
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-gray-100">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <div class="max-w-4xl mx-auto p-4 bg-white rounded-lg shadow-2xl my-4 sm:my-8 sm:p-8">
+        
+        <!-- 헤더: 제목 및 언어 선택 -->
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8">
+            <h1 class="text-2xl sm:text-3xl font-bold text-blue-700 mb-4 sm:mb-0" data-lang-key="app_title">문법 학습: -아/어하다</h1>
+            <nav class="flex space-x-1 sm:space-x-2 flex-wrap" id="lang-selector">
+                <button class="lang-btn px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm rounded-lg font-medium active" data-lang="KR">한국어</button>
+                <button class="lang-btn px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm rounded-lg font-medium" data-lang="VI">Tiếng Việt</button>
+                <button class="lang-btn px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm rounded-lg font-medium" data-lang="JA">日本語</button>
+                <button class="lang-btn px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm rounded-lg font-medium" data-lang="ZH">中文</button>
+            </nav>
+        </header>
+
+        <main id="content-container">
+            <!-- 1. 설명 섹션 -->
+            <section class="mb-6 sm:mb-8">
+                <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 border-b-2 border-blue-200 pb-2 mb-4" data-lang-key="explanation_title">설명</h2>
+                <div class="bg-blue-50 p-4 sm:p-5 rounded-lg text-gray-700 leading-relaxed space-y-3 text-sm sm:text-base">
+                    <p data-lang-key="explanation_text_1">이 문법은 다른 사람(3인칭)의 감정이나 느낌을 보고 말할 때 사용해요.</p>
+                    <p data-lang-key="explanation_text_2">형용사(예: 기쁘다, 슬프다)를 동사(예: 기뻐하다, 슬퍼하다)로 바꿔줘요.</p>
+                    <p data-lang-key="explanation_text_3"><strong class="font-semibold">'나(1인칭)'의 감정</strong>은 그냥 형용사 <code class="bg-gray-200 px-1 rounded text-sm">기뻐요</code>, <code class="bg-gray-200 px-1 rounded text-sm">슬퍼요</code>처럼 말해요.</p>
+                    <p data-lang-key="explanation_text_4"><strong class="font-semibold">'다른 사람'의 감정</strong>은 <code class="bg-gray-200 px-1 rounded text-sm">-아/어하다</code>를 붙여서 <code class="bg-gray-200 px-1 rounded text-sm">기뻐해요</code>, <code class="bg-gray-200 px-1 rounded text-sm">슬퍼해요</code>처럼 말해요.</p>
+                </div>
+            </section>
+
+            <!-- 2. 형태 (결합 정보) 섹션 -->
+            <section class="mb-6 sm:mb-8">
+                <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 border-b-2 border-blue-200 pb-2 mb-4" data-lang-key="conjugation_title">형태</h2>
+                <ul class="list-none space-y-3 text-sm sm:text-base">
+                    <li class="bg-gray-50 p-4 rounded-lg flex items-start">
+                        <span class="text-blue-600 font-bold text-lg mr-3">1.</span>
+                        <span class="text-gray-700" data-lang-key="conjugation_rule_1">형용사 어간의 마지막 모음이 <strong class="font-semibold">'ㅏ'</strong>나 <strong class="font-semibold">'ㅗ'</strong>이면 <strong class="font-semibold text-blue-700">-아하다</strong>를 붙여요.
+                            <br>(예: 좋다 → 좋아하다)</span>
+                    </li>
+                    <li class="bg-gray-50 p-4 rounded-lg flex items-start">
+                        <span class="text-blue-600 font-bold text-lg mr-3">2.</span>
+                        <span class="text-gray-700" data-lang-key="conjugation_rule_2">마지막 모음이 <strong class="font-semibold">'ㅏ', 'ㅗ'가 아니면</strong> <strong class="font-semibold text-blue-700">-어하다</strong>를 붙여요.
+                            <br>(예: 싫다 → 싫어하다, 기쁘다 → 기뻐하다, 무섭다 → 무서워하다)</span>
+                    </li>
+                    <li class="bg-gray-50 p-4 rounded-lg flex items-start">
+                        <span class="text-blue-600 font-bold text-lg mr-3">3.</span>
+                        <span class="text-gray-700" data-lang-key="conjugation_rule_3"><strong class="font-semibold">'하다'</strong>로 끝나는 형용사(예: 심심하다)는 <strong class="font-semibold text-blue-700">-해하다</strong>가 돼요.
+                            <br>(예: 심심하다 → 심심해하다, 피곤하다 → 피곤해하다)</span>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- 3. 예문 섹션 (번역되지 않음) -->
+            <section class="mb-6 sm:mb-8">
+                <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 border-b-2 border-blue-200 pb-2 mb-4" data-lang-key="examples_title">예문</h2>
+                <div class="space-y-4">
+                    <!-- 예문 1: 나 vs 아버지 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-gray-100 p-4 rounded-lg border-l-4 border-gray-400">
+                            <span class="block text-sm font-medium text-gray-600">나 (I)</span>
+                            <p class="text-base sm:text-lg text-gray-800">저는 고향이 <strong class="font-semibold text-blue-700">그리워요</strong>.</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
+                            <span class="block text-sm font-medium text-gray-600">아버지 (Father)</span>
+                            <p class="text-base sm:text-lg text-gray-800">아버지는 고향을 <strong class="font-semibold text-green-700">그리워하세요</strong>.</p>
+                        </div>
+                    </div>
+                    <!-- 예문 2: 나 vs 동생 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-gray-100 p-4 rounded-lg border-l-4 border-gray-400">
+                            <span class="block text-sm font-medium text-gray-600">나 (I)</span>
+                            <p class="text-base sm:text-lg text-gray-800">저는 개가 <strong class="font-semibold text-blue-700">무서워요</strong>.</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
+                            <span class="block text-sm font-medium text-gray-600">내 동생 (My Sibling)</span>
+                            <p class="text-base sm:text-lg text-gray-800">제 동생은 개를 <strong class="font-semibold text-green-700">무서워해요</strong>.</p>
+                        </div>
+                    </div>
+                    <!-- 예문 3: 나 vs 수진 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-gray-100 p-4 rounded-lg border-l-4 border-gray-400">
+                            <span class="block text-sm font-medium text-gray-600">나 (I)</span>
+                            <p class="text-base sm:text-lg text-gray-800">선물을 받아서 정말 <strong class="font-semibold text-blue-700">기뻐요</strong>.</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
+                            <span class="block text-sm font-medium text-gray-600">수진 씨 (Sujin)</span>
+                            <p class="text-base sm:text-lg text-gray-800">수진 씨가 선물을 받고 정말 <strong class="font-semibold text-green-700">기뻐해요</strong>.</p>
+                        </div>
+                    </div>
+                     <!-- 예문 4: 이미지 예문 (이유) -->
+                    <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400 col-span-1 md:col-span-2">
+                        <span class="block text-sm font-medium text-gray-600">응용 (Application)</span>
+                        <p class="text-base sm:text-lg text-gray-800">마리코 씨가 김치를 담그고 <strong class="font-semibold text-yellow-800">싶어해서</strong> 같이 만들었어요.</p>
+                        <p class="text-base sm:text-lg text-gray-800">조카가 <strong class="font-semibold text-yellow-800">심심해해서</strong> 함께 놀아 줬어요.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. 연습 문제 섹션 -->
+            <section>
+                <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 border-b-2 border-blue-200 pb-2 mb-4" data-lang-key="practice_title">연습</h2>
+                <p class="text-gray-600 mb-6 text-sm sm:text-base" data-lang-key="practice_instruction">
+                    빈칸에 알맞은 형태를 써보세요. (1인칭 '나'와 3인칭 '친구'를 비교해 보세요.)
+                </p>
+                
+                <div class="space-y-6" id="practice-area">
+                    <!-- 문제 1 -->
+                    <div class="bg-gray-50 p-4 sm:p-5 rounded-lg shadow-sm" data-practice-item="0">
+                        <div class="text-base sm:text-lg font-bold text-blue-800 mb-3">기본형: 피곤하다</div>
+                        <div class="space-y-3 text-sm sm:text-base">
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center">
+                                <label class="w-full sm:w-2/5 mb-1 sm:mb-0">1. (나) 저는 오늘 좀</label>
+                                <input type="text" class="practice-input p-2 border border-gray-300 rounded-md w-full sm:w-2/5 focus:ring-blue-500 focus:border-blue-500" data-answer="피곤해요">
+                                <span class="feedback-span ml-0 sm:ml-3 text-sm font-medium"></span>
+                            </div>
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center">
+                                <label class="w-full sm:w-2/5 mb-1 sm:mb-0">2. (친구) 친구가 오늘 좀</label>
+                                <input type="text" class="practice-input p-2 border border-gray-300 rounded-md w-full sm:w-2/5 focus:ring-blue-500 focus:border-blue-500" data-answer="피곤해해요">
+                                <span class="feedback-span ml-0 sm:ml-3 text-sm font-medium"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 문제 2 -->
+                    <div class="bg-gray-50 p-4 sm:p-5 rounded-lg shadow-sm" data-practice-item="1">
+                        <div class="text-base sm:text-lg font-bold text-blue-800 mb-3">기본형: 외롭다</div>
+                        <div class="space-y-3 text-sm sm:text-base">
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center">
+                                <label class="w-full sm:w-2/5 mb-1 sm:mb-0">1. (나) 저는 가끔</label>
+                                <input type="text" class="practice-input p-2 border border-gray-300 rounded-md w-full sm:w-2/5 focus:ring-blue-500 focus:border-blue-500" data-answer="외로워요">
+                                <span class="feedback-span ml-0 sm:ml-3 text-sm font-medium"></span>
+                            </div>
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center">
+                                <label class="w-full sm:w-2/5 mb-1 sm:mb-0">2. (친구) 친구가 가끔</form>
+                                <input type="text" class="practice-input p-2 border border-gray-300 rounded-md w-full sm:w-2/5 focus:ring-blue-500 focus:border-blue-500" data-answer="외로워해요">
+                                <span class="feedback-span ml-0 sm:ml-3 text-sm font-medium"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 문제 3 -->
+                    <div class="bg-gray-50 p-4 sm:p-5 rounded-lg shadow-sm" data-practice-item="2">
+                        <div class="text-base sm:text-lg font-bold text-blue-800 mb-3">기본형: 재미있다</div>
+                        <div class="space-y-3 text-sm sm:text-base">
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center">
+                                <label class="w-full sm:w-2/5 mb-1 sm:mb-0">1. (나) 저는 이 영화가</label>
+                                <input type="text" class="practice-input p-2 border border-gray-300 rounded-md w-full sm:w-2/5 focus:ring-blue-500 focus:border-blue-500" data-answer="재미있어요">
+                                <span class="feedback-span ml-0 sm:ml-3 text-sm font-medium"></span>
+                            </div>
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center">
+                                <label class="w-full sm:w-2/5 mb-1 sm:mb-0">2. (친구) 친구가 이 영화를</label>
+                                <input type="text" class="practice-input p-2 border border-gray-300 rounded-md w-full sm:w-2/5 focus:ring-blue-500 focus:border-blue-500" data-answer="재미있어해요">
+                                <span class="feedback-span ml-0 sm:ml-3 text-sm font-medium"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 정답 확인 버튼 -->
+                <div class="text-center mt-8">
+                    <button id="check-answers-btn" class="px-5 py-2.5 sm:px-6 sm:py-3 bg-green-600 text-white font-bold text-base sm:text-lg rounded-lg shadow-md hover:bg-green-700 transition-colors duration-300" data-lang-key="check_button">
+                        정답 확인
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 번역 내용을 저장하는 객체
+            const contentStore = {
+                // 앱 제목
+                app_title: {
+                    KR: '문법 학습: -아/어하다',
+                    VI: 'Học ngữ pháp: -아/어하다',
+                    JA: '文法学習：-아/어하다',
+                    ZH: '语法学习：-아/어하다'
+                },
+                // 섹션 1: 설명
+                explanation_title: {
+                    KR: '설명',
+                    VI: 'Giải thích',
+                    JA: '説明',
+                    ZH: '说明'
+                },
+                explanation_text_1: {
+                    KR: '이 문법은 다른 사람(3인칭)의 감정이나 느낌을 보고 말할 때 사용해요.',
+                    VI: 'Ngữ pháp này được sử dụng khi nói về cảm xúc hoặc cảm nhận của người khác (ngôi thứ ba) mà bạn quan sát được.',
+                    JA: 'この文法は、他人（三人称）の感情や感覚を見て話すときに使います。',
+                    ZH: '这个语法在谈论所观察到的他人（第三人称）的感情或感觉时使用。'
+                },
+                explanation_text_2: {
+                    KR: '형용사(예: 기쁘다, 슬프다)를 동사(예: 기뻐하다, 슬퍼하다)로 바꿔줘요.',
+                    VI: 'Nó biến tính từ (ví dụ: 기쁘다, 슬프다) thành động từ (ví dụ: 기뻐하다, 슬퍼하다).',
+                    JA: '形容詞（例：기쁘다, 슬프다）を動詞（例：기뻐하다, 슬퍼하다）に変えます。',
+                    ZH: '它将形容词（例如：기쁘다, 슬프다）变为动词（例如：기뻐하다, 슬퍼하다）。'
+                },
+                explanation_text_3: {
+                    KR: '<strong class="font-semibold">\'나(1인칭)\'의 감정</strong>은 그냥 형용사 <code class="bg-gray-200 px-1 rounded text-sm">기뻐요</code>, <code class="bg-gray-200 px-1 rounded text-sm">슬퍼요</code>처럼 말해요.',
+                    VI: 'Cảm xúc của <strong class="font-semibold">"tôi" (ngôi thứ nhất)</strong> chỉ cần dùng tính từ như <code class="bg-gray-200 px-1 rounded text-sm">기뻐요</code>, <code class="bg-gray-200 px-1 rounded text-sm">슬퍼요</code>.',
+                    JA: '<strong class="font-semibold">「私（一人称）」の感情</strong>は、そのまま形容詞の <code class="bg-gray-200 px-1 rounded text-sm">기뻐요</code>, <code class="bg-gray-200 px-1 rounded text-sm">슬퍼요</code> のように言います。',
+                    ZH: '<strong class="font-semibold">"我"（第一人称）的感情</strong>，只使用形容词，如 <code class="bg-gray-200 px-1 rounded text-sm">기뻐요</code>, <code class="bg-gray-200 px-1 rounded text-sm">슬퍼요</code>。'
+                },
+                explanation_text_4: {
+                    KR: '<strong class="font-semibold">\'다른 사람\'의 감정</strong>은 <code class="bg-gray-200 px-1 rounded text-sm">-아/어하다</code>를 붙여서 <code class="bg-gray-200 px-1 rounded text-sm">기뻐해요</code>, <code class="bg-gray-200 px-1 rounded text-sm">슬퍼해요</code>처럼 말해요.',
+                    VI: 'Cảm xúc của <strong class="font-semibold">"người khác"</strong> thì gắn <code class="bg-gray-200 px-1 rounded text-sm">-아/어하다</code> và nói như <code class="bg-gray-200 px-1 rounded text-sm">기뻐해요</code>, <code class="bg-gray-200 px-1 rounded text-sm">슬퍼해요</code>.',
+                    JA: '<strong class="font-semibold">「他人」の感情</strong>は <code class="bg-gray-200 px-1 rounded text-sm">-아/어하다</code> を付けて <code class="bg-gray-200 px-1 rounded text-sm">기뻐해요</code>, <code class="bg-gray-200 px-1 rounded text-sm">슬퍼해요</code> のように言います。',
+                    ZH: '<strong class="font-semibold">"他人"的感情</strong>，则加上 <code class="bg-gray-200 px-1 rounded text-sm">-아/어하다</code>，说成 <code class="bg-gray-200 px-1 rounded text-sm">기뻐해요</code>, <code class="bg-gray-200 px-1 rounded text-sm">슬퍼해요</code>。'
+                },
+                // 섹션 2: 형태
+                conjugation_title: {
+                    KR: '형태',
+                    VI: 'Hình thái',
+                    JA: '形態',
+                    ZH: '形态'
+                },
+                conjugation_rule_1: {
+                    KR: '형용사 어간의 마지막 모음이 <strong class="font-semibold">\'ㅏ\'</strong>나 <strong class="font-semibold">\'ㅗ\'</strong>이면 <strong class="font-semibold text-blue-700">-아하다</strong>를 붙여요.<br>(예: 좋다 → 좋아하다)',
+                    VI: 'Nếu nguyên âm cuối của gốc tính từ là <strong class="font-semibold">\'ㅏ\'</strong> hoặc <strong class="font-semibold">\'ㅗ\'</strong>, thì gắn <strong class="font-semibold text-blue-700">-아하다</strong>.<br>(Ví dụ: 좋다 → 좋아하다)',
+                    JA: '形容詞の語幹の最後の母音が <strong class="font-semibold">「ㅏ」</strong>か <strong class="font-semibold">「ㅗ」</strong>の場合、<strong class="font-semibold text-blue-700">-아하다</strong> を付けます。<br>（例：좋다 → 좋아하다）',
+                    ZH: '形容词词干的最后一个元音是 <strong class="font-semibold">"ㅏ"</strong> 或 <strong class="font-semibold">"ㅗ"</strong> 时，加 <strong class="font-semibold text-blue-700">-아하다</strong>。<br>（例：좋다 → 좋아하다）'
+                },
+                conjugation_rule_2: {
+                    KR: '마지막 모음이 <strong class="font-semibold">\'ㅏ\', \'ㅗ\'가 아니면</strong> <strong class="font-semibold text-blue-700">-어하다</strong>를 붙여요.<br>(예: 싫다 → 싫어하다, 기쁘다 → 기뻐하다, 무섭다 → 무서워하다)',
+                    VI: 'Nếu nguyên âm cuối <strong class="font-semibold">không phải là \'ㅏ\', \'ㅗ\'</strong>, thì gắn <strong class="font-semibold text-blue-700">-어하다</strong>.<br>(Ví dụ: 싫다 → 싫어하다, 기쁘다 → 기뻐하다, 무섭다 → 무서워하다)',
+                    JA: '最後の母音が <strong class="font-semibold">「ㅏ」「ㅗ」でない場合</strong>、<strong class="font-semibold text-blue-700">-어하다</strong> を付けます。<br>（例：싫다 → 싫어하다, 기쁘다 → 기뻐하다, 무섭다 → 무서워하다）',
+                    ZH: '最后一个元音 <strong class="font-semibold">不是 "ㅏ", "ㅗ" 时</strong>，加 <strong class="font-semibold text-blue-700">-어하다</strong>。<br>（例：싫다 → 싫어하다, 기쁘다 → 기뻐하다, 무섭다 → 무서워하다）'
+                },
+                conjugation_rule_3: {
+                    KR: '<strong class="font-semibold">\'하다\'</strong>로 끝나는 형용사(예: 심심하다)는 <strong class="font-semibold text-blue-700">-해하다</strong>가 돼요.<br>(예: 심심하다 → 심심해하다, 피곤하다 → 피곤해하다)',
+                    VI: 'Tính từ kết thúc bằng <strong class="font-semibold">\'하다\'</strong> (ví dụ: 심심하다) sẽ trở thành <strong class="font-semibold text-blue-700">-해하다</strong>.<br>(Ví dụ: 심심하다 → 심심해하다, 피곤하다 → 피곤해하다)',
+                    JA: '<strong class="font-semibold">「하다」</strong>で終わる形容詞（例：심심하다）は <strong class="font-semibold text-blue-700">-해하다</strong> になります。<br>（例：심심하다 → 심심해하다, 피곤하다 → 피곤해하다）',
+                    ZH: '以 <strong class="font-semibold">"하다"</strong> 结尾的形容词（例：심심하다）变为 <strong class="font-semibold text-blue-700">-해하다</strong>。<br>（例：심심하다 → 심심해하다, 피곤하다 → 피곤해하다）'
+                },
+                // 섹션 3: 예문 (제목만 번역)
+                examples_title: {
+                    KR: '예문',
+                    VI: 'Câu ví dụ',
+                    JA: '例文',
+                    ZH: '例句'
+                },
+                // 섹션 4: 연습
+                practice_title: {
+                    KR: '연습',
+                    VI: 'Luyện tập',
+                    JA: '練習',
+                    ZH: '练习'
+                },
+                practice_instruction: {
+                    KR: '빈칸에 알맞은 형태를 써보세요. (1인칭 \'나\'와 3인칭 \'친구\'를 비교해 보세요.)',
+                    VI: 'Hãy điền dạng đúng vào chỗ trống. (So sánh giữa \'tôi\' ngôi thứ nhất và \'bạn\' ngôi thứ ba.)',
+                    JA: '空欄に正しい形を書いてみましょう。（一人称「私」と三人称「友達」を比べてみましょう。）',
+                    ZH: '请在空格中填入正确的形态。（比较一下第一人称"我"和第三人称"朋友"。）'
+                },
+                check_button: {
+                    KR: '정답 확인',
+                    VI: 'Kiểm tra đáp án',
+                    JA: '答え合わせ',
+                    ZH: '确认答案'
+                },
+                correct_message: {
+                    KR: '정답입니다!',
+                    VI: 'Chính xác!',
+                    JA: '正解です！',
+                    ZH: '正确！'
+                },
+                wrong_message: {
+                    KR: '다시 시도해 보세요.',
+                    VI: 'Hãy thử lại.',
+                    JA: 'もう一度試してみてください。',
+                    ZH: '请再试一次。'
+                }
+            };
+
+            let currentLang = 'KR'; // 기본 언어 설정
+
+            // 번역된 내용으로 화면을 업데이트하는 함수
+            function renderContent() {
+                // data-lang-key 속성을 가진 모든 요소를 찾음
+                document.querySelectorAll('[data-lang-key]').forEach(element => {
+                    const key = element.getAttribute('data-lang-key');
+                    if (contentStore[key] && contentStore[key][currentLang]) {
+                        element.innerHTML = contentStore[key][currentLang];
+                    }
+                });
+
+                // HTML lang 속성 변경
+                document.documentElement.lang = currentLang.toLowerCase();
+            }
+
+            // 언어 변경 함수
+            function changeLanguage(lang) {
+                currentLang = lang;
+
+                // 모든 버튼에서 'active' 클래스 제거
+                document.querySelectorAll('#lang-selector .lang-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // 클릭된 버튼에 'active' 클래스 추가
+                document.querySelector(`#lang-selector .lang-btn[data-lang="${lang}"]`).classList.add('active');
+
+                // 내용 다시 렌더링
+                renderContent();
+            }
+
+            // 언어 선택 버튼에 이벤트 리스너 추가
+            document.querySelectorAll('#lang-selector .lang-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const lang = e.target.getAttribute('data-lang');
+                    changeLanguage(lang);
+                });
+            });
+
+            // 정답 확인 함수
+            function checkAnswers() {
+                const practiceItems = document.querySelectorAll('.practice-input');
+                let allCorrect = true;
+
+                // 정답 비교를 위한 헬퍼 함수 (여기서 정의)
+                const compareAnswers = (userAnswer, correctAnswer) => {
+                    // 간단한 정규화: 공백 제거
+                    const normalize = (str) => str.replace(/\s+/g, '');
+                    return normalize(userAnswer) === normalize(correctAnswer);
+                };
+
+                practiceItems.forEach(input => {
+                    /* <-- 이 부분이 잘못되었습니다.
+                    const- (userAnswer, correctAnswer) {
+                        // 간단한 정규화: 공백 제거 및 소문자 변환
+                        const normalize = (str) => str.replace(/\s+/g, '').toLowerCase();
+                        return normalize(userAnswer) === normalize(correctAnswer);
+                    };
+                    */ // <-- 헬퍼 함수를 checkAnswers 함수 시작 부분으로 이동시켰습니다.
+
+                    const userAnswer = input.value;
+                    const correctAnswer = input.getAttribute('data-answer');
+                    const feedbackSpan = input.nextElementSibling; // .feedback-span
+
+                    if (compareAnswers(userAnswer, correctAnswer)) {
+                        feedbackSpan.textContent = contentStore.correct_message[currentLang];
+                        feedbackSpan.className = 'feedback-span ml-0 sm:ml-3 text-sm font-medium text-green-600';
+                    } else {
+                        feedbackSpan.textContent = contentStore.wrong_message[currentLang];
+                        feedbackSpan.className = 'feedback-span ml-0 sm:ml-3 text-sm font-medium text-red-600';
+                        allCorrect = false;
+                    }
+                });
+            }
+
+            // 정답 확인 버튼에 이벤트 리스너 추가
+            document.getElementById('check-answers-btn').addEventListener('click', checkAnswers);
+
+            // 초기 로드 시 한국어(기본값)로 내용 렌더링
+            renderContent();
+        });
+    </script>
+</body>
+</html>
+
+

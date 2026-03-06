@@ -1,0 +1,603 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NB76SV96');</script>
+    <!-- End Google Tag Manager -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12怨??댄쐶 移대뱶 & ?댁쫰</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', 'Noto Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .card-container {
+            perspective: 1000px;
+            -webkit-perspective: 1000px;
+            cursor: pointer;
+        }
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            -webkit-transform-style: preserve-3d;
+        }
+        .card-container.flipped .card-inner {
+            transform: rotateY(180deg);
+            -webkit-transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            -webkit-transform: rotateY(180deg);
+        }
+        .lang-btn.active {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        .correct-answer {
+            background-color: #dcfce7; /* green-100 */
+        }
+        .wrong-answer {
+            background-color: #fee2e2; /* red-100 */
+        }
+        .answer-feedback {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 1rem;
+            height: 30px;
+        }
+        .correct {
+            color: #15803d; /* green-700 */
+        }
+        .wrong {
+            color: #b91c1c; /* red-700 */
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-blue-50 min-h-screen flex flex-col items-center justify-center p-4 transition-colors duration-500">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 硫붿씤?쇰줈</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> ?⑥썝 ??/a>
+    </nav>
+    
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NB76SV96"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+    <div class="text-center mb-6">
+        <h1 class="text-4xl font-bold text-blue-600 mb-2">12怨??댄쐶</h1>
+        <p class="text-lg text-gray-600">紐멸낵 嫄닿컯 ?곹깭</p>
+        <div id="last-score-display" class="mt-2 text-sm text-gray-500 font-medium hidden"></div>
+    </div>
+
+    <div id="language-selector" class="flex flex-wrap justify-center gap-2 sm:gap-4 mb-6 bg-white p-2 rounded-xl shadow-md">
+        <button data-lang="korean" class="lang-btn px-4 py-2 text-sm sm:text-base font-semibold text-white bg-blue-500 rounded-lg shadow-md hover:bg-blue-600 transition-all duration-300">?쒓뎅???ㅻ챸</button>
+        <button data-lang="vietnamese" class="lang-btn px-4 py-2 text-sm sm:text-base font-semibold text-white bg-green-500 rounded-lg shadow-md hover:bg-green-600 transition-all duration-300">踰좏듃?⑥뼱</button>
+        <button data-lang="japanese" class="lang-btn px-4 py-2 text-sm sm:text-base font-semibold text-white bg-purple-500 rounded-lg shadow-md hover:bg-purple-600 transition-all duration-300">?쇰낯??/button>
+        <button data-lang="chinese" class="lang-btn px-4 py-2 text-sm sm:text-base font-semibold text-white bg-red-500 rounded-lg shadow-md hover:bg-red-600 transition-all duration-300">以묎뎅??/button>
+    </div>
+
+    <!-- Main Card View -->
+    <div id="card-view" class="w-full max-w-6xl">
+        <div class="flex justify-center mb-6">
+            <button id="start-quiz-btn" class="px-6 py-3 font-bold text-white bg-blue-500 rounded-lg shadow-md hover:bg-blue-600 transition-all duration-300">?댁쫰 ?쒖옉?섍린</button>
+        </div>
+        <div id="game-board" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+    </div>
+
+    <!-- Quiz View -->
+    <div id="quiz-view" class="w-full max-w-2xl hidden">
+        <div class="bg-white rounded-xl shadow-md p-6 sm:p-8 flex flex-col items-center text-center">
+            <div id="quiz-header" class="w-full mb-4">
+                <p id="quiz-question-number" class="text-gray-500 text-sm mb-2"></p>
+                <h3 id="quiz-question" class="text-2xl sm:text-3xl font-bold text-gray-800 mb-6"></h3>
+            </div>
+            <div id="quiz-options" class="w-full grid gap-4"></div>
+            <div id="quiz-feedback" class="answer-feedback"></div>
+            <div id="quiz-combo" class="mt-4 text-gray-500 text-lg font-semibold"></div>
+        </div>
+    </div>
+
+    <!-- Result View -->
+    <div id="result-view" class="w-full max-w-2xl hidden">
+        <div id="result-content-to-capture" class="bg-white rounded-xl shadow-md p-6 sm:p-8 flex flex-col items-center text-center">
+            <h3 id="result-title" class="text-3xl font-bold text-blue-600 mb-4"></h3>
+            <p id="result-score" class="text-xl text-gray-700 mb-6"></p>
+            <table class="w-full text-left table-auto border-collapse">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="p-3 border-b-2">臾몄젣</th>
+                        <th class="p-3 border-b-2">?뺣떟</th>
+                        <th class="p-3 border-b-2">寃곌낵</th>
+                        <th class="p-3 border-b-2 text-right">?먯닔</th>
+                    </tr>
+                </thead>
+                <tbody id="result-table-body">
+                </tbody>
+            </table>
+        </div>
+        <div class="flex flex-wrap justify-center gap-4 mt-6">
+            <button id="capture-btn" class="px-6 py-3 font-bold text-white bg-teal-500 rounded-lg shadow-md hover:bg-teal-600 transition-all duration-300">
+                <span id="capture-text">寃곌낵 罹≪쿂?섍린</span> ?벝
+            </button>
+            <button id="restart-quiz-btn" class="px-6 py-3 font-bold text-white bg-blue-500 rounded-lg shadow-md hover:bg-blue-600 transition-all duration-300">?댁쫰 ?ㅼ떆 ?湲?/button>
+            <button id="back-to-cards-btn" class="px-6 py-3 font-bold text-gray-700 bg-gray-200 rounded-lg shadow-md hover:bg-gray-300 transition-all duration-300">?댄쐶 移대뱶 蹂닿린</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const allVocabulary = {
+                korean: {
+                    themeColor: 'blue',
+                    data: [
+                        { korean: "?댁씠 李뚮떎/鍮좎???, foreign: "泥댁쨷???섎떎/以꾨떎." },
+                        { korean: "?섏씠 ?몃떎/?쏀븯??, foreign: "?좎껜?곸씤 ?λ젰??媛뺥븯???쏀븯??" },
+                        { korean: "?먯꽭媛 醫뗫떎/?섏걯??, foreign: "紐몄쓽 洹좏삎?대굹 ?쒕룄媛 諛붾Ⅴ??諛붾Ⅴ吏 ?딅떎." },
+                        { korean: "紐몄씠 臾닿쾪??媛蹂띾떎", foreign: "紐몄씠 ?뷀븯怨??쇨낀?섎떎/?곸풄?섍퀬 ?쒓린李⑤떎." },
+                        { korean: "?⑥씠 李⑤떎", foreign: "?명씉??媛?섍퀬 ?섎뱾??" },
+                        { korean: "????섎떎", foreign: "泥댁삩 議곗젅???꾪빐 ?쇰??먯꽌 臾쇱씠 ?섏삤??" },
+                        { korean: "伊먭? ?섎떎", foreign: "洹쇱쑁??媛묒옄湲??섏텞?섏뿬 ?꾪봽??" },
+                        { korean: "吏移섎떎", foreign: "?섏씠 ??鍮좎졇???쇨낀?섎떎." },
+                        { korean: "湲곕텇???곸풄?섎떎", foreign: "?먮굦???쒖썝?섍퀬 源⑤걮?섎떎." },
+                        { korean: "湲곗슫???섎떎", foreign: "紐몄뿉 ?섏씠 ?앷린??" },
+                        { korean: "紐몄씠 醫뗭븘吏??, foreign: "嫄닿컯 ?곹깭媛 ?뚮났?섎떎." },
+                        { korean: "洹쇱쑁???앷린??, foreign: "?대룞?쇰줈 洹쇱쑁??諛쒕떖?섎떎." },
+                        { korean: "(紐⑹쓣) ?뚮━??, foreign: "紐⑹쓣 ?먯쓣 洹몃━硫??吏곸씠??" },
+                        { korean: "(?녾뎄由щ?) 援쏀엳??, foreign: "紐몄쓽 ?녿?遺꾩쓣 援щ?由щ떎." },
+                        { korean: "(媛?댁쓣) ?대떎", foreign: "媛?댁쓣 ?볤쾶 踰뚮━??" },
+                        { korean: "(紐몄쓣) ?뽱엳??, foreign: "紐몄쓣 ?ㅻ줈 湲곗슱?대떎." },
+                        { korean: "(?먯쓣 ?덈━?? ???, foreign: "?먯쓣 ?덈━ 遺遺꾩뿉 ?щ젮?볥떎." },
+                        { korean: "(?붿쓣) 六쀫떎", foreign: "?붿쓣 湲멸쾶 ?섏씠??" },
+                        { korean: "(?ㅻ━瑜? 踰뚮━??, foreign: "???ㅻ━ ?ъ씠瑜??볧엳??" },
+                        { korean: "(諛쒕뮘轅덉튂瑜? ?ㅻ떎", foreign: "諛쒖쓽 ?룸?遺꾩쓣 ?꾨줈 ?щ━??" }
+                    ]
+                },
+                vietnamese: {
+                    themeColor: 'green',
+                    data: [
+                        { korean: "?댁씠 李뚮떎/鍮좎???, foreign: "t훱ng c창n / gi梳즡 c창n" },
+                        { korean: "?섏씠 ?몃떎/?쏀븯??, foreign: "m梳죒h / y梳퓎" },
+                        { korean: "?먯꽭媛 醫뗫떎/?섏걯??, foreign: "t튼 th梳?t沼몋 / x梳쪀" },
+                        { korean: "紐몄씠 臾닿쾪??媛蹂띾떎", foreign: "c퉤 th沼?n梳톘g n沼?/ nh梳?nh천m" },
+                        { korean: "?⑥씠 李⑤떎", foreign: "h沼쩿 h퉤i, kh처 th沼? },
+                        { korean: "????섎떎", foreign: "ra m沼?h척i" },
+                        { korean: "伊먭? ?섎떎", foreign: "b沼?chu沼셳 r첬t" },
+                        { korean: "吏移섎떎", foreign: "m沼뇍 m沼뢩, ki沼뇍 s沼쯢" },
+                        { korean: "湲곕텇???곸풄?섎떎", foreign: "t창m tr梳죒g s梳즢g kho찼i" },
+                        { korean: "湲곗슫???섎떎", foreign: "c처 s沼쯢 l沼켧, kh沼뢤 ra" },
+                        { korean: "紐몄씠 醫뗭븘吏??, foreign: "s沼쯢 kh沼뢤 t沼몋 l챗n" },
+                        { korean: "洹쇱쑁???앷린??, foreign: "l챗n c퉤 b梳칛" },
+                        { korean: "(紐⑹쓣) ?뚮━??, foreign: "xoay c沼? },
+                        { korean: "(?녾뎄由щ?) 援쏀엳??, foreign: "g梳춑 l튼沼쓓" },
+                        { korean: "(媛?댁쓣) ?대떎", foreign: " 튼沼죒 ng沼켧" },
+                        { korean: "(紐몄쓣) ?뽱엳??, foreign: "ng梳?ng튼沼쓎 ra sau" },
+                        { korean: "(?먯쓣 ?덈━?? ???, foreign: "ch沼몁g tay l챗n h척ng" },
+                        { korean: "(?붿쓣) 六쀫떎", foreign: "du沼뾦 tay" },
+                        { korean: "(?ㅻ━瑜? 踰뚮━??, foreign: "d梳죒g ch창n" },
+                        { korean: "(諛쒕뮘轅덉튂瑜? ?ㅻ떎", foreign: "nh처n g처t ch창n" }
+                    ]
+                },
+                japanese: {
+                    themeColor: 'purple',
+                    data: [
+                        { korean: "?댁씠 李뚮떎/鍮좎???, foreign: "鸚ゃ굥/?⒲걵?? },
+                        { korean: "?섏씠 ?몃떎/?쏀븯??, foreign: "?쎼걣凉룔걚/凉긱걚" },
+                        { korean: "?먯꽭媛 醫뗫떎/?섏걯??, foreign: "冶욕떌?뚩돬???ゃ걚" },
+                        { korean: "紐몄씠 臾닿쾪??媛蹂띾떎", foreign: "鵝볝걣?띲걚/邕썬걚" },
+                        { korean: "?⑥씠 李⑤떎", foreign: "??걣?뉎굦?? },
+                        { korean: "????섎떎", foreign: "黎쀣걣?뷩굥" },
+                        { korean: "伊먭? ?섎떎", foreign: "擁녈걣?ㅳ굥" },
+                        { korean: "吏移섎떎", foreign: "?꿔굦?? },
+                        { korean: "湲곕텇???곸풄?섎떎", foreign: "麗쀥늽?뚨댙恙ャ걽" },
+                        { korean: "湲곗슫???섎떎", foreign: "?껅컱?뚦눣?? },
+                        { korean: "紐몄씠 醫뗭븘吏??, foreign: "鵝볢た?뚩돬?뤵겒?? },
+                        { korean: "洹쇱쑁???앷린??, foreign: "嶺뗨굢?뚣겇?? },
+                        { korean: "(紐⑹쓣) ?뚮━??, foreign: "腰뽧굮?욁걲" },
+                        { korean: "(?녾뎄由щ?) 援쏀엳??, foreign: "?뉓끃?믤쎊?믡굥" },
+                        { korean: "(媛?댁쓣) ?대떎", foreign: "?멥굮凉듐굥" },
+                        { korean: "(紐몄쓣) ?뽱엳??, foreign: "鵝볝굮?띲굢?? },
+                        { korean: "(?먯쓣 ?덈━?? ???, foreign: "?겹겓?뗣굮壤볝겍?? },
+                        { korean: "(?붿쓣) 六쀫떎", foreign: "?뺛굮鴉멥겙?? },
+                        { korean: "(?ㅻ━瑜? 踰뚮━??, foreign: "擁녈굮?뗣걦" },
+                        { korean: "(諛쒕뮘轅덉튂瑜? ?ㅻ떎", foreign: "?뗣걢?ⓦ굮訝듽걩?? }
+                    ]
+                },
+                chinese: {
+                    themeColor: 'red',
+                    data: [
+                        { korean: "?댁씠 李뚮떎/鍮좎???, foreign: "?욤깣 / ?섊삧" },
+                        { korean: "?섏씠 ?몃떎/?쏀븯??, foreign: "?쎿컮鸚?/ ?쎿컮弱? },
+                        { korean: "?먯꽭媛 醫뗫떎/?섏걯??, foreign: "冶욕듌也?/ 訝띶?" },
+                        { korean: "紐몄씠 臾닿쾪??媛蹂띾떎", foreign: "翁ヤ퐪亦됮뇥 / 饔삣엮" },
+                        { korean: "?⑥씠 李⑤떎", foreign: "?섉컮" },
+                        { korean: "????섎떎", foreign: "?뷸콟" },
+                        { korean: "伊먭? ?섎떎", foreign: "?썹춮" },
+                        { korean: "吏移섎떎", foreign: "榮? },
+                        { korean: "湲곕텇???곸풄?섎떎", foreign: "恙껅깄?믥븙" },
+                        { korean: "湲곗슫???섎떎", foreign: "?됬꼐曄? },
+                        { korean: "紐몄씠 醫뗭븘吏??, foreign: "翁ヤ퐪?섇?" },
+                        { korean: "洹쇱쑁???앷린??, foreign: "?욤굦?? },
+                        { korean: "(紐⑹쓣) ?뚮━??, foreign: "饔у뒯(?뽩춴)" },
+                        { korean: "(?녾뎄由щ?) 援쏀엳??, foreign: "凉??겻쑨)" },
+                        { korean: "(媛?댁쓣) ?대떎", foreign: "????" },
+                        { korean: "(紐몄쓣) ?뽱엳??, foreign: "?롣뺐(翁ヤ퐪)" },
+                        { korean: "(?먯쓣 ?덈━?? ???, foreign: "?뗦붂?②뀺訝? },
+                        { korean: "(?붿쓣) 六쀫떎", foreign: "鴉??녘냺)" },
+                        { korean: "(?ㅻ━瑜? 踰뚮━??, foreign: "略붷?(??" },
+                        { korean: "(諛쒕뮘轅덉튂瑜? ?ㅻ떎", foreign: "甕?돈?싪퇎" }
+                    ]
+                }
+            };
+
+            const gameBoard = document.getElementById('game-board');
+            const langButtons = document.querySelectorAll('.lang-btn');
+            const body = document.body;
+            const cardView = document.getElementById('card-view');
+            const quizView = document.getElementById('quiz-view');
+            const resultView = document.getElementById('result-view');
+            const startQuizBtn = document.getElementById('start-quiz-btn');
+            const restartQuizBtn = document.getElementById('restart-quiz-btn');
+            const backToCardsBtn = document.getElementById('back-to-cards-btn');
+            const captureBtn = document.getElementById('capture-btn');
+            const captureText = document.getElementById('capture-text');
+            const resultContentToCapture = document.getElementById('result-content-to-capture');
+            const quizQuestionEl = document.getElementById('quiz-question');
+            const quizQuestionNumberEl = document.getElementById('quiz-question-number');
+            const quizOptionsEl = document.getElementById('quiz-options');
+            const quizFeedbackEl = document.getElementById('quiz-feedback');
+            const quizComboEl = document.getElementById('quiz-combo');
+            const resultTitleEl = document.getElementById('result-title');
+            const resultScoreEl = document.getElementById('result-score');
+            const resultTableBodyEl = document.getElementById('result-table-body');
+            const lastScoreDisplayEl = document.getElementById('last-score-display');
+            
+            let currentLang = 'korean';
+            let currentQuizData = [];
+            let currentQuestionIndex = 0;
+            let totalScore = 0;
+            let combo = 0;
+            let quizResults = [];
+
+            const colorMap = {
+                blue: { bg: 'bg-blue-50', text: 'text-blue-800', cardBack: 'bg-blue-500', button: 'bg-blue-500' },
+                green: { bg: 'bg-green-50', text: 'text-green-800', cardBack: 'bg-green-500', button: 'bg-green-500' },
+                purple: { bg: 'bg-purple-50', text: 'text-purple-800', cardBack: 'bg-purple-500', button: 'bg-purple-500' },
+                red: { bg: 'bg-red-50', text: 'text-red-800', cardBack: 'bg-red-500', button: 'bg-red-500' }
+            };
+
+            // Fisher-Yates shuffle algorithm
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+            }
+
+            // Function to save quiz result to local storage
+            function saveQuizResult() {
+                try {
+                    const resultData = {
+                        score: totalScore,
+                        totalQuestions: allVocabulary[currentLang].data.length,
+                        date: new Date().toLocaleDateString('ko-KR')
+                    };
+                    localStorage.setItem(`quizResult_12_${currentLang}`, JSON.stringify(resultData));
+                    displayLastScore();
+                } catch (e) {
+                    console.error("Local storage save failed:", e);
+                }
+            }
+
+            // Function to load and display the last score
+            function displayLastScore() {
+                try {
+                    const savedData = localStorage.getItem(`quizResult_12_${currentLang}`);
+                    if (savedData) {
+                        const result = JSON.parse(savedData);
+                        lastScoreDisplayEl.textContent = `理쒓렐 ?먯닔: ${result.score}??(珥?${result.totalQuestions}臾몄젣)`;
+                        lastScoreDisplayEl.classList.remove('hidden');
+                    } else {
+                        lastScoreDisplayEl.classList.add('hidden');
+                    }
+                } catch (e) {
+                    console.error("Local storage load failed:", e);
+                }
+            }
+            
+            // Function to switch views
+            function showView(view) {
+                cardView.classList.add('hidden');
+                quizView.classList.add('hidden');
+                resultView.classList.add('hidden');
+                document.getElementById(view).classList.remove('hidden');
+            }
+
+            // Renders the vocabulary cards
+            function createCardBoard(language) {
+                gameBoard.innerHTML = '';
+                const langData = allVocabulary[language];
+                const vocabulary = langData.data;
+                const colors = colorMap[langData.themeColor];
+                
+                body.className = `min-h-screen flex flex-col items-center justify-center p-4 transition-colors duration-500 ${colors.bg}`;
+                
+                vocabulary.forEach(item => {
+                    const cardContainer = document.createElement('div');
+                    cardContainer.className = 'card-container h-48';
+                    const cardInner = document.createElement('div');
+                    cardInner.className = 'card-inner';
+
+                    const cardFront = document.createElement('div');
+                    cardFront.className = `card-front bg-white ${colors.text}`;
+                    const koreanText = document.createElement('h2');
+                    koreanText.className = 'text-xl font-bold';
+                    koreanText.textContent = item.korean;
+                    cardFront.appendChild(koreanText);
+
+                    const cardBack = document.createElement('div');
+                    cardBack.className = `card-back text-white ${colors.cardBack}`;
+                    const foreignText = document.createElement('p');
+                    foreignText.className = 'text-lg font-semibold';
+                    foreignText.textContent = item.foreign;
+                    cardBack.appendChild(foreignText);
+                    
+                    cardInner.appendChild(cardFront);
+                    cardInner.appendChild(cardBack);
+                    cardContainer.appendChild(cardInner);
+                    gameBoard.appendChild(cardContainer);
+
+                    cardContainer.addEventListener('click', () => cardContainer.classList.toggle('flipped'));
+                });
+            }
+
+            // Generates and displays a single quiz question
+            function showQuizQuestion() {
+                const totalQuestions = currentQuizData.length;
+                if (currentQuestionIndex >= totalQuestions) {
+                    showQuizResult();
+                    return;
+                }
+
+                const currentItem = currentQuizData[currentQuestionIndex];
+                const allItems = allVocabulary[currentLang].data;
+                
+                // Generate wrong answers
+                const distractors = [];
+                while (distractors.length < 2) {
+                    const randomIndex = Math.floor(Math.random() * allItems.length);
+                    const randomItem = allItems[randomIndex];
+                    if (randomItem.foreign !== currentItem.foreign && !distractors.includes(randomItem.foreign)) {
+                        distractors.push(randomItem.foreign);
+                    }
+                }
+
+                // Create and shuffle options
+                const options = [currentItem.foreign, ...distractors];
+                shuffleArray(options);
+
+                // Update UI
+                quizQuestionNumberEl.textContent = `${currentQuestionIndex + 1} / ${totalQuestions}`;
+                quizQuestionEl.textContent = currentItem.korean;
+                quizOptionsEl.innerHTML = '';
+                quizFeedbackEl.textContent = ''; // Clear feedback
+                quizComboEl.textContent = (combo > 0) ? `??${combo} 肄ㅻ낫! ?? : '';
+
+                options.forEach(option => {
+                    const optionBtn = document.createElement('button');
+                    optionBtn.className = `w-full px-4 py-4 text-lg font-semibold rounded-lg shadow-md transition-all duration-300 text-gray-800 bg-gray-100 hover:bg-gray-200`;
+                    optionBtn.textContent = option;
+                    optionBtn.addEventListener('click', () => handleAnswer(option, currentItem.foreign, optionBtn));
+                    quizOptionsEl.appendChild(optionBtn);
+                });
+            }
+
+            // Handles user's answer
+            function handleAnswer(selectedAnswer, correctAnswer, selectedBtn) {
+                const isCorrect = selectedAnswer === correctAnswer;
+                const colors = colorMap[allVocabulary[currentLang].themeColor];
+                
+                // Disable all buttons after selection
+                Array.from(quizOptionsEl.children).forEach(btn => btn.disabled = true);
+
+                let pointsGained = 0;
+                if (isCorrect) {
+                    combo++;
+                    pointsGained = 10 + combo; // Basic point + combo bonus
+                    totalScore += pointsGained;
+                    selectedBtn.classList.add('bg-green-300', 'text-white');
+                    quizFeedbackEl.textContent = '?뺣떟?낅땲?? ?럦';
+                    quizFeedbackEl.classList.add('correct');
+                } else {
+                    combo = 0;
+                    pointsGained = 0;
+                    selectedBtn.classList.add('bg-red-300', 'text-white');
+                    quizFeedbackEl.textContent = `?꾩돺?ㅼ슂. ?뺣떟? '${correctAnswer}' ?낅땲??`;
+                    quizFeedbackEl.classList.add('wrong');
+                    
+                    // Highlight the correct answer
+                    Array.from(quizOptionsEl.children).forEach(btn => {
+                        if (btn.textContent === correctAnswer) {
+                            btn.classList.add('bg-green-300', 'text-white');
+                        }
+                    });
+                }
+                
+                // Track result
+                quizResults.push({
+                    question: currentQuizData[currentQuestionIndex].korean,
+                    userAnswer: selectedAnswer,
+                    correctAnswer: correctAnswer,
+                    isCorrect: isCorrect,
+                    points: pointsGained
+                });
+                
+                // Move to the next question after a short delay
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    quizFeedbackEl.classList.remove('correct', 'wrong');
+                    showQuizQuestion();
+                }, 1500);
+            }
+
+            // Shows the quiz results page
+            function showQuizResult() {
+                showView('result-view');
+                resultTitleEl.textContent = `?댁쫰 ?꾨즺!`;
+                resultScoreEl.textContent = `珥??먯닔: ${totalScore}??;
+                resultTableBodyEl.innerHTML = '';
+                
+                quizResults.forEach(result => {
+                    const row = document.createElement('tr');
+                    const correctClass = result.isCorrect ? 'correct-answer' : 'wrong-answer';
+                    row.className = correctClass;
+                    
+                    row.innerHTML = `
+                        <td class="p-3 border-b-2 font-medium">${result.question}</td>
+                        <td class="p-3 border-b-2 text-gray-700">${result.correctAnswer}</td>
+                        <td class="p-3 border-b-2 font-bold">${result.isCorrect ? 'O' : 'X'}</td>
+                        <td class="p-3 border-b-2 text-right">${result.points}??/td>
+                    `;
+                    resultTableBodyEl.appendChild(row);
+                });
+
+                saveQuizResult();
+            }
+
+            // Event Listeners
+            langButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    langButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    currentLang = button.dataset.lang;
+                    createCardBoard(currentLang);
+                    displayLastScore();
+                    showView('card-view');
+                });
+            });
+
+            startQuizBtn.addEventListener('click', () => {
+                currentQuizData = [...allVocabulary[currentLang].data];
+                shuffleArray(currentQuizData);
+                currentQuestionIndex = 0;
+                totalScore = 0;
+                combo = 0;
+                quizResults = [];
+                showView('quiz-view');
+                showQuizQuestion();
+            });
+
+            restartQuizBtn.addEventListener('click', () => {
+                startQuizBtn.click(); // Re-use the start quiz logic
+            });
+
+            backToCardsBtn.addEventListener('click', () => {
+                createCardBoard(currentLang);
+                showView('card-view');
+            });
+
+            captureBtn.addEventListener('click', () => {
+                // Hide buttons before capture
+                const buttons = document.querySelectorAll('#result-view button');
+                buttons.forEach(btn => btn.style.display = 'none');
+                
+                captureText.textContent = '罹≪쿂 以?..';
+                
+                html2canvas(resultContentToCapture, {
+                    scale: 2, // Capture at a higher resolution
+                    useCORS: true
+                }).then(canvas => {
+                    const a = document.createElement('a');
+                    a.href = canvas.toDataURL('image/png');
+                    a.download = `quiz_result_${new Date().toLocaleDateString('ko-KR')}.png`;
+                    a.click();
+                    
+                    // Show buttons again after capture
+                    buttons.forEach(btn => btn.style.display = '');
+                    captureText.textContent = '寃곌낵 罹≪쿂?섍린';
+                });
+            });
+
+            // Initial setup
+            document.querySelector('[data-lang="korean"]').classList.add('active');
+            createCardBoard('korean');
+            displayLastScore();
+        });
+    </script>
+</body>
+</html>
+

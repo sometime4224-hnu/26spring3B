@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 문법 학습: V-고 있다</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .card {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        @media (min-width: 640px) {
+            .card {
+                padding: 2rem;
+                margin-bottom: 2rem;
+            }
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #10b981, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .btn {
+            border-radius: 10px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(0,0,0,0.1);
+        }
+        .btn:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn-primary {
+            background-color: #10b981;
+        }
+        .btn-primary:hover:not(:disabled) {
+            background-color: #059669;
+        }
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #059669;
+            background-color: #d1fae5;
+            border-color: #10b981;
+        }
+        .tab-btn:not(.active) {
+            color: #4b5563;
+        }
+        .quiz-input {
+            border: 2px solid #d1d5db;
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            transition: border-color 0.2s;
+        }
+        .quiz-input:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+        .quiz-input:disabled {
+            background-color: #f3f4f6;
+        }
+        .feedback {
+            font-weight: 700;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .feedback-correct {
+            color: #16a34a;
+            background-color: #dcfce7;
+        }
+        .feedback-incorrect {
+            color: #dc2626;
+            background-color: #fee2e2;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../../assets/content-consistency.css">
+</head>
+<body class="p-4 sm:p-6 lg:p-8">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+    <div class="max-w-4xl mx-auto">
+        
+        <header class="text-center mb-6">
+            <h1 class="text-3xl sm:text-4xl font-bold gradient-text" data-key="main_title">문법과 표현 2: V-고 있다</h1>
+            <p class="text-gray-600 mt-2" data-key="main_subtitle">Grammar and Expression 2: V-고 있다</p>
+            <div class="mt-4">
+                <select id="lang-selector" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-base py-2 px-3">
+                    <option value="ko">한국어</option>
+                    <option value="en">English</option>
+                    <option value="vi">Tiếng Việt</option>
+                    <option value="ja">日本語</option>
+                    <option value="zh">中文</option>
+                </select>
+            </div>
+        </header>
+
+        <!-- Tab Navigation -->
+        <div class="flex justify-center flex-wrap space-x-2 sm:space-x-4 mb-6 bg-gray-100 p-2 rounded-xl">
+            <button class="tab-btn active" onclick="changeView('explanation')" data-key="tab_explanation">설명</button>
+            <button class="tab-btn" onclick="changeView('practice')" data-key="tab_practice">연습</button>
+            <button class="tab-btn" onclick="changeView('quiz')" data-key="tab_quiz">연습 문제</button>
+            <button class="tab-btn" onclick="changeView('comparison')" data-key="tab_comparison">차이점 비교</button>
+            <button class="tab-btn" onclick="changeView('comparison-quiz')" data-key="tab_comparison_quiz">차이점 퀴즈</button>
+        </div>
+
+        <!-- Content Views -->
+        <main>
+            <!-- Explanation View -->
+            <div id="explanation-view">
+                <div class="card">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4" data-key="explanation_title">무엇을 배울까요?</h2>
+                    <p class="text-gray-700 mb-2" data-key="explanation_desc_1">
+                        <strong>-고 있다</strong>는 현재 진행 중인 동작이나, 옷 등을 입거나 착용한 상태가 계속됨을 나타낼 때 사용하는 표현입니다.
+                    </p>
+                     <p class="text-gray-700" data-key="explanation_desc_2">
+                        '~하는 중이다' 또는 '~한 상태이다'라는 의미를 가집니다.
+                    </p>
+                    <div class="mt-6 pt-6 border-t">
+                        <h3 class="font-bold text-lg text-gray-800 mb-2" data-key="conjugation_title">만드는 법</h3>
+                        <ul class="list-disc list-inside text-gray-700 space-y-2">
+                            <li data-key="conjugation_rule_1">동사 어간에 바로 + <strong>고 있다</strong>를 붙입니다. (예: 가다 → 가고 있다, 입다 → 입고 있다)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Practice View -->
+            <div id="practice-view" class="hidden">
+                 <div class="card">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4" data-key="dialogue_title">대화 예시</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-3">
+                            <div class="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-lg">A</div>
+                            <div class="bg-gray-100 rounded-xl p-3 sm:p-4">
+                                <p class="text-gray-800" data-key="dialogue_a_1">아키라 씨가 누구예요?</p>
+                                <p class="text-sm text-gray-500" data-key="dialogue_a_2">Who is Akira?</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <div class="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-lg">B</div>
+                            <div class="bg-gray-100 rounded-xl p-3 sm:p-4">
+                                <p class="text-gray-800" data-key="dialogue_b_1">저기 흰색 양복에 까만색 가방을 <strong>들고 있는</strong> 사람이에요.</p>
+                                <p class="text-sm text-gray-500" data-key="dialogue_b_2">That person over there wearing a white suit and holding a black bag.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4" data-key="examples_title">문장 예시</h2>
+                    <ul class="space-y-4">
+                        <li>
+                            <p class="text-gray-800">지금 <strong>입고 있는</strong> 청바지 아주 편해 보이는데 어디서 샀어요?</p>
+                        </li>
+                        <li>
+                            <p class="text-gray-800">흰색 와이셔츠에 빨간색 넥타이를 <strong>메고 있는</strong> 사람이 우리 형이에요.</p>
+                        </li>
+                        <li>
+                            <p class="text-gray-800">사오랑 씨는 파란색 체크무늬 셔츠에 청바지를 <strong>입고 있어요</strong>.</p>
+                        </li>
+                         <li>
+                            <p class="text-gray-800">마리코 씨는 노란색 원피스에 하얀색 구두를 <strong>신고 있어요</strong>.</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Quiz View -->
+            <div id="quiz-view" class="hidden">
+                <div class="card">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2" data-key="quiz_title">연습 문제</h2>
+                    <p class="text-gray-600 mb-6" data-key="quiz_instruction">괄호 안의 단어를 사용하여 문장을 완성하세요. ('-고 있어요' 형태로)</p>
+                    <div id="quiz-container"></div>
+                    <div class="mt-6 flex justify-between items-center">
+                        <button id="check-btn" class="btn btn-primary" data-key="check_button">정답 확인</button>
+                        <button id="next-btn" class="btn bg-gray-600 hover:bg-gray-700 hidden" data-key="next_button">다음 문제</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comparison View -->
+            <div id="comparison-view" class="hidden">
+                <div class="card">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4" data-key="comparison_title">-고 있다 vs. -아/어 있다</h2>
+                    <div class="space-y-6">
+                        <!-- -고 있다 설명 -->
+                        <div>
+                            <h3 class="text-xl font-bold text-emerald-600" data-key="go_itta_title">-고 있다 (진행)</h3>
+                            <p class="mt-2 text-gray-700" data-key="go_itta_desc">동작이 현재 진행 중임을 나타냅니다. (Action in progress)</p>
+                            <p class="mt-2 text-gray-700 bg-gray-50 p-3 rounded-lg" data-key="example_go_itta_1">예: 학생이 책을 <strong>읽고 있어요</strong>. (The student is reading a book now.)</p>
+                        </div>
+                        <!-- -아/어 있다 설명 -->
+                        <div>
+                            <h3 class="text-xl font-bold text-blue-600" data-key="aeo_itta_title">-아/어 있다 (상태)</h3>
+                            <p class="mt-2 text-gray-700" data-key="aeo_itta_desc">동작이 완료된 후 그 결과 상태가 지속됨을 나타냅니다. (State of being after an action is completed)</p>
+                             <p class="mt-2 text-gray-700 bg-gray-50 p-3 rounded-lg" data-key="example_aeo_itta_1">예: 학생이 의자에 <strong>앉아 있어요</strong>. (앉는 동작은 끝났고, 앉은 상태가 지속됨)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4" data-key="verb_constraints_title">결합 동사 제약</h3>
+                     <div class="space-y-4">
+                        <div>
+                            <h4 class="font-bold text-emerald-600">-고 있다</h4>
+                            <p class="mt-1 text-gray-700" data-key="verb_constraints_go_itta">대부분의 동사(자동사, 타동사)와 결합할 수 있습니다.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-blue-600">-아/어 있다</h4>
+                            <p class="mt-1 text-gray-700" data-key="verb_constraints_aeo_itta">주로 자동사(목적어가 필요 없는 동사)와 결합하며, 특히 몸의 자세(앉다, 서다, 눕다)나 상태 변화를 나타내는 동사와 자주 사용됩니다.</p>
+                            <p class="mt-2 text-gray-700 bg-blue-50 p-3 rounded-lg" data-key="example_aeo_itta_2">예: 벽에 그림이 <strong>걸려 있어요</strong>. 창문이 <strong>열려 있어요</strong>.</p>
+                            <p class="mt-2 text-gray-700 bg-red-50 p-3 rounded-lg" data-key="verb_constraints_aeo_itta_warning">주의: 타동사(목적어가 필요한 동사)와는 거의 사용하지 않습니다. (예: 책을 읽어 있어요 (X))</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comparison Quiz View -->
+            <div id="comparison-quiz-view" class="hidden">
+                <div class="card">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2" data-key="comparison_quiz_title">차이점 퀴즈</h2>
+                    <p class="text-gray-600 mb-6" data-key="comparison_quiz_instruction">문장에 더 자연스러운 표현을 고르세요.</p>
+                    <div id="comparison-quiz-container"></div>
+                    <div id="comparison-quiz-feedback" class="feedback hidden"></div>
+                    <div class="mt-6 flex justify-end">
+                        <button id="comparison-next-btn" class="btn bg-gray-600 hover:bg-gray-700 hidden" data-key="next_button">다음 문제</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            ko: {
+                main_title: "문법과 표현 2: V-고 있다",
+                main_subtitle: "Grammar and Expression 2: V-고 있다",
+                tab_explanation: "설명",
+                tab_practice: "연습",
+                tab_quiz: "연습 문제",
+                tab_comparison: "차이점 비교",
+                tab_comparison_quiz: "차이점 퀴즈",
+                explanation_title: "무엇을 배울까요?",
+                explanation_desc_1: "<strong>-고 있다</strong>는 현재 진행 중인 동작이나, 옷 등을 입거나 착용한 상태가 계속됨을 나타낼 때 사용하는 표현입니다.",
+                explanation_desc_2: "'~하는 중이다' 또는 '~한 상태이다'라는 의미를 가집니다.",
+                conjugation_title: "만드는 법",
+                conjugation_rule_1: "동사 어간에 바로 + <strong>고 있다</strong>를 붙입니다. (예: 가다 → 가고 있다, 입다 → 입고 있다)",
+                dialogue_title: "대화 예시",
+                dialogue_a_1: "아키라 씨가 누구예요?",
+                dialogue_a_2: "Who is Akira?",
+                dialogue_b_1: "저기 흰색 양복에 까만색 가방을 <strong>들고 있는</strong> 사람이에요.",
+                dialogue_b_2: "That person over there wearing a white suit and holding a black bag.",
+                examples_title: "문장 예시",
+                quiz_title: "연습 문제",
+                quiz_instruction: "괄호 안의 단어를 사용하여 문장을 완성하세요. ('-고 있어요' 형태로)",
+                check_button: "정답 확인",
+                next_button: "다음 문제",
+                feedback_correct: "정답입니다!",
+                feedback_incorrect_template: (answer) => `틀렸어요. 정답은 "${answer}" 입니다.`,
+                quiz_end: "모든 문제를 다 풀었어요! 정말 잘했어요! 👏",
+                comparison_title: "-고 있다 vs. -아/어 있다",
+                go_itta_title: "-고 있다 (진행)",
+                go_itta_desc: "동작이 현재 진행 중임을 나타냅니다. (Action in progress)",
+                example_go_itta_1: "예: 학생이 책을 <strong>읽고 있어요</strong>. (학생이 지금 책을 읽는 동작을 하고 있음)",
+                aeo_itta_title: "-아/어 있다 (상태)",
+                aeo_itta_desc: "동작이 완료된 후 그 결과 상태가 지속됨을 나타냅니다. (State of being after an action is completed)",
+                example_aeo_itta_1: "예: 학생이 의자에 <strong>앉아 있어요</strong>. (앉는 동작은 끝났고, 앉은 상태가 지속됨)",
+                verb_constraints_title: "결합 동사 제약",
+                verb_constraints_go_itta: "대부분의 동사(자동사, 타동사)와 결합할 수 있습니다.",
+                verb_constraints_aeo_itta: "주로 자동사(목적어가 필요 없는 동사)와 결합하며, 특히 몸의 자세(앉다, 서다, 눕다)나 상태 변화를 나타내는 동사와 자주 사용됩니다.",
+                example_aeo_itta_2: "예: 벽에 그림이 <strong>걸려 있어요</strong>. 창문이 <strong>열려 있어요</strong>.",
+                verb_constraints_aeo_itta_warning: "주의: 타동사(목적어가 필요한 동사)와는 거의 사용하지 않습니다. (예: 책을 읽어 있어요 (X))",
+                comparison_quiz_title: "차이점 퀴즈",
+                comparison_quiz_instruction: "문장에 더 자연스러운 표현을 고르세요.",
+                comparison_quiz_feedback_correct: "맞았어요! '-아/어 있다'는 동작의 결과 상태가 지속될 때 사용해요.",
+                comparison_quiz_feedback_incorrect_action: "아쉬워요! 이 문장에서는 동작이 진행 중이므로 '-고 있다'가 더 자연스러워요.",
+                comparison_quiz_feedback_incorrect_state: "아쉬워요! 이 문장에서는 동작이 끝난 상태가 지속되므로 '-아/어 있다'가 더 자연스러워요."
+            },
+            en: {
+                main_title: "Grammar and Expression 2: V-고 있다",
+                main_subtitle: "",
+                tab_explanation: "Explanation",
+                tab_practice: "Practice",
+                tab_quiz: "Quiz",
+                tab_comparison: "Comparison",
+                tab_comparison_quiz: "Comparison Quiz",
+                explanation_title: "What will we learn?",
+                explanation_desc_1: "<strong>-고 있다</strong> is used to express an action in progress, or a continuous state of wearing something (like clothes).",
+                explanation_desc_2: "It means 'is/are -ing' or 'is in the state of wearing'.",
+                conjugation_title: "Conjugation",
+                conjugation_rule_1: "Simply add + <strong>고 있다</strong> to the verb stem. (e.g., 가다 → 가고 있다, 입다 → 입고 있다)",
+                dialogue_title: "Dialogue Example",
+                dialogue_a_1: "Who is Akira?",
+                dialogue_a_2: "",
+                dialogue_b_1: "That person over there <strong>wearing</strong> a white suit and <strong>holding</strong> a black bag.",
+                dialogue_b_2: "",
+                examples_title: "Example Sentences",
+                quiz_title: "Practice Quiz",
+                quiz_instruction: "Complete the sentence using the word in parentheses. (in the '-고 있어요' form)",
+                check_button: "Check Answer",
+                next_button: "Next Question",
+                feedback_correct: "Correct!",
+                feedback_incorrect_template: (answer) => `Incorrect. The answer is "${answer}".`,
+                quiz_end: "You've completed all the questions! Great job! 👏",
+                comparison_title: "-고 있다 vs. -아/어 있다",
+                go_itta_title: "-고 있다 (Progression)",
+                go_itta_desc: "Indicates an action is currently in progress.",
+                example_go_itta_1: "e.g., A student <strong>is reading</strong> a book. (The action of reading is happening now.)",
+                aeo_itta_title: "-아/어 있다 (State)",
+                aeo_itta_desc: "Indicates that the state resulting from a completed action continues.",
+                example_aeo_itta_1: "e.g., A student <strong>is sitting</strong> on a chair. (The action of sitting is over, and the state of being seated continues.)",
+                verb_constraints_title: "Verb Constraints",
+                verb_constraints_go_itta: "Can be combined with most verbs (both intransitive and transitive).",
+                verb_constraints_aeo_itta: "Mainly used with intransitive verbs (verbs that don't need an object), especially those related to body posture (sit, stand, lie down) or a change of state.",
+                example_aeo_itta_2: "e.g., A picture <strong>is hanging</strong> on the wall. The window <strong>is open</strong>.",
+                verb_constraints_aeo_itta_warning: "Note: Rarely used with transitive verbs (verbs that need an object). (e.g., 책을 읽어 있어요 (X))",
+                comparison_quiz_title: "Comparison Quiz",
+                comparison_quiz_instruction: "Choose the more natural expression for the sentence.",
+                comparison_quiz_feedback_correct: "Correct! '-아/어 있다' is used when the resulting state of an action continues.",
+                comparison_quiz_feedback_incorrect_action: "Not quite! In this sentence, the action is in progress, so '-고 있다' is more natural.",
+                comparison_quiz_feedback_incorrect_state: "Not quite! In this sentence, the state after an action is completed continues, so '-아/어 있다' is more natural."
+            },
+            vi: {
+                main_title: "Ngữ pháp và biểu hiện 2: V-고 있다",
+                main_subtitle: "",
+                tab_explanation: "Giải thích",
+                tab_practice: "Luyện tập",
+                tab_quiz: "Câu đố",
+                tab_comparison: "So sánh",
+                tab_comparison_quiz: "Câu đố so sánh",
+                explanation_title: "Chúng ta sẽ học gì?",
+                explanation_desc_1: "<strong>-고 있다</strong> là biểu hiện dùng để chỉ hành động đang diễn ra, hoặc trạng thái đang mặc (quần áo, v.v.).",
+                explanation_desc_2: "Nó có nghĩa là 'đang làm gì đó' hoặc 'đang trong trạng thái'.",
+                conjugation_title: "Cách chia",
+                conjugation_rule_1: "Chỉ cần thêm + <strong>고 있다</strong> vào sau gốc động từ. (ví dụ: 가다 → 가고 있다, 입다 → 입고 있다)",
+                dialogue_title: "Ví dụ hội thoại",
+                dialogue_a_1: "Akira là ai vậy?",
+                dialogue_a_2: "",
+                dialogue_b_1: "Là người <strong>đang mặc</strong> vest trắng và <strong>xách</strong> túi màu đen ở đằng kia.",
+                dialogue_b_2: "",
+                examples_title: "Ví dụ câu",
+                quiz_title: "Câu đố thực hành",
+                quiz_instruction: "Hoàn thành câu bằng từ trong ngoặc. (dạng '-고 있어요')",
+                check_button: "Kiểm tra đáp án",
+                next_button: "Câu tiếp theo",
+                feedback_correct: "Đúng rồi!",
+                feedback_incorrect_template: (answer) => `Sai rồi. Đáp án là "${answer}".`,
+                quiz_end: "Bạn đã hoàn thành tất cả các câu hỏi! Làm tốt lắm! 👏",
+                comparison_title: "-고 있다 vs. -아/어 있다",
+                go_itta_title: "-고 있다 (Tiến trình)",
+                go_itta_desc: "Chỉ một hành động đang diễn ra.",
+                example_go_itta_1: "Ví dụ: Học sinh <strong>đang đọc</strong> sách. (Hành động đọc đang diễn ra.)",
+                aeo_itta_title: "-아/어 있다 (Trạng thái)",
+                aeo_itta_desc: "Chỉ trạng thái kết quả tiếp tục sau khi một hành động đã hoàn thành.",
+                example_aeo_itta_1: "Ví dụ: Học sinh <strong>đang ngồi</strong> trên ghế. (Hành động ngồi đã kết thúc, trạng thái ngồi tiếp tục.)",
+                verb_constraints_title: "Hạn chế về động từ",
+                verb_constraints_go_itta: "Có thể kết hợp với hầu hết các động từ (cả nội động từ và ngoại động từ).",
+                verb_constraints_aeo_itta: "Chủ yếu được sử dụng với nội động từ (động từ không cần tân ngữ), đặc biệt là những động từ liên quan đến tư thế cơ thể (ngồi, đứng, nằm) hoặc thay đổi trạng thái.",
+                example_aeo_itta_2: "Ví dụ: Bức tranh <strong>được treo</strong> trên tường. Cửa sổ <strong>đang mở</strong>.",
+                verb_constraints_aeo_itta_warning: "Lưu ý: Hiếm khi được sử dụng với ngoại động từ (động từ cần tân ngữ). (ví dụ: 책을 읽어 있어요 (X))",
+                comparison_quiz_title: "Câu đố so sánh",
+                comparison_quiz_instruction: "Chọn biểu hiện tự nhiên hơn cho câu.",
+                comparison_quiz_feedback_correct: "Đúng! '-아/어 있다' được sử dụng khi trạng thái kết quả của một hành động tiếp tục.",
+                comparison_quiz_feedback_incorrect_action: "Chưa đúng! Trong câu này, hành động đang diễn ra, vì vậy '-고 있다' tự nhiên hơn.",
+                comparison_quiz_feedback_incorrect_state: "Chưa đúng! Trong câu này, trạng thái sau khi một hành động hoàn thành vẫn tiếp tục, vì vậy '-아/어 있다' tự nhiên hơn."
+            },
+            ja: {
+                main_title: "文法と表現 2: V-고 있다",
+                main_subtitle: "",
+                tab_explanation: "説明",
+                tab_practice: "練習",
+                tab_quiz: "練習問題",
+                tab_comparison: "違いの比較",
+                tab_comparison_quiz: "比較クイズ",
+                explanation_title: "何を学びますか？",
+                explanation_desc_1: "<strong>-고 있다</strong>は、現在進行中の動作や、服などを着たり着用した状態が続いていることを表すときに使う表現です。",
+                explanation_desc_2: "「〜している」または「〜している状態だ」という意味です。",
+                conjugation_title: "作り方",
+                conjugation_rule_1: "動詞の語幹にそのまま + <strong>고 있다</strong>を付けます。(例: 가다 → 가고 있다, 입다 → 입고 있다)",
+                dialogue_title: "会話の例",
+                dialogue_a_1: "あきらさんは誰ですか？",
+                dialogue_a_2: "",
+                dialogue_b_1: "あそこの白いスーツに黒いカバンを<strong>持っている</strong>人です。",
+                dialogue_b_2: "",
+                examples_title: "例文",
+                quiz_title: "練習問題",
+                quiz_instruction: "括弧内の単語を使って文章を完成させてください。(「-고 있어요」の形で)",
+                check_button: "正解確認",
+                next_button: "次の問題",
+                feedback_correct: "正解です！",
+                feedback_incorrect_template: (answer) => `不正解です。正解は「${answer}」です。`,
+                quiz_end: "すべての問題を完了しました！お疲れ様でした！👏",
+                comparison_title: "-고 있다 vs. -아/어 있다",
+                go_itta_title: "-고 있다 (進行)",
+                go_itta_desc: "動作が現在進行中であることを示します。",
+                example_go_itta_1: "例: 学生が本を<strong>読んでいます</strong>。(本を読む動作が今行われている)",
+                aeo_itta_title: "-아/어 있다 (状態)",
+                aeo_itta_desc: "動作が完了した後、その結果の状態が続いていることを示します。",
+                example_aeo_itta_1: "例: 学生が椅子に<strong>座っています</strong>。(座る動作は終わり、座った状態が続いている)",
+                verb_constraints_title: "結合動詞の制約",
+                verb_constraints_go_itta: "ほとんどの動詞（自動詞、他動詞）と結合できます。",
+                verb_constraints_aeo_itta: "主に自動詞（目的語を必要としない動詞）、特に体の姿勢（座る、立つ、横になる）や状態変化を表す動詞と共によく使われます。",
+                example_aeo_itta_2: "例: 壁に絵が<strong>かかっています</strong>。窓が<strong>開いています</strong>。",
+                verb_constraints_aeo_itta_warning: "注意: 他動詞（目的語を必要とする動詞）とはほとんど使いません。(例: 책을 읽어 있어요 (X))",
+                comparison_quiz_title: "比較クイズ",
+                comparison_quiz_instruction: "文にとってより自然な表現を選んでください。",
+                comparison_quiz_feedback_correct: "正解です！ 「-아/어 있다」は、アクションの結果の状態が続くときに使用されます。",
+                comparison_quiz_feedback_incorrect_action: "惜しい！ この文ではアクションが進行中なので、「-고 있다」の方が自然です。",
+                comparison_quiz_feedback_incorrect_state: "惜しい！ この文では、アクションが完了した後の状態が続くため、「-아/어 있다」の方が自然です。"
+            },
+            zh: {
+                main_title: "语法与表达 2: V-고 있다",
+                main_subtitle: "",
+                tab_explanation: "说明",
+                tab_practice: "练习",
+                tab_quiz: "练习题",
+                tab_comparison: "比较差异",
+                tab_comparison_quiz: "比较测验",
+                explanation_title: "我们将学习什么？",
+                explanation_desc_1: "<strong>-고 있다</strong> 用于表示正在进行的动作，或穿着衣物等持续的状态。",
+                explanation_desc_2: "意思是“正在做...”或“处于...的状态”。",
+                conjugation_title: "构成方法",
+                conjugation_rule_1: "在动词词干后直接加 + <strong>고 있다</strong>。(例如: 가다 → 가고 있다, 입다 → 입고 있다)",
+                dialogue_title: "对话示例",
+                dialogue_a_1: "Akira是谁？",
+                dialogue_a_2: "",
+                dialogue_b_1: "就是那个穿着白色西装，<strong>提着</strong>黑色包的人。",
+                dialogue_b_2: "",
+                examples_title: "例句",
+                quiz_title: "练习题",
+                quiz_instruction: "请使用括号中的单词完成句子。(使用'-고 있어요'形式)",
+                check_button: "确认答案",
+                next_button: "下一题",
+                feedback_correct: "回答正确！",
+                feedback_incorrect_template: (answer) => `回答错误。正确答案是“${answer}”。`,
+                quiz_end: "你已经完成了所有问题！做得好！👏",
+                comparison_title: "-고 있다 vs. -아/어 있다",
+                go_itta_title: "-고 있다 (进行)",
+                go_itta_desc: "表示动作当前正在进行中。",
+                example_go_itta_1: "例如：学生正在<strong>看书</strong>。(看书的动作正在发生。)",
+                aeo_itta_title: "-아/어 있다 (状态)",
+                aeo_itta_desc: "表示动作完成后，其结果状态仍在持续。",
+                example_aeo_itta_1: "例如：学生<strong>坐</strong>在椅子上。(坐的动作已结束，坐着的状态在持续。)",
+                verb_constraints_title: "动词结合限制",
+                verb_constraints_go_itta: "可以与大多数动词（及物动词，不及物动词）结合。",
+                verb_constraints_aeo_itta: "主要与不及物动词（不需要宾语的动词）结合，特别是与身体姿势（坐、站、躺）或状态变化相关的动词。",
+                example_aeo_itta_2: "例如：墙上<strong>挂着</strong>一幅画。窗户<strong>开着</strong>。",
+                verb_constraints_aeo_itta_warning: "注意：很少与及物动词（需要宾语的动词）一起使用。(例如: 책을 읽어 있어요 (X))",
+                comparison_quiz_title: "比较测验",
+                comparison_quiz_instruction: "为句子选择更自然的表达方式。",
+                comparison_quiz_feedback_correct: "正确！ 当动作的结果状态持续时，使用'-아/어 있다'。",
+                comparison_quiz_feedback_incorrect_action: "不对哦！ 在这个句子中，动作正在进行中，所以'-고 있다'更自然。",
+                comparison_quiz_feedback_incorrect_state: "不对哦！ 在这个句子中，动作完成后的状态仍在持续，所以'-아/어 있다'更自然。"
+            }
+        };
+
+        const quizData = [
+            { type: "동사", base: "보다", sentence: "수진 씨가 텔레비전을 (보다).", answer: "보고 있어요" },
+            { type: "동사", base: "듣다", sentence: "학생들이 음악을 (듣다).", answer: "듣고 있어요" },
+            { type: "동사", base: "만들다", sentence: "어머니께서 김밥을 (만들다).", answer: "만들고 있어요" },
+            { type: "동사", base: "읽다", sentence: "아버지가 신문을 (읽다).", answer: "읽고 있어요" },
+            { type: "동사", base: "자다", sentence: "아기가 침대에서 (자다).", answer: "자고 있어요" },
+            { type: "동사", base: "쓰다", sentence: "저는 지금 모자를 (쓰다).", answer: "쓰고 있어요" },
+        ];
+        
+        const comparisonQuizData = [
+            { sentence: "학생이 의자에 (앉다).", options: ["앉고 있어요", "앉아 있어요"], answer: "앉아 있어요", type: 'state' },
+            { sentence: "가수가 무대에서 (노래하다).", options: ["노래하고 있어요", "노래해 있어요"], answer: "노래하고 있어요", type: 'action' },
+            { sentence: "택시가 호텔 앞에 (서다).", options: ["서고 있어요", "서 있어요"], answer: "서 있어요", type: 'state' },
+            { sentence: "아이들이 운동장에서 (놀다).", options: ["놀고 있어요", "놀아 있어요"], answer: "놀고 있어요", type: 'action' },
+            { sentence: "창문이 (열다).", options: ["열고 있어요", "열려 있어요"], answer: "열려 있어요", type: 'state' },
+            { sentence: "친구가 저에게 (오다).", options: ["오고 있어요", "와 있어요"], answer: "오고 있어요", type: 'action' },
+            { sentence: "컴퓨터가 책상 위에 (놓다).", options: ["놓고 있어요", "놓여 있어요"], answer: "놓여 있어요", type: 'state' }
+        ];
+
+        let currentQuestionIndex = 0;
+        let currentComparisonQuizIndex = 0;
+        let currentLang = 'ko';
+
+        const quizContainer = document.getElementById('quiz-container');
+        const checkBtn = document.getElementById('check-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const langSelector = document.getElementById('lang-selector');
+        const comparisonQuizContainer = document.getElementById('comparison-quiz-container');
+        const comparisonNextBtn = document.getElementById('comparison-next-btn');
+        const comparisonFeedback = document.getElementById('comparison-quiz-feedback');
+
+
+        function changeView(viewId) {
+            document.querySelectorAll('main > div').forEach(view => view.classList.add('hidden'));
+            document.getElementById(`${viewId}-view`).classList.remove('hidden');
+
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[onclick="changeView('${viewId}')"]`).classList.add('active');
+            
+            if (viewId === 'quiz') {
+                currentQuestionIndex = 0;
+                loadQuestion();
+            } else if (viewId === 'comparison-quiz') {
+                currentComparisonQuizIndex = 0;
+                loadComparisonQuestion();
+            }
+        }
+
+        function changeLanguage() {
+            currentLang = langSelector.value;
+            const langData = translations[currentLang];
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.dataset.key;
+                if (langData[key] && typeof langData[key] !== 'function') {
+                    el.innerHTML = langData[key];
+                }
+            });
+
+            if (!document.getElementById('quiz-view').classList.contains('hidden')) {
+                loadQuestion();
+            }
+            if (!document.getElementById('comparison-quiz-view').classList.contains('hidden')) {
+                loadComparisonQuestion();
+            }
+        }
+        
+        function loadQuestion() {
+            const currentQuestion = quizData[currentQuestionIndex];
+            quizContainer.innerHTML = `
+                <p class="text-lg text-gray-800 mb-4">${currentQuestionIndex + 1}. ${currentQuestion.sentence}</p>
+                <input type="text" id="quiz-input" class="quiz-input" placeholder="${currentQuestion.base}">
+                <div id="feedback-wrapper" class="mt-4"></div>
+            `;
+            document.getElementById('quiz-input').focus();
+            checkBtn.style.display = 'inline-block';
+            nextBtn.style.display = 'none';
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('quiz-input').value.trim();
+            const currentQuestion = quizData[currentQuestionIndex];
+            const feedbackWrapper = document.getElementById('feedback-wrapper');
+            const langData = translations[currentLang];
+
+            if (userAnswer === currentQuestion.answer) {
+                feedbackWrapper.innerHTML = `<div class="feedback feedback-correct">${langData.feedback_correct}</div>`;
+            } else {
+                feedbackWrapper.innerHTML = `<div class="feedback feedback-incorrect">${langData.feedback_incorrect_template(currentQuestion.answer)}</div>`;
+            }
+            checkBtn.style.display = 'none';
+            nextBtn.style.display = 'inline-block';
+            document.getElementById('quiz-input').disabled = true;
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                quizContainer.innerHTML = `<p class="text-xl font-bold text-center text-emerald-600">${translations[currentLang].quiz_end}</p>`;
+                checkBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
+            }
+        }
+        
+        function loadComparisonQuestion() {
+            comparisonFeedback.className = "feedback hidden";
+            comparisonNextBtn.classList.add('hidden');
+            const currentQuestion = comparisonQuizData[currentComparisonQuizIndex];
+            comparisonQuizContainer.innerHTML = `
+                <p class="text-lg text-gray-800 mb-4">${currentComparisonQuizIndex + 1}. ${currentQuestion.sentence}</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <button class="btn btn-primary" onclick="checkComparisonAnswer('${currentQuestion.options[0]}', '${currentQuestion.answer}', '${currentQuestion.type}')">${currentQuestion.options[0]}</button>
+                    <button class="btn btn-primary" onclick="checkComparisonAnswer('${currentQuestion.options[1]}', '${currentQuestion.answer}', '${currentQuestion.type}')">${currentQuestion.options[1]}</button>
+                </div>
+            `;
+        }
+        
+        function checkComparisonAnswer(selected, correct, type) {
+            const langData = translations[currentLang];
+            comparisonFeedback.classList.remove('hidden');
+            if (selected === correct) {
+                comparisonFeedback.textContent = langData.comparison_quiz_feedback_correct;
+                comparisonFeedback.className = 'feedback feedback-correct';
+            } else {
+                if (type === 'action') {
+                    comparisonFeedback.textContent = langData.comparison_quiz_feedback_incorrect_action;
+                } else {
+                     comparisonFeedback.textContent = langData.comparison_quiz_feedback_incorrect_state;
+                }
+                comparisonFeedback.className = 'feedback feedback-incorrect';
+            }
+            document.querySelectorAll('#comparison-quiz-container button').forEach(btn => btn.disabled = true);
+            comparisonNextBtn.classList.remove('hidden');
+        }
+        
+        function nextComparisonQuestion() {
+            currentComparisonQuizIndex++;
+            if (currentComparisonQuizIndex < comparisonQuizData.length) {
+                loadComparisonQuestion();
+            } else {
+                 comparisonQuizContainer.innerHTML = `
+                    <p class="text-xl font-bold text-center text-emerald-600">${translations[currentLang].quiz_end}</p>
+                `;
+                comparisonNextBtn.classList.add('hidden');
+                comparisonFeedback.classList.add('hidden');
+            }
+        }
+        
+        langSelector.addEventListener('change', changeLanguage);
+        checkBtn.addEventListener('click', checkAnswer);
+        nextBtn.addEventListener('click', nextQuestion);
+        comparisonNextBtn.addEventListener('click', nextComparisonQuestion);
+
+
+        // Initial load
+        window.onload = () => {
+            changeLanguage();
+            changeView('explanation');
+        };
+    </script>
+</body>
+</html>
+

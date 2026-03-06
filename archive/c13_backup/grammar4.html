@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale-1.0">
+    <title>한국어 문법 학습: V-도록</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+        }
+        .lang-btn {
+            transition: all 0.3s ease;
+            width: 2.75rem; /* 44px */
+            height: 2.75rem; /* 44px */
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #374151; /* text-gray-700 */
+            background-color: #ffffff; /* bg-white */
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        }
+        .lang-btn:hover {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transform: translateY(-2px);
+        }
+        .lang-btn.active {
+            background-color: #4f46e5;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .practice-input {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            transition: border-color 0.3s ease;
+        }
+        .practice-input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.3);
+        }
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            color: #4b5563;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .tab-btn.active {
+            background-color: #e0e7ff;
+            color: #4338ca;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../../assets/content-consistency.css">
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+        <!-- Header and Language Selector -->
+        <header class="text-center mb-8">
+            <h1 id="app-title" class="text-3xl md:text-4xl font-bold text-indigo-700 mb-4">쉽게 배우는 한국어 문법</h1>
+            <div id="lang-selector" class="flex justify-center space-x-3">
+                <button class="lang-btn active" data-lang="ko">한</button>
+                <button class="lang-btn" data-lang="en">영</button>
+                <button class="lang-btn" data-lang="vi">베</button>
+                <button class="lang-btn" data-lang="ja">일</button>
+                <button class="lang-btn" data-lang="zh">중</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Grammar Point Card -->
+            <div class="card">
+                <h2 class="text-2xl font-bold text-indigo-600 mb-4" data-key="grammar_title">V-도록</h2>
+                <div id="grammar-explanation">
+                    <p class="text-lg font-semibold mb-2" data-key="explanation_title">무슨 뜻일까요?</p>
+                    <p data-key="explanation_content" class="text-gray-700 leading-relaxed">
+                        앞의 내용이 뒤에 오는 행동의 '목적'이나 '결과'가 됨을 나타내는 표현이에요. 또는 어떤 행동의 '방식'이나 '정도'를 설명할 때도 사용돼요.<br>
+                        '<span class="font-semibold text-indigo-600">~하기 위해서</span>' 또는 '<span class="font-semibold text-indigo-600">~할 정도로</span>' 와 비슷한 의미로 생각할 수 있어요.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Dialogue Card -->
+            <div class="card">
+                <h3 class="text-xl font-bold mb-4" data-key="dialogue_title">대화 예시</h3>
+                <div class="space-y-4">
+                    <div class="flex items-start space-x-3">
+                        <div class="bg-blue-100 text-blue-800 font-bold rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">A</div>
+                        <div class="bg-gray-100 p-3 rounded-lg flex-1">
+                            <p>이번 행사는 아주 중요하니까 잘 준비해 주세요.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="bg-pink-100 text-pink-800 font-bold rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">B</div>
+                        <div class="bg-gray-100 p-3 rounded-lg flex-1">
+                            <p>네, 준비에 문제가 없도록 최선을 다하겠습니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Example Sentences Card -->
+            <div class="card">
+                <h3 class="text-xl font-bold mb-4" data-key="examples_title">문장 예시</h3>
+                <ul class="space-y-3 list-disc list-inside text-gray-700">
+                    <li>잘 들리도록 크게 말씀해 주세요.</li>
+                    <li>유리컵을 떨어뜨리지 않도록 조심해서 들고 가세요.</li>
+                    <li>비행기 시간에 늦지 않도록 일찍 출발해야 합니다.</li>
+                </ul>
+            </div>
+            
+            <!-- Comparison Card -->
+            <div class="card">
+                <h3 class="text-xl font-bold mb-4" data-key="comparison_title">유사 문법 비교</h3>
+                <div id="comparison-tabs" class="flex space-x-2 border-b mb-4">
+                    <button class="tab-btn active" data-tab="ge">-게</button>
+                    <button class="tab-btn" data-tab="ryeogo">-(으)려고</button>
+                    <button class="tab-btn" data-tab="w해서">-기 위해서</button>
+                </div>
+                <div id="comparison-content">
+                    <!-- -게 -->
+                    <div class="tab-content active" data-content="ge">
+                        <p class="mb-4" data-key="ge_explanation">'-도록'과 의미가 매우 비슷해서 바꿔 쓸 수 있는 경우가 많아요. 하지만 '-도록'은 행동이 어떤 상태에 도달하거나 유지되는 과정을 좀 더 강조하는 느낌을 줘요.</p>
+                        <ul class="space-y-2 list-disc list-inside">
+                            <li><span class="font-semibold text-indigo-600">잘 들리도록/게</span> 크게 말씀해 주세요. <span class="text-gray-500" data-key="interchangeable">→ 둘 다 가능</span></li>
+                            <li>목이 쉬<span class="font-semibold text-indigo-600">도록</span> 노래를 불렀어요. <span class="text-gray-500" data-key="nuance_도록">→ '목이 쉰 상태가 될 때까지'라는 과정, 정도를 강조</span></li>
+                        </ul>
+                    </div>
+                    <!-- -(으)려고 -->
+                    <div class="tab-content" data-content="ryeogo">
+                        <p class="mb-4" data-key="ryeogo_explanation">행동의 '의도'를 나타내요. '-도록'과 달리 명령문(-으세요)이나 청유문(-ㅂ시다)과 함께 쓸 수 없고, 보통 앞뒤 문장의 주어가 같아야 해요.</p>
+                        <ul class="space-y-2 list-disc list-inside">
+                             <li>회의에 늦지 않<span class="font-semibold text-indigo-600">으려고/도록</span> 일찍 출발했어요. <span class="text-gray-500" data-key="interchangeable">→ 둘 다 가능</span></li>
+                             <li>늦지 않<span class="font-semibold text-indigo-600">도록</span> 서둘러 주세요. (O) <span class="text-gray-500" data-key="different_subjects">→ 주어가 다름 (나, 당신)</span></li>
+                             <li>늦지 않<span class="font-semibold text-red-600">으려고</span> 서둘러 주세요. (X)</li>
+                        </ul>
+                    </div>
+                    <!-- -기 위해서 -->
+                    <div class="tab-content" data-content="w해서">
+                        <p class="mb-4" data-key="w해서_explanation">뚜렷하고 의식적인 '목적'을 나타낼 때 사용해요. '-도록'이 목적이나 그에 따르는 결과/상태를 나타내는 반면, '-기 위해서'는 그 목적 달성만을 위한 행동임을 명확히 할 때 주로 쓰여서, '-도록'과 바꾸어 쓰기 어려운 경우가 많습니다.</p>
+                         <ul class="space-y-2 list-disc list-inside">
+                            <li>한국에 유학 가<span class="font-semibold text-indigo-600">기 위해서</span> 한국어를 배워요. (O) <span class="text-gray-500" data-key="clear_purpose">→ 뚜렷한 목적</span></li>
+                            <li>한국에 유학 가<span class="font-semibold text-red-600">도록</span> 한국어를 배워요. (X)</li>
+                            <li class="mt-2">밤이 새<span class="font-semibold text-indigo-600">도록</span> 공부했어요. <span class="text-gray-500" data-key="nuance_도록_revised">→ '밤이 샐 때까지'라는 정도를 강조</span></li>
+                            <li>시험에 합격하<span class="font-semibold text-indigo-600">기 위해서</span> 밤새워 공부했어요. <span class="text-gray-500" data-key="clear_purpose_2">→ '합격'이라는 목적을 강조</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Practice Card -->
+            <div class="card bg-indigo-50 border border-indigo-200">
+                <h3 class="text-xl font-bold mb-2" data-key="practice_title">연습</h3>
+                <p class="text-gray-600 mb-6" data-key="practice_instruction">다음과 같이 광고를 만들어 보세요.</p>
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="font-semibold">1. 아이들을 맡기고 편하게 쇼핑하다 (어린이 놀이방)</label>
+                        <div class="flex flex-col sm:flex-row sm:items-center mt-2">
+                             <input type="text" class="practice-input" placeholder="예: 아이들을 맡기고 편하게 쇼핑하실 수 있도록..." value="아이들을 맡기고 편하게 쇼핑하실 수 있도록 어린이 놀이방을 마련했습니다.">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="font-semibold">2. 남편들이 쇼핑하는 아내를 편하게 기다리다 (휴게실)</label>
+                         <div class="flex flex-col sm:flex-row sm:items-center mt-2">
+                            <input type="text" class="practice-input" data-key="practice_placeholder" placeholder="문장을 만들어 보세요...">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="font-semibold">3. 혼자 사는 사람들이 쉽게 장을 보다 (즉석식품)</label>
+                        <div class="flex flex-col sm:flex-row sm:items-center mt-2">
+                            <input type="text" class="practice-input" data-key="practice_placeholder" placeholder="문장을 만들어 보세요...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <script>
+        const translations = {
+            ko: {
+                "app-title": "쉽게 배우는 한국어 문법",
+                "grammar_title": "V-도록",
+                "explanation_title": "무슨 뜻일까요?",
+                "explanation_content": "앞의 내용이 뒤에 오는 행동의 '목적'이나 '결과'가 됨을 나타내는 표현이에요. 또는 어떤 행동의 '방식'이나 '정도'를 설명할 때도 사용돼요.<br>'<span class='font-semibold text-indigo-600'>~하기 위해서</span>' 또는 '<span class='font-semibold text-indigo-600'>~할 정도로</span>' 와 비슷한 의미로 생각할 수 있어요.",
+                "dialogue_title": "대화 예시",
+                "examples_title": "문장 예시",
+                "practice_title": "연습",
+                "practice_instruction": "다음과 같이 광고를 만들어 보세요.",
+                "practice_placeholder": "문장을 만들어 보세요...",
+                "comparison_title": "유사 문법 비교",
+                "ge_explanation": "'-도록'과 의미가 매우 비슷해서 바꿔 쓸 수 있는 경우가 많아요. 하지만 '-도록'은 행동이 어떤 상태에 도달하거나 유지되는 과정을 좀 더 강조하는 느낌을 줘요.",
+                "ryeogo_explanation": "행동의 '의도'를 나타내요. '-도록'과 달리 명령문(-으세요)이나 청유문(-ㅂ시다)과 함께 쓸 수 없고, 보통 앞뒤 문장의 주어가 같아야 해요.",
+                "w해서_explanation": "뚜렷하고 의식적인 '목적'을 나타낼 때 사용해요. '-도록'이 목적이나 그에 따르는 결과/상태를 나타내는 반면, '-기 위해서'는 그 목적 달성만을 위한 행동임을 명확히 할 때 주로 쓰여서, '-도록'과 바꾸어 쓰기 어려운 경우가 많습니다.",
+                "interchangeable": "→ 둘 다 가능",
+                "nuance_도록": "→ '-도록'이 과정, 정도를 강조",
+                "different_subjects": "→ 주어가 다름",
+                "clear_purpose": "→ 뚜렷한 목적",
+                "nuance_도록_revised": "→ '밤이 샐 때까지'라는 정도를 강조",
+                "clear_purpose_2": "→ '합격'이라는 목적을 강조"
+            },
+            en: {
+                "app-title": "Easy Korean Grammar",
+                "grammar_title": "V-dorok",
+                "explanation_title": "What does it mean?",
+                "explanation_content": "This expression indicates that the preceding clause is the 'purpose' or 'result' of the following action. It's also used to describe the 'manner' or 'degree' of an action.<br>You can think of it as having a similar meaning to '<span class='font-semibold text-indigo-600'>~하기 위해서</span>' or '<span class='font-semibold text-indigo-600'>~할 정도로</span>'.",
+                "dialogue_title": "Dialogue Example",
+                "examples_title": "Example Sentences",
+                "practice_title": "Practice",
+                "practice_instruction": "Try to make an advertisement like the following.",
+                "practice_placeholder": "Make a sentence...",
+                "comparison_title": "Comparison with Similar Grammar",
+                "ge_explanation": "It's very similar in meaning to '-dorok' and can often be used interchangeably. However, '-dorok' has a stronger nuance of emphasizing the process of an action reaching or maintaining a certain state.",
+                "ryeogo_explanation": "It indicates the 'intention' of an action. Unlike '-dorok', it cannot be used with imperative (-으세요) or propositive (-ㅂ시다) sentences, and usually, the subjects of the preceding and following clauses must be the same.",
+                "w해서_explanation": "Used to express a clear and conscious 'purpose'. While '-dorok' can express a purpose or its resulting consequence/state, '-gi wieseo' is mainly used to clarify that an action is solely for achieving that purpose, making it often difficult to interchange with '-dorok'.",
+                "interchangeable": "→ Both are possible",
+                "nuance_도록": "→ '-dorok' emphasizes the process, degree",
+                "different_subjects": "→ Different subjects",
+                "clear_purpose": "→ Clear purpose",
+                "nuance_도록_revised": "→ Emphasizes the extent, 'until morning'",
+                "clear_purpose_2": "→ Emphasizes the purpose of 'passing'"
+            },
+            vi: {
+                "app-title": "Ngữ pháp tiếng Hàn dễ dàng",
+                "grammar_title": "V-도록",
+                "explanation_title": "Nó có nghĩa là gì?",
+                "explanation_content": "Đây là một biểu hiện cho thấy nội dung phía trước trở thành 'mục đích' hoặc 'kết quả' của hành động theo sau. Nó cũng được sử dụng để giải thích 'phương thức' hoặc 'mức độ' của một hành động nào đó.<br>Bạn có thể nghĩ nó có nghĩa tương tự như '<span class='font-semibold text-indigo-600'>~하기 위해서</span>' hoặc '<span class='font-semibold text-indigo-600'>~할 정도로</span>'.",
+                "dialogue_title": "Ví dụ hội thoại",
+                "examples_title": "Ví dụ câu",
+                "practice_title": "Luyện tập",
+                "practice_instruction": "Hãy thử làm một quảng cáo như sau.",
+                "practice_placeholder": "Tạo một câu...",
+                "comparison_title": "So sánh ngữ pháp tương tự",
+                "ge_explanation": "Nó có ý nghĩa rất giống với '-도록' và thường có thể được sử dụng thay thế cho nhau. Tuy nhiên, '-도록' mang sắc thái nhấn mạnh hơn quá trình một hành động đạt đến hoặc duy trì một trạng thái nhất định.",
+                "ryeogo_explanation": "Nó chỉ 'ý định' của một hành động. Không giống như '-도록', nó không thể được sử dụng với câu mệnh lệnh (-으세요) hoặc câu đề nghị (-ㅂ시다), và thông thường, chủ ngữ của mệnh đề trước và sau phải giống nhau.",
+                "w해서_explanation": "Được sử dụng để diễn đạt một 'mục đích' rõ ràng và có ý thức. Trong khi '-도록' có thể diễn đạt một mục đích hoặc kết quả/trạng thái của nó, '-gi wieseo' chủ yếu được sử dụng để làm rõ rằng một hành động chỉ nhằm mục đích đạt được mục đích đó, khiến nó thường khó có thể thay thế cho '-도록'.",
+                "interchangeable": "→ Cả hai đều có thể",
+                "nuance_도록": "→ '-도록' nhấn mạnh quá trình, mức độ",
+                "different_subjects": "→ Chủ ngữ khác nhau",
+                "clear_purpose": "→ Mục đích rõ ràng",
+                "nuance_도록_revised": "→ Nhấn mạnh mức độ, 'cho đến sáng'",
+                "clear_purpose_2": "→ Nhấn mạnh mục đích 'đỗ đạt'"
+            },
+            ja: {
+                "app-title": "やさしい韓国語文法",
+                "grammar_title": "V-도록",
+                "explanation_title": "どういう意味ですか？",
+                "explanation_content": "前の内容が後の行動の「目的」や「結果」になることを表す表現です。または、ある行動の「方式」や「程度」を説明する時にも使われます。<br>「<span class='font-semibold text-indigo-600'>~하기 위해서</span>」や「<span class='font-semibold text-indigo-600'>~할 정도로</span>」と似た意味だと考えられます。",
+                "dialogue_title": "会話の例",
+                "examples_title": "例文",
+                "practice_title": "練習",
+                "practice_instruction": "次のように広告を作ってみましょう。",
+                "practice_placeholder": "文章を作ってみてください...",
+                "comparison_title": "類似文法の比較",
+                "ge_explanation": "'-도록'と意味が非常に似ており、言い換えられる場合が多いです。しかし、'-도록'は行動がある状態に到達したり維持されたりする過程をより強調するニュアンスがあります。",
+                "ryeogo_explanation": "行動の「意図」を表します。'-도록'とは異なり、命令文(-으세요)や勧誘文(-ㅂ시다)と一緒に使うことはできず、通常、前後の文の主語が同じでなければなりません。",
+                "w해서_explanation": "明確で意識的な「目的」を表すときに使います。'-도록'が目的やそれに伴う結果/状態を表すのに対し、'-기 위해서'はその目的達成だけのための行動であることを明確にするときに主に使われるため、'-도록'と言い換えるのが難しい場合が多いです。",
+                "interchangeable": "→ 両方可能",
+                "nuance_도록": "→ '-도록'が過程、程度を強調",
+                "different_subjects": "→ 主語が違う",
+                "clear_purpose": "→ 明確な目的",
+                "nuance_도록_revised": "→ 「夜が明けるまで」という程度を強調",
+                "clear_purpose_2": "→ 「合格」という目的を強調"
+            },
+            zh: {
+                "app-title": "轻松学韩语语法",
+                "grammar_title": "V-도록",
+                "explanation_title": "是什么意思？",
+                "explanation_content": "表示前面的内容是后面行为的'目的'或'结果'。或者也用于说明某个行为的'方式'或'程度'。<br>可以理解为与'<span class='font-semibold text-indigo-600'>~하기 위해서</span>'或'<span class='font-semibold text-indigo-600'>~할 정도로</span>'相似的意思。",
+                "dialogue_title": "对话示例",
+                "examples_title": "例句",
+                "practice_title": "练习",
+                "practice_instruction": "请像下面这样制作广告。",
+                "practice_placeholder": "请造句...",
+                "comparison_title": "相似语法比较",
+                "ge_explanation": "与'-도록'的意思非常相似，很多情况下可以互换使用。但是'-도록'更强调行为达到或维持某种状态的过程。",
+                "ryeogo_explanation": "表示行为的'意图'。与'-도록'不同，它不能与命令句(-으세요)或共动句(-ㅂ시다)一起使用，并且通常前后句的主语必须相同。",
+                "w해서_explanation": "用于表示明确且有意识的'目的'。'-도록'表示目的或随之而来的结果/状态，而'-기 위해서'则主要用于明确指出该行为仅为实现该目的，因此很多情况下很难与'-도록'互换使用。",
+                "interchangeable": "→ 两者皆可",
+                "nuance_도록": "→ '-도록'强调过程、程度",
+                "different_subjects": "→ 主语不同",
+                "clear_purpose": "→ 明确的目的",
+                "nuance_도록_revised": "→ 强调'直到天亮'的程度",
+                "clear_purpose_2": "→ 强调'合格'的目的"
+            }
+        };
+
+        function changeLanguage(lang) {
+            // Translate elements with data-key
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang] && translations[lang][key]) {
+                    // For input placeholders, we need to set the attribute, not innerHTML
+                    if (el.tagName === 'INPUT' && key.includes('placeholder')) {
+                        el.placeholder = translations[lang][key];
+                    } else {
+                        el.innerHTML = translations[lang][key];
+                    }
+                }
+            });
+        }
+
+        document.getElementById('lang-selector').addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                const selectedLang = e.target.getAttribute('data-lang');
+                changeLanguage(selectedLang);
+            }
+        });
+        
+        const tabContainer = document.getElementById('comparison-tabs');
+        const contentContainer = document.getElementById('comparison-content');
+
+        tabContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('tab-btn')) {
+                const tabId = e.target.getAttribute('data-tab');
+
+                tabContainer.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+
+                contentContainer.querySelectorAll('.tab-content').forEach(content => {
+                    if (content.getAttribute('data-content') === tabId) {
+                        content.classList.add('active');
+                    } else {
+                        content.classList.remove('active');
+                    }
+                });
+            }
+        });
+
+        // Initialize with default language
+        changeLanguage('ko');
+    </script>
+</body>
+</html>
+

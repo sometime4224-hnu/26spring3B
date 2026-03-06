@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 회화 학습</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .slide {
+            display: none;
+        }
+        .slide.active {
+            display: block;
+        }
+        .flip-card {
+            background-color: transparent;
+            width: 100%;
+            height: 150px;
+            perspective: 1000px;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .flip-card-front {
+            background-color: #f3f4f6;
+            color: black;
+        }
+        .flip-card-back {
+            background-color: #4f46e5;
+            color: white;
+            transform: rotateY(180deg);
+        }
+        .highlight {
+            background-color: #e0e7ff;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        .lang-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            background-color: #e5e7eb;
+            color: #4b5563;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .lang-btn.active-lang {
+            background-color: #4f46e5;
+            color: white;
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <div class="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-6 sm:p-8 space-y-6">
+        <!-- 진행도 바 -->
+        <div class="w-full">
+            <div class="bg-gray-200 rounded-full h-2.5">
+                <div id="progress-bar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 0%;"></div>
+            </div>
+        </div>
+
+        <div id="slides-container" class="relative">
+            <!-- 슬라이드 1: 시작 화면 -->
+            <div id="step-1" class="slide active text-center">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">💼 회사 생활 말하기 연습</h1>
+                <p class="text-gray-600">대화 연습, 표현 바꾸기, 어휘 학습을 통해 한국어 실력을 향상시켜 보세요.</p>
+                <p class="text-gray-500 mt-4">준비가 되면 '시작' 버튼을 누르세요.</p>
+            </div>
+
+            <!-- 슬라이드 2: 대화 연습 -->
+            <div id="step-2" class="slide">
+                <h2 class="text-2xl font-bold mb-4 text-indigo-700">Step 1: 전체 대화 연습하기</h2>
+                <div class="space-y-3 bg-gray-50 p-4 rounded-lg text-lg">
+                    <p><strong>마리코:</strong> 아키라 씨, 요즘 회사 생활 어때요?</p>
+                    <p><strong>아키라:</strong> 보고서 준비 때문에 바쁘지만 동료들이 도와줘서 괜찮아요.</p>
+                    <p><strong>마리코:</strong> 그렇군요. 저도 한국에서 일해 보고 싶은데 일자리가 있을까요?</p>
+                    <p><strong>아키라:</strong> 어떤 일을 하고 싶은데요?</p>
+                    <p><strong>마리코:</strong> 만약 일하게 된다면 학교 다니면서 할 수 있는 아르바이트가 좋을 것 같아요.</p>
+                    <p><strong>아키라:</strong> 그럼 일본어 번역을 해 보는 건 어때요? 마침 우리 회사에서 서류 번역할 사람을 구하고 있어요.</p>
+                    <p><strong>마리코:</strong> 정말요? 그런데 제가 잘할 수 있을까요?</p>
+                    <p><strong>아키라:</strong> 그럼요. 마리코 씨는 무슨 일이든지 성실하게 하잖아요.</p>
+                    <p><strong>마리코:</strong> 그런데 근무 시간이 어떻게 돼요?</p>
+                    <p><strong>아키라:</strong> 출퇴근 시간이 자유로워요. 원하는 시간에는 언제든지 일할 수 있어요.</p>
+                </div>
+            </div>
+
+            <!-- 슬라이드 3: 표현 바꿔 말하기 1 -->
+            <div id="step-3" class="slide">
+                 <h2 class="text-2xl font-bold mb-4 text-indigo-700">Step 2: 표현 바꿔 말하기 (1/2)</h2>
+                 <div id="substitution-container-1" class="space-y-4"></div>
+            </div>
+
+            <!-- 슬라이드 3: 표현 바꿔 말하기 -->
+            <div id="step-3" class="slide">
+                 <h2 class="text-2xl font-bold mb-4 text-indigo-700">Step 2: 표현 바꿔 말하기</h2>
+                 <div id="substitution-container" class="space-y-4"></div>
+            </div>
+            
+            <!-- 슬라이드 4: 어휘 학습 -->
+            <div id="step-4" class="slide">
+                <h2 class="text-2xl font-bold mb-4 text-indigo-700">Step 3: 어휘 학습하기</h2>
+                <p class="text-gray-600 mb-4">학습할 언어를 선택하고 카드를 클릭해서 뜻을 확인하세요.</p>
+                <div id="lang-buttons" class="flex justify-center flex-wrap gap-2 mb-4">
+                    <button class="lang-btn active-lang" data-lang="eng">영어</button>
+                    <button class="lang-btn" data-lang="vie">베트남어</button>
+                    <button class="lang-btn" data-lang="jpn">일본어</button>
+                    <button class="lang-btn" data-lang="chn">중국어</button>
+                </div>
+                <div id="vocab-card-container"></div>
+                <button id="next-vocab-btn" class="mt-4 w-full bg-indigo-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-600 transition duration-300">다음 어휘</button>
+            </div>
+
+            <!-- 슬라이드 5: 완료 -->
+            <div id="step-5" class="slide text-center">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">🎉 모든 학습 완료!</h1>
+                <p class="text-gray-600">수고하셨습니다! 꾸준한 연습이 중요해요.</p>
+                <i class="fas fa-check-circle text-6xl text-green-500 mt-6"></i>
+            </div>
+        </div>
+
+        <!-- 네비게이션 버튼 -->
+        <div id="navigation-buttons" class="flex justify-between mt-8">
+            <button id="prev-btn" class="bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-400 transition duration-300 invisible">이전</button>
+            <button id="next-btn" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700 transition duration-300">시작</button>
+        </div>
+    </div>
+
+<script>
+    const steps = [
+        { id: 'step-1', name: '시작' },
+        { id: 'step-2', name: '대화 연습' },
+        { id: 'step-3', name: '표현 바꾸기' },
+        { id: 'step-4', name: '어휘 학습' },
+        { id: 'step-5', name: '완료' }
+    ];
+
+    const substitutionData = [
+        {
+            context: '아키라: <span class="highlight">보고서 준비 때문에 바쁘지만</span> 동료들이 도와줘서 괜찮아요.',
+            replacement: '야근이 많아서 괴롭다',
+            answer: '아키라: <span class="highlight">야근이 많아서 괴롭지만</span> 동료들이 도와줘서 괜찮아요.'
+        },
+        {
+            context: '아키라: <span class="highlight">어떤 일을 하고 싶은데요?</span>',
+            replacement: '어떤 회사에 다니고 싶다',
+            answer: '아키라: <span class="highlight">어떤 회사에 다니고 싶은데요?</span>'
+        },
+        {
+            context: '아키라: 그럼 <span class="highlight">일본어 번역을 해 보는 건</span> 어때요? 마침 우리 회사에서 <span class="highlight">서류 번역할</span> 사람을 구하고 있어요.',
+            replacement: '일본어 통역 / 회의 내용을 통역하다',
+            answer: '아키라: 그럼 <span class="highlight">일본어 통역을 해 보는 건</span> 어때요? 마침 우리 회사에서 <span class="highlight">회의 내용을 통역할</span> 사람을 구하고 있어요.'
+        },
+        {
+            context: '아키라: 그럼요. 마리코 씨는 <span class="highlight">무슨 일이든지 성실하게</span> 하잖아요.',
+            replacement: '언제든지 최선을 다하다',
+            answer: '아키라: 그럼요. 마리코 씨는 <span class="highlight">언제든지 최선을 다하잖아요</span>.'
+        }
+    ];
+
+    const vocabularyData = [
+        { kor: '일자리', eng: 'job / work position', vie: 'việc làm', jpn: '働き口 (はたらきぐち)', chn: '工作 (gōngzuò)' },
+        { kor: '서류', eng: 'document', vie: 'tài liệu', jpn: '書類 (しょるい)', chn: '文件 (wénjiàn)' },
+        { kor: '번역', eng: 'translation', vie: 'biên dịch', jpn: '翻訳 (ほんやく)', chn: '翻译 (fānyì)' },
+        { kor: '야근', eng: 'overtime work', vie: 'tăng ca', jpn: '残業 (ざんぎょう)', chn: '加班 (jiābān)' },
+        { kor: '통역', eng: 'interpretation', vie: 'thông dịch', jpn: '通訳 (つうやく)', chn: '口译 (kǒuyì)' }
+    ];
+
+    let currentStep = 0;
+    let currentVocabIndex = 0;
+    let currentLang = 'eng';
+
+    const progressBar = document.getElementById('progress-bar');
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+
+    function updateUI() {
+        slides.forEach((slide, index) => {
+            slide.classList.toggle('active', index === currentStep);
+        });
+
+        const progressPercentage = (currentStep / (steps.length - 1)) * 100;
+        progressBar.style.width = `${progressPercentage}%`;
+
+        prevBtn.classList.toggle('invisible', currentStep === 0);
+        nextBtn.classList.toggle('invisible', currentStep === steps.length - 1);
+        
+        if (currentStep === 0) {
+            nextBtn.textContent = '시작';
+        } else if (currentStep === steps.length - 2) {
+            nextBtn.textContent = '완료';
+        } else {
+            nextBtn.textContent = '다음';
+        }
+    }
+    
+    function renderSubstitutionCards(containerId, data) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+        data.forEach((item) => {
+            const card = document.createElement('div');
+            card.className = 'bg-gray-50 p-4 rounded-lg';
+            card.innerHTML = `
+                <p class="text-gray-500 text-sm mb-2">다음 문장의 강조된 부분을 아래 표현으로 바꿔서 말해보세요.</p>
+                <p class="mb-3 text-lg">${item.context}</p>
+                <div class="text-center bg-indigo-100 text-indigo-800 font-bold py-2 px-4 rounded-md mb-3">
+                    <i class="fas fa-exchange-alt mr-2"></i> ${item.replacement}
+                </div>
+                <button class="show-answer-btn w-full text-sm text-indigo-600 hover:text-indigo-800 font-semibold py-1">정답 보기</button>
+                <p class="answer-text hidden mt-2 p-3 bg-green-100 text-green-800 rounded-md text-lg">${item.answer}</p>
+            `;
+            container.appendChild(card);
+        });
+
+        container.querySelectorAll('.show-answer-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                answer.classList.toggle('hidden');
+                button.textContent = answer.classList.contains('hidden') ? '정답 보기' : '정답 숨기기';
+            });
+        });
+    }
+
+    function createVocabCard() {
+        const container = document.getElementById('vocab-card-container');
+        const vocab = vocabularyData[currentVocabIndex];
+        container.innerHTML = `
+            <div class="flip-card cursor-pointer" onclick="this.classList.toggle('flipped')">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <span class="text-3xl font-bold">${vocab.kor}</span>
+                    </div>
+                    <div class="flip-card-back">
+                        <span class="text-2xl font-bold">${vocab[currentLang]}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    nextBtn.addEventListener('click', () => {
+        if (currentStep < steps.length - 1) {
+            currentStep++;
+            updateUI();
+        }
+    });
+
+    prevBtn.addEventListener('click', () => {
+        if (currentStep > 0) {
+            currentStep--;
+            updateUI();
+        }
+    });
+    
+    document.getElementById('next-vocab-btn').addEventListener('click', () => {
+        currentVocabIndex = (currentVocabIndex + 1) % vocabularyData.length;
+        createVocabCard();
+    });
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentLang = btn.dataset.lang;
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active-lang'));
+            btn.classList.add('active-lang');
+            createVocabCard();
+        });
+    });
+
+    // 초기화
+    renderSubstitutionCards('substitution-container', substitutionData);
+    createVocabCard();
+    updateUI();
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 학습</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #F3F4F6; /* Light gray background */
+            color: #1F2937; /* Dark gray text */
+        }
+        .lesson-card {
+            background-color: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .lesson-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+        .btn-primary {
+            background-color: #2563EB; /* A nice blue */
+            color: #FFFFFF;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #1D4ED8;
+        }
+        .btn-secondary {
+            background-color: #E5E7EB;
+            color: #374151;
+            transition: background-color 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background-color: #D1D5DB;
+        }
+        .dialogue-bubble {
+            background-color: #E5E7EB;
+        }
+        .dialogue-bubble.user {
+            background-color: #DBEAFE; /* Light blue */
+        }
+        .hidden {
+            display: none;
+        }
+        .blank-quiz {
+            background-color: #93C5FD; /* Lighter blue for blanks */
+            color: #93C5FD;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 0 4px;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        .blank-quiz.revealed {
+            background-color: transparent;
+            color: #3B82F6; /* A darker blue to show it's revealed */
+            cursor: default;
+            font-weight: bold;
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="antialiased">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <div id="app" class="max-w-2xl mx-auto p-4 md:p-6">
+
+        <!-- 홈 화면 --><div id="home-screen">
+            <header class="text-center mb-8">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-900">스픽 스타일 한국어 학습</h1>
+                <p class="text-gray-600 mt-2">대화문으로 배우는 생생한 한국어</p>
+            </header>
+            
+            <div class="space-y-6">
+                <!-- 기본 연습 카드 --><div id="start-basic-lesson" class="lesson-card rounded-xl p-6 cursor-pointer">
+                    <div class="flex items-start">
+                        <div class="mr-4 mt-1">
+                            <div class="w-12 h-12 bg-indigo-500 rounded-lg flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2V4a2 2 0 012-2h8a2 2 0 012 2v4z"></path></svg>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-900">기본 연습: 대화 배우기</h2>
+                            <p class="text-gray-500 mt-1">청계천의 변화에 대한 대화문을 통해 기본 표현을 익혀보세요.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 학습 화면 --><div id="lesson-screen" class="hidden">
+            <header class="flex items-center mb-6">
+                <button id="back-to-home" class="p-2 rounded-full hover:bg-gray-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <h2 id="lesson-title" class="text-2xl font-bold text-gray-900 text-center flex-grow"></h2>
+            </header>
+            <div id="lesson-content" class="space-y-8">
+                <!-- 학습 콘텐츠가 동적으로 채워집니다. --></div>
+        </div>
+    </div>
+
+    <script>
+        const appData = {
+            basic: {
+                title: '기본 연습: 청계천 대화',
+                initialContent: `
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold text-blue-600 border-b-2 border-blue-500 pb-2">대화문 전체 보기</h3>
+                        <div class="dialogue-bubble rounded-lg p-4">
+                            <p class="font-semibold text-gray-800">줄리앙</p>
+                            <p>아버지, 여기가 전에 말씀드렸던 청계천이에요.</p>
+                        </div>
+                        <div class="dialogue-bubble user rounded-lg p-4">
+                            <p class="font-semibold text-gray-800">아버지</p>
+                            <p>여기가 청계천이라고? 하도 많이 변해서 어디가 어딘지 모르겠다.</p>
+                        </div>
+                        <div class="dialogue-bubble rounded-lg p-4">
+                            <p class="font-semibold text-gray-800">줄리앙</p>
+                            <p>그렇게 많이 달라졌어요?</p>
+                        </div>
+                        <div class="dialogue-bubble user rounded-lg p-4">
+                            <p class="font-semibold text-gray-800">아버지</p>
+                            <p>예전엔 여긴 자동차가 다니던 도로였어.</p>
+                        </div>
+                        <div class="dialogue-bubble rounded-lg p-4">
+                            <p class="font-semibold text-gray-800">줄리앙</p>
+                            <p>여기가 도로였다고요? 저는 상상이 잘 안 돼요.</p>
+                        </div>
+                         <div class="dialogue-bubble user rounded-lg p-4">
+                            <p class="font-semibold text-gray-800">아버지</p>
+                            <p>근데 어머니하고 처음 만났던 곳이 이 근처라고 하셨지요?</p>
+                        </div>
+                         <div class="dialogue-bubble rounded-lg p-4">
+                            <p class="font-semibold text-gray-800">줄리앙</p>
+                            <p>응, 그땐 이 주변이 다 서점이었는데 가게들이 사라져서 못 찾겠다.</p>
+                        </div>
+                         <div class="dialogue-bubble user rounded-lg p-4">
+                            <p class="font-semibold text-gray-800">아버지</p>
+                            <p>저기 들어가서 좀 물어보고 올까요?</p>
+                        </div>
+                         <div class="dialogue-bubble rounded-lg p-4">
+                            <p class="font-semibold text-gray-800">줄리앙</p>
+                            <p>그게 좋겠다. 서울은 올 때마다 정말 몰라보게 달라지는구나.</p>
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <button id="start-basic-quiz-btn" class="btn-primary w-full font-bold py-3 px-4 rounded-lg text-lg">
+                            대화 연습 시작하기
+                        </button>
+                    </div>
+                `,
+                quizPairs: [
+                    {
+                        pair: [
+                            { speaker: '줄리앙', text: '아버지, 여기가 전에 말씀드렸던 청계천이에요.' },
+                            { speaker: '아버지', full: '여기가 청계천이라고? 하도 많이 변해서 어디가 어딘지 모르겠다.', blank: '하도 많이 변해서' }
+                        ]
+                    },
+                    {
+                        pair: [
+                            { speaker: '줄리앙', text: '그렇게 많이 달라졌어요?' },
+                            { speaker: '아버지', full: '예전엔 여긴 자동차가 다니던 도로였어.', blank: '다니던' }
+                        ]
+                    },
+                    {
+                        pair: [
+                            { speaker: '줄리앙', text: '여기가 도로였다고요? 저는 상상이 잘 안 돼요.' },
+                            { speaker: '아버지', full: '근데 어머니하고 처음 만났던 곳이 이 근처라고 하셨지요?', blank: '만났던' }
+                        ]
+                    },
+                    {
+                        pair: [
+                            { speaker: '아버지', text: '근데 어머니하고 처음 만났던 곳이 이 근처라고 하셨지요?' },
+                            { speaker: '줄리앙', full: '응, 그땐 이 주변이 다 서점이었는데 가게들이 사라져서 못 찾겠다.', blank: '이었는데 가게들이 사라져서' }
+                        ]
+                    },
+                    {
+                        pair: [
+                            { speaker: '아버지', text: '저기 들어가서 좀 물어보고 올까요?' },
+                            { speaker: '줄리앙', full: '그게 좋겠다. 서울은 올 때마다 정말 몰라보게 달라지는구나.', blank: '달라지는구나' }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        const homeScreen = document.getElementById('home-screen');
+        const lessonScreen = document.getElementById('lesson-screen');
+        const lessonTitle = document.getElementById('lesson-title');
+        const lessonContent = document.getElementById('lesson-content');
+
+        function showLesson() {
+            const lessonData = appData.basic;
+            lessonTitle.textContent = lessonData.title;
+            lessonContent.innerHTML = lessonData.initialContent;
+            
+            const startQuizBtn = document.getElementById('start-basic-quiz-btn');
+            startQuizBtn.addEventListener('click', () => {
+                renderBasicQuiz(0);
+            });
+            
+            homeScreen.classList.add('hidden');
+            lessonScreen.classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        function renderBasicQuiz(index) {
+            const pairs = appData.basic.quizPairs;
+            if (index < 0 || index >= pairs.length) return;
+
+            const currentPairData = pairs[index].pair;
+            const [q, a] = currentPairData;
+
+            const questionBubble = `
+                <div class="dialogue-bubble ${q.speaker === '아버지' ? 'user' : ''} rounded-lg p-4">
+                    <p class="font-semibold text-gray-800">${q.speaker}</p>
+                    <p>${q.text}</p>
+                </div>
+            `;
+
+            const answerHtml = a.full.replace(a.blank, `<span class="blank-quiz" data-answer="${a.blank}">${a.blank}</span>`);
+            const answerBubble = `
+                <div class="dialogue-bubble ${a.speaker === '아버지' ? 'user' : ''} rounded-lg p-4">
+                    <p class="font-semibold text-gray-800">${a.speaker}</p>
+                    <p>${answerHtml}</p>
+                </div>
+            `;
+
+            const quizNav = `
+                <div class="flex justify-between items-center mt-8">
+                    <button id="prev-btn" class="btn-secondary font-semibold py-2 px-5 rounded-lg ${index === 0 ? 'opacity-50 cursor-not-allowed' : ''}" ${index === 0 ? 'disabled' : ''}>이전</button>
+                    <p class="text-gray-500 font-medium">${index + 1} / ${pairs.length}</p>
+                    <button id="next-btn" class="btn-primary font-semibold py-2 px-5 rounded-lg ${index === pairs.length - 1 ? 'opacity-50 cursor-not-allowed' : ''}" ${index === pairs.length - 1 ? 'disabled' : ''}>다음</button>
+                </div>
+            `;
+
+            lessonContent.innerHTML = `
+                <div class="space-y-4">
+                    <p class="text-gray-500 text-center">파란색 박스를 클릭하면 정답을 확인할 수 있습니다.</p>
+                    ${questionBubble}
+                    ${answerBubble}
+                </div>
+                ${quizNav}
+            `;
+            
+            if (index > 0) {
+                document.getElementById('prev-btn').addEventListener('click', () => renderBasicQuiz(index - 1));
+            }
+            if (index < pairs.length - 1) {
+                document.getElementById('next-btn').addEventListener('click', () => renderBasicQuiz(index + 1));
+            }
+        }
+
+        function showHome() {
+            homeScreen.classList.remove('hidden');
+            lessonScreen.classList.add('hidden');
+        }
+        
+        lessonContent.addEventListener('click', (e) => {
+            const blank = e.target.closest('.blank-quiz:not(.revealed)');
+            if (blank) {
+                blank.classList.add('revealed');
+                blank.textContent = blank.dataset.answer;
+                return;
+            }
+        });
+
+        document.getElementById('start-basic-lesson').addEventListener('click', showLesson);
+        document.getElementById('back-to-home').addEventListener('click', showHome);
+
+    </script>
+</body>
+</html>
+
