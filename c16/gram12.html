@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>'N만하다' 크기 비교 게임</title>
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --success-color: #2ECC71;
+            --warning-color: #F1C40F;
+            --bg-color: #F0F4F8;
+            --text-color: #333;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none; /* 드래그 시 텍스트 선택 방지 */
+            -webkit-user-select: none;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        #game-container {
+            width: 100%; max-width: 800px;
+            height: 90vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Header */
+        header {
+            padding: 15px 20px;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 20px 20px 0 0;
+        }
+
+        h1 { margin: 0; font-size: 1.2rem; }
+        .level-indicator { font-weight: bold; }
+
+        /* Question Area */
+        .question-area {
+            padding: 20px;
+            text-align: center;
+            background: #E8F0FE;
+            border-bottom: 2px solid #D2E3FC;
+        }
+
+        .sentence {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-color);
+            margin-bottom: 10px;
+            word-break: keep-all;
+        }
+
+        .instruction {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Play Area */
+        #play-area {
+            flex: 1;
+            position: relative;
+            background-color: #fff;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .side-panel {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            width: 150px;
+            background: #fafafa;
+            border-right: 1px dashed #ccc;
+        }
+        
+        .side-panel.right-panel {
+            border-right: none;
+            border-left: 1px dashed #ccc;
+            width: 150px;
+            background: #fafafa;
+            justify-content: center;
+        }
+
+        /* Objects */
+        .object-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 10px 0;
+            transition: transform 0.2s;
+        }
+
+        .object-emoji {
+            font-size: 3rem; /* 기본 사이즈 */
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .object-label {
+            margin-top: 5px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #555;
+            background: rgba(255,255,255,0.8);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Draggable Target */
+        #draggable-target {
+            position: absolute;
+            font-size: 3rem;
+            cursor: grab;
+            z-index: 100;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2));
+            /* 초기 위치는 JS로 설정 */
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            touch-action: none; /* 모바일 터치 스크롤 방지 */
+        }
+
+        #draggable-target:active {
+            cursor: grabbing;
+        }
+
+        /* Controls Area */
+        .controls {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .slider-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type=range] {
+            width: 100%;
+            height: 10px;
+            border-radius: 5px;
+            background: #d3d3d3;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+        }
+
+        button#check-btn {
+            background: var(--success-color);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #27ae60;
+            transition: all 0.1s;
+        }
+
+        button#check-btn:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 80%;
+            max-width: 400px;
+            animation: popIn 0.3s ease-out;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal h2 { margin-top: 0; color: var(--primary-color); }
+        .modal p { font-size: 1.1rem; margin: 20px 0; }
+        .modal button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        /* Success/Fail styles within modal */
+        .success-icon { font-size: 3rem; margin-bottom: 10px; display: block; }
+        .fail-icon { font-size: 3rem; margin-bottom: 10px; display: block; }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .sentence { font-size: 1.2rem; }
+            .side-panel { width: 100px; padding: 10px; }
+            .object-emoji { font-size: 2.5rem; }
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body>
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+<div id="game-container">
+    <header>
+        <h1>'N만하다' 익히기</h1>
+        <div class="level-indicator">단계: <span id="current-level">1</span>/5</div>
+    </header>
+
+    <div class="question-area">
+        <div class="sentence" id="sentence-text">문장을 로딩 중...</div>
+        <div class="instruction">오른쪽의 물건을 드래그해서 정답 옆에 놓고, 슬라이더로 크기를 비슷하게 맞추세요!</div>
+    </div>
+
+    <div id="play-area">
+        <!-- Left Side: Reference Objects -->
+        <div class="side-panel" id="reference-area">
+            <!-- Items injected by JS -->
+        </div>
+
+        <!-- The Draggable Target -->
+        <div id="draggable-target" class="object-container">
+            <div class="object-emoji" id="target-emoji">❓</div>
+            <div class="object-label" id="target-label">대상</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="slider-container">
+            <span>작게</span>
+            <input type="range" id="size-slider" min="0.5" max="2.5" step="0.1" value="1">
+            <span>크게</span>
+        </div>
+        <button id="check-btn">확인</button>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div id="modal-feedback" class="modal">
+        <div class="modal-content">
+            <span id="modal-icon"></span>
+            <h2 id="modal-title">결과</h2>
+            <p id="modal-msg">메시지</p>
+            <button id="next-btn">다음 문제</button>
+        </div>
+    </div>
+    
+    <!-- Game Clear Modal -->
+    <div id="modal-clear" class="modal">
+        <div class="modal-content">
+            <span class="success-icon">🎉</span>
+            <h2>참 잘했어요!</h2>
+            <p>'N만하다' 개념을 완벽하게 이해했군요!</p>
+            <button onclick="location.reload()">다시 하기</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* --- Game Data --- */
+    const levels = [
+        {
+            sentence: "<span style='color:#E74C3C'>눈사람</span>이 <span style='color:#2980B9'>사람</span>만 해요.",
+            target: { emoji: "☃️", label: "눈사람", id: "snowman" },
+            references: [
+                { emoji: "🏠", label: "집", scale: 2.5, id: "house" }, // 너무 큼
+                { emoji: "🧑", label: "사람", scale: 1.2, id: "person", isCorrect: true }, // 정답
+                { emoji: "🐜", label: "개미", scale: 0.5, id: "ant" } // 너무 작음
+            ],
+            targetStartScale: 0.5, // 사용자가 키워야 함
+            description: "눈사람의 크기를 사람과 비슷하게 만들어보세요."
+        },
+        {
+            sentence: "<span style='color:#E74C3C'>수박</span>이 <span style='color:#2980B9'>축구공</span>만 해요.",
+            target: { emoji: "🍉", label: "수박", id: "watermelon" },
+            references: [
+                { emoji: "⚽", label: "축구공", scale: 1.0, id: "soccer", isCorrect: true },
+                { emoji: "🏔️", label: "산", scale: 3.0, id: "mountain" },
+                { emoji: "✏️", label: "지우개", scale: 0.4, id: "eraser" }
+            ],
+            targetStartScale: 2.0, // 사용자가 줄여야 함
+            description: "수박이 너무 커요! 축구공 크기로 줄여주세요."
+        },
+        {
+            sentence: "<span style='color:#E74C3C'>강아지</span>가 <span style='color:#2980B9'>고양이</span>만 해요.",
+            target: { emoji: "🐕", label: "강아지", id: "dog" },
+            references: [
+                { emoji: "🐘", label: "코끼리", scale: 2.8, id: "elephant" },
+                { emoji: "🐁", label: "생쥐", scale: 0.6, id: "mouse" },
+                { emoji: "🐈", label: "고양이", scale: 1.1, id: "cat", isCorrect: true }
+            ],
+            targetStartScale: 0.6, // 키워야 함
+            description: "강아지가 고양이랑 비슷한 크기가 되게 해주세요."
+        },
+        {
+            sentence: "<span style='color:#E74C3C'>사과</span>가 <span style='color:#2980B9'>주먹</span>만 해요.",
+            target: { emoji: "🍎", label: "사과", id: "apple" },
+            references: [
+                { emoji: "👊", label: "주먹", scale: 0.9, id: "fist", isCorrect: true },
+                { emoji: "🙆", label: "머리", scale: 1.8, id: "head" },
+                { emoji: "🏢", label: "빌딩", scale: 3.0, id: "building" }
+            ],
+            targetStartScale: 2.5, // 줄여야 함
+            description: "사과가 주먹 크기와 비슷해야 해요."
+        },
+        {
+            sentence: "<span style='color:#E74C3C'>바위</span>가 <span style='color:#2980B9'>자동차</span>만 해요.",
+            target: { emoji: "🪨", label: "바위", id: "rock" },
+            references: [
+                { emoji: "🐞", label: "무당벌레", scale: 0.3, id: "bug" },
+                { emoji: "🚗", label: "자동차", scale: 1.8, id: "car", isCorrect: true },
+                { emoji: "🪐", label: "행성", scale: 4.0, id: "planet" }
+            ],
+            targetStartScale: 0.5, // 키워야 함
+            description: "엄청 큰 바위네요! 자동차만큼 크게 만들어주세요."
+        }
+    ];
+
+    /* --- State --- */
+    let currentLevelIdx = 0;
+    let currentScale = 1.0;
+    let isDragging = false;
+    let startX, startY, initialLeft, initialTop;
+
+    /* --- DOM Elements --- */
+    const sentenceEl = document.getElementById('sentence-text');
+    const instructionEl = document.querySelector('.instruction');
+    const refAreaEl = document.getElementById('reference-area');
+    const targetEl = document.getElementById('draggable-target');
+    const targetEmojiEl = document.getElementById('target-emoji');
+    const targetLabelEl = document.getElementById('target-label');
+    const slider = document.getElementById('size-slider');
+    const levelInd = document.getElementById('current-level');
+    const checkBtn = document.getElementById('check-btn');
+    const modalFeedback = document.getElementById('modal-feedback');
+    const modalClear = document.getElementById('modal-clear');
+    const modalMsg = document.getElementById('modal-msg');
+    const modalTitle = document.getElementById('modal-title');
+    const modalIcon = document.getElementById('modal-icon');
+    const nextBtn = document.getElementById('next-btn');
+
+    /* --- Game Logic --- */
+
+    function initGame() {
+        loadLevel(currentLevelIdx);
+        
+        // Event Listeners
+        slider.addEventListener('input', updateSize);
+        checkBtn.addEventListener('click', checkAnswer);
+        nextBtn.addEventListener('click', nextLevel);
+
+        // Drag Events (Mouse)
+        targetEl.addEventListener('mousedown', dragStart);
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('mouseup', dragEnd);
+
+        // Drag Events (Touch)
+        targetEl.addEventListener('touchstart', dragStart, {passive: false});
+        document.addEventListener('touchmove', drag, {passive: false});
+        document.addEventListener('touchend', dragEnd);
+    }
+
+    function loadLevel(idx) {
+        const level = levels[idx];
+        levelInd.textContent = idx + 1;
+        sentenceEl.innerHTML = level.sentence;
+        
+        // Reset Inputs
+        currentScale = level.targetStartScale;
+        slider.value = currentScale;
+        
+        // Setup Reference Objects
+        refAreaEl.innerHTML = '';
+        level.references.forEach(ref => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'object-container';
+            wrapper.dataset.id = ref.id;
+            wrapper.dataset.isCorrect = ref.isCorrect || false;
+            
+            const emoji = document.createElement('div');
+            emoji.className = 'object-emoji';
+            emoji.textContent = ref.emoji;
+            emoji.style.transform = `scale(${ref.scale})`; // Set fixed visual scale
+            
+            const label = document.createElement('div');
+            label.className = 'object-label';
+            label.textContent = ref.label;
+
+            wrapper.appendChild(emoji);
+            wrapper.appendChild(label);
+            refAreaEl.appendChild(wrapper);
+        });
+
+        // Setup Target
+        targetEmojiEl.textContent = level.target.emoji;
+        targetLabelEl.textContent = level.target.label;
+        updateSize();
+
+        // Reset Position to center right area
+        const playAreaRect = document.getElementById('play-area').getBoundingClientRect();
+        targetEl.style.left = '75%'; // Right side
+        targetEl.style.top = '50%';
+        targetEl.style.transform = `translate(-50%, -50%) scale(${currentScale})`;
+    }
+
+    function updateSize() {
+        currentScale = parseFloat(slider.value);
+        // Keep translate for centering anchor
+        targetEl.style.transform = `translate(-50%, -50%) scale(${currentScale})`;
+    }
+
+    /* --- Drag & Drop Logic --- */
+    function dragStart(e) {
+        isDragging = true;
+        
+        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+
+        startX = clientX;
+        startY = clientY;
+
+        // Get current positions (percentage or px)
+        const rect = targetEl.getBoundingClientRect();
+        const parentRect = targetEl.parentElement.getBoundingClientRect();
+
+        // Convert current Left/Top to pixels relative to parent
+        initialLeft = targetEl.offsetLeft;
+        initialTop = targetEl.offsetTop;
+
+        targetEl.style.cursor = 'grabbing';
+    }
+
+    function drag(e) {
+        if (!isDragging) return;
+        e.preventDefault(); // Prevent scrolling on touch
+
+        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+
+        const deltaX = clientX - startX;
+        const deltaY = clientY - startY;
+
+        let newLeft = initialLeft + deltaX;
+        let newTop = initialTop + deltaY;
+
+        // Boundary Check (Simple)
+        const parentRect = document.getElementById('play-area').getBoundingClientRect();
+        // Allow some overflow but keep mostly inside
+        newLeft = Math.max(0, Math.min(newLeft, parentRect.width));
+        newTop = Math.max(0, Math.min(newTop, parentRect.height));
+
+        targetEl.style.left = `${newLeft}px`;
+        targetEl.style.top = `${newTop}px`;
+    }
+
+    function dragEnd() {
+        isDragging = false;
+        targetEl.style.cursor = 'grab';
+    }
+
+    /* --- Checking Logic --- */
+    function checkAnswer() {
+        const level = levels[currentLevelIdx];
+        const targetRect = targetEl.getBoundingClientRect();
+        const refElements = Array.from(refAreaEl.children);
+        
+        let correctRefEl = null;
+        let correctData = null;
+
+        // Find the DOM element for the correct reference
+        refElements.forEach(el => {
+            if (el.dataset.isCorrect === "true") {
+                correctRefEl = el;
+                // Find data object
+                correctData = level.references.find(r => r.isCorrect);
+            }
+        });
+
+        if (!correctRefEl) return;
+
+        const refRect = correctRefEl.getBoundingClientRect();
+
+        // 1. Proximity Check (Distance between centers)
+        const targetCx = targetRect.left + targetRect.width / 2;
+        const targetCy = targetRect.top + targetRect.height / 2;
+        const refCx = refRect.left + refRect.width / 2;
+        const refCy = refRect.top + refRect.height / 2;
+
+        const distance = Math.sqrt(Math.pow(targetCx - refCx, 2) + Math.pow(targetCy - refCy, 2));
+        const maxDist = (refRect.width + targetRect.width) / 1.5; // Allow generous proximity
+
+        // 2. Size Check (Visual Height Comparison)
+        // We compare the rendered height of the emoji part mostly.
+        // Simplified: Compare bounding box heights.
+        // Target Visual Scale vs Reference Scale logic:
+        // Since base font-size is same, we can compare slider value vs reference scale defined in data.
+        
+        const sizeDiff = Math.abs(currentScale - correctData.scale);
+        const sizeTolerance = 0.4; // Allow +/- 0.4 scale difference
+
+        let isPosCorrect = distance < maxDist;
+        let isSizeCorrect = sizeDiff < sizeTolerance;
+
+        // Special handling: If user drags near WRONG object
+        let nearWrongObj = false;
+        refElements.forEach(el => {
+            if (el.dataset.isCorrect !== "true") {
+                const wRect = el.getBoundingClientRect();
+                const wCx = wRect.left + wRect.width/2;
+                const wCy = wRect.top + wRect.height/2;
+                const dist = Math.sqrt(Math.pow(targetCx - wCx, 2) + Math.pow(targetCy - wCy, 2));
+                if (dist < (wRect.width + targetRect.width)/2) nearWrongObj = true;
+            }
+        });
+
+        if (isPosCorrect && isSizeCorrect) {
+            showFeedback(true, "정답입니다! 완벽해요.");
+        } else if (!isPosCorrect) {
+            if (nearWrongObj) {
+                showFeedback(false, "비교 대상이 틀렸어요. 문장을 다시 읽어보세요.<br>무엇과 크기가 비슷한가요?");
+            } else {
+                showFeedback(false, "대상을 정답 물건 옆으로 더 가까이 가져가세요.");
+            }
+        } else if (!isSizeCorrect) {
+             if (currentScale < correctData.scale) {
+                 showFeedback(false, "위치는 맞지만, 크기가 너무 작아요!<br>조금 더 크게 만들어볼까요?");
+             } else {
+                 showFeedback(false, "위치는 맞지만, 크기가 너무 커요!<br>조금 더 작게 만들어볼까요?");
+             }
+        }
+    }
+
+    function showFeedback(isSuccess, msg) {
+        modalFeedback.style.display = 'flex';
+        modalMsg.innerHTML = msg;
+        
+        if (isSuccess) {
+            modalTitle.textContent = "성공!";
+            modalTitle.style.color = "#2ECC71";
+            modalIcon.textContent = "⭕";
+            modalIcon.className = "success-icon";
+            nextBtn.style.display = 'inline-block';
+            nextBtn.onclick = () => {
+                modalFeedback.style.display = 'none';
+                nextLevel();
+            };
+        } else {
+            modalTitle.textContent = "아쉬워요!";
+            modalTitle.style.color = "#E74C3C";
+            modalIcon.textContent = "❌";
+            modalIcon.className = "fail-icon";
+            nextBtn.textContent = "다시 시도";
+            nextBtn.onclick = () => {
+                modalFeedback.style.display = 'none';
+            };
+        }
+    }
+
+    function nextLevel() {
+        currentLevelIdx++;
+        if (currentLevelIdx >= levels.length) {
+            modalClear.style.display = 'flex';
+        } else {
+            loadLevel(currentLevelIdx);
+        }
+    }
+
+    // Start
+    initGame();
+
+</script>
+</body>
+</html>
+

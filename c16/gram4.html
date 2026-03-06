@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 문법 학습</title>
+    <!-- Tailwind CSS 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Inter 폰트 적용 (한글 폰트는 기본 폰트 사용) */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* 더 나은 가독성을 위해 기본 폰트 크기 조정 */
+        html {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-gray-100 min-h-screen py-12 px-4">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <div class="w-full max-w-3xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+        
+        <!-- 헤더 -->
+        <header class="bg-teal-600 text-white p-6">
+            <h1 class="text-3xl font-bold text-center">한국어 문법 학습</h1>
+        </header>
+
+        <!-- 메인 콘텐츠 -->
+        <main class="p-6 md:p-8 space-y-8">
+
+            <!-- 오늘의 문법 -->
+            <section class="border-b pb-6">
+                <h2 class="text-4xl font-bold text-teal-700 mb-4">A/V-기로 유명하다, N(으)로 유명하다</h2>
+                <p class="text-gray-600 text-lg">
+                    어떤 것이 무엇으로 잘 알려져 있는지, 대표적인 특징이 무엇인지 말할 때 사용해요.<br>
+                    (Used to state what something is well-known or famous for.)
+                </p>
+            </section>
+
+            <!-- 예문 (대화) -->
+            <section class="space-y-4">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-4">예문 (Examples)</h3>
+                
+                <div class="bg-gray-50 p-5 rounded-lg space-y-3 shadow-sm border border-gray-200">
+                    <p class="text-lg"><span class="font-bold text-blue-500">A:</span> 한탄강 캠핑장은 시설이 <span class="font-bold text-red-500">좋기로 유명해요</span>.</p>
+                    <p class="text-lg"><span class="font-bold text-green-500">B:</span> 그럼 이번 캠핑은 거기로 갈까?</p>
+                </div>
+
+                <ul class="list-disc list-inside space-y-2 text-gray-700 text-lg pl-2">
+                    <li>동대문시장은 옷이 <span class="font-bold">싸기로 유명하다</span>.</li>
+                    <li>베토벤은 어렸을 때부터 피아노를 <span class="font-bold">잘 치기로 유명했다</span>.</li>
+                    <li>동강은 <span class="font-bold">래프팅으로 유명하다</span>.</li>
+                    <li>브라질은 <span class="font-bold">축구로 유명한</span> 나라이다.</li>
+                </ul>
+            </section>
+
+            <!-- 말하기 활동 -->
+            <section class="space-y-6 border-t pt-8">
+                <h3 class="text-3xl font-bold text-gray-800">말하기 활동 (Speaking Activity)</h3>
+                <p class="text-lg text-gray-600">
+                    여러분 나라는 무엇으로 유명합니까? [보기]와 같이 이야기해 보세요.
+                </p>
+
+                <!-- 보기 1: 중국 -->
+                <div class="bg-teal-50 border-l-4 border-teal-400 p-5 rounded-md shadow-sm">
+                    <h4 class="font-bold text-lg text-teal-800 mb-3">보기 1 (Example 1)</h4>
+                    <div class="space-y-2 text-lg">
+                        <p><span class="font-bold text-blue-500">A:</span> 중국은 무엇으로 유명해요?</p>
+                        <p><span class="font-bold text-green-500">B:</span> <span class="font-bold text-teal-600">만리장성으로 유명해요</span>. 만리장성이 <span class="font-bold text-teal-600">길기로 유명해요</span>.</p>
+                    </div>
+                </div>
+                
+                <!-- 보기 2: 이탈리아 -->
+                <div class="bg-teal-50 border-l-4 border-teal-400 p-5 rounded-md shadow-sm">
+                    <h4 class="font-bold text-lg text-teal-800 mb-3">보기 2 (Example 2)</h4>
+                    <div class="space-y-2 text-lg">
+                        <p><span class="font-bold text-blue-500">A:</span> 이탈리아는 무엇으로 유명해요?</p>
+                        <p><span class="font-bold text-green-500">B:</span> <span class="font-bold text-teal-600">파스타로 유명해요</span>. 파스타는 종류가 <span class="font-bold text-teal-600">많기로 유명해요</span>.</p>
+                    </div>
+                </div>
+
+
+                <!-- 말하기 연습 카드 (Grid Layout) -->
+                <h4 class="text-2xl font-semibold text-gray-800 pt-6">연습 (Practice)</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- 연습 1: 프랑스 -->
+                    <div class="bg-white p-5 rounded-lg shadow border border-gray-200">
+                        <h4 class="font-semibold text-xl mb-3 text-gray-700">연습 1: 프랑스 (France)</h4>
+                        <p class="mb-4 text-lg italic text-gray-600">키워드: 에펠탑, 빵/와인</p>
+                        <button onclick="toggleAnswer('answer-1')" class="w-full px-4 py-2 bg-teal-600 text-white rounded-md font-semibold hover:bg-teal-700 transition-colors text-lg">
+                            예시 대화 보기
+                        </button>
+                        <div id="answer-1" class="hidden mt-4 p-3 bg-gray-50 border rounded-md space-y-2 text-lg">
+                            <p><span class="font-bold text-blue-500">A:</span> "프랑스는 무엇으로 유명해요?"</p>
+                            <p><span class="font-bold text-green-500">B:</span> "<span class="font-bold text-teal-600">에펠탑으로 유명해요</span>. 그리고 빵과 와인이 <span class="font-bold text-teal-600">맛있기로 유명해요</span>."</p>
+                        </div>
+                    </div>
+
+                    <!-- 연습 2: 미국 -->
+                    <div class="bg-white p-5 rounded-lg shadow border border-gray-200">
+                        <h4 class="font-semibold text-xl mb-3 text-gray-700">연습 2: 미국 (USA)</h4>
+                         <p class="mb-4 text-lg italic text-gray-600">키워드: 자유의 여신상, 햄버거</p>
+                        <button onclick="toggleAnswer('answer-2')" class="w-full px-4 py-2 bg-teal-600 text-white rounded-md font-semibold hover:bg-teal-700 transition-colors text-lg">
+                            예시 대화 보기
+                        </button>
+                        <div id="answer-2" class="hidden mt-4 p-3 bg-gray-50 border rounded-md space-y-2 text-lg">
+                            <p><span class="font-bold text-blue-500">A:</span> "미국은 무엇으로 유명해요?"</p>
+                            <p><span class="font-bold text-green-500">B:</span> "<span class="font-bold text-teal-600">자유의 여신상으로 유명해요</span>. 햄버거가 <span class="font-bold text-teal-600">크기로도 유명해요</span>."</p>
+                        </div>
+                    </div>
+
+                    <!-- 연습 3: 이집트 -->
+                    <div class="bg-white p-5 rounded-lg shadow border border-gray-200">
+                        <h4 class="font-semibold text-xl mb-3 text-gray-700">연습 3: 이집트 (Egypt)</h4>
+                         <p class="mb-4 text-lg italic text-gray-600">키워드: 피라미드, 사막</p>
+                        <button onclick="toggleAnswer('answer-3')" class="w-full px-4 py-2 bg-teal-600 text-white rounded-md font-semibold hover:bg-teal-700 transition-colors text-lg">
+                            예시 대화 보기
+                        </button>
+                        <div id="answer-3" class="hidden mt-4 p-3 bg-gray-50 border rounded-md space-y-2 text-lg">
+                            <p><span class="font-bold text-blue-500">A:</span> "이집트는 무엇으로 유명해요?"</p>
+                            <p><span class="font-bold text-green-500">B:</span> "<span class="font-bold text-teal-600">피라미드로 유명해요</span>. 사막이 <span class="font-bold text-teal-600">넓기로 유명해요</span>."</p>
+                        </div>
+                    </div>
+
+                    <!-- 연습 4: 인도 -->
+                    <div class="bg-white p-5 rounded-lg shadow border border-gray-200">
+                        <h4 class="font-semibold text-xl mb-3 text-gray-700">연습 4: 인도 (India)</h4>
+                         <p class="mb-4 text-lg italic text-gray-600">키워드: 타지마할, 카레</p>
+                        <button onclick="toggleAnswer('answer-4')" class="w-full px-4 py-2 bg-teal-600 text-white rounded-md font-semibold hover:bg-teal-700 transition-colors text-lg">
+                            예시 대화 보기
+                        </button>
+                        <div id="answer-4" class="hidden mt-4 p-3 bg-gray-50 border rounded-md space-y-2 text-lg">
+                            <p><span class="font-bold text-blue-500">A:</span> "인도는 무엇으로 유명해요?"</p>
+                            <p><span class="font-bold text-green-500">B:</span> "<span class="font-bold text-teal-600">타지마할로 유명해요</span>. 그리고 <span class="font-bold text-teal-600">카레로도 유명해요</span>."</p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // '예시 대화 보기' 버튼을 클릭하면 해당 답안을 보여주거나 숨깁니다.
+        function toggleAnswer(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.classList.toggle('hidden');
+            }
+        }
+    </script>
+
+</body>
+</html>
+

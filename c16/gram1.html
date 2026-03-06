@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>'N만 하다' 문법 배우기</title>
+    <!-- Tailwind CSS 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Inter 폰트 적용 (Tailwind 기본 폰트와 유사) */
+        body {
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        }
+        /* 활성 탭 스타일 */
+        .tab-active {
+            border-bottom: 2px solid #3B82F6; /* blue-600 */
+            color: #3B82F6;
+            font-weight: 600;
+        }
+        /* 비활성 탭 스타일 */
+        .tab-inactive {
+            color: #6B7280; /* gray-500 */
+        }
+        /* 페이지 숨김 처리 */
+        .page-hidden {
+            display: none;
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <!-- 전체 카드 컨테이너 -->
+    <div class="max-w-lg w-full bg-white rounded-xl shadow-2xl overflow-hidden">
+        
+        <!-- 탭 네비게이션 -->
+        <nav class="flex border-b">
+            <button id="btn-explanation" class="tab-active flex-1 py-4 px-6 text-center focus:outline-none transition-all duration-300">
+                📚 설명 보기
+            </button>
+            <button id="btn-quiz" class="tab-inactive flex-1 py-4 px-6 text-center focus:outline-none transition-all duration-300">
+                🎓 이모지 퀴즈
+            </button>
+        </nav>
+
+        <!-- === 1. 설명 페이지 === -->
+        <div id="page-explanation" class="p-6 md:p-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-4">'N만 하다'</h1>
+            
+            <!-- [변경] 언어 선택 버튼을 위로 이동하고 '한국어' 추가 -->
+            <div class="flex flex-wrap gap-2 mb-4">
+                <button onclick="showTranslation('ko')" class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200">
+                    🇰🇷 한국어
+                </button>
+                <button onclick="showTranslation('vi')" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200">
+                    🇻🇳 Tiếng Việt
+                </button>
+                <button onclick="showTranslation('zh')" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200">
+                    🇨🇳 中文
+                </button>
+                <button onclick="showTranslation('ja')" class="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200">
+                    🇯🇵 日本語
+                </button>
+            </div>
+
+            <!-- [변경] 기존의 정적 설명과 번역 섹션을 하나로 통합 -->
+            <div id="explanation-content" class="space-y-4">
+                <!-- 자바스크립트에 의해 내용이 채워집니다. -->
+            </div>
+
+            <!-- [추가] 예시 섹션 (번역되지 않음, 항상 한국어로 표시) -->
+            <h2 class="text-xl font-semibold text-gray-700 mt-8 mb-3">예시 보기 (Examples)</h2>
+            <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg space-y-3">
+                <p class="text-lg text-gray-800">
+                    "저 눈사람은 <strong class="text-blue-700">사람만 해요</strong>."
+                </p>
+                <p class="text-sm text-gray-600">
+                    → (의미) 눈사람 크기 ≈ 사람 크기
+                </p>
+                <hr>
+                <p class="text-lg text-gray-800">
+                    "이 사과는 <strong class="text-blue-700">수박만 해요</strong>."
+                </p>
+                <p class="text-sm text-gray-600">
+                    → (의미) 사과 크기 ≈ 수박 크기
+                </p>
+                <hr>
+                <p class="text-lg text-gray-800">
+                    "잡은 물고기가 <strong class="text-blue-700">팔뚝만 해요</strong>."
+                </p>
+                <p class="text-sm text-gray-600">
+                    → (의미) 물고기 크기 ≈ 팔뚝 크기
+                </p>
+                <hr>
+                <p class="text-lg text-gray-800">
+                    "아기 주먹이 <strong class="text-blue-700">밤톨만 해요</strong>."
+                </p>
+                <p class="text-sm text-gray-600">
+                    → (의미) 아기 주먹 크기 ≈ 밤톨 크기
+                </p>
+            </div>
+        </div>
+
+        <!-- === 2. 퀴즈 페이지 === -->
+        <div id="page-quiz" class="p-6 md:p-8 page-hidden">
+            <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">이모지 퀴즈 🧐</h1>
+
+            <!-- 이모지 비교 영역 -->
+            <div class="flex justify-around items-center bg-blue-50 p-6 rounded-xl shadow-inner">
+                <!-- 주어 (Subject) -->
+                <div id="quiz-emoji-left" class="text-6xl md:text-7xl">
+                    <!-- 예: ⛄ -->
+                </div>
+                
+                <div class="text-2xl md:text-3xl font-bold text-gray-500">
+                    ≈
+                </div>
+                
+                <!-- 명사 (Noun) -->
+                <div id="quiz-emoji-right" class="text-6xl md:text-7xl">
+                    <!-- 예: 🧍 -->
+                </div>
+            </div>
+
+            <!-- 문제 문장 -->
+            <div class="my-6">
+                <p id="quiz-question" class="text-center text-xl md:text-2xl font-semibold text-gray-700 h-16 flex items-center justify-center">
+                    <!-- 예: 저 눈사람은 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 해요. -->
+                </p>
+            </div>
+
+            <!-- 정답 입력 -->
+            <div class="flex flex-col sm:flex-row gap-2">
+                <input type="text" id="quiz-answer" placeholder="빈칸에 들어갈 말은?" class="flex-grow w-full sm:w-auto px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition-all duration-200 text-lg" onkeydown="handleKeydown(event)">
+                <button id="check-btn" onclick="checkAnswer()" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 text-lg">
+                    정답 확인
+                </button>
+                <button id="next-btn" onclick="nextQuiz()" class="w-full sm:w-auto bg-gray-700 hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 text-lg page-hidden">
+                    다음 문제
+                </button>
+            </div>
+
+            <!-- 피드백 -->
+            <div id="quiz-feedback" class="mt-4 text-center text-lg font-semibold h-8">
+                <!-- 예: 정답입니다! 🎉 -->
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 데이터 ---
+        
+        // [변경] 번역 텍스트 (설명 부분만 남김)
+        const translations = {
+            'ko': `
+                <p class="text-lg text-gray-700">
+                    'N만 하다'는 <strong class="text-blue-600">두 개의 크기, 높이, 길이, 양 등이 비슷할 때</strong> 사용해요.
+                </p>
+                <p class="text-lg text-gray-700">
+                    비교하고 싶은 명사(N) 뒤에 <strong class="text-blue-600">'만 하다'</strong>를 붙여서 말해요.
+                </p>
+            `,
+            'vi': `
+                <p class="text-lg text-gray-700">
+                    Sử dụng \'N만 하다\' khi <strong class="text-blue-600">kích thước, chiều cao, chiều dài, v.v. của hai vật tương tự nhau</strong>.
+                </p>
+                <p class="text-lg text-gray-700">
+                    Gắn <strong class="text-blue-600">\'만 하다\'</strong> vào sau danh từ (N) bạn muốn so sánh.
+                </p>
+            `,
+            'zh': `
+                <p class="text-lg text-gray-700">
+                    \'N만 하다\' 用于<strong class="text-blue-600">两个事物的大小、高度、长度等相似时</strong>。
+                </p>
+                <p class="text-lg text-gray-700">
+                    在想要比较的名词 (N) 后面加上 <strong class="text-blue-600">\'만 하다\'</strong>。
+                </p>
+            `,
+            'ja': `
+                <p class="text-lg text-gray-700">
+                    'N만 하다'は、<strong class="text-blue-600">二つのものの大きさ、高さ、長さなどが似ているとき</strong>に使います。
+                </p>
+                <p class="text-lg text-gray-700">
+                    比較したい名詞 (N) の後ろに <strong class="text-blue-600">'만 하다'</strong> をつけます。
+                </p>
+            `
+        };
+
+        // 퀴즈 데이터
+        const quizData = [
+            {
+                subjectEmoji: '⛄', // 눈사람
+                nounEmoji: '🧍', // 사람
+                question: '저 눈사람은 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 해요.',
+                answer: '사람만'
+            },
+            {
+                subjectEmoji: '🍎', // 사과
+                nounEmoji: '🍉', // 수박
+                question: '이 사과는 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 해요.',
+                answer: '수박만'
+            },
+            {
+                subjectEmoji: '🐻', // 곰인형
+                nounEmoji: '🧍', // 사람
+                question: '남자 친구가 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 한 곰 인형을 줬어요.',
+                answer: '사람만'
+            },
+            {
+                subjectEmoji: '🐟', // 물고기
+                nounEmoji: '💪', // 팔뚝
+                question: '이 물고기는 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 해요.',
+                answer: '팔뚝만'
+            },
+            {
+                subjectEmoji: '🐋', // 고래
+                nounEmoji: '🚢', // 배
+                question: '저 고래는 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 해요.',
+                answer: '배만'
+            },
+            {
+                subjectEmoji: '🪪', // 학생증 (ID 카드)
+                nounEmoji: '💳', // 카드
+                question: '이 학생증은 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 해요.',
+                answer: '카드만'
+            }
+        ];
+        let currentQuizIndex = 0;
+
+        // --- 요소(Element) 가져오기 ---
+        const pageExplanation = document.getElementById('page-explanation');
+        const pageQuiz = document.getElementById('page-quiz');
+        const btnExplanation = document.getElementById('btn-explanation');
+        const btnQuiz = document.getElementById('btn-quiz');
+        
+        // [변경] ID 'translation-output'을 'explanation-content'로 변경
+        const explanationContent = document.getElementById('explanation-content');
+        
+        const quizEmojiLeft = document.getElementById('quiz-emoji-left');
+        const quizEmojiRight = document.getElementById('quiz-emoji-right');
+        const quizQuestion = document.getElementById('quiz-question');
+        const quizAnswer = document.getElementById('quiz-answer');
+        const checkBtn = document.getElementById('check-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const quizFeedback = document.getElementById('quiz-feedback');
+
+        // --- 함수 ---
+
+        // 페이지 전환 함수
+        function showPage(pageId) {
+            if (pageId === 'page-explanation') {
+                pageExplanation.classList.remove('page-hidden');
+                pageQuiz.classList.add('page-hidden');
+                
+                btnExplanation.classList.add('tab-active');
+                btnExplanation.classList.remove('tab-inactive');
+                btnQuiz.classList.add('tab-inactive');
+                btnQuiz.classList.remove('tab-active');
+            } else {
+                pageExplanation.classList.add('page-hidden');
+                pageQuiz.classList.remove('page-hidden');
+
+                btnQuiz.classList.add('tab-active');
+                btnQuiz.classList.remove('tab-inactive');
+                btnExplanation.classList.add('tab-inactive');
+                btnExplanation.classList.remove('tab-active');
+            }
+        }
+
+        // 번역 표시 함수
+        function showTranslation(lang) {
+            // [변경] 'translationOutput' 대신 'explanationContent'의 내용을 변경
+            explanationContent.innerHTML = translations[lang];
+        }
+
+        // 퀴즈 로드 함수
+        function loadQuiz(index) {
+            const quiz = quizData[index];
+            quizEmojiLeft.textContent = quiz.subjectEmoji;
+            quizEmojiRight.textContent = quiz.nounEmoji;
+            quizQuestion.innerHTML = quiz.question;
+
+            // 초기화
+            quizAnswer.value = '';
+            quizAnswer.disabled = false;
+            quizFeedback.textContent = '';
+            quizFeedback.classList.remove('text-green-600', 'text-red-600');
+            checkBtn.classList.remove('page-hidden');
+            nextBtn.classList.add('page-hidden');
+            quizAnswer.focus();
+        }
+
+        // 정답 확인 함수
+        function checkAnswer() {
+            const userAnswer = quizAnswer.value.trim();
+            const correctAnswer = quizData[currentQuizIndex].answer;
+
+            if (userAnswer === correctAnswer) {
+                quizFeedback.textContent = '정답입니다! 🎉';
+                quizFeedback.classList.add('text-green-600');
+                quizFeedback.classList.remove('text-red-600');
+                
+                checkBtn.classList.add('page-hidden');
+                nextBtn.classList.remove('page-hidden');
+                quizAnswer.disabled = true;
+            } else {
+                quizFeedback.textContent = '틀렸습니다. 다시 시도해 보세요.';
+                quizFeedback.classList.add('text-red-600');
+                quizFeedback.classList.remove('text-green-600');
+            }
+        }
+        
+        // Enter 키로 정답 확인
+        function handleKeydown(event) {
+            if (event.key === 'Enter') {
+                if (!checkBtn.classList.contains('page-hidden')) {
+                    checkAnswer();
+                } else {
+                    nextQuiz();
+                }
+            }
+        }
+
+        // 다음 퀴즈 함수
+        function nextQuiz() {
+            currentQuizIndex = (currentQuizIndex + 1) % quizData.length; // 다음 문제로, 마지막이면 처음으로
+            loadQuiz(currentQuizIndex);
+        }
+
+        // --- 이벤트 리스너 ---
+        btnExplanation.addEventListener('click', () => showPage('page-explanation'));
+        btnQuiz.addEventListener('click', () => showPage('page-quiz'));
+
+        // 초기 로드
+        window.onload = () => {
+            showPage('page-explanation'); // 처음엔 설명 페이지
+            loadQuiz(currentQuizIndex); // 퀴즈 데이터 미리 로드
+            showTranslation('ko'); // [변경] 기본으로 한국어 설명을 메인 컨텐츠 영역에 표시
+        };
+
+    </script>
+</body>
+</html>
+
+
+

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 문법 학습</title>
+    <!-- Tailwind CSS 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Inter 폰트 적용 (한글 폰트는 기본 폰트 사용) */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* 더 나은 가독성을 위해 기본 폰트 크기 조정 */
+        html {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-gray-100 min-h-screen py-12 px-4">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <div class="w-full max-w-3xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+        
+        <!-- 헤더 -->
+        <header class="bg-blue-600 text-white p-6">
+            <h1 class="text-3xl font-bold text-center">한국어 문법 학습</h1>
+        </header>
+
+        <!-- 메인 콘텐츠 -->
+        <main class="p-6 md:p-8 space-y-8">
+
+            <!-- 오늘의 문법 -->
+            <section class="border-b pb-6">
+                <h2 class="text-4xl font-bold text-blue-700 mb-4">V-(으)ㄹ 생각도 못 하다</h2>
+                <p class="text-gray-600 text-lg">
+                    어떤 일을 할 여유나 상황이 전혀 되지 않음을 나타낼 때 사용해요.<br>
+                    (Used to express that one cannot even think of doing something due to lack of time, money, or capacity.)
+                </p>
+            </section>
+
+            <!-- 예문 (대화) -->
+            <section class="space-y-4">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-4">예문 (Examples)</h3>
+                
+                <div class="bg-gray-50 p-5 rounded-lg space-y-3 shadow-sm border border-gray-200">
+                    <p class="text-lg"><span class="font-bold text-blue-500">A:</span> 요즘엔 캠핑 안 가요? 전에는 자주 갔잖아요.</p>
+                    <p class="text-lg"><span class="font-bold text-green-500">B:</span> 요즘 일이 많아서 <span class="font-bold text-red-500">캠핑 갈 생각도 못 해요</span>.</p>
+                </div>
+
+                <ul class="list-disc list-inside space-y-2 text-gray-700 text-lg pl-2">
+                    <li>하비가 너무 비싸서 <span class="font-bold">유학 갈 생각도 못 해요</span>.</li>
+                    <li>취직 준비 때문에 바빠서 <span class="font-bold">여자 친구 만날 생각도 못 해요</span>.</li>
+                    <li>그 식당은 손님이 많아서 예약하지 않으면 <span class="font-bold">갈 생각도 못 해요</span>.</li>
+                </ul>
+            </section>
+
+            <!-- 말하기 활동 -->
+            <section class="space-y-6 border-t pt-8">
+                <h3 class="text-3xl font-bold text-gray-800">말하기 활동 (Speaking Activity)</h3>
+                <p class="text-lg text-gray-600">
+                    그림/상황을 보고 [보기]와 같이 '-(으)ㄹ 생각도 못 하다'를 사용해서 이야기해 보세요.
+                </p>
+
+                <!-- 보기 -->
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-5 rounded-md shadow-sm">
+                    <h4 class="font-bold text-lg text-blue-800 mb-2">보기 (Example)</h4>
+                    <p class="mb-2 text-lg italic text-gray-600">
+                        [상황] 그 영화는 인기가 많아요. / 빨리 예매하지 않으면?
+                    </p>
+                    <p class="text-lg text-gray-800">
+                        "그 영화는 인기가 많아서 빨리 예매하지 않으면 <span class="font-bold text-blue-600">볼 생각도 못 해요</span>."
+                    </p>
+                </div>
+
+                <!-- 말하기 연습 카드 (Grid Layout) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                    
+                    <!-- 연습 1: 붐비는 가게 (Image 1) -->
+                    <div class="bg-white p-5 rounded-lg shadow border border-gray-200">
+                        <h4 class="font-semibold text-xl mb-3 text-gray-700">연습 1: 붐비는 가게</h4>
+                        <p class="mb-4 text-lg italic text-gray-600">[상황] 가게에 사람이 너무 많아요. (쇼핑하다)</p>
+                        <button onclick="toggleAnswer('answer-1')" class="w-full px-4 py-2 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition-colors text-lg">
+                            예시 답안 보기
+                        </button>
+                        <div id="answer-1" class="hidden mt-4 p-3 bg-gray-50 border rounded-md">
+                            <p class="font-bold text-lg">예시 답안:</p>
+                            <p class="text-lg">"가게에 사람이 너무 많아서 <span class="font-bold text-blue-600">쇼핑할 생각도 못 했어요</span>."</p>
+                        </div>
+                    </div>
+
+                    <!-- 연습 2: 교통 체증 (Image 2) -->
+                    <div class="bg-white p-5 rounded-lg shadow border border-gray-200">
+                        <h4 class="font-semibold text-xl mb-3 text-gray-700">연습 2: 교통 체증</h4>
+                        <p class="mb-4 text-lg italic text-gray-600">[상황] 추석 연휴에 고속도로가 막혀요. (운전하다)</p>
+                        <button onclick="toggleAnswer('answer-2')" class="w-full px-4 py-2 bg-green-600 text-white rounded-md font-semibold hover:bg-green-700 transition-colors text-lg">
+                            예시 답안 보기
+                        </button>
+                        <div id="answer-2" class="hidden mt-4 p-3 bg-gray-50 border rounded-md">
+                            <p class="font-bold text-lg">예시 답안:</p>
+                            <p class="text-lg">"추석 연휴에는 고속도로가 막혀서 <span class="font-bold text-green-600">운전할 생각도 못 해요</span>."</p>
+                        </div>
+                    </div>
+
+                    <!-- 연습 3: 비싼 옷 (Image 3) -->
+                    <div class="bg-white p-5 rounded-lg shadow border border-gray-200">
+                        <h4 class="font-semibold text-xl mb-3 text-gray-700">연습 3: 비싼 옷</h4>
+                        <p class="mb-4 text-lg italic text-gray-600">[상황] 티셔츠가 너무 비싸요. (사다)</p>
+                        <button onclick="toggleAnswer('answer-3')" class="w-full px-4 py-2 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition-colors text-lg">
+                            예시 답안 보기
+                        </button>
+                        <div id="answer-3" class="hidden mt-4 p-3 bg-gray-50 border rounded-md">
+                            <p class="font-bold text-lg">예시 답안:</p>
+                            <p class="text-lg">"티셔츠가 너무 비싸서 <span class="font-bold text-blue-600">살 생각도 못 하겠어요</span>."</p>
+                        </div>
+                    </div>
+
+                    <!-- 연습 4: 인기 많은 식당 (Image 4) -->
+                    <div class="bg-white p-5 rounded-lg shadow border border-gray-200">
+                        <h4 class="font-semibold text-xl mb-3 text-gray-700">연습 4: 인기 많은 식당</h4>
+                        <p class="mb-4 text-lg italic text-gray-600">[상황] 식당 앞에 사람들이 줄을 서 있어요. (들어가다)</p>
+                        <button onclick="toggleAnswer('answer-4')" class="w-full px-4 py-2 bg-green-600 text-white rounded-md font-semibold hover:bg-green-700 transition-colors text-lg">
+                            예시 답안 보기
+                        </button>
+                        <div id="answer-4" class="hidden mt-4 p-3 bg-gray-50 border rounded-md">
+                            <p class="font-bold text-lg">예시 답안:</p>
+                            <p class="text-lg">"식당 앞에 줄이 너무 길어서 <span class="font-bold text-green-600">들어갈 생각도 못 했어요</span>."</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // '예시 답안 보기' 버튼을 클릭하면 해당 답안을 보여주거나 숨깁니다.
+        function toggleAnswer(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.classList.toggle('hidden');
+            }
+        }
+    </script>
+
+</body>
+</html>
+
+

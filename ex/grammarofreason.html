@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 이유 문법</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #1e2B3b;
+        }
+        .container {
+            width: 100%; max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .grammar-card {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 2px solid transparent;
+        }
+        .grammar-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        .grammar-card.selected {
+            border-color: #3b82f6;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(59, 130, 246, 0.2);
+        }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 1rem;
+            width: 90%;
+            width: 100%; max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .close-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #64748b;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 1rem;
+        }
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: #64748b;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .tab.active {
+            color: #1e293b;
+            border-bottom: 2px solid #3b82f6;
+        }
+        .explanation-container {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background-color: #f1f5f9;
+            border-radius: 0.75rem;
+        }
+        .copy-btn {
+            cursor: pointer;
+            margin-left: 8px;
+            color: #64748b;
+            transition: color 0.2s;
+        }
+        .copy-btn:hover {
+            color: #3b82f6;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+    <div class="container mx-auto p-6">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-blue-600 mb-2">한국어 이유 문법</h1>
+            <p class="text-lg text-gray-600">유사성과 차이점을 한눈에 확인하고 공부하세요.</p>
+            <div class="flex justify-center mt-4 space-x-2">
+                <button class="lang-btn px-4 py-2 text-sm rounded-full bg-blue-500 text-white font-medium" data-lang="ko">한국어</button>
+                <button class="lang-btn px-4 py-2 text-sm rounded-full bg-gray-300 text-gray-700 hover:bg-gray-400" data-lang="en">English</button>
+                <button class="lang-btn px-4 py-2 text-sm rounded-full bg-gray-300 text-gray-700 hover:bg-gray-400" data-lang="vi">Tiếng Việt</button>
+                <button class="lang-btn px-4 py-2 text-sm rounded-full bg-gray-300 text-gray-700 hover:bg-gray-400" data-lang="ja">日本語</button>
+                <button class="lang-btn px-4 py-2 text-sm rounded-full bg-gray-300 text-gray-700 hover:bg-gray-400" data-lang="zh">中文</button>
+            </div>
+            <div class="mt-8 max-w-lg mx-auto">
+                <div class="relative">
+                    <input id="search-input" type="text" placeholder="문법 검색..." class="w-full py-3 px-4 rounded-full shadow-md border-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors">
+                    <i class="fas fa-search absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+            </div>
+        </header>
+        
+        <div class="text-center mb-8">
+            <button id="toggle-compare-mode" class="px-6 py-3 rounded-full bg-indigo-500 text-white font-semibold shadow-md hover:bg-indigo-600 transition-colors">
+                <i class="fas fa-tasks mr-2"></i> 비교 모드 시작하기
+            </button>
+            <div id="compare-actions" class="hidden mt-4 space-x-2">
+                 <button id="compare-selected-btn" class="px-6 py-3 rounded-full bg-green-500 text-white font-semibold shadow-md hover:bg-green-600 transition-colors">
+                    <i class="fas fa-balance-scale-left mr-2"></i> 선택 완료 및 비교하기
+                </button>
+                <button id="cancel-compare-btn" class="px-6 py-3 rounded-full bg-red-500 text-white font-semibold shadow-md hover:bg-red-600 transition-colors">
+                    <i class="fas fa-times mr-2"></i> 취소
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Groups -->
+        <div class="flex flex-col md:flex-row space-y-8 md:space-y-0 md:space-x-8">
+            <!-- Group 1: 가장 가까운 그룹 -->
+            <div class="flex-1 bg-white p-6 rounded-2xl shadow-lg border-2 border-blue-200">
+                <h2 class="text-2xl font-bold text-blue-600 mb-4 text-center">가장 보편적인 이유</h2>
+                <p class="text-center text-gray-500 mb-6">대부분의 상황에서 바꿔 쓸 수 있지만, 뉘앙스 차이가 있어요.</p>
+                <div id="grammar-group-1" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Cards will be dynamically inserted here -->
+                </div>
+            </div>
+
+            <!-- Group 2: 특정 의미로 분화된 그룹 -->
+            <div class="flex-1 bg-white p-6 rounded-2xl shadow-lg border-2 border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">특정 의미로 분화된 이유</h2>
+                <p class="text-center text-gray-500 mb-6">특정 상황에만 사용되는 문법들이에요.</p>
+                <div id="grammar-group-2" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                     <!-- Cards will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="grammarModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <div class="tabs">
+                <div class="tab active" data-tab="info">설명</div>
+                <div class="tab" data-tab="examples">예문</div>
+            </div>
+            <h2 id="modalTitle" class="text-2xl font-bold text-center mb-4"></h2>
+            <div id="modalContent" class="text-gray-700 text-base">
+                <div id="infoTab" class="tab-content"></div>
+                <div id="examplesTab" class="tab-content hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comparison Modal -->
+    <div id="compareModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 id="compareTitle" class="text-2xl font-bold text-center mb-4">문법 비교</h2>
+            <div id="compareContent" class="text-gray-700 text-base"></div>
+        </div>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-gray-800 text-white px-5 py-3 rounded-lg shadow-lg opacity-0 transition-opacity duration-300">
+        복사되었습니다!
+    </div>
+
+    <script>
+        // --- DATA --- //
+        const langData = {
+            ko: {
+                title: "한국어 이유 문법",
+                subtitle: "유사성과 차이점을 한눈에 확인하고 공부하세요.",
+                searchPlaceholder: "문법 검색...",
+                group1Title: "가장 보편적인 이유",
+                group1Subtitle: "대부분의 상황에서 바꿔 쓸 수 있지만, 뉘앙스 차이가 있어요.",
+                group2Title: "특정 의미로 분화된 이유",
+                group2Subtitle: "특정 상황에만 사용되는 문법들이에요.",
+                modalTabInfo: "설명",
+                modalTabExamples: "예문",
+                modalConstraintsTitle: "제약 조건",
+                compareTitle: "문법 비교",
+                toastCopied: "복사되었습니다!",
+                compareModeStart: "비교 모드 시작하기",
+                compareModeComplete: "선택 완료 및 비교하기",
+                compareModeCancel: "취소",
+                grammars: {
+                    "-아/어서": { group: 1, icon: ["fa-arrow-right-long"], desc: "가장 기본적이고 널리 쓰이는 이유 문법입니다. 주로 '왜?'라는 질문에 대한 답으로 사용됩니다.", constraints: "명령문(V-으세요)이나 청유문(V-읍시다)과 함께 쓸 수 없습니다. (예: 배고파서 밥을 먹으세요 (X))", examples: ["날씨가 추워서 감기에 걸렸어요.", "배가 고파서 밥을 먹었어요.", "늦어서 죄송합니다."] },
+                    "-(으)니까": { group: 1, icon: ["fa-comment-dots"], desc: "말하는 사람의 주관적인 판단이나 경험에 근거한 이유를 나타낼 때 사용합니다. '내가 해보니/생각해보니 이래서...'의 뉘앙스를 가집니다.", constraints: "객관적인 사실보다는 주관적인 판단에 주로 사용됩니다.", examples: ["밖이 추우니까 옷을 따뜻하게 입으세요.", "바쁘시니까 다음에 다시 전화할게요.", "네가 늦었으니까 내가 대신 갈게."] },
+                    "-기 때문에": { group: 1, icon: ["fa-magnifying-glass-chart"], desc: "객관적인 사실이나 분명한 원인을 설명할 때 사용합니다. 논리적이고 격식 있는 상황에 주로 쓰입니다.", constraints: "'-(으)니까'처럼 명령문, 청유문과 잘 어울리지는 않습니다.", examples: ["교통 체증이 심하기 때문에 늦었습니다.", "그는 감기에 걸렸기 때문에 학교에 오지 못했습니다.", "이것은 매우 중요한 문제이기 때문에 신중해야 합니다."] },
+                    "-(으)므로": { group: 1, icon: ["fa-scroll"], desc: "매우 격식 있고 논리적인 이유를 나타냅니다. 주로 글이나 공식적인 발표에서 사용되는 문어체 문법입니다.", constraints: "일상 대화에서는 거의 사용하지 않아 어색하게 들릴 수 있습니다.", examples: ["본 제품은 친환경 재료를 사용했으므로 안심하고 사용하셔도 됩니다.", "모든 서류가 준비되었으므로 회의를 시작하겠습니다.", "결과가 만족스러우므로 다음 단계로 넘어갑시다."] },
+                    "-느라고": { group: 2, icon: ["fa-face-frown"], desc: "앞선 행동에 집중하느라 다른 일을 하지 못했거나, 부정적인 결과가 발생했음을 나타냅니다.", constraints: "앞 문장과 뒷 문장의 주어가 같아야 하고, 부정적인 결과가 와야 합니다. 동사에만 붙습니다.", examples: ["게임하느라고 밤을 새웠어요.", "공부하느라고 밥 먹는 걸 잊었어요.", "바쁜 일하느라고 전화를 못 받았어요."] },
+                    "-는 바람에": { group: 2, icon: ["fa-face-frown", "fa-bolt"], desc: "갑작스럽거나 예상치 못한 일이 원인이 되어 부정적인 결과가 생겼을 때 사용합니다.", constraints: "긍정적인 결과에는 사용할 수 없으며, 주로 과거 시제와 함께 사용됩니다.", examples: ["갑자기 비가 오는 바람에 소풍이 취소됐어요.", "차가 고장 나는 바람에 약속에 늦었어요.", "친구가 갑자기 아픈 바람에 여행을 못 갔어요."] },
+                    "-는 통에": { group: 2, icon: ["fa-face-frown", "fa-bullhorn"], desc: "주변의 시끄럽거나 복잡한 상황이 원인이 되어 부정적인 결과가 생겼을 때 사용합니다.", constraints: "주로 주변 환경의 혼란스러운 상황을 강조할 때 사용됩니다.", examples: ["옆집 공사하는 통에 잠을 못 잤어요.", "아이들이 떠드는 통에 책에 집중할 수 없었어요.", "사람들이 많은 통에 길을 잃었어요."] },
+                    "-는 탓에": { group: 2, icon: ["fa-face-frown", "fa-hand-point-right"], desc: "어떤 일의 원인을 탓하거나 원망하는 뉘앙스가 있습니다. 주로 부정적인 결과의 원인을 돌릴 때 사용합니다.", constraints: "긍정적인 상황에는 절대로 사용할 수 없습니다.", examples: ["네가 늦게 온 탓에 우리가 벌을 받았어.", "날씨가 추운 탓에 감기가 나을 기미가 안 보여.", "그의 실수 탓에 프로젝트가 망가졌어."] },
+                    "-았더니/었더니": { group: 2, icon: ["fa-lightbulb"], desc: "과거에 직접 경험한 행동이 어떤 결과를 가져왔거나, 새로운 사실을 알게 되었음을 나타냅니다.", constraints: "주어가 1인칭일 때 주로 사용하며, 말하는 사람의 직접 경험이 바탕이 되어야 합니다.", examples: ["창문을 열었더니 시원한 바람이 들어왔어요.", "열심히 공부했더니 성적이 올랐어요.", "오랜만에 친구에게 전화했더니 다른 사람이 받았어요."] },
+                    "-다 보니": { group: 2, icon: ["fa-arrow-trend-up"], desc: "어떤 행동을 계속 반복하다가 그 결과로 새로운 사실을 깨닫거나, 어떤 상태가 되었음을 나타냅니다.", constraints: "일회성 행동이 아닌, 지속적이고 반복적인 행동에 사용됩니다.", examples: ["매일 운동을 하다 보니 몸이 가벼워졌어요.", "오래 살다 보니 이런 일도 다 겪네요.", "친구와 자주 만나다 보니 정이 들었어요."] },
+                    "-고 해서": { group: 2, icon: ["fa-list-ul"], desc: "여러 이유 중에서 한 가지를 대표적으로 말하며, 다른 이유들도 있음을 암시합니다.", constraints: "단 하나의 이유만 있을 때는 사용하지 않습니다.", examples: ["오랜만에 친구도 보고 해서 서울에 갔어요.", "운동도 할 겸 해서 바람도 쐴 겸 해서 나왔어요.", "일도 끝났고 해서 일찍 퇴근했어요."] },
+                    "-는 덕분에": { group: 2, icon: ["fa-face-smile"], desc: "앞선 원인으로 인해 좋은 결과가 생겼을 때 사용합니다. '덕분'이라는 단어 자체가 긍정적인 의미를 담고 있습니다.", constraints: "부정적인 결과에는 사용할 수 없습니다.", examples: ["선생님 덕분에 시험에 합격했어요.", "네가 도와준 덕분에 일이 잘 끝났어.", "맑은 날씨 덕분에 기분이 좋아요."] }
+                }
+            },
+            en: {
+                title: "Korean Grammar for 'Reason'",
+                subtitle: "Understand similarities and differences at a glance.",
+                searchPlaceholder: "Search grammar...",
+                group1Title: "Most Common Reasons",
+                group1Subtitle: "Often interchangeable, but with subtle differences.",
+                group2Title: "Reasons with Specific Meanings",
+                group2Subtitle: "Used for specific situations only.",
+                modalTabInfo: "Explanation",
+                modalTabExamples: "Examples",
+                modalConstraintsTitle: "Constraints",
+                compareTitle: "Grammar Comparison",
+                toastCopied: "Copied!",
+                compareModeStart: "Start Compare Mode",
+                compareModeComplete: "Compare Selected",
+                compareModeCancel: "Cancel",
+                grammars: {
+                    "-아/어서": { group: 1, icon: ["fa-arrow-right-long"], desc: "The most basic and widely used grammar for 'reason'. It's primarily used to answer 'Why?'.", constraints: "Cannot be used with imperative (-으세요) or propositive (-읍시다) sentences. (e.g., 배고파서 밥을 먹으세요 (X) - Because I'm hungry, please eat. (Incorrect))", examples: ["I caught a cold because the weather is cold.", "I ate because I was hungry.", "I'm sorry for being late."] },
+                    "-(으)니까": { group: 1, icon: ["fa-comment-dots"], desc: "Used for a reason based on the speaker's subjective judgment or experience. Nuance of 'Since I experienced it...'.", constraints: "Mainly used for subjective judgments rather than objective facts.", examples: ["It's cold outside, so please wear warm clothes.", "You seem busy, so I'll call back later.", "Since you were late, I'll go instead."] },
+                    "-기 때문에": { group: 1, icon: ["fa-magnifying-glass-chart"], desc: "Used to explain an objective fact or a clear cause. Mainly used in logical and formal situations.", constraints: "It doesn't pair well with imperative or propositive sentences, much like '-아/어서'.", examples: ["I was late because of the heavy traffic.", "He couldn't come to school because he had a cold.", "This is a very important issue, so we must be cautious."] },
+                    "-(으)므로": { group: 1, icon: ["fa-scroll"], desc: "Indicates a very formal and logical reason. It is a written grammar used mainly in articles or official presentations.", constraints: "Sounds awkward in daily conversation as it's rarely used.", examples: ["This product uses eco-friendly materials, therefore you can use it with confidence.", "All documents are prepared, therefore we will begin the meeting.", "The results are satisfactory, therefore we will proceed to the next step."] },
+                    "-느라고": { group: 2, icon: ["fa-face-frown"], desc: "Indicates that one was so focused on an action that they couldn't do something else, resulting in a negative outcome.", constraints: "The subjects of both clauses must be the same, and the result must be negative. Only attaches to verbs.", examples: ["I stayed up all night because I was playing games.", "I forgot to eat because I was studying.", "I couldn't answer the phone because I was busy working."] },
+                    "-는 바람에": { group: 2, icon: ["fa-face-frown", "fa-bolt"], desc: "Used when a sudden or unexpected event caused a negative outcome.", constraints: "Cannot be used for positive results and is mainly used with the past tense.", examples: ["The picnic was canceled because it suddenly started raining.", "I was late for my appointment because my car broke down.", "I couldn't go on the trip because my friend suddenly got sick."] },
+                    "-는 통에": { group: 2, icon: ["fa-face-frown", "fa-bullhorn"], desc: "Used when a noisy or chaotic surrounding situation caused a negative outcome.", constraints: "Mainly used to emphasize a chaotic situation in the surroundings.", examples: ["I couldn't sleep because of the construction noise next door.", "I couldn't concentrate on my book because the children were being loud.", "I got lost in the crowd because there were so many people."] },
+                    "-는 탓에": { group: 2, icon: ["fa-face-frown", "fa-hand-point-right"], desc: "Has a nuance of blaming or resenting the cause of an event. Mainly used to attribute the cause of a negative result.", constraints: "Can never be used in positive situations.", examples: ["We got punished because you came late.", "My cold shows no sign of getting better, all due to the cold weather.", "The project was ruined because of his mistake."] },
+                    "-았더니/었더니": { group: 2, icon: ["fa-lightbulb"], desc: "Indicates that a past action personally experienced by the speaker led to a certain result or a new discovery.", constraints: "The subject is usually first-person, and it must be based on the speaker's direct experience.", examples: ["I opened the window and a cool breeze came in.", "I studied hard, and (as a result) my grades went up.", "I called my friend after a long time, and someone else answered."] },
+                    "-다 보니": { group: 2, icon: ["fa-arrow-trend-up"], desc: "Indicates that as a result of continuously repeating an action, a new realization was made or a certain state was reached.", constraints: "Used for continuous or repeated actions, not a one-time event.", examples: ["As I exercised every day, my body started to feel lighter.", "Living for a long time, I've come to experience all sorts of things.", "As I met my friend often, we grew fond of each other."] },
+                    "-고 해서": { group: 2, icon: ["fa-list-ul"], desc: "Presents one representative reason among several, implying that there are other reasons as well.", constraints: "Not used when there is only a single reason.", examples: ["I went to Seoul to see an old friend (among other things).", "I came out to get some exercise and fresh air.", "Since my work is done (and for other reasons), I'm leaving early."] },
+                    "-는 덕분에": { group: 2, icon: ["fa-face-smile"], desc: "Used when a good outcome occurred thanks to a preceding cause. The word '덕분' (thanks to) itself has a positive connotation.", constraints: "Cannot be used for negative results.", examples: ["Thanks to you, I passed the exam.", "Thanks to your help, the work finished well.", "I'm in a good mood thanks to the beautiful weather."] }
+                }
+            },
+            vi: {
+                title: "Ngữ pháp tiếng Hàn chỉ 'Lý do'",
+                subtitle: "Hiểu rõ sự tương đồng và khác biệt một cách trực quan.",
+                searchPlaceholder: "Tìm kiếm ngữ pháp...",
+                group1Title: "Lý do phổ biến nhất",
+                group1Subtitle: "Thường có thể thay thế cho nhau, nhưng có sắc thái khác biệt.",
+                group2Title: "Lý do với ý nghĩa cụ thể",
+                group2Subtitle: "Chỉ được sử dụng trong các tình huống cụ thể.",
+                modalTabInfo: "Giải thích",
+                modalTabExamples: "Ví dụ",
+                modalConstraintsTitle: "Hạn chế",
+                compareTitle: "So sánh ngữ pháp",
+                toastCopied: "Đã sao chép!",
+                compareModeStart: "Bắt đầu so sánh",
+                compareModeComplete: "So sánh lựa chọn",
+                compareModeCancel: "Hủy",
+                grammars: {
+                    "-아/어서": { group: 1, icon: ["fa-arrow-right-long"], desc: "Là ngữ pháp lý do cơ bản và được sử dụng rộng rãi nhất. Thường được dùng để trả lời câu hỏi 'Tại sao?'.", constraints: "Không thể kết hợp với câu mệnh lệnh (-으세요) hoặc câu đề nghị (-읍시다). (Ví dụ: 배고파서 밥을 먹으세요 (X))", examples: ["Vì thời tiết lạnh nên tôi đã bị cảm.", "Vì đói bụng nên tôi đã ăn cơm.", "Xin lỗi vì đã đến muộn."] },
+                    "-(으)니까": { group: 1, icon: ["fa-comment-dots"], desc: "Sử dụng khi nói lý do dựa trên phán đoán chủ quan hoặc kinh nghiệm của người nói. Mang sắc thái 'Vì tôi thấy/nghĩ là...'.", constraints: "Chủ yếu dùng cho phán đoán chủ quan hơn là sự thật khách quan.", examples: ["Ngoài trời lạnh nên hãy mặc áo ấm vào.", "Vì anh có vẻ bận nên tôi sẽ gọi lại sau.", "Vì bạn đến muộn nên tôi sẽ đi thay."] },
+                    "-기 때문에": { group: 1, icon: ["fa-magnifying-glass-chart"], desc: "Sử dụng khi giải thích một sự thật khách quan hoặc một nguyên nhân rõ ràng. Chủ yếu dùng trong tình huống logic và trang trọng.", constraints: "Không kết hợp tốt với câu mệnh lệnh, đề nghị, tương tự như '-아/어서'.", examples: ["Vì kẹt xe nên tôi đã đến muộn.", "Bạn ấy không đến trường được vì bị cảm.", "Vì đây là vấn đề rất quan trọng nên phải thận trọng."] },
+                    "-(으)므로": { group: 1, icon: ["fa-scroll"], desc: "Diễn tả một lý do rất trang trọng và logic. Là ngữ pháp văn viết, chủ yếu dùng trong các bài viết hoặc thông báo chính thức.", constraints: "Rất hiếm khi sử dụng trong giao tiếp hàng ngày, nghe sẽ không tự nhiên.", examples: ["Vì sản phẩm này sử dụng nguyên liệu thân thiện với môi trường nên quý khách có thể yên tâm sử dụng.", "Vì tất cả tài liệu đã được chuẩn bị, chúng ta sẽ bắt đầu cuộc họp.", "Vì kết quả rất thỏa đáng nên chúng ta sẽ chuyển sang giai đoạn tiếp theo."] },
+                    "-느라고": { group: 2, icon: ["fa-face-frown"], desc: "Diễn tả vì mải mê làm một việc gì đó nên không thể làm việc khác, dẫn đến kết quả tiêu cực.", constraints: "Chủ ngữ của hai vế câu phải giống nhau và kết quả phải là tiêu cực. Chỉ kết hợp với động từ.", examples: ["Vì mải chơi game nên tôi đã thức trắng đêm.", "Vì mải học bài nên tôi quên cả ăn.", "Vì bận việc nên tôi đã không thể nghe điện thoại."] },
+                    "-는 바람에": { group: 2, icon: ["fa-face-frown", "fa-bolt"], desc: "Sử dụng khi một sự việc đột ngột, bất ngờ gây ra một kết quả tiêu cực.", constraints: "Không thể sử dụng cho kết quả tích cực và chủ yếu dùng ở thì quá khứ.", examples: ["Vì trời đột nhiên đổ mưa nên chuyến dã ngoại đã bị hủy.", "Vì xe bị hỏng nên tôi đã trễ hẹn.", "Vì bạn tôi đột nhiên bị bệnh nên tôi không thể đi du lịch."] },
+                    "-는 통에": { group: 2, icon: ["fa-face-frown", "fa-bullhorn"], desc: "Sử dụng khi một tình huống ồn ào, hỗn loạn xung quanh gây ra kết quả tiêu cực.", constraints: "Chủ yếu dùng để nhấn mạnh tình hình hỗn loạn của môi trường xung quanh.", examples: ["Vì nhà hàng xóm sửa chữa ồn ào nên tôi không thể ngủ được.", "Vì bọn trẻ làm ồn nên tôi không thể tập trung đọc sách.", "Vì quá đông người nên tôi đã bị lạc."] },
+                    "-는 탓에": { group: 2, icon: ["fa-face-frown", "fa-hand-point-right"], desc: "Mang sắc thái đổ lỗi hoặc oán trách nguyên nhân của một sự việc nào đó. Chủ yếu được sử dụng khi đổ lỗi cho nguyên nhân của một kết quả tiêu cực.", constraints: "Tuyệt đối không thể sử dụng trong tình huống tích cực.", examples: ["Tại cậu đến muộn mà chúng ta bị phạt đấy.", "Tại thời tiết lạnh nên bệnh cảm không có dấu hiệu đỡ hơn.", "Tại sai lầm của anh ấy mà dự án đã hỏng."] },
+                    "-았더니/었더니": { group: 2, icon: ["fa-lightbulb"], desc: "Diễn tả một hành động trong quá khứ mà người nói trực tiếp trải nghiệm đã dẫn đến một kết quả hoặc một phát hiện mới.", constraints: "Chủ ngữ thường là ngôi thứ nhất và phải dựa trên kinh nghiệm trực tiếp của người nói.", examples: ["Tôi mở cửa sổ ra thì thấy gió mát thổi vào.", "Tôi đã học chăm chỉ và kết quả là điểm số đã tăng lên.", "Lâu rồi mới gọi cho bạn thì một người khác nghe máy."] },
+                    "-다 보니": { group: 2, icon: ["fa-arrow-trend-up"], desc: "Diễn tả việc liên tục lặp lại một hành động và kết quả là nhận ra một sự thật mới hoặc đạt đến một trạng thái nào đó.", constraints: "Sử dụng cho hành động kéo dài, lặp đi lặp lại chứ không phải hành động một lần.", examples: ["Vì ngày nào cũng tập thể dục nên cơ thể tôi trở nên nhẹ nhõm.", "Sống lâu rồi mới thấy, chuyện gì cũng có thể xảy ra.", "Vì gặp gỡ thường xuyên nên chúng tôi đã trở nên thân thiết."] },
+                    "-고 해서": { group: 2, icon: ["fa-list-ul"], desc: "Nêu ra một lý do tiêu biểu trong số nhiều lý do, ngụ ý rằng còn có những lý do khác nữa.", constraints: "Không sử dụng khi chỉ có một lý do duy nhất.", examples: ["Lâu rồi mới gặp lại bạn bè, và cũng có vài việc nên tôi đã đến Seoul.", "Vừa để tập thể dục, vừa để hóng gió nên tôi đã ra ngoài.", "Vì công việc cũng xong rồi nên tôi đã về sớm."] },
+                    "-는 덕분에": { group: 2, icon: ["fa-face-smile"], desc: "Sử dụng khi một kết quả tốt đẹp xảy ra nhờ vào một nguyên nhân nào đó. Bản thân từ '덕분' (nhờ) đã mang ý nghĩa tích cực.", constraints: "Không thể sử dụng cho kết quả tiêu cực.", examples: ["Nhờ có cô giáo mà em đã thi đỗ.", "Nhờ bạn giúp đỡ mà công việc đã kết thúc tốt đẹp.", "Nhờ thời tiết đẹp mà tâm trạng tôi rất tốt."] }
+                }
+            },
+            ja: {
+                title: "韓国語の「理由」文法",
+                subtitle: "類似点と相違点を一目で把握して学びましょう。",
+                searchPlaceholder: "文法を検索...",
+                group1Title: "最も一般的な理由",
+                group1Subtitle: "ほとんどの場合、置き換え可能ですが、微妙なニュアンスの違いがあります。",
+                group2Title: "特定の意味を持つ理由",
+                group2Subtitle: "特定の状況でのみ使用される文法です。",
+                modalTabInfo: "説明",
+                modalTabExamples: "例文",
+                modalConstraintsTitle: "制約",
+                compareTitle: "文法比較",
+                toastCopied: "コピーしました！",
+                compareModeStart: "比較モードを開始",
+                compareModeComplete: "選択項目を比較",
+                compareModeCancel: "キャンセル",
+                grammars: {
+                    "-아/어서": { group: 1, icon: ["fa-arrow-right-long"], desc: "最も基本的で広く使われる理由の文法です。主に「なぜ？」という質問への答えとして使われます。", constraints: "命令文(-으세요)や勧誘文(-읍시다)と一緒に使うことはできません。(例: 배고파서 밥을 먹으세요 (X))", examples: ["天気が寒いので風邪をひきました。", "お腹が空いたのでご飯を食べました。", "遅れて申し訳ありません。"] },
+                    "-(으)니까": { group: 1, icon: ["fa-comment-dots"], desc: "話し手の主観的な判断や経験に基づいた理由を表すときに使います。「私がしてみたら/考えてみたらこうだから...」というニュアンスを持ちます。", constraints: "客観的な事実より主観的な判断に主に使用されます。", examples: ["外は寒いから、暖かい服を着てください。", "お忙しいようですから、また後で電話します。", "君が遅れたから私が代わりに行くよ。"] },
+                    "-기 때문에": { group: 1, icon: ["fa-magnifying-glass-chart"], desc: "客観的な事実や明確な原因を説明するときに使います。論理的で格式のある状況で主に使用されます。", constraints: "「-(으)니까」のように、命令文や勧誘文とはあまり一緒に使われません。", examples: ["交通渋滞がひどいため遅刻しました。", "彼は風邪をひいたため学校に来れませんでした。", "これは非常に重要な問題であるため、慎重でなければなりません。"] },
+                    "-(으)므로": { group: 1, icon: ["fa-scroll"], desc: "非常に格式があり、論理的な理由を表します。主に文章や公式発表で使用される文語体文法です。", constraints: "日常会話ではほとんど使われず、不自然に聞こえることがあります。", examples: ["本製品は環境に優しい素材を使用しているため、安心してご使用いただけます。", "すべての書類が準備されたので、会議を始めます。", "結果が満足のいくものなので、次の段階に進みましょう。"] },
+                    "-느라고": { group: 2, icon: ["fa-face-frown"], desc: "前の行動に集中したために、他のこと（主に否定的なこと）ができなかったり、否定的な結果が生じたりしたことを表します。", constraints: "前後の文の主語が同じでなければならず、否定的な結果が続く必要があります。動詞にのみ付きます。", examples: ["ゲームをしていたので夜を明かしました。", "勉強していたのでご飯を食べるのを忘れました。", "忙しい仕事で電話に出られませんでした。"] },
+                    "-는 바람에": { group: 2, icon: ["fa-face-frown", "fa-bolt"], desc: "突然の、あるいは予期せぬ出来事が原因で否定的な結果が生じたときに使います。", constraints: "肯定的な結果には使用できず、主に過去形で使われます。", examples: ["急に雨が降ったせいで、ピクニックが中止になりました。", "車が故障したせいで、約束に遅れました。", "友達が急に病気になったせいで、旅行に行けませんでした。"] },
+                    "-는 통에": { group: 2, icon: ["fa-face-frown", "fa-bullhorn"], desc: "周囲の騒音や複雑な状況が原因で、物事がうまくいかなかったときに使います。", constraints: "主に周囲の混乱した状況を強調する際に使います。", examples: ["隣の家の工事のせいで、眠れませんでした。", "子供たちが騒いでいたので、本に集中できませんでした。", "人が多いせいで、道に迷いました。"] },
+                    "-는 탓에": { group: 2, icon: ["fa-face-frown", "fa-hand-point-right"], desc: "あることの原因を責めたり、恨むニュアンスがあります。主に否定的な結果の原因を非難するときに使います。", constraints: "肯定的な状況では絶対に使用できません。", examples: ["君が遅く来たせいで私たちが罰を受けたんだ。", "寒い天気のせいで風邪が治る気配がない。", "彼のミスのせいでプロジェクトが台無しになった。"] },
+                    "-았더니/었더니": { group: 2, icon: ["fa-lightbulb"], desc: "過去に直接経験した行動がある結果をもたらしたり、新しい事実を発見したりしたことを表します。", constraints: "主語は通常一人称で、話し手の直接の経験に基づいている必要があります。", examples: ["窓を開けたら、涼しい風が入ってきました。", "一生懸命勉強したら、成績が上がりました。", "久しぶりに友達に電話したら、他の人が出ました。"] },
+                    "-다 보니": { group: 2, icon: ["fa-arrow-trend-up"], desc: "ある行動を繰り返し続けるうちに、その結果として新しい事実を悟ったり、ある状態になったことを表します。", constraints: "一回限りの行動ではなく、持続的・反復的な行動に使われます。", examples: ["毎日運動をしていたら体が軽くなりました。", "長く生きているとこんなことも経験するんですね。", "友達と頻繁に会っていたら、情が湧きました。"] },
+                    "-고 해서": { group: 2, icon: ["fa-list-ul"], desc: "いくつかの理由の中から一つを代表的に述べ、他にも理由があることを暗示します。", constraints: "理由が一つしかない場合は使用しません。", examples: ["久しぶりに友達にも会うし、ソウルに行きました。", "運動も兼ねて、気分転換も兼ねて、外に出ました。", "仕事も終わったことだし、早く退勤しました。"] },
+                    "-는 덕분에": { group: 2, icon: ["fa-face-smile"], desc: "前の原因によって良い結果が生じたときに使います。「 덕분 」（おかげ）という言葉自体が肯定的な意味を含んでいます。", constraints: "否定的な結果には使用できません。", examples: ["先生のおかげで試験に合格しました。", "手伝ってくれたおかげで仕事がうまくいった。", "晴れた天気のおかげで気分が良いです。"] }
+                }
+            },
+            zh: {
+                title: "韩语“原因”语法",
+                subtitle: "一目了然地理解相似之处和不同之处。",
+                searchPlaceholder: "搜索语法...",
+                group1Title: "最常见的原因",
+                group1Subtitle: "大多数情况下可以互换，但有细微的语感差异。",
+                group2Title: "具有特定含义的原因",
+                group2Subtitle: "仅在特定情况下使用的语法。",
+                modalTabInfo: "解释",
+                modalTabExamples: "例句",
+                modalConstraintsTitle: "限制",
+                compareTitle: "语法比较",
+                toastCopied: "已复制！",
+                compareModeStart: "开始比较模式",
+                compareModeComplete: "比较所选项",
+                compareModeCancel: "取消",
+                grammars: {
+                    "-아/어서": { group: 1, icon: ["fa-arrow-right-long"], desc: "是最基本、使用最广泛的表示原因的语法。主要用于回答“为什么？”的问题。", constraints: "不能与命令句(-으세요)或共动句(-읍시다)一起使用。(例如: 배고파서 밥을 먹으세요 (X))", examples: ["因为天气冷，所以感冒了。", "因为肚子饿，所以吃饭了。", "对不起，我迟到了。"] },
+                    "-(으)니까": { group: 1, icon: ["fa-comment-dots"], desc: "用于表示基于说话者主观判断或经验的原因。带有“因为我试过/觉得……”的语感。", constraints: "主要用于主观判断，而非客观事实。", examples: ["外面冷，所以请穿暖和的衣服。", "您好像很忙，我待会儿再打电话吧。", "因为你迟到了，所以我替你去。"] },
+                    "-기 때문에": { group: 1, icon: ["fa-magnifying-glass-chart"], desc: "用于说明客观事实或明确原因。主要用于逻辑性强、正式的场合。", constraints: "和'-아/어서'一样，不常与命令句或共动句搭配使用。", examples: ["因为交通堵塞，所以我迟到了。", "他因为感冒没能来学校。", "因为这是个非常重要的问题，所以必须慎重。"] },
+                    "-(으)므로": { group: 1, icon: ["fa-scroll"], desc: "表示非常正式、有逻辑性的原因。是主要用于文章或正式发表的书面语。", constraints: "在日常对话中几乎不使用，听起来会很别扭。", examples: ["本产品使用环保材料，因此您可以放心使用。", "所有文件都已备齐，因此会议现在开始。", "结果令人满意，因此我们将进入下一阶段。"] },
+                    "-느라고": { group: 2, icon: ["fa-face-frown"], desc: "表示因为专注于做某事而没能做成其他事，或导致了否定的结果。", constraints: "前后分句的主语必须一致，且后句必须是否定的结果。只能用于动词。", examples: ["因为玩游戏，所以熬了一夜。", "因为学习，所以忘了吃饭。", "因为忙着工作，所以没接到电话。"] },
+                    "-는 바람에": { group: 2, icon: ["fa-face-frown", "fa-bolt"], desc: "用于因突然发生或意想不到的事情而导致了否定的结果。", constraints: "不能用于肯定的结果，主要与过去时态连用。", examples: ["因为突然下雨，郊游被取消了。", "因为车坏了，所以约会迟到了。", "因为朋友突然病了，所以没能去成旅行。"] },
+                    "-는 통에": { group: 2, icon: ["fa-face-frown", "fa-bullhorn"], desc: "用于因周围嘈杂或混乱的情况而导致了否定的结果。", constraints: "主要用于强调周围环境的混乱状况。", examples: ["因为隔壁施工，所以没睡好觉。", "因为孩子们太吵，所以没法集中精力看书。", "因为人太多，所以迷路了。"] },
+                    "-는 탓에": { group: 2, icon: ["fa-face-frown", "fa-hand-point-right"], desc: "带有责备或埋怨某事原因的语气。主要用于归咎负面结果的原因。", constraints: "绝对不能用于积极的情况。", examples: ["都怪你来晚了，我们才受罚的。", "都怪天气冷，感冒一点好转的迹象都没有。", "都怪他的失误，项目才搞砸了。"] },
+                    "-았더니/었더니": { group: 2, icon: ["fa-lightbulb"], desc: "表示说话人亲身经历过的过去的行为带来了某种结果，或发现了新的事实。", constraints: "主语通常是第一人称，必须基于说话者的亲身经历。", examples: ["我一开窗，凉爽的风就吹了进来。", "我努力学习了，结果成绩提高了。", "我时隔很久给朋友打电话，结果是别人接的。"] },
+                    "-다 보니": { group: 2, icon: ["fa-arrow-trend-up"], desc: "表示持续反复进行某个动作，结果领悟到了新的事实，或进入了某种状态。", constraints: "用于持续性、反复性的动作，而非一次性动作。", examples: ["因为每天运动，身体变轻了。", "活久了，这种事都经历到了。", "因为经常和朋友见面，所以产生感情了。"] },
+                    "-고 해서": { group: 2, icon: ["fa-list-ul"], desc: "在多个理由中，举出一个有代表性的理由，同时暗示还有其他理由。", constraints: "只有一个理由时不能使用。", examples: ["也想见见许久未见的朋友，所以就去了首尔。", "想着既能运动又能散散心，所以就出来了。", "工作也结束了，所以就早点下班了。"] },
+                    "-는 덕분에": { group: 2, icon: ["fa-face-smile"], desc: "用于表示因为前面的原因而产生了好的结果。“덕분”（多亏）这个词本身就包含着积极的意义。", constraints: "不能用于否定的结果。", examples: ["多亏了老师，我考试合格了。", "多亏了你的帮助，事情才顺利结束。", "托晴朗天气之福，我心情很好。"] }
+                }
+            }
+        };
+
+        // --- STATE --- //
+        let currentLang = 'ko';
+        let isCompareMode = false;
+        let selectedGrammars = [];
+
+        // --- DOM ELEMENTS --- //
+        const grammarGroup1 = document.getElementById('grammar-group-1');
+        const grammarGroup2 = document.getElementById('grammar-group-2');
+        const searchInput = document.getElementById('search-input');
+        const toggleCompareBtn = document.getElementById('toggle-compare-mode');
+        const compareActions = document.getElementById('compare-actions');
+        const compareSelectedBtn = document.getElementById('compare-selected-btn');
+        const cancelCompareBtn = document.getElementById('cancel-compare-btn');
+        const grammarModal = document.getElementById('grammarModal');
+        const compareModal = document.getElementById('compareModal');
+        const toast = document.getElementById('toast');
+
+        // --- FUNCTIONS --- //
+
+        function renderGrammarCards() {
+            grammarGroup1.innerHTML = '';
+            grammarGroup2.innerHTML = '';
+            const grammarData = langData[currentLang].grammars;
+            for (const grammar in grammarData) {
+                const data = grammarData[grammar];
+                const card = document.createElement('div');
+                card.className = 'grammar-card';
+                card.dataset.grammar = grammar;
+
+                const iconHTML = data.icon.map(iconClass => `<i class="fas ${iconClass} text-gray-400 ml-1"></i>`).join('');
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-semibold text-lg">${grammar}</h3>
+                        <div class="flex items-center" title="${data.desc}">${iconHTML}</div>
+                    </div>
+                `;
+                if (data.group === 1) {
+                    grammarGroup1.appendChild(card);
+                } else {
+                    grammarGroup2.appendChild(card);
+                }
+            }
+            addCardEventListeners();
+        }
+        
+        function addCardEventListeners() {
+            document.querySelectorAll('.grammar-card').forEach(card => {
+                card.addEventListener('click', () => handleCardClick(card));
+            });
+        }
+
+        function handleCardClick(card) {
+            const grammar = card.dataset.grammar;
+            if (isCompareMode) {
+                card.classList.toggle('selected');
+                if (selectedGrammars.includes(grammar)) {
+                    selectedGrammars = selectedGrammars.filter(g => g !== grammar);
+                } else {
+                    selectedGrammars.push(grammar);
+                }
+            } else {
+                showGrammarModal(grammar);
+            }
+        }
+
+        function showGrammarModal(grammar) {
+            const data = langData[currentLang].grammars[grammar];
+            const constraintsTitle = langData[currentLang].modalConstraintsTitle;
+
+            document.getElementById('modalTitle').textContent = grammar;
+            
+            const infoTab = document.getElementById('infoTab');
+            infoTab.innerHTML = `
+                <div class="p-4 bg-gray-100 rounded-lg mb-4">${data.desc}</div>
+                <h4 class="font-bold text-md text-red-600 mb-2"><i class="fas fa-exclamation-triangle mr-2"></i>${constraintsTitle}</h4>
+                <div class="p-4 bg-red-50 rounded-lg text-red-800">${data.constraints}</div>
+            `;
+
+            const examplesTab = document.getElementById('examplesTab');
+            examplesTab.innerHTML = `<ul>${data.examples.map(ex => `
+                <li class="mb-2 p-3 bg-blue-50 rounded-lg flex justify-between items-center">
+                    <span>${ex}</span>
+                    <i class="fas fa-copy copy-btn" data-text="${ex}"></i>
+                </li>`).join('')}</ul>`;
+
+            document.querySelectorAll('#grammarModal .tab').forEach(t => t.classList.remove('active'));
+            document.querySelector('#grammarModal .tab[data-tab="info"]').classList.add('active');
+            document.querySelectorAll('#grammarModal .tab-content').forEach(c => c.classList.add('hidden'));
+            document.getElementById('infoTab').classList.remove('hidden');
+
+            grammarModal.style.display = 'flex';
+        }
+
+        function toggleCompareMode() {
+            isCompareMode = !isCompareMode;
+            selectedGrammars = [];
+            document.querySelectorAll('.grammar-card').forEach(c => c.classList.remove('selected'));
+            
+            if (isCompareMode) {
+                toggleCompareBtn.classList.add('hidden');
+                compareActions.classList.remove('hidden');
+                document.body.style.cursor = 'copy';
+            } else {
+                toggleCompareBtn.classList.remove('hidden');
+                compareActions.classList.add('hidden');
+                document.body.style.cursor = 'default';
+            }
+        }
+        
+        function showCompareModal() {
+            if (selectedGrammars.length < 2) {
+                const alertMsg = {
+                    ko: "비교를 위해 2개 이상의 문법을 선택해주세요.",
+                    en: "Please select at least two grammar points to compare.",
+                    vi: "Vui lòng chọn ít nhất hai điểm ngữ pháp để so sánh.",
+                    ja: "比較するには、2つ以上の文法項目を選択してください。",
+                    zh: "请选择至少两个语法点进行比较。"
+                }
+                alert(alertMsg[currentLang]);
+                return;
+            }
+            
+            const content = document.getElementById('compareContent');
+            const grammarData = langData[currentLang].grammars;
+
+            let tableHTML = `<div class="grid gap-0 overflow-x-auto" style="grid-template-columns: repeat(${selectedGrammars.length}, minmax(200px, 1fr));">`;
+            
+            // Headers
+            selectedGrammars.forEach(g => {
+                tableHTML += `<div class="font-bold text-lg text-center text-blue-600 p-2 bg-blue-50 border-b-2 border-blue-200 sticky top-0">${g}</div>`;
+            });
+
+            // Descriptions
+            tableHTML += `<div class="col-span-${selectedGrammars.length} p-2 bg-gray-100 font-bold mt-2">${langData[currentLang].modalTabInfo}</div>`;
+            selectedGrammars.forEach(g => {
+                tableHTML += `<div class="p-2 border-r border-gray-200">${grammarData[g].desc}</div>`;
+            });
+
+            // Constraints
+            tableHTML += `<div class="col-span-${selectedGrammars.length} p-2 bg-gray-100 font-bold mt-2">${langData[currentLang].modalConstraintsTitle}</div>`;
+            selectedGrammars.forEach(g => {
+                tableHTML += `<div class="p-2 border-r border-gray-200 bg-red-50 text-red-800">${grammarData[g].constraints}</div>`;
+            });
+            
+            // Examples
+            tableHTML += `<div class="col-span-${selectedGrammars.length} p-2 bg-gray-100 font-bold mt-2">${langData[currentLang].modalTabExamples}</div>`;
+            const maxExamples = Math.max(...selectedGrammars.map(g => grammarData[g].examples.length));
+            for(let i=0; i<maxExamples; i++){
+                 selectedGrammars.forEach(g => {
+                    const example = grammarData[g].examples[i] || '&nbsp;';
+                    tableHTML += `<div class="p-2 border-r border-gray-200">${example}</div>`;
+                });
+            }
+
+            tableHTML += '</div>';
+            content.innerHTML = tableHTML;
+            
+            document.getElementById('compareTitle').textContent = langData[currentLang].compareTitle;
+            compareModal.style.display = 'flex';
+            toggleCompareMode();
+        }
+
+        function updateUI() {
+            const data = langData[currentLang];
+            document.querySelector('h1').textContent = data.title;
+            document.querySelector('p.text-lg').textContent = data.subtitle;
+            searchInput.placeholder = data.searchPlaceholder;
+            
+            document.querySelector('.flex-1:nth-of-type(1) h2').textContent = data.group1Title;
+            document.querySelector('.flex-1:nth-of-type(1) p').textContent = data.group1Subtitle;
+            document.querySelector('.flex-1:nth-of-type(2) h2').textContent = data.group2Title;
+            document.querySelector('.flex-1:nth-of-type(2) p').textContent = data.group2Subtitle;
+            
+            document.querySelector('#grammarModal .tab[data-tab="info"]').textContent = data.modalTabInfo;
+            document.querySelector('#grammarModal .tab[data-tab="examples"]').textContent = data.modalTabExamples;
+
+            toggleCompareBtn.innerHTML = `<i class="fas fa-tasks mr-2"></i> ${data.compareModeStart}`;
+            compareSelectedBtn.innerHTML = `<i class="fas fa-balance-scale-left mr-2"></i> ${data.compareModeComplete}`;
+            cancelCompareBtn.innerHTML = `<i class="fas fa-times mr-2"></i> ${data.compareModeCancel}`;
+            
+            toast.textContent = data.toastCopied;
+
+            renderGrammarCards();
+        }
+
+        function showToast() {
+            toast.classList.remove('opacity-0');
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+            }, 2000);
+        }
+
+        // --- EVENT LISTENERS --- //
+        
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', (event) => {
+                const newLang = event.target.dataset.lang;
+                if (newLang === currentLang) return;
+                currentLang = newLang;
+                document.querySelectorAll('.lang-btn').forEach(b => {
+                    b.classList.remove('bg-blue-500', 'text-white');
+                    b.classList.add('bg-gray-300', 'text-gray-700');
+                });
+                event.target.classList.add('bg-blue-500', 'text-white');
+                event.target.classList.remove('bg-gray-300', 'text-gray-700');
+                updateUI();
+            });
+        });
+
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            document.querySelectorAll('.grammar-card').forEach(card => {
+                const grammarName = card.dataset.grammar.toLowerCase();
+                if (grammarName.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+        
+        [grammarModal, compareModal].forEach(modal => {
+             modal.addEventListener('click', (event) => {
+                if (event.target.classList.contains('close-button') || event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+
+        document.querySelectorAll('#grammarModal .tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.dataset.tab;
+                document.querySelectorAll('#grammarModal .tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                document.querySelectorAll('#grammarModal .tab-content').forEach(c => c.classList.add('hidden'));
+                document.getElementById(tabName + 'Tab').classList.remove('hidden');
+            });
+        });
+        
+        grammarModal.addEventListener('click', (e) => {
+             if (e.target.classList.contains('copy-btn')) {
+                const textToCopy = e.target.dataset.text;
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showToast();
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                });
+            }
+        });
+        
+        toggleCompareBtn.addEventListener('click', toggleCompareMode);
+        cancelCompareBtn.addEventListener('click', toggleCompareMode);
+        compareSelectedBtn.addEventListener('click', showCompareModal);
+
+        // --- INITIALIZATION --- //
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUI();
+        });
+
+    </script>
+</body>
+</html>
+

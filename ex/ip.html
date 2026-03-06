@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나의 미래 계획 - 연습 가이드</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f1f5f9;
+        }
+        .vietnamese-text {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 2px;
+            font-style: italic;
+        }
+        .progress-bar {
+            transition: width 0.2s ease;
+        }
+        .card {
+            scroll-margin-top: 80px;
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="text-slate-800 pb-12">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <!-- Fixed Header / Scroll Progress -->
+    <div class="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md shadow-sm">
+        <div class="flex justify-between items-center p-4">
+            <div>
+                <h1 class="text-lg font-bold text-blue-600">나의 미래 계획</h1>
+                <p class="text-[10px] text-slate-400 uppercase tracking-wider">Kế hoạch tương lai của tôi</p>
+            </div>
+            <div id="scroll-percent" class="text-xs font-bold text-blue-500 bg-blue-50 px-2 py-1 rounded-lg">0%</div>
+        </div>
+        <div class="w-full bg-slate-200 h-1.5">
+            <div id="progress" class="progress-bar bg-blue-500 h-full" style="width: 0%;"></div>
+        </div>
+    </div>
+
+    <!-- Content Area -->
+    <main class="max-w-md mx-auto px-4 pt-24 space-y-8">
+        
+        <!-- Practice Method Guide (New Addition) -->
+        <div class="bg-blue-600 rounded-3xl p-6 text-white shadow-lg shadow-blue-200">
+            <div class="flex items-center gap-3 mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                <h2 class="text-lg font-bold italic">학습 방법 (Cách học)</h2>
+            </div>
+            <p class="text-sm leading-relaxed font-medium">
+                질문에 대한 답을 공책이나 종이에 직접 쓰고, 소리 내어 말하며 연습하세요.
+            </p>
+            <p class="text-[13px] opacity-80 mt-1 italic">
+                Hãy viết câu trả lời cho các câu hỏi vào vở hoặc giấy, sau đó luyện nói to thành tiếng.
+            </p>
+        </div>
+
+        <!-- Introduction & Warning -->
+        <header class="text-center py-2">
+            <h2 class="text-2xl font-extrabold text-slate-900">말하기 시험 준비</h2>
+            <p class="vietnamese-text text-base">Chuẩn bị cho kỳ thi nói</p>
+            
+            <!-- Warning Box -->
+            <div class="mt-6 p-4 bg-red-50 border-2 border-red-100 rounded-2xl text-left">
+                <div class="flex items-start gap-2">
+                    <span class="text-red-500 text-lg">⚠️</span>
+                    <div>
+                        <p class="text-sm font-bold text-red-600 underline decoration-red-200 underline-offset-4">주의사항 (Lưu ý)</p>
+                        <p class="mt-1 text-xs font-medium text-red-700 leading-relaxed">
+                            예시 문장과 똑같이 말하면 안 됩니다. 반드시 자신의 생각으로 답변을 준비하세요.<br>
+                            <span class="italic font-normal">Không được nói giống hệt như câu ví dụ. Hãy chuẩn bị câu trả lời bằng suy nghĩ của chính mình.</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <p class="mt-6 text-sm text-slate-600 leading-relaxed px-4">
+                질문에 대해 <span class="text-blue-600 font-bold">3~5문장</span>으로 길게 말하는 연습을 하세요.<br>
+                <span class="text-slate-400 font-medium italic text-xs">Hãy luyện tập trả lời dài từ 3~5 câu cho mỗi câu hỏi.</span>
+            </p>
+        </header>
+
+        <!-- Question 1 -->
+        <article class="card bg-white rounded-3xl p-6 shadow-sm border border-slate-200" id="q1">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white text-sm font-bold">1</span>
+                <div>
+                    <h3 class="font-bold text-lg">단기적인 계획</h3>
+                    <p class="vietnamese-text">Kế hoạch ngắn hạn</p>
+                </div>
+            </div>
+            
+            <p class="text-slate-700 font-medium mb-1 italic">Q: 이번 과정을 마친 후의 계획은 무엇입니까?</p>
+            <p class="vietnamese-text mb-6">Kế hoạch của bạn sau khi kết thúc khóa học này là gì?</p>
+
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <code class="text-blue-600 font-bold block">-(으)려고 하다</code>
+                        <span class="text-[11px] text-slate-500">định làm gì đó</span>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <code class="text-blue-600 font-bold block">-기로 하다</code>
+                        <span class="text-[11px] text-slate-500">quyết định làm gì</span>
+                    </div>
+                </div>
+
+                <button onclick="toggleBox('ex1')" class="w-full py-3 bg-slate-800 text-white rounded-xl text-sm font-medium hover:bg-slate-700 transition-colors">
+                    상세 예시 보기 (Xem ví dụ chi tiết)
+                </button>
+
+                <div id="ex1" class="hidden bg-blue-50 p-4 rounded-xl text-sm leading-relaxed border-l-4 border-blue-400">
+                    <p class="text-blue-900 font-medium">
+                        "이번 3급 과정을 마친 후에 저는 계속해서 4급 수업을 <strong>들으려고 합니다.</strong> 
+                        방학 때는 고향에 가지 않고 친구와 같이 제주도에 <strong>가기로 했습니다.</strong> 
+                        제주도에서 맛있는 음식도 먹고 사진도 많이 찍고 싶습니다. 
+                        이번 여행이 저에게 아주 좋은 추억이 될 것 같습니다."
+                    </p>
+                    <hr class="my-3 border-blue-200">
+                    <p class="text-blue-700/70 text-xs italic">
+                        "Sau khi kết thúc khóa học cấp 3 này, tôi định sẽ tiếp tục học lớp cấp 4. 
+                        Kỳ nghỉ tới, tôi đã quyết định không về quê mà sẽ cùng bạn đi đảo Jeju. 
+                        Tôi muốn ăn những món ăn ngon và chụp thật nhiều ảnh tại đảo Jeju. 
+                        Tôi nghĩ chuyến đi này sẽ trở thành một kỷ niệm rất đẹp đối với mình."
+                    </p>
+                </div>
+            </div>
+        </article>
+
+        <!-- Question 2 -->
+        <article class="card bg-white rounded-3xl p-6 shadow-sm border border-slate-200" id="q2">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-green-600 text-white text-sm font-bold">2</span>
+                <div>
+                    <h3 class="font-bold text-lg">희망 직업</h3>
+                    <p class="vietnamese-text">Nghề nghiệp mong muốn</p>
+                </div>
+            </div>
+            
+            <p class="text-slate-700 font-medium mb-1 italic">Q: 나중에 어떤 직업을 갖고 싶습니까? 그 이유는 무엇입니까?</p>
+            <p class="vietnamese-text mb-6">Sau này bạn muốn làm nghề gì? Tại sao?</p>
+
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <code class="text-green-600 font-bold block">-기 위해서</code>
+                        <span class="text-[11px] text-slate-500">để/nhằm mục đích</span>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <code class="text-green-600 font-bold block">-(으)면 좋겠다</code>
+                        <span class="text-[11px] text-slate-500">ước gì/nếu... thì tốt</span>
+                    </div>
+                </div>
+
+                <button onclick="toggleBox('ex2')" class="w-full py-3 bg-slate-800 text-white rounded-xl text-sm font-medium hover:bg-slate-700 transition-colors">
+                    상세 예시 보기 (Xem ví dụ chi tiết)
+                </button>
+
+                <div id="ex2" class="hidden bg-green-50 p-4 rounded-xl text-sm leading-relaxed border-l-4 border-green-400">
+                    <p class="text-green-900 font-medium">
+                        "저는 나중에 한국 무역 회사에서 통역사가 되고 싶습니다. 
+                        한국 사람과 베트남 사람이 서로 잘 이해할 수 있도록 <strong>돕기 위해서</strong> 이 직업을 선택했습니다. 
+                        지금은 실력이 부족하지만 열심히 공부해서 전문적인 능력을 갖추고 싶습니다. 
+                        나중에 제 꿈을 이루고 부모님께 효도할 수 <strong>있으면 좋겠습니다.</strong>"
+                    </p>
+                    <hr class="my-3 border-green-200">
+                    <p class="text-green-700/70 text-xs italic">
+                        "Sau này tôi muốn trở thành thông dịch viên tại một công ty thương mại Hàn Quốc. 
+                        Tôi chọn nghề này để giúp người Hàn Quốc và người Việt Nam có thể hiểu nhau hơn. 
+                        Tuy hiện tại năng lực còn thiếu sót nhưng tôi muốn học tập chăm chỉ để có khả năng chuyên môn. 
+                        Ước gì sau này tôi có thể thực hiện được ước mơ và báo hiếu cho bố mẹ."
+                    </p>
+                </div>
+            </div>
+        </article>
+
+        <!-- Question 3 -->
+        <article class="card bg-white rounded-3xl p-6 shadow-sm border border-slate-200" id="q3">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-600 text-white text-sm font-bold">3</span>
+                <div>
+                    <h3 class="font-bold text-lg">미래의 모습</h3>
+                    <p class="vietnamese-text">Hình ảnh trong tương lai</p>
+                </div>
+            </div>
+            
+            <p class="text-slate-700 font-medium mb-1 italic">Q: 10년 후의 여러분은 어떤 모습일까요? 어디에서 살고 있을까요?</p>
+            <p class="vietnamese-text mb-6">Bạn của 10 năm sau sẽ như thế nào? Sẽ sống ở đâu?</p>
+
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <code class="text-purple-600 font-bold block">-(으)ㄹ 것이다</code>
+                        <span class="text-[11px] text-slate-500">sẽ (dự đoán/ý chí)</span>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <code class="text-purple-600 font-bold block">-게 되다</code>
+                        <span class="text-[11px] text-slate-500">được/trở nên/bị</span>
+                    </div>
+                </div>
+
+                <button onclick="toggleBox('ex3')" class="w-full py-3 bg-slate-800 text-white rounded-xl text-sm font-medium hover:bg-slate-700 transition-colors">
+                    상세 예시 보기 (Xem ví dụ chi tiết)
+                </button>
+
+                <div id="ex3" class="hidden bg-purple-50 p-4 rounded-xl text-sm leading-relaxed border-l-4 border-purple-400">
+                    <p class="text-purple-900 font-medium">
+                        "10년 후에 저는 아마 결혼을 해서 행복한 가정을 <strong>꾸릴 것입니다.</strong> 
+                        그때는 베트남의 큰 도시에서 가족들과 함께 살고 있을 것 같습니다. 
+                        회사에서도 능력을 인정받아서 팀장이 <strong>되게 될 것입니다.</strong> 
+                        바쁘겠지만 주말에는 가족들과 여행을 다니며 여유롭게 지내고 싶습니다."
+                    </p>
+                    <hr class="my-3 border-purple-200">
+                    <p class="text-purple-700/70 text-xs italic">
+                        "10 năm sau có lẽ tôi sẽ kết hôn và xây dựng một gia đình hạnh phúc. 
+                        Khi đó, tôi nghĩ mình sẽ sống cùng gia đình tại một thành phố lớn ở Việt Nam. 
+                        Ở công ty, năng lực của tôi cũng sẽ được công nhận và tôi sẽ trở thành trưởng nhóm. 
+                        Dù bận rộn nhưng cuối tuần tôi muốn cùng gia đình đi du lịch và sống một cách thong thả."
+                    </p>
+                </div>
+            </div>
+        </article>
+
+        <!-- Question 4 -->
+        <article class="card bg-white rounded-3xl p-6 shadow-sm border border-slate-200" id="q4">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-orange-600 text-white text-sm font-bold">4</span>
+                <div>
+                    <h3 class="font-bold text-lg">현재의 노력</h3>
+                    <p class="vietnamese-text">Sự nỗ lực hiện tại</p>
+                </div>
+            </div>
+            
+            <p class="text-slate-700 font-medium mb-1 italic">Q: 꿈을 이루기 위해 지금 어떤 노력을 하고 있습니까?</p>
+            <p class="vietnamese-text mb-6">Bạn đang nỗ lực như thế nào để thực hiện ước mơ?</p>
+
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <code class="text-orange-600 font-bold block">-(으)면서</code>
+                        <span class="text-[11px] text-slate-500">vừa... vừa...</span>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <code class="text-orange-600 font-bold block">-아/어/여야 하다</code>
+                        <span class="text-[11px] text-slate-500">phải (bắt buộc)</span>
+                    </div>
+                </div>
+
+                <button onclick="toggleBox('ex4')" class="w-full py-3 bg-slate-800 text-white rounded-xl text-sm font-medium hover:bg-slate-700 transition-colors">
+                    상세 예시 보기 (Xem ví dụ chi tiết)
+                </button>
+
+                <div id="ex4" class="hidden bg-orange-50 p-4 rounded-xl text-sm leading-relaxed border-l-4 border-orange-400">
+                    <p class="text-orange-900 font-medium">
+                        "꿈을 이루기 위해 매일 아침 한국어 뉴스를 <strong>들으면서</strong> 새로운 단어를 공부합니다. 
+                        수업이 끝난 후에는 한국 드라마를 보면서 자연스러운 표현을 익히고 있습니다. 
+                        한국어 실력을 높이려면 매일매일 꾸준히 <strong>연습해야 합니다.</strong> 
+                        힘들 때도 있지만 미래의 제 모습을 생각하면서 포기하지 않을 것입니다."
+                    </p>
+                    <hr class="my-3 border-orange-200">
+                    <p class="text-orange-700/70 text-xs italic">
+                        "Để thực hiện ước mơ, mỗi sáng tôi vừa nghe tin tức tiếng Hàn vừa học từ mới. 
+                        Sau khi tan học, tôi xem phim truyền hình Hàn Quốc để làm quen với các biểu hiện tự nhiên. 
+                        Để nâng cao trình độ tiếng Hàn, tôi phải luyện tập đều đặn mỗi ngày. 
+                        Dù có những lúc mệt mỏi nhưng nghĩ về bản thân trong tương lai, tôi sẽ không bỏ cuộc."
+                    </p>
+                </div>
+            </div>
+        </article>
+
+        <!-- Footer -->
+        <footer class="text-center pt-8">
+            <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="text-blue-500 text-sm font-medium underline decoration-2 underline-offset-4">
+                맨 위로 가기 (Lên đầu trang)
+            </button>
+            <p class="text-[11px] text-slate-400 mt-8">© 2026 Korean Speaking Exam Prep</p>
+        </footer>
+    </main>
+
+    <script>
+        // Toggle Visibility of Examples
+        function toggleBox(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('hidden');
+        }
+
+        // Handle Scroll Progress
+        window.onscroll = function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            document.getElementById("progress").style.width = scrolled + "%";
+            document.getElementById("scroll-percent").innerText = Math.round(scrolled) + "%";
+        };
+    </script>
+</body>
+</html>

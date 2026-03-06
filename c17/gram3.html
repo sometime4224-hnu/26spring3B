@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 문법 학습: -다니(요) / -(이)라니(요)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Noto Sans KR 폰트를 기본으로 사용 */
+        body {
+            font-family: 'Noto Sans KR', 'Inter', sans-serif;
+        }
+        /* 피드백 메시지 스타일 */
+        .feedback {
+            margin-top: 8px;
+            font-size: 0.875rem; /* 14px */
+            font-weight: 500;
+        }
+        .feedback.correct {
+            color: #10B981; /* green-500 */
+        }
+        .feedback.incorrect {
+            color: #EF4444; /* red-500 */
+        }
+        .feedback.info {
+            color: #3B82F6; /* blue-500 */
+        }
+        /* 활성 언어 버튼 스타일 */
+        .lang-btn.active {
+            background-color: #2563EB; /* blue-600 */
+            color: white;
+            font-weight: 600;
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 md:p-8">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <!-- 메인 컨테이너 -->
+    <div class="max-w-4xl w-full bg-white rounded-xl shadow-2xl overflow-hidden my-8">
+        
+        <!-- 헤더 -->
+        <header class="p-6 md:p-8 bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-md">
+            <h1 class="text-3xl md:text-4xl font-bold">문법과 표현 2</h1>
+            <p class="text-xl md:text-2xl mt-2 font-semibold">-다니(요) / -(이)라니(요)</p>
+            <p class="text-lg mt-1 opacity-90" data-lang-key="header_subtitle">Grammar for Expressing Surprise</p>
+        </header>
+
+        <!-- 컨텐츠 영역 -->
+        <main class="p-6 md:p-8 space-y-8">
+
+            <!-- 0. 언어 선택 (Language Selection) -->
+            <section>
+                <h2 class="text-xl font-semibold text-gray-700 mb-3" data-lang-key="lang_select_title">언어 선택 (Language)</h2>
+                <div class="flex flex-wrap gap-3">
+                    <button id="lang-en" class="lang-btn active bg-blue-600 text-white px-5 py-2 rounded-lg font-medium transition-colors duration-150">English</button>
+                    <button id="lang-vi" class="lang-btn bg-gray-200 text-gray-700 px-5 py-2 rounded-lg font-medium transition-colors duration-150 hover:bg-gray-300">Tiếng Việt</button>
+                    <button id="lang-zh" class="lang-btn bg-gray-200 text-gray-700 px-5 py-2 rounded-lg font-medium transition-colors duration-150 hover:bg-gray-300">中文</button>
+                    <button id="lang-ja" class="lang-btn bg-gray-200 text-gray-700 px-5 py-2 rounded-lg font-medium transition-colors duration-150 hover:bg-gray-300">日本語</button>
+                </div>
+            </section>
+
+            <!-- 1. 의미 (Meaning) -->
+            <section>
+                <h2 class="text-2xl font-semibold text-blue-700 border-b-2 border-blue-200 pb-2 mb-4">
+                    <span data-lang-key="meaning_title">의미 (Meaning)</span>
+                </h2>
+                <div class="bg-blue-50 p-4 rounded-lg text-gray-800">
+                    <p class="text-lg">
+                        이 문법은 <strong>방금 듣거나 알게 된 사실</strong>에 대해 <strong>놀라움, 감탄, 또는 믿기 어려움</strong>을 표현할 때 사용합니다.
+                    </p>
+                    <p class="text-base mt-2" data-lang-key="meaning_desc_2">
+                        (Used to express <strong>surprise, disbelief, admiration, or a strong reaction</strong> to information one has just heard or learned.)
+                    </p>
+                    <p class="text-base mt-2 font-medium" data-lang-key="meaning_desc_3">
+                        "You mean...?!", "I can't believe...", "To think that..."
+                    </p>
+                </div>
+            </section>
+
+            <!-- 2. 사용법 (How to Use) -->
+            <section>
+                <h2 class="text-2xl font-semibold text-blue-700 border-b-2 border-blue-200 pb-2 mb-4">
+                    <span data-lang-key="usage_title">사용법 (How to Use)</span>
+                </h2>
+                <ul class="list-disc list-inside space-y-3 text-lg">
+                    <li>
+                        <strong data-lang-key="usage_verb_adj">동사 (Verbs) / 형용사 (Adjectives):</strong>
+                        <code class="ml-2 bg-gray-200 px-2 py-1 rounded-md text-base font-semibold text-purple-700">
+                            (기본형) + -다니(요)
+                        </code>
+                        <div class="text-base ml-8 mt-1 text-gray-600">
+                            예: 먹다 → <strong class="text-gray-800">먹다니요?</strong> / 예쁘다 → <strong class="text-gray-800">예쁘다니요?</strong> / 싸다 → <strong class="text-gray-800">싸다니요?</strong>
+                        </div>
+                    </li>
+                    <li>
+                        <strong data-lang-key="usage_noun_o">명사 (Nouns) (받침 O):</strong>
+                        <code class="ml-2 bg-gray-200 px-2 py-1 rounded-md text-base font-semibold text-purple-700">
+                            (명사) + -이라니(요)
+                        </code>
+                        <div class="text-base ml-8 mt-1 text-gray-600">
+                            예: 학생 → <strong class="text-gray-800">학생이라니요?</strong> / 50만원 → <strong class="text-gray-800">50만원이라니?</strong>
+                        </div>
+                    </li>
+                    <li>
+                        <strong data-lang-key="usage_noun_x">명사 (Nouns) (받침 X):</strong>
+                        <code class="ml-2 bg-gray-200 px-2 py-1 rounded-md text-base font-semibold text-purple-700">
+                            (명사) + -라니(요)
+                        </code>
+                        <div class="text-base ml-8 mt-1 text-gray-600">
+                            예: 의사 → <strong class="text-gray-800">의사라니요?</strong> / 6시 → <strong class="text-gray-800">6시라니?</strong>
+                        </div>
+                    </li>
+                     <li>
+                        <strong data-lang-key="usage_past">과거 (Past Tense):</strong>
+                        <code class="ml-2 bg-gray-200 px-2 py-1 rounded-md text-base font-semibold text-purple-700">
+                            -았/었/였다니(요)
+                        </code>
+                        <div class="text-base ml-8 mt-1 text-gray-600">
+                            예: 가다 → <strong class="text-gray-800">갔다니요?</strong> / 합격하다 → <strong class="text-gray-800">합격했다니,</strong>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- 3. 예문 (Examples) -->
+            <section>
+                <h2 class="text-2xl font-semibold text-blue-700 border-b-2 border-blue-200 pb-2 mb-4">
+                    <span data-lang-key="examples_title">예문 (Examples)</span>
+                </h2>
+                <div class="space-y-4">
+                    <!-- 예문 1 (대화) -->
+                    <div class="bg-gray-50 border border-gray-200 p-4 rounded-lg">
+                        <p class="text-lg"><strong class="text-sky-700">A:</strong> 전 매운 김치를 못 먹어요.</p>
+                        <p class="text-lg"><strong class="text-orange-600">B:</strong> 김치를 못 <strong class="text-red-600 font-semibold">먹다니요?</strong> 한국 사람은 누구나 김치를 좋아하는 줄 알았는데요.</p>
+                    </div>
+                    <!-- 예문 2 -->
+                    <div class="bg-gray-50 border border-gray-200 p-4 rounded-lg">
+                        <p class="text-lg">
+                            지하철역에서 가까운데 방값이 이렇게 <strong class="text-red-600 font-semibold">싸다니요?</strong>
+                            <span class="block text-base text-gray-600 mt-1" data-lang-key="ex_2_translation">(It's near the subway, but the rent is this cheap?!)</span>
+                        </p>
+                    </div>
+                    <!-- 예문 3 -->
+                    <div class="bg-gray-50 border border-gray-200 p-4 rounded-lg">
+                        <p class="text-lg">
+                            민수 씨 결혼식에 못 <strong class="text-red-600 font-semibold">가다니요?</strong> 민수 씨가 많이 실망할 텐데...
+                            <span class="block text-base text-gray-600 mt-1" data-lang-key="ex_3_translation">(You mean you can't go to Minsu's wedding?!)</span>
+                        </p>
+                    </div>
+                    <!-- 예문 4 -->
+                    <div class="bg-gray-50 border border-gray-200 p-4 rounded-lg">
+                        <p class="text-lg">
+                            두 사람이 <strong class="text-red-600 font-semibold">헤어지다니,</strong> 믿을 수 없어요.
+                            <span class="block text-base text-gray-600 mt-1" data-lang-key="ex_4_translation">(To think that those two broke up... I can't believe it.)</span>
+                        </p>
+                    </div>
+                    <!-- 예문 5 -->
+                    <div class="bg-gray-50 border border-gray-200 p-4 rounded-lg">
+                        <p class="text-lg">
+                            출발 시간이 오전 <strong class="text-red-600 font-semibold">6시라니,</strong> 너무 이르지 않아요?
+                            <span class="block text-base text-gray-600 mt-1" data-lang-key="ex_5_translation">(The departure time is 6 AM?! Isn't that too early?)</span>
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. 퀴즈 (Quiz) -->
+            <section>
+                <h2 class="text-2xl font-semibold text-blue-700 border-b-2 border-blue-200 pb-2 mb-4">
+                    <span data-lang-key="quiz_title">연습 퀴즈 (Practice Quiz)</span>
+                </h2>
+                <p class="text-lg mb-6 bg-yellow-100 border-l-4 border-yellow-400 p-4 rounded-r-lg">
+                    상황을 읽고 <code class="font-semibold text-gray-800">-다니(요) / -(이)라니(요)</code>를 사용해서 문장을 완성해 보세요.
+                    <br>
+                    <span data-lang-key="quiz_desc_translation">(Read the situation and complete the sentence.)</span>
+                </p>
+
+                <div class="space-y-6" id="quiz-container">
+                    <!-- 퀴즈 아이템들은 JS로 생성됩니다. -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        let currentLang = 'en'; // 기본 언어 설정
+
+        // 번역 데이터
+        const translations = {
+            // 헤더
+            "header_subtitle": {
+                "en": "Grammar for Expressing Surprise",
+                "vi": "Ngữ pháp thể hiện sự ngạc nhiên",
+                "zh": "表示惊讶的语法",
+                "ja": "驚きを表す文法"
+            },
+            // 언어 선택
+            "lang_select_title": { "en": "Select Language", "vi": "Chọn ngôn ngữ", "zh": "选择语言", "ja": "言語選択" },
+            // 의미
+            "meaning_title": { "en": "Meaning", "vi": "Ý nghĩa", "zh": "意义", "ja": "意味" },
+            "meaning_desc_2": {
+                "en": "(Used to express <strong>surprise, disbelief, admiration, or a strong reaction</strong> to information one has just heard or learned.)",
+                "vi": "(Dùng để thể hiện <strong>sự ngạc nhiên, không thể tin được, thán phục, hoặc phản ứng mạnh</strong> đối với thông tin vừa nghe hoặc biết được.)",
+                "zh": "（用于对<strong>刚听到或得知的事实</strong>表示<strong>惊讶、难以置信、感叹或强烈反应</strong>。）",
+                "ja": "（<strong>たった今聞いたり知ったりした事実</strong>に対し、<strong>驚き、信じがたさ、感心、または強い反応</strong>を表すときに使います。）"
+            },
+            "meaning_desc_3": {
+                "en": "\"You mean...?!\", \"I can't believe...\", \"To think that...\"",
+                "vi": "\"Ý bạn là...?!\", \"Tôi không thể tin được...\", \"Không ngờ...\"",
+                "zh": "“你的意思是...？！”、“我不敢相信...”、“竟然...”",
+                "ja": "「〜ですって？！」、「〜なんて信じられない」、「〜とは...」"
+            },
+            // 사용법
+            "usage_title": { "en": "How to Use", "vi": "Cách sử dụng", "zh": "使用方法", "ja": "使い方" },
+            "usage_verb_adj": { "en": "Verbs / Adjectives", "vi": "Động từ / Tính từ", "zh": "动词 / 形容词", "ja": "動詞 / 形容詞" },
+            "usage_noun_o": { "en": "Nouns (with final consonant)", "vi": "Danh từ (Có 받침)", "zh": "名词 (有收音)", "ja": "名詞 (パッチム O)" },
+            "usage_noun_x": { "en": "Nouns (no final consonant)", "vi": "Danh từ (Không có 받침)", "zh": "名词 (无收音)", "ja": "名詞 (パッチム X)" },
+            "usage_past": { "en": "Past Tense", "vi": "Quá khứ", "zh": "过去时", "ja": "過去形" },
+            // 예문
+            "examples_title": { "en": "Examples", "vi": "Ví dụ", "zh": "例句", "ja": "例文" },
+            "ex_2_translation": { "en": "(It's near the subway, but the rent is this cheap?!)", "vi": "(Gần ga tàu điện ngầm mà tiền thuê nhà rẻ thế này sao?!)", "zh": "（离地铁站很近，房租还这么便宜？！）", "ja": "（地下鉄の駅に近いのに、家賃がこんなに安いなんて？！）" },
+            "ex_3_translation": { "en": "(You mean you can't go to Minsu's wedding?!)", "vi": "(Ý bạn là bạn không thể đến đám cưới của Minsu?!)", "zh": "（你居然不去民秀的婚礼？！）", "ja": "（ミンスさんの結婚式に行けないんですって？！）" },
+            "ex_4_translation": { "en": "(To think that those two broke up... I can't believe it.)", "vi": "(Không ngờ hai người đó lại chia tay... Tôi không thể tin được.)", "zh": "（那两个人竟然分手了...真不敢相信。）", "ja": "（あの二人が別れるなんて、信じられない。）" },
+            "ex_5_translation": { "en": "(The departure time is 6 AM?! Isn't that too early?)", "vi": "(Giờ khởi hành là 6 giờ sáng á?! Không phải là quá sớm sao?)", "zh": "（出发时间是早上6点？！是不是太早了？）", "ja": "（出発時間が午前6時だなんて、早すぎませんか？）" },
+            // 퀴즈
+            "quiz_title": { "en": "Practice Quiz", "vi": "Bài tập luyện tập", "zh": "练习测验", "ja": "練習クイズ" },
+            "quiz_desc_translation": {
+                "en": "(Read the situation and complete the sentence.)",
+                "vi": "(Đọc tình huống và hoàn thành câu.)",
+                "zh": "(阅读情景并完成句子。)",
+                "ja": "(状況を読んで文を完成させてください。)"
+            },
+            "quiz_label_example": { "en": "Example", "vi": "Ví dụ", "zh": "示例", "ja": "例" },
+            "quiz_label_question": { "en": "Question", "vi": "Câu hỏi", "zh": "问题", "ja": "問題" },
+            "quiz_placeholder": { "en": "Enter the answer", "vi": "Nhập câu trả lời", "zh": "请输入答案", "ja": "答えを入力してください" },
+            "quiz_btn_check": { "en": "Check", "vi": "Kiểm tra", "zh": "确认", "ja": "確認" },
+            "quiz_btn_show": { "en": "Show Answer", "vi": "Xem đáp án", "zh": "查看答案", "ja": "答えを見る" },
+            "feedback_correct": { "ko": "정답입니다!", "en": "Correct!", "vi": "Đúng rồi!", "zh": "回答正确！", "ja": "正解です！" },
+            "feedback_incorrect": { "ko": "다시 시도해 보세요.", "en": "Incorrect. Try again.", "vi": "Sai rồi. Thử lại nhé.", "zh": "回答错误，请重试。", "ja": "違います。もう一度お試しください。" },
+            "feedback_shown": { "ko": "정답이 표시되었습니다.", "en": "Answer is shown.", "vi": "Đáp án đã được hiển thị.", "zh": "已显示答案。", "ja": "答えが表示されました。" }
+        };
+
+        // 퀴즈 데이터
+        // ... (quizItems 배열은 변경 없음)
+        const quizItems = [
+            {
+                id: 0,
+                situation: "A: 지연 씨 동생이 서울대학교에 합격했대요.",
+                response: "B: 서울대학교에",
+                blank: ", 정말 기쁘겠네요.",
+                answer: "합격했다니"
+            },
+            {
+                id: 1,
+                situation: "A: 제가 시험에 1등으로 합격했어요!",
+                response: "B: 1등으로",
+                blank: "? 정말 축하해요!",
+                answer: "합격했다니"
+            },
+            {
+                id: 2,
+                situation: "A: 저 두 사람, 드디어 사귄대요.",
+                response: "B: 드디어",
+                blank: "? 정말 잘 어울려요!",
+                answer: "사귄다니"
+            },
+            {
+                id: 3,
+                situation: "A: 오늘이 벌써 12월 25일, 크리스마스예요.",
+                response: "B: 벌써 크리스마스",
+                blank: "? 시간이 정말 빠르네요.",
+                answer: "라니"
+            },
+            {
+                id: 4,
+                situation: "A: 아침 지하철에는 사람이 정말 많아요.",
+                response: "B: 매일 아침 이렇게 사람이",
+                blank: "? 너무 힘들겠어요.",
+                answer: "많다니"
+            },
+            {
+                id: 5,
+                situation: "A: 약속 시간이 11시인데 지금 12시예요.",
+                response: "B: 1시간이나 늦게",
+                blank: "?",
+                answer: "오다니요"
+            },
+            {
+                id: 6,
+                situation: "A: 이 원피스 어때요? 50만원이에요.",
+                response: "B: 원피스 한 벌에 50만원",
+                blank: "? 너무 비싸요!",
+                answer: "이라니"
+            }
+        ];
+
+        const quizContainer = document.getElementById('quiz-container');
+
+        // 언어 변경 함수
+        function updateLanguage(lang) {
+            currentLang = lang;
+
+            // 모든 data-lang-key 요소 찾아서 번역 적용
+            document.querySelectorAll('[data-lang-key]').forEach(element => {
+                const key = element.getAttribute('data-lang-key');
+                if (translations[key] && translations[key][currentLang]) {
+                    // h2 태그 안의 span을 구분하기 위해
+                    if (element.tagName === 'SPAN' && element.parentElement.tagName === 'H2') {
+                         const koreanTitle = element.parentElement.textContent.split('(')[0].trim();
+                         element.innerHTML = `${koreanTitle} (${translations[key][currentLang]})`;
+                    } 
+                    // strong 태그 안의 텍스트를 구분하기 위해
+                    else if (element.tagName === 'STRONG') {
+                        const koreanText = element.textContent.split('(')[0].trim();
+                        element.innerHTML = `${koreanText} (${translations[key][currentLang]})`;
+                    }
+                    else {
+                        element.innerHTML = translations[key][currentLang];
+                    }
+                }
+            });
+
+            // 언어 버튼 활성/비활성 스타일 업데이트
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                if (btn.id === `lang-${lang}`) {
+                    btn.classList.add('active', 'bg-blue-600', 'text-white');
+                    btn.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+                } else {
+                    btn.classList.remove('active', 'bg-blue-600', 'text-white');
+                    btn.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+                }
+            });
+
+            // 퀴즈 섹션 다시 그리기
+            renderQuiz();
+        }
+
+        // 퀴즈 문항 생성 함수
+        function renderQuiz() {
+            quizContainer.innerHTML = ''; // 기존 퀴즈 내용 초기화
+            
+            quizItems.forEach((item, index) => {
+                const isExample = index === 0;
+                const quizElement = document.createElement('div');
+                quizElement.className = `border ${isExample ? 'border-blue-300 bg-blue-50' : 'border-gray-300'} p-4 rounded-lg shadow-sm`;
+                
+                let label = isExample ? 
+                    `보기 (${translations.quiz_label_example[currentLang]})` : 
+                    `문제 ${item.id} (${translations.quiz_label_question[currentLang]} ${item.id})`;
+
+                quizElement.innerHTML = `
+                    <span class="font-semibold text-lg ${isExample ? 'text-blue-600' : 'text-gray-700'}">${label}</span>
+                    <p class="text-lg text-gray-800 mt-2"><strong>상황:</strong> ${item.situation}</p>
+                    <div class="mt-4 flex flex-wrap items-center gap-2 text-lg">
+                        <span class="font-medium"><strong>반응:</strong> ${item.response}</span>
+                        <input type="text" id="input-${item.id}" 
+                               class="border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 flex-1 min-w-[120px]" 
+                               placeholder="${translations.quiz_placeholder[currentLang]}">
+                        <span>${item.blank}</span>
+                    </div>
+                    <div class="mt-3 flex items-center gap-3">
+                        <button onclick="checkAnswer(${item.id})" 
+                                class="bg-blue-600 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 transition duration-150">
+                            ${translations.quiz_btn_check[currentLang]}
+                        </button>
+                        <button onclick="showAnswer(${item.id})" 
+                                class="bg-gray-500 text-white px-4 py-2 rounded-md font-medium hover:bg-gray-600 transition duration-150">
+                            ${translations.quiz_btn_show[currentLang]}
+                        </button>
+                    </div>
+                    <div id="feedback-${item.id}" class="feedback"></div>
+                `;
+                quizContainer.appendChild(quizElement);
+            });
+        }
+
+        // 정답 확인 함수
+        function checkAnswer(id) {
+            const input = document.getElementById(`input-${id}`).value.trim();
+            const feedback = document.getElementById(`feedback-${id}`);
+            const correctAnswser = quizItems.find(item => item.id === id).answer;
+
+            if (input === correctAnswser) {
+                feedback.textContent = `${translations.feedback_correct.ko} (${translations.feedback_correct[currentLang]})`;
+                feedback.className = "feedback correct";
+            } else {
+                feedback.textContent = `${translations.feedback_incorrect.ko} (${translations.feedback_incorrect[currentLang]})`;
+                feedback.className = "feedback incorrect";
+            }
+        }
+
+        // 정답 보기 함수
+        function showAnswer(id) {
+            const input = document.getElementById(`input-${id}`);
+            const feedback = document.getElementById(`feedback-${id}`);
+            const correctAnswser = quizItems.find(item => item.id === id).answer;
+            
+            input.value = correctAnswser;
+            feedback.textContent = `${translations.feedback_shown.ko} (${translations.feedback_shown[currentLang]})`;
+            feedback.className = "feedback info";
+        }
+
+        // 언어 버튼에 이벤트 리스너 추가
+        document.getElementById('lang-en').addEventListener('click', () => updateLanguage('en'));
+        document.getElementById('lang-vi').addEventListener('click', () => updateLanguage('vi'));
+        document.getElementById('lang-zh').addEventListener('click', () => updateLanguage('zh'));
+        document.getElementById('lang-ja').addEventListener('click', () => updateLanguage('ja'));
+
+        // 페이지 로드 시 기본 언어로 초기화
+        document.addEventListener('DOMContentLoaded', () => {
+            updateLanguage(currentLang);
+        });
+
+    </script>
+</body>
+</html>
+
+

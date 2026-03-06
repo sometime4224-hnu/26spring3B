@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 어휘 복습 퀴즈</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .chapter-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .chapter-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        .option-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .option-btn:not(:disabled):hover {
+            background-color: #f0f0f0;
+            transform: scale(1.02);
+        }
+        .option-btn.correct {
+            background-color: #dcfce7; /* green-200 */
+            border-color: #4ade80; /* green-400 */
+            color: #166534; /* green-800 */
+        }
+        .option-btn.incorrect {
+            background-color: #fee2e2; /* red-200 */
+            border-color: #f87171; /* red-400 */
+            color: #991b1b; /* red-800 */
+        }
+        #feedback-box {
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <div id="app-container" class="w-full max-w-2xl mx-auto p-4 md:p-6">
+        
+        <!-- Main Menu -->
+        <div id="main-menu" class="text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">한국어 어휘 복습 퀴즈</h1>
+            <p class="text-gray-600 mb-8">연습하고 싶은 과를 선택하세요.</p>
+            <div class="grid grid-cols-2 gap-4">
+                <button data-chapter="10" class="chapter-btn col-span-2 md:col-span-1 bg-white p-6 rounded-xl shadow-md text-lg font-semibold text-gray-700">10과: 연애와 결혼</button>
+                <button data-chapter="11" class="chapter-btn col-span-2 md:col-span-1 bg-white p-6 rounded-xl shadow-md text-lg font-semibold text-gray-700">11과: 업무</button>
+                <button data-chapter="12" class="chapter-btn col-span-2 md:col-span-1 bg-white p-6 rounded-xl shadow-md text-lg font-semibold text-gray-700">12과: 운동, 몸의 상태</button>
+                <button data-chapter="13" class="chapter-btn col-span-2 md:col-span-1 bg-white p-6 rounded-xl shadow-md text-lg font-semibold text-gray-700">13과: 모임과 옷차림</button>
+            </div>
+        </div>
+
+        <!-- Quiz View -->
+        <div id="quiz-view" class="hidden">
+            <div class="bg-white p-6 rounded-2xl shadow-lg">
+                <!-- Header -->
+                <div class="flex justify-between items-center mb-6">
+                    <button id="back-to-menu" class="text-gray-500 hover:text-gray-800 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                    </button>
+                    <h2 id="quiz-title" class="text-xl font-bold text-gray-800"></h2>
+                    <select id="language-selector" class="border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm">
+                        <option value="kor">한국어</option>
+                        <option value="eng">English</option>
+                        <option value="vie">Tiếng Việt</option>
+                        <option value="jpn">日本語</option>
+                        <option value="chn">中文</option>
+                    </select>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-6">
+                    <div id="progress-bar" class="bg-blue-500 h-2.5 rounded-full transition-all duration-300"></div>
+                </div>
+
+                <!-- Question -->
+                <div class="mb-6 text-center">
+                    <p id="question-instruction" class="text-gray-500 mb-2"></p>
+                    <p id="question-text" class="text-2xl font-semibold text-gray-900 leading-relaxed"></p>
+                </div>
+                
+                <!-- Options -->
+                <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <!-- Option buttons will be injected here -->
+                </div>
+
+                <!-- Feedback -->
+                <div id="feedback-container" class="min-h-[110px]">
+                     <!-- Feedback will be injected here -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- DATA ---
+        const vocabulary = {
+            10: {
+                title: "10과: 연애와 결혼",
+                words: [
+                    { kor: '소개팅하다', pos: 'verb', conjugated: '소개팅했다', kor_def: '모르는 남녀가 다른 사람의 소개로 만나는 일', eng: 'to have a blind date', vie: 'Hẹn hò giấu mặt', jpn: '合コンをする', chn: '相亲', sentence: '친구의 주선으로 처음 만나는 이성과 {word}.' },
+                    { kor: '첫눈에 반하다', pos: 'verb', conjugated: '첫눈에 반했다', kor_def: '처음 보자마자 바로 사랑에 빠지는 것', eng: 'to be love struck at first glance', vie: 'Yêu từ cái nhìn đầu tiên', jpn: '一目惚れする', chn: '一见钟情', sentence: '그는 그녀를 보자마자 {word}.' },
+                    { kor: '사귀다', pos: 'verb', conjugated: '사귀기', kor_def: '서로 연인 관계를 맺고 지내는 것', eng: 'to be in a relationship; go out', vie: 'Hẹn hò, đi lại với nhau', jpn: '付き合う', chn: '交往', sentence: '우리는 작년부터 {word} 시작했다.' },
+                    { kor: '사랑에 빠지다', pos: 'verb', conjugated: '사랑에 빠졌다', kor_def: '누군가를 아주 많이 좋아하게 되다', eng: 'to fall in love', vie: 'Rơi vào lưới tình', jpn: '恋に落ちる', chn: '坠入爱河', sentence: '로미오와 줄리엣은 깊이 {word}.' },
+                    { kor: '고백하다', pos: 'verb', conjugated: '고백했다', kor_def: '마음속 생각을 솔직하게 말하는 것, 특히 사랑을 알리는 것', eng: 'to confess (one\'s love)', vie: 'Tỏ tình', jpn: '告白する', chn: '告白', sentence: '용기를 내어 좋아하는 사람에게 사랑을 {word}.' },
+                    { kor: '연애하다', pos: 'verb', conjugated: '연애하고', kor_def: '남녀가 서로 사랑하며 사귀는 것', eng: 'to have a romantic relationship', vie: 'Yêu đương', jpn: '恋愛する', chn: '恋爱', sentence: '그들은 5년 동안 {word} 결혼했다.' },
+                    { kor: '선보다', pos: 'verb', conjugated: '선을 봤다', kor_def: '결혼할 상대로 어떤지 알아보기 위해 만나는 것', eng: 'to meet with a view toward marriage', vie: 'Xem mắt', jpn: 'お見合いをする', chn: '相亲（为了结婚）', sentence: '결혼을 생각하며 맞선 상대를 {word}.' },
+                    { kor: '청혼하다', pos: 'verb', conjugated: '청혼했다', kor_def: '결혼하자고 공식적으로 요청하는 것', eng: 'to propose marriage', vie: 'Cầu hôn', jpn: 'プロポーズする', chn: '求婚', sentence: '남자는 무릎을 꿇고 여자에게 {word}.' },
+                    { kor: '성격이 잘 맞다', pos: 'adj', conjugated: '성격이 잘 맞아서', kor_def: '생각이나 마음이 서로 비슷해서 잘 어울리는 것', eng: 'to have a matching personality', vie: 'Hợp tính cách', jpn: '性格がよく合う', chn: '性格合得来', sentence: '우리는 {word} 싸우는 일이 거의 없다.' },
+                    { kor: '조건이 맞다', pos: 'adj', conjugated: '조건이 맞는', kor_def: '원하는 상황이나 상태에 부합하는 것', eng: 'to meet a condition', vie: 'Phù hợp điều kiện', jpn: '条件が合う', chn: '条件符合', sentence: '결혼할 때 집, 직업 등 {word} 사람을 찾기도 한다.' },
+                    { kor: '매력이 있다', pos: 'adj', conjugated: '매력이 있다', kor_def: '사람의 마음을 끄는 힘이 있는 것', eng: 'to be attractive', vie: 'Có sức hấp dẫn', jpn: '魅力がある', chn: '有魅力', sentence: '그녀는 웃는 모습이 정말 {word}.' },
+                    { kor: '말이 잘 통하다', pos: 'verb', conjugated: '말이 잘 통해서', kor_def: '서로의 생각이나 의견을 잘 이해하는 것', eng: 'to understand each other', vie: 'Nói chuyện hợp nhau', jpn: '話がよく通じる', chn: '谈得来', sentence: '우리는 {word} 대화하는 것이 즐겁다.' },
+                    { kor: '인상이 좋다', pos: 'adj', conjugated: '인상이 좋아서', kor_def: '처음 봤을 때 느껴지는 느낌이 긍정적인 것', eng: 'to make a good impression', vie: 'Có ấn tượng tốt', jpn: '印象が良い', chn: '印象很好', sentence: '처음 만났을 때 {word} 다음 만남도 기대된다.' },
+                    { kor: '마음씨가 착하다', pos: 'adj', conjugated: '마음씨가 착해서', kor_def: '마음이 너그럽고 어진 것', eng: 'to be kind-hearted', vie: 'Tốt bụng', jpn: '心が優しい', chn: '心地善良', sentence: '그녀는 {word} 주변 사람들을 잘 챙긴다.' },
+                    { kor: '나란히 앉다', pos: 'verb', conjugated: '나란히 앉아', kor_def: '옆으로 줄을 맞추어 함께 앉는 것', eng: 'to sit side-by-side', vie: 'Ngồi cạnh nhau', jpn: '並んで座る', chn: '并排坐', sentence: '영화관에서 연인들이 {word} 영화를 본다.' },
+                    { kor: '얼굴이 빨개지다', pos: 'verb', conjugated: '얼굴이 빨개졌다', kor_def: '부끄럽거나 당황해서 얼굴색이 붉게 변하는 것', eng: 'to become red-faced; blush', vie: 'Mặt đỏ lên', jpn: '顔が赤くなる', chn: '脸红', sentence: '부끄러움을 느낄 때 {word}.' },
+                    { kor: '손을 잡다', pos: 'verb', conjugated: '손을 잡고', kor_def: '한 사람이 다른 사람의 손을 쥐는 것', eng: 'to hold hands', vie: 'Nắm tay', jpn: '手を繋ぐ', chn: '牵手', sentence: '길을 걸을 때 연인과 {word} 걸었다.' },
+                    { kor: '어깨에 기대다', pos: 'verb', conjugated: '어깨에 기대어', kor_def: '다른 사람의 어깨에 몸을 의지하는 것', eng: 'to lean on a shoulder', vie: 'Dựa vào vai', jpn: '肩に寄りかかる', chn: '靠在肩膀上', sentence: '피곤할 때 친구의 {word} 잠이 들었다.' },
+                    { kor: '가슴이 두근거리다', pos: 'verb', conjugated: '가슴이 두근거린다', kor_def: '놀라거나 설레서 심장이 빨리 뛰는 것', eng: 'to have one\'s heart palpitate', vie: 'Tim đập thình thịch', jpn: '胸がドキドキする', chn: '心跳加速', sentence: '좋아하는 사람을 보면 {word}.' },
+                    { kor: '팔짱을 끼다', pos: 'verb', conjugated: '팔짱을 끼고', kor_def: '다른 사람의 팔에 자기 팔을 거는 것', eng: 'to be arm-in-arm', vie: 'Khoác tay', jpn: '腕を組む', chn: '挽着胳膊', sentence: '추운 날 연인과 {word} 걸으면 따뜻하다.' },
+                    { kor: '신혼여행', pos: 'noun', kor_def: '결혼한 부부가 결혼 직후 함께 가는 여행', eng: 'honeymoon', vie: 'Tuần trăng mật', jpn: '新婚旅行', chn: '蜜月旅行', sentence: '결혼식을 마치고 제주도로 {word}을 갔다.' },
+                    { kor: '중매결혼', pos: 'noun', kor_def: '다른 사람의 소개로 만나서 하는 결혼', eng: 'match-made marriage', vie: 'Hôn nhân qua mai mối', jpn: 'お見合い結婚', chn: '包办婚姻', sentence: '부모님의 소개로 만나 {word}을 했다.' },
+                    { kor: '연애결혼', pos: 'noun', kor_def: '서로 사랑해서 만나 하는 결혼', eng: 'love marriage', vie: 'Hôn nhân tự do', jpn: '恋愛結婚', chn: '自由恋爱结婚', sentence: '자유롭게 만나 사랑해서 하는 결혼은 {word}이다.' },
+                    { kor: '청첩장', pos: 'noun', kor_def: '결혼 소식을 알리고 초대하는 편지나 카드', eng: 'wedding invitation', vie: 'Thiệp cưới', jpn: '結婚式の招待状', chn: '请帖', sentence: '결혼 소식을 알리기 위해 친구들에게 {word}을 보냈다.' },
+                    { kor: '예식장', pos: 'noun', kor_def: '결혼식을 하는 장소', eng: 'wedding ceremony hall', vie: 'Nơi tổ chức lễ cưới', jpn: '結婚式場', chn: '婚礼堂', sentence: '주말에는 결혼하는 사람들로 {word}이 붐빈다.' }
+                ]
+            },
+            11: {
+                title: "11과: 업무",
+                words: [
+                    { kor: '아르바이트', pos: 'noun', kor_def: '정식 직원이 아닌 임시로 하는 일', eng: 'part-time job', vie: 'Việc làm thêm', jpn: 'アルバイト', chn: '兼职', sentence: '대학생들은 방학 동안 용돈을 벌기 위해 {word}를 한다.' },
+                    { kor: '근무 시간', pos: 'noun', kor_def: '일하는 시간', eng: 'working hours', vie: 'Thời gian làm việc', jpn: '勤務時間', chn: '工作时间', sentence: '이 회사의 {word}는 오전 9시부터 오후 6시까지이다.' },
+                    { kor: '연령', pos: 'noun', kor_def: '나이', eng: 'age', vie: 'Tuổi', jpn: '年齢', chn: '年龄', sentence: '이 일은 {word}에 제한 없이 누구나 지원할 수 있다.' },
+                    { kor: '시급', pos: 'noun', kor_def: '한 시간 일하고 받는 돈', eng: 'hourly wage', vie: 'Lương theo giờ', jpn: '時給', chn: '时薪', sentence: '편의점 아르바이트의 {word}은 최저 임금 수준이다.' },
+                    { kor: '업무', pos: 'noun', kor_def: '직장에서 맡아서 하는 일', eng: 'work duties', vie: 'Công việc', jpn: '業務', chn: '业务', sentence: '오늘 해야 할 {word}가 너무 많아서 바쁘다.' },
+                    { kor: '성별', pos: 'noun', kor_def: '남성과 여성을 구분하는 것', eng: 'gender', vie: 'Giới tính', jpn: '性別', chn: '性别', sentence: '지원서에 {word}을 표시해 주세요.' },
+                    { kor: '성실하다', pos: 'adj', conjugated: '성실해서', kor_def: '정성스럽고 참된 태도를 가진 것', eng: 'to be sincere', vie: 'Thành thật', jpn: '誠実だ', chn: '诚实', sentence: '그는 {word} 맡은 일을 책임감 있게 잘한다.' },
+                    { kor: '꼼꼼하다', pos: 'adj', conjugated: '꼼꼼한', kor_def: '실수 없이 빈틈이 없고 자세한 것', eng: 'to be detail oriented', vie: 'Tỉ mỉ, cẩn thận', jpn: '几帳面だ', chn: '细心', sentence: '회계 업무는 실수가 없도록 {word} 성격이 필요하다.' },
+                    { kor: '경험이 많다', pos: 'adj', conjugated: '경험이 많은', kor_def: '어떤 일을 많이 해 봐서 익숙한 것', eng: 'to have a lot of experience', vie: 'Có nhiều kinh nghiệm', jpn: '経験が多い', chn: '经验丰富', sentence: '이 분야는 {word} 사람을 우대합니다.' },
+                    { kor: '실력이 있다', pos: 'adj', conjugated: '실력이 있어서', kor_def: '어떤 일을 잘 해낼 수 있는 능력이 있는 것', eng: 'to have ability', vie: 'Có thực lực', jpn: '実力がある', chn: '有实力', sentence: '그는 {word} 어려운 문제도 쉽게 해결한다.' },
+                    { kor: '이해가 빠르다', pos: 'adj', conjugated: '이해가 빨라서', kor_def: '내용이나 상황을 남들보다 빨리 아는 것', eng: 'to have a quick understanding', vie: 'Hiểu nhanh', jpn: '理解が速い', chn: '理解快', sentence: '그녀는 {word} 일을 금방 배운다.' },
+                    { kor: '최선을 다하다', pos: 'verb', conjugated: '최선을 다하는', kor_def: '자신의 모든 힘과 노력을 기울이는 것', eng: 'to do one\'s best', vie: 'Làm hết sức mình', jpn: '最善を尽くす', chn: '尽力而为', sentence: '어떤 일이든 {word} 자세가 중요하다.' },
+                    { kor: '보고서 작성을 잘하다', pos: 'verb', conjugated: '보고서 작성을 잘해서', kor_def: '업무 내용을 글로 잘 정리하는 능력이 뛰어난 것', eng: 'to be good at writing reports', vie: 'Viết báo cáo giỏi', jpn: '報告書の作成が上手だ', chn: '擅长写报告', sentence: '그는 {word} 능력을 인정받았다.' },
+                    { kor: '대인 관계가 원만하다', pos: 'adj', conjugated: '대인 관계가 원만해서', kor_def: '다른 사람들과 문제없이 잘 지내는 것', eng: 'to have smooth/harmonious personal relationships', vie: 'Quan hệ xã giao tốt', jpn: '対人関係が円満だ', chn: '人际关系好', sentence: '그는 {word} 회사에서 인기가 많다.' },
+                    { kor: '부장', pos: 'noun', kor_def: '회사의 부서를 책임지는 직위', eng: 'department head; general manager', vie: 'Trưởng phòng', jpn: '部長', chn: '部长', sentence: '우리 회사의 영업부 {word}님은 아주 유능하다.' },
+                    { kor: '과장', pos: 'noun', kor_def: '부장 아래, 대리 위의 직위', eng: 'section chief; manager', vie: 'Quản lý', jpn: '課長', chn: '科长', sentence: '김 {word}님은 회의 준비를 하고 있다.' },
+                    { kor: '대리', pos: 'noun', kor_def: '과장 아래, 사원 위의 직위', eng: 'deputy; assistant manager', vie: 'Phó phòng, trợ lý', jpn: '代理', chn: '代理', sentence: '박 {word}님, 이 서류 좀 복사해 주세요.' },
+                    { kor: '신입 사원', pos: 'noun', kor_def: '회사에 새로 들어온 직원', eng: 'new employee', vie: 'Nhân viên mới', jpn: '新入社員', chn: '新员工', sentence: '올해 입사한 {word}들을 위한 교육이 있을 예정이다.' },
+                    { kor: '직장 상사', pos: 'noun', kor_def: '직장에서 자기보다 직위가 높은 사람', eng: 'workplace superior', vie: 'Cấp trên', jpn: '職場の上司', chn: '职场上司', sentence: '{word}에게 예의 바르게 행동해야 한다.' },
+                    { kor: '동료', pos: 'noun', kor_def: '직장에서 직위가 비슷하거나 함께 일하는 사람', eng: 'coworker', vie: 'Đồng nghiệp', jpn: '同僚', chn: '同事', sentence: '힘들 때 서로 돕는 좋은 {word}가 있다.' },
+                    { kor: '부하 직원', pos: 'noun', kor_def: '직장에서 자기보다 직위가 낮은 사람', eng: 'subordinate worker', vie: 'Cấp dưới', jpn: '部下', chn: '下属', sentence: '리더는 {word}들의 의견을 잘 들어주어야 한다.' },
+                    { kor: '대기업', pos: 'noun', kor_def: '규모가 아주 큰 회사', eng: 'big business; conglomerate', vie: 'Công ty lớn', jpn: '大企業', chn: '大企业', sentence: '많은 사람들이 {word}에 취업하고 싶어 한다.' },
+                    { kor: '중소기업', pos: 'noun', kor_def: '규모가 크지 않은 회사', eng: 'medium sized business enterprise', vie: 'Doanh nghiệp vừa và nhỏ', jpn: '中小企業', chn: '中小企业', sentence: '한국 경제는 {word}이 튼튼해야 발전할 수 있다.' },
+                    { kor: '연봉이 높다', pos: 'adj', conjugated: '연봉이 높아서', kor_def: '일 년 동안 받는 월급의 총액이 많은 것', eng: 'to have a high yearly salary', vie: 'Lương năm cao', jpn: '年俸が高い', chn: '年薪高', sentence: '그 회사는 {word} 직원들의 만족도가 높다.' },
+                    { kor: '승진 기회가 많다', pos: 'adj', conjugated: '승진 기회가 많아서', kor_def: '직장에서 더 높은 자리로 올라갈 가능성이 큰 것', eng: 'to have many opportunities for advancement/promotion', vie: 'Có nhiều cơ hội thăng tiến', jpn: '昇進の機会が多い', chn: '晋升机会多', sentence: '우리 회사는 {word} 열심히 일할 동기가 생긴다.' },
+                    { kor: '출퇴근 시간이 자유롭다', pos: 'adj', conjugated: '출퇴근 시간이 자유로운', kor_def: '회사에 오고 가는 시간을 마음대로 정할 수 있는 것', eng: 'to have flexible working hours', vie: 'Thời gian đi làm và tan làm linh hoạt', jpn: '出退勤時間が自由だ', chn: '上下班时间自由', sentence: 'IT 회사 중에는 {word} 곳이 많다.' },
+                    { kor: '휴가가 길다', pos: 'adj', conjugated: '휴가가 길다는', kor_def: '쉴 수 있는 날이 많은 것', eng: 'to have a long vacation', vie: 'Kỳ nghỉ dài', jpn: '休暇が長い', chn: '假期长', sentence: '유럽의 회사들은 {word} 장점이 있다.' }
+                ]
+            },
+            12: {
+                title: "12과: 운동, 몸의 상태",
+                words: [
+                    { kor: '살이 찌다', pos: 'verb', conjugated: '살이 쪘다', kor_def: '몸무게가 늘다', eng: 'to gain weight', vie: 'Tăng cân', jpn: '太る', chn: '增重', sentence: '명절에 음식을 많이 먹었더니 {word}.' },
+                    { kor: '살이 빠지다', pos: 'verb', conjugated: '살이 빠졌다', kor_def: '몸무게가 줄다', eng: 'to lose weight', vie: 'Giảm cân', jpn: '痩せる', chn: '减肥', sentence: '다이어트를 해서 1달 만에 {word}.' },
+                    { kor: '힘이 세다', pos: 'adj', conjugated: '힘이 세졌다', kor_def: '물리적인 능력이 강하다', eng: 'to be strong', vie: 'Khỏe', jpn: '力が強い', chn: '力气大', sentence: '운동을 꾸준히 해서 전보다 {word}.' },
+                    { kor: '자세가 좋다', pos: 'adj', conjugated: '자세가 좋다', kor_def: '몸의 모양이나 태도가 바르다', eng: 'to have good posture', vie: 'Tư thế tốt', jpn: '姿勢が良い', chn: '姿势好', sentence: '모델은 걸을 때 {word}.' },
+                    { kor: '몸이 무겁다', pos: 'adj', conjugated: '몸이 무겁다', kor_def: '몸이 피곤하게 느껴지다', eng: 'to have a heavy body', vie: 'Cơ thể nặng nề', jpn: '体が重い', chn: '身体沉重', sentence: '어제 잠을 잘 못 자서 {word}.' },
+                    { kor: '(목을) 돌리다', pos: 'verb', conjugated: '목을 돌렸다', kor_def: '목을 원을 그리듯이 움직이다', eng: 'to rotate (the neck)', vie: 'Xoay (cổ)', jpn: '（首を）回す', chn: '转（脖子）', sentence: '오래 앉아 있었더니 뻐근해서 {word}.' },
+                    { kor: '(가슴을) 펴다', pos: 'verb', conjugated: '가슴을 펴고', kor_def: '어깨를 뒤로 해서 가슴을 넓게 하다', eng: 'to spread (the chest)', vie: 'Mở (ngực)', jpn: '（胸を）張る', chn: '挺（胸）', sentence: '자신감 있게 {word} 걸었다.' },
+                    { kor: '(손을 허리에) 대다', pos: 'verb', conjugated: '손을 허리에 대고', kor_def: '허리에 손을 얹다', eng: 'to put (hands on the waist)', vie: 'Đặt (tay lên eo)', jpn: '（手を腰に）当てる', chn: '（手）叉腰', sentence: '준비 운동 자세로 {word} 서 있었다.' },
+                    { kor: '(다리를) 벌리다', pos: 'verb', conjugated: '다리를 벌리고', kor_def: '두 다리 사이를 넓히다', eng: 'to spread (the legs)', vie: 'Dang (chân)', jpn: '（足を）開く', chn: '张开（腿）', sentence: '어깨너비만큼 {word} 서세요.' },
+                    { kor: '(옆구리를) 굽히다', pos: 'verb', conjugated: '옆구리를 굽혔다', kor_def: '몸의 옆부분을 아래로 숙이다', eng: 'to bend (at the side)', vie: 'Gập (lườn)', jpn: '（脇腹を）曲げる', chn: '弯（腰）', sentence: '스트레칭으로 {word}.' },
+                    { kor: '(몸을) 젖히다', pos: 'verb', conjugated: '몸을 젖혔다', kor_def: '몸을 뒤로 기울이다', eng: 'to bend (the body) backwards', vie: 'Ngả (người) ra sau', jpn: '（体を）反らす', chn: '（身体）后仰', sentence: '허리가 아플 때 천천히 {word}.' },
+                    { kor: '(팔을) 뻗다', pos: 'verb', conjugated: '팔을 뻗어', kor_def: '팔을 길게 늘이다', eng: 'to stretch out (the arm)', vie: 'Duỗi (tay)', jpn: '（腕を）伸ばす', chn: '伸（胳膊）', sentence: '위로 {word} 기지개를 켰다.' },
+                    { kor: '(발뒤꿈치를) 들다', pos: 'verb', conjugated: '발뒤꿈치를 들었다', kor_def: '발의 뒷부분을 위로 올리다', eng: 'to lift (the heel)', vie: 'Nhón (gót chân)', jpn: '（かかとを）上げる', chn: '踮起（脚后跟）', sentence: '키가 작은 사람이 앞을 보기 위해 {word}.' },
+                    { kor: '숨이 차다', pos: 'verb', conjugated: '숨이 찼다', kor_def: '호흡이 가쁘고 힘든 상태가 되다', eng: 'to be out of breath', vie: 'Hụt hơi, thở hổn hển', jpn: '息が切れる', chn: '喘不过气', sentence: '계단을 빨리 올라갔더니 {word}.' },
+                    { kor: '땀이 나다', pos: 'verb', conjugated: '땀이 났다', kor_def: '더위나 운동으로 몸에서 물기가 나오다', eng: 'to sweat', vie: 'Ra mồ hôi', jpn: '汗が出る', chn: '出汗', sentence: '더운 여름에는 조금만 움직여도 {word}.' },
+                    { kor: '쥐가 나다', pos: 'verb', conjugated: '쥐가 났다', kor_def: '근육이 갑자기 오그라들고 아프다', eng: 'to have a cramp', vie: 'Bị chuột rút', jpn: '足がつる', chn: '抽筋', sentence: '갑자기 무리하게 운동하면 다리에 {word}.' },
+                    { kor: '지치다', pos: 'verb', conjugated: '지쳤다', kor_def: '힘이 다 빠져서 매우 피곤해지다', eng: 'to be worn out', vie: 'Mệt mỏi, kiệt sức', jpn: '疲れる', chn: '疲惫', sentence: '마라톤을 완주하고 나니 너무 {word}.' },
+                    { kor: '기분이 상쾌하다', pos: 'adj', conjugated: '기분이 상쾌하다', kor_def: '느낌이나 마음이 시원하고 깨끗하다', eng: 'to feel refreshed', vie: 'Cảm thấy sảng khoái', jpn: '気分がすっきりする', chn: '心情舒畅', sentence: '아침에 조깅을 하고 나니 {word}.' },
+                    { kor: '기운이 나다', pos: 'verb', conjugated: '기운이 난다', kor_def: '활기나 에너지가 생기다', eng: 'to be energized', vie: 'Có năng lượng', jpn: '元気が出る', chn: '有精神', sentence: '피곤했는데 커피를 마시니 {word}.' },
+                    { kor: '몸이 좋아지다', pos: 'verb', conjugated: '몸이 좋아졌다', kor_def: '건강이나 체격이 더 나은 상태로 변하다', eng: 'to have an improved physique', vie: 'Cơ thể khỏe hơn', jpn: '体が良くなる', chn: '身体变好', sentence: '꾸준히 헬스를 했더니 {word}.' },
+                    { kor: '근육이 생기다', pos: 'verb', conjugated: '근육이 생긴다', kor_def: '운동으로 인해 몸에 근육이 만들어지다', eng: 'to have muscle growth', vie: 'Cơ bắp phát triển', jpn: '筋肉がつく', chn: '长肌肉', sentence: '웨이트 트레이닝을 하면 팔에 {word}.' }
+                ]
+            },
+            13: {
+                title: "13과: 모임과 옷차림",
+                words: [
+                    { kor: '집들이', pos: 'noun', kor_def: '새 집으로 이사한 후 친구들을 초대하는 잔치', eng: 'house warming party', vie: 'Tiệc tân gia', jpn: '引っ越し祝い', chn: '乔迁派对', sentence: '새 집으로 이사하고 친구들을 초대해서 {word}를 했다.' },
+                    { kor: '돌잔치', pos: 'noun', kor_def: '아기의 첫 번째 생일을 축하하는 잔치', eng: 'baby\'s first birthday party', vie: 'Tiệc thôi nôi', jpn: 'トルジャンチ', chn: '周岁宴', sentence: '아기의 첫 번째 생일을 축하하는 {word}를 열었다.' },
+                    { kor: '송년회', pos: 'noun', kor_def: '한 해를 보내며 여는 모임', eng: 'year-end party', vie: 'Tiệc cuối năm', jpn: '忘年会', chn: '年会', sentence: '연말에 회사 동료들과 함께 {word}를 했다.' },
+                    { kor: '송별회', pos: 'noun', kor_def: '다른 곳으로 떠나는 사람을 위해 여는 모임', eng: 'farewell party', vie: 'Tiệc chia tay', jpn: '送別会', chn: '送别会', sentence: '다른 도시로 이사 가는 친구를 위해 {word}를 열어주었다.' },
+                    { kor: '동창회', pos: 'noun', kor_def: '같은 학교를 졸업한 사람들이 모이는 것', eng: 'alumni reunion', vie: 'Họp lớp', jpn: '同窓会', chn: '同学会', sentence: '고등학교 졸업 10주년 기념 {word}에 참석했다.' },
+                    { kor: '(방을) 꾸미다', pos: 'verb', conjugated: '방을 꾸몄다', kor_def: '어떤 공간을 아름답게 만들다', eng: 'to decorate (a room)', vie: 'Trang trí (phòng)', jpn: '（部屋を）飾る', chn: '装饰（房间）', sentence: '파티를 위해 풍선과 리본으로 {word}.' },
+                    { kor: '(상을) 차리다', pos: 'verb', conjugated: '상을 차렸다', kor_def: '식사를 위해 음식과 그릇 등을 탁자 위에 준비하다', eng: 'to set (a table)', vie: 'Dọn (bàn ăn)', jpn: '（食卓を）整える', chn: '摆（桌子）', sentence: '손님들을 위해 맛있는 음식으로 {word}.' },
+                    { kor: '(선물을) 마련하다', pos: 'verb', conjugated: '선물을 마련했다', kor_def: '주기 위해서 선물을 준비하다', eng: 'to prepare (a present)', vie: 'Chuẩn bị (quà)', jpn: '（プレゼントを）用意する', chn: '准备（礼物）', sentence: '친구의 생일이라 {word}.' },
+                    { kor: '(손님을) 대접하다', pos: 'verb', conjugated: '손님을 대접했다', kor_def: '손님에게 음식이나 서비스를 정성껏 제공하다', eng: 'to treat (a guest)', vie: 'Tiếp đãi (khách)', jpn: '（客を）もてなす', chn: '招待（客人）', sentence: '정성껏 준비한 음식으로 {word}.' },
+                    { kor: '(옷을) 차려입다', pos: 'verb', conjugated: '옷을 차려입었다', kor_def: '특별한 날을 위해 옷을 신경 써서 입다', eng: 'to be well dressed', vie: 'Ăn mặc đẹp', jpn: '（服を）着飾る', chn: '盛装', sentence: '중요한 모임이라서 {word}.' },
+                    { kor: '(넥타이를) 매다', pos: 'verb', conjugated: '넥타이를 맨다', kor_def: '목에 넥타이를 두르다', eng: 'to wear/fasten (a necktie)', vie: 'Thắt (cà vạt)', jpn: '（ネクタイを）締める', chn: '系（领带）', sentence: '아빠가 출근 준비를 하며 {word}.' },
+                    { kor: '(반지를) 끼다', pos: 'verb', conjugated: '반지를 꼈다', kor_def: '손가락에 반지를 넣다', eng: 'to slip/put on (a ring)', vie: 'Đeo (nhẫn)', jpn: '（指輪を）はめる', chn: '戴（戒指）', sentence: '약속의 의미로 손가락에 {word}.' },
+                    { kor: '(귀고리를) 하다', pos: 'verb', conjugated: '귀고리를 했다', kor_def: '귀에 장신구를 달다', eng: 'to wear (earrings)', vie: 'Đeo (bông tai)', jpn: '（イヤリングを）する', chn: '戴（耳环）', sentence: '예쁘게 보이려고 {word}.' },
+                    { kor: '(시계를) 차다', pos: 'verb', conjugated: '시계를 찼다', kor_def: '손목에 시계를 두르다', eng: 'to wear (a watch)', vie: 'Đeo (đồng hồ)', jpn: '（時計を）する', chn: '戴（手表）', sentence: '시간을 확인하기 위해 손목에 {word}.' },
+                    { kor: '(가방을) 들다', pos: 'verb', conjugated: '가방을 들었다', kor_def: '손으로 가방을 잡다', eng: 'to carry (a bag)', vie: 'Cầm (túi)', jpn: '（かばんを）持つ', chn: '拿（包）', sentence: '외출할 때 필요한 물건을 넣은 {word}.' },
+                    { kor: '(배낭을) 매다', pos: 'verb', conjugated: '배낭을 멨다', kor_def: '어깨에 배낭을 걸치다', eng: 'to put/strap on (a backpack)', vie: 'Đeo (ba lô)', jpn: '（リュックを）背負う', chn: '背（背包）', sentence: '등산을 가기 위해 큰 {word}.' },
+                    { kor: '충분하다', pos: 'adj', conjugated: '충분하니까', kor_def: '필요한 만큼 있어서 모자람이 없다', eng: 'to be sufficient', vie: 'Đủ', jpn: '十分だ', chn: '足够', sentence: '음식은 {word} 더 주문하지 않아도 돼요.' },
+                    { kor: '모자라다', pos: 'adj', conjugated: '모자라서', kor_def: '필요한 양보다 적어서 부족하다', eng: 'to be short on; not enough', vie: 'Thiếu', jpn: '足りない', chn: '不够', sentence: '음식이 {word} 몇 가지 더 준비해야겠다.' },
+                    { kor: '남다', pos: 'verb', conjugated: '남았다', kor_def: '쓰고 난 나머지가 있다', eng: 'to be leftover', vie: 'Còn lại', jpn: '残る', chn: '剩下', sentence: '파티가 끝나고 음식이 많이 {word}.' },
+                    { kor: '부족하다', pos: 'adj', conjugated: '부족해서', kor_def: '필요한 기준에 미치지 못하다', eng: 'to be lacking', vie: 'Thiếu thốn', jpn: '不足している', chn: '不足', sentence: '시간이 {word} 서둘러야 한다.' }
+                ]
+            }
+        };
+
+        const feedbackMessages = {
+            correct: {
+                kor: "정답입니다! 아주 좋아요.",
+                eng: "Correct! Very good.",
+                vie: "Đúng rồi! Rất tốt.",
+                jpn: "正解です！素晴らしいです。",
+                chn: "回答正确！非常好。"
+            },
+            incorrect: {
+                kor: "아쉬워요. 정답은",
+                eng: "Not quite. The correct answer is",
+                vie: "Tiếc quá. Đáp án đúng là",
+                jpn: "残念。正解は",
+                chn: "很遗憾。正确答案是"
+            },
+            final: {
+                kor: "모든 문제를 다 풀었어요! 최종 점수:",
+                eng: "You've completed all the questions! Final score:",
+                vie: "Bạn đã hoàn thành tất cả các câu hỏi! Điểm cuối cùng:",
+                jpn: "すべての問題を解き終わりました！最終スコア:",
+                chn: "你已经完成了所有问题！最终得分："
+            },
+            next_button: {
+                kor: "다음 문제",
+                eng: "Next Question",
+                vie: "Câu tiếp theo",
+                jpn: "次の問題",
+                chn: "下一题"
+            },
+            finish_button: {
+                kor: "결과 보기",
+                eng: "Show Results",
+                vie: "Xem kết quả",
+                jpn: "結果を見る",
+                chn: "查看结果"
+            },
+             main_menu_button: {
+                kor: "처음으로",
+                eng: "Main Menu",
+                vie: "Về menu chính",
+                jpn: "メインメニューへ",
+                chn: "返回主菜单"
+            }
+        };
+
+        // --- STATE ---
+        let currentChapter;
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let currentLang = 'kor';
+
+        // --- DOM ELEMENTS ---
+        const mainMenu = document.getElementById('main-menu');
+        const quizView = document.getElementById('quiz-view');
+        const chapterButtons = document.querySelectorAll('.chapter-btn');
+        const backToMenuButton = document.getElementById('back-to-menu');
+        const quizTitle = document.getElementById('quiz-title');
+        const questionInstruction = document.getElementById('question-instruction');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackContainer = document.getElementById('feedback-container');
+        const progressBar = document.getElementById('progress-bar');
+        const languageSelector = document.getElementById('language-selector');
+
+        // --- FUNCTIONS ---
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function startQuiz(chapter) {
+            currentChapter = chapter;
+            const chapterData = vocabulary[chapter];
+            
+            questions = shuffleArray([...chapterData.words]).map(word => ({
+                word: word,
+                type: Math.random() < 0.5 ? 'definition' : 'fill-in-the-blank'
+            }));
+
+            currentQuestionIndex = 0;
+            score = 0;
+            currentLang = languageSelector.value;
+
+            quizTitle.textContent = chapterData.title;
+            mainMenu.classList.add('hidden');
+            quizView.classList.remove('hidden');
+
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            feedbackContainer.innerHTML = '';
+            optionsContainer.innerHTML = '';
+
+            if (currentQuestionIndex >= questions.length) {
+                showFinalFeedback();
+                return;
+            }
+
+            const progress = ((currentQuestionIndex) / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+
+            const questionData = questions[currentQuestionIndex];
+            const currentWord = questionData.word;
+            const questionType = questionData.type;
+
+            if (questionType === 'definition') {
+                questionInstruction.textContent = '다음 설명에 해당하는 한국어 어휘를 고르세요.';
+                const definition = currentLang === 'kor' ? currentWord.kor_def : (currentWord[currentLang] || currentWord.eng);
+                questionText.textContent = `"${definition}"`;
+            } else { // fill-in-the-blank
+                questionInstruction.textContent = '다음 문장의 빈칸에 들어갈 알맞은 어휘를 고르세요.';
+                questionText.innerHTML = currentWord.sentence.replace('{word}', '<span class="font-bold text-blue-600">[빈칸]</span>');
+            }
+
+            const distractors = vocabulary[currentChapter].words
+                .filter(word => word.kor !== currentWord.kor && word.pos === currentWord.pos) // Filter by part of speech
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 3);
+            
+            const options = shuffleArray([currentWord, ...distractors]);
+            
+            options.forEach(option => {
+                const button = document.createElement('button');
+                const displayText = (questionType === 'fill-in-the-blank' && option.conjugated) ? option.conjugated : option.kor;
+                button.textContent = displayText;
+                button.className = "option-btn w-full p-4 border-2 border-gray-300 rounded-lg text-lg text-gray-800";
+                button.onclick = () => selectAnswer(button, option.kor === currentWord.kor, currentWord.kor);
+                optionsContainer.appendChild(button);
+            });
+        }
+        
+        function selectAnswer(selectedButton, isCorrect, correctAnswerKor) {
+            const allOptionButtons = optionsContainer.querySelectorAll('button');
+            const questionData = questions[currentQuestionIndex];
+            const correctAnswerObject = vocabulary[currentChapter].words.find(w => w.kor === correctAnswerKor);
+            const correctDisplayText = (questionData.type === 'fill-in-the-blank' && correctAnswerObject.conjugated) ? correctAnswerObject.conjugated : correctAnswerObject.kor;
+
+            allOptionButtons.forEach(btn => {
+                btn.disabled = true;
+                if (btn.textContent === correctDisplayText) {
+                    btn.classList.add('correct');
+                }
+            });
+            
+            if (isCorrect) {
+                score++;
+                selectedButton.classList.add('correct');
+                showFeedback(true);
+            } else {
+                selectedButton.classList.add('incorrect');
+                showFeedback(false, correctDisplayText);
+            }
+        }
+        
+        function showFeedback(isCorrect, correctAnswer) {
+            let feedbackHTML = '';
+            const isLastQuestion = currentQuestionIndex === questions.length - 1;
+
+            if (isCorrect) {
+                 feedbackHTML = `
+                    <div id="feedback-box" class="p-4 rounded-lg bg-green-100 text-green-800 text-center">
+                        <p class="font-bold text-lg">${feedbackMessages.correct[currentLang]}</p>
+                    </div>`;
+            } else {
+                 feedbackHTML = `
+                    <div id="feedback-box" class="p-4 rounded-lg bg-red-100 text-red-800 text-center">
+                        <p>${feedbackMessages.incorrect[currentLang]} <span class="font-bold">"${correctAnswer}"</span></p>
+                    </div>`;
+            }
+            
+            const nextButtonText = isLastQuestion ? feedbackMessages.finish_button[currentLang] : feedbackMessages.next_button[currentLang];
+            
+            feedbackHTML += `
+                <div class="mt-4 text-center">
+                    <button id="next-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-lg transition">${nextButtonText}</button>
+                </div>`;
+
+            feedbackContainer.innerHTML = feedbackHTML;
+            document.getElementById('next-btn').onclick = () => {
+                currentQuestionIndex++;
+                displayQuestion();
+            };
+        }
+
+        function showFinalFeedback() {
+            progressBar.style.width = '100%';
+            questionInstruction.textContent = '퀴즈 완료!';
+            questionText.textContent = "🎉";
+            optionsContainer.innerHTML = '';
+            
+            const finalScoreText = `${feedbackMessages.final[currentLang]} ${score} / ${questions.length}`;
+            
+            feedbackContainer.innerHTML = `
+                <div id="feedback-box" class="text-center p-4">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">${finalScoreText}</h3>
+                    <button id="restart-btn" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg transition">${feedbackMessages.main_menu_button[currentLang]}</button>
+                </div>`;
+                
+            document.getElementById('restart-btn').onclick = goBackToMenu;
+        }
+
+        function goBackToMenu() {
+            quizView.classList.add('hidden');
+            mainMenu.classList.remove('hidden');
+        }
+
+        // --- EVENT LISTENERS ---
+        chapterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                startQuiz(button.dataset.chapter);
+            });
+        });
+
+        backToMenuButton.addEventListener('click', goBackToMenu);
+        
+        languageSelector.addEventListener('change', (e) => {
+            currentLang = e.target.value;
+            // If quiz is active, update the current question's text
+            if (!quizView.classList.contains('hidden') && currentQuestionIndex < questions.length) {
+                const questionData = questions[currentQuestionIndex];
+                if (questionData.type === 'definition') {
+                    const currentWord = questionData.word;
+                    const definition = currentLang === 'kor' ? currentWord.kor_def : (currentWord[currentLang] || currentWord.eng);
+                    questionText.textContent = `"${definition}"`;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+

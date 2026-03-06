@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 문법 학습: A/V-는 척하다</title>
+    <!-- Tailwind CSS 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Inter 폰트 적용 (Tailwind 기본 폰트와 유사) */
+        body {
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            background-color: #f0f9ff; /* 연한 파란색 배경 */
+        }
+        /* 교재의 헤더 색상과 유사하게 */
+        .lesson-header {
+            background-color: #fcd34d; /* 노란색 계열 */
+            border-bottom: 2px solid #fbbf24; /* 조금 더 진한 노란색 */
+        }
+        .dialog-a {
+            background-color: #ffffff;
+            border-color: #e5e7eb;
+        }
+        .dialog-b {
+            background-color: #f3f4f6; /* 약간 다른 배경색 */
+            border-color: #e5e7eb;
+        }
+        /* 연습 문제 스타일 */
+        .practice-question {
+            background-color: #ecfdf5; /* 연한 녹색 */
+            border: 1px dashed #a7f3d0;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        .practice-answer {
+            background-color: #feefee; /* 연한 분홍색 */
+            border: 1px dashed #fecaca;
+            padding: 12px;
+            border-radius: 8px;
+            min-height: 50px; /* 답변란 최소 높이 */
+            display: flex;
+            align-items: center;
+        }
+
+        /* --- 언어 비교 기능 스타일 --- */
+        .lang-comparison {
+            display: none; /* 비교 내용은 기본적으로 숨김 */
+            margin-top: 10px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        .lang-vi { background-color: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
+        .lang-zh { background-color: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+        .lang-ja { background-color: #feefee; border: 1px solid #fecaca; color: #b91c1c; }
+        
+        /* 강조 밑줄 스타일 추가 */
+        .lang-comparison u {
+            text-decoration: underline;
+            text-decoration-thickness: 1.5px;
+            text-underline-offset: 3px;
+        }
+        .lang-vi u { text-decoration-color: #10b981; }
+        .lang-zh u { text-decoration-color: #f59e0b; }
+        .lang-ja u { text-decoration-color: #ef4444; }
+
+        /* 언어 토글 버튼 스타일 */
+        .lang-btn {
+            transition: all 0.2s ease-in-out;
+            border: 1px solid #d1d5db;
+        }
+        .lang-btn.active {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .lang-btn-ko.active { background-color: #3b82f6; color: white; border-color: #3b82f6; }
+        .lang-btn-vi.active { background-color: #10b981; color: white; border-color: #10b981; }
+        .lang-btn-zh.active { background-color: #f59e0b; color: white; border-color: #f59e0b; }
+        .lang-btn-ja.active { background-color: #ef4444; color: white; border-color: #ef4444; }
+        /* --- 끝: 언어 비교 기능 스타일 --- */
+
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+        <link rel="stylesheet" href="../assets/content-consistency.css">
+</head>
+<body class="antialiased text-gray-800 p-4 md:p-8">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <div class="max-w-3xl mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden">
+        
+        <!-- 페이지 헤더 -->
+        <header class="p-6 bg-blue-600 text-white text-center rounded-t-2xl">
+            <h1 class="text-3xl font-bold">한국어 문법 학습</h1>
+            <p class="text-lg opacity-90 mt-1">Korean Grammar Learning</p>
+        </header>
+
+        <!-- 메인 콘텐츠 -->
+        <main class="p-6 md:p-8">
+
+            <!-- 1. 문법 포인트 섹션 -->
+            <section>
+                <!-- 교재 스타일 헤더 -->
+                <div class="lesson-header p-4 rounded-lg flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-yellow-900">2. A-(으)ㄴ/L/V-는 척하다</h2>
+                    <span class="text-sm font-medium text-yellow-800">(track 80)</span>
+                </div>
+
+                <!-- 언어 비교 버튼 -->
+                <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+                    <h4 class="font-semibold text-center mb-3 text-gray-700">언어별 비교 보기 (Compare)</h4>
+                    <div class="flex flex-wrap space-x-2 justify-center" id="lang-toggle">
+                        <button onclick="showLanguage('ko')" class="lang-btn lang-btn-ko active px-3 py-2 md:px-4 md:py-2 rounded-lg font-semibold text-sm bg-white text-gray-700 hover:bg-gray-50">한국어</button>
+                        <button onclick="showLanguage('vi')" class="lang-btn lang-btn-vi px-3 py-2 md:px-4 md:py-2 rounded-lg font-semibold text-sm bg-white text-gray-700 hover:bg-gray-50">Tiếng Việt</button>
+                        <button onclick="showLanguage('zh')" class="lang-btn lang-btn-zh px-3 py-2 md:px-4 md:py-2 rounded-lg font-semibold text-sm bg-white text-gray-700 hover:bg-gray-50">中文</button>
+                        <button onclick="showLanguage('ja')" class="lang-btn lang-btn-ja px-3 py-2 md:px-4 md:py-2 rounded-lg font-semibold text-sm bg-white text-gray-700 hover:bg-gray-50">日本語</button>
+                    </div>
+                </div>
+
+                <!-- 문법 설명 -->
+                <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg mb-6">
+                    <h3 class="text-lg font-semibold text-blue-800 mb-2">무슨 뜻일까요? (Meaning)</h3>
+                    <p class="lang-ko">
+                        실제로는 그렇지 않지만 그런 것처럼 거짓으로 행동하거나 꾸밀 때 사용합니다.
+                        <br>
+                        <span class="font-medium">"to pretend to be/do..."</span>와 비슷한 의미입니다.
+                    </p>
+                    <ul class="list-disc list-inside mt-2 text-sm text-blue-700 lang-ko">
+                        <li>동사(V): -는 척하다 (예: 먹는 척하다)</li>
+                        <li>형용사(A): -(으)ㄴ 척하다 (예: 예쁜 척하다, 바쁜 척하다)</li>
+                        <li>명사(N): -인 척하다 (예: 학생인 척하다)</li>
+                    </ul>
+                    <!-- 비교 설명 -->
+                    <div class="lang-comparison lang-vi">
+                        <strong class="font-semibold">[Tiếng Việt]</strong> <u>"Giả vờ như..."</u>, <u>"Tỏ ra là..."</u><br>
+                        Dùng khi hành động giả vờ, không đúng với sự thật. (Ví dụ: giả vờ bận, giả vờ biết)
+                    </div>
+                    <div class="lang-comparison lang-zh">
+                        <strong class="font-semibold">[中文]</strong> <u>"假装..."</u>, <u>"装作..."</u><br>
+                        表示故意做出与实际不符的样子。(例如: 假装很忙, 假装知道)
+                    </div>
+                    <div class="lang-comparison lang-ja">
+                        <strong class="font-semibold">[日本語]</strong> <u>「〜ふりをする」</u><br>
+                        実際はそうではないのに、そのような様子を意図的に見せる時に使います。(例: 忙しいふりをする、知っているふりをする)
+                    </div>
+                </div>
+
+                <!-- 대화 예시 -->
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold mb-3 text-gray-700">대화 (Dialogue)</h3>
+                    <div class="space-y-3">
+                        <!-- A 대사 -->
+                        <div class="dialog-a p-4 rounded-lg border shadow-sm">
+                            <span class="font-bold text-blue-600">A:</span>
+                            <p class="inline ml-2 lang-ko">두 사람이 정말 사귀어요?</p>
+                            <!-- 비교 설명 -->
+                            <div class="lang-comparison lang-vi"><strong class="font-semibold">[A:]</strong> Hai người đó hẹn hò thật à?</div>
+                            <div class="lang-comparison lang-zh"><strong class="font-semibold">[A:]</strong> 两个人真的在交往吗？</div>
+                            <div class="lang-comparison lang-ja"><strong class="font-semibold">[A:]</strong> あの二人、本当に付き合ってるんですか？</div>
+                        </div>
+                        <!-- B 대사 -->
+                        <div class="dialog-b p-4 rounded-lg border shadow-sm">
+                            <span class="font-bold text-green-600">B:</span>
+                            <p class="inline ml-2 lang-ko">네. 사랑하는 사이인데 그동안 사귀지 않는 척했대요.</p>
+                            <!-- 비교 설명 -->
+                            <div class="lang-comparison lang-vi"><strong class="font-semibold">[B:]</strong> Vâng. Nghe nói họ yêu nhau nhưng <u>vờ như không hẹn hò</u>.</div>
+                            <div class="lang-comparison lang-zh"><strong class="font-semibold">[B:]</strong> 是啊。他们说是恋爱关系，但一直<u>假装没在交往</u>。</div>
+                            <div class="lang-comparison lang-ja"><strong class="font-semibold">[B:]</strong> ええ。愛し合っている仲なのに、これまで<u>付き合っていないふりをしていた</u>そうです。</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 예문 -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold mb-3 text-gray-700">예 (Examples)</h3>
+                    <ul class="list-disc list-inside space-y-3 bg-gray-50 p-5 rounded-lg border">
+                        <li class="p-3 border-b">
+                            <p class="lang-ko">1. 마음에 안 드는 남자가 만나자고 해서 <span class="font-bold text-blue-600">바쁜 척했어요.</span></p>
+                            <div class="lang-comparison lang-vi">Có anh chàng tôi không thích rủ gặp mặt nên tôi đã <u>giả vờ bận</u>.</div>
+                            <div class="lang-comparison lang-zh">有个不喜欢的男人约我，我就<u>假装很忙</u>。</div>
+                            <div class="lang-comparison lang-ja">気に入らない男性から会おうと言われて、<u>忙しいふりをしました</u>。</div>
+                        </li>
+                        <li class="p-3 border-b">
+                            <p class="lang-ko">2. 동생의 이야기를 듣고 <span class="font-bold text-blue-600">재미있는 척했지만</span> 사실은 그저 그랬어요.</p>
+                            <div class="lang-comparison lang-vi">Tôi nghe chuyện của em và <u>giả vờ như thú vị lắm</u> nhưng thực ra cũng bình thường thôi.</div>
+                            <div class="lang-comparison lang-zh">听了弟弟的话，我<u>假装很有趣</u>，但其实觉得很一般。</div>
+                            <div class="lang-comparison lang-ja">弟の話を聞いて<u>面白いふりをしました</u>が、実際はそうでもありませんでした。</div>
+                        </li>
+                        <li class="p-3 border-b">
+                            <p class="lang-ko">3. 길에서 전에 사귀던 사람을 만났는데 그냥 <span class="font-bold text-blue-600">모른 척했어요.</span></p>
+                            <div class="lang-comparison lang-vi">Tôi gặp người yêu cũ trên đường nhưng đã <u>giả vờ không biết</u>.</div>
+                            <div class="lang-comparison lang-zh">在路上遇到了前男友/女友，但我<u>假装没看见</u>。</div>
+                            <div class="lang-comparison lang-ja">道で元恋人に会いましたが、ただ<u>知らないふりをしました</u>。</div>
+                        </li>
+                        <li class="p-3">
+                            <p class="lang-ko">4. 학교에 <span class="font-bold text-blue-600">가는 척하고</span> 친구들과 여행 간 적이 있어요.</p>
+                            <div class="lang-comparison lang-vi">Tôi đã từng <u>giả vờ đến trường</u> rồi đi du lịch với bạn.</div>
+                            <div class="lang-comparison lang-zh">我有过<u>假装去上学</u>，其实和朋友们去旅行的经历。</div>
+                            <div class="lang-comparison lang-ja">学校へ<u>行くふりをして</u>、友達と旅行に行ったことがあります。</div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 2. 연습 문제 섹션 -->
+            <section class="border-t pt-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">연습 (Practice)</h2>
+                <p class="text-base mb-6 bg-gray-100 p-4 rounded-lg">
+                    다음 질문에 대답해 보세요.
+                </p>
+
+                <!-- 연습 문제 리스트 -->
+                <div class="space-y-4">
+                    <!-- Q 1 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 items-center">
+                        <div class="practice-question">1) 목욕탕에서 선생님을 만난다면?</div>
+                        <div class="practice-answer">못 본 척하겠어요.</div>
+                    </div>
+                    <!-- Q 2 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 items-center">
+                        <div class="practice-question">2) 소개팅으로 만난 사람이 마음에 안 든다면?</div>
+                        <div class="practice-answer text-gray-400">?</div>
+                    </div>
+                    <!-- Q 3 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 items-center">
+                        <div class="practice-question">3) 지각을 자주 해서 혼났는데 오늘 또 지각했다면?</div>
+                        <div class="practice-answer text-gray-400">?</div>
+                    </div>
+                    <!-- Q 4 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 items-center">
+                        <div class="practice-question">4) 헤어진 애인을 길에서 우연히 만난다면?</div>
+                        <div class="practice-answer text-gray-400">?</div>
+                    </div>
+                    <!-- Q 5 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 items-center">
+                        <div class="practice-question">5) 신혼여행에서 상사를 만난다면?</div>
+                        <div class="practice-answer text-gray-400">?</div>
+                    </div>
+                    <!-- Q 6 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 items-center">
+                        <div class="practice-question text-gray-400">6) ?</div>
+                        <div class="practice-answer text-gray-400">?</div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- 푸터 -->
+        <footer class="text-center p-4 bg-gray-100 border-t rounded-b-2xl">
+            <p class="text-sm text-gray-500">한국어 문법 학습 웹페이지</p>
+        </footer>
+
+    </div>
+
+    <!-- JavaScript 로직 -->
+    <script>
+        function showLanguage(lang) {
+            // 모든 언어 비교 설명 숨기기
+            document.querySelectorAll('.lang-comparison').forEach(el => {
+                el.style.display = 'none';
+            });
+
+            // 선택된 언어의 비교 설명만 보이기 (한국어 제외)
+            if (lang !== 'ko') {
+                document.querySelectorAll('.lang-' + lang).forEach(el => {
+                    el.style.display = 'block';
+                });
+            }
+
+            // 모든 버튼의 'active' 클래스 제거
+            document.querySelectorAll('#lang-toggle .lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+                // 기본 스타일로 되돌리기
+                btn.classList.add('bg-white', 'text-gray-700');
+                btn.classList.remove('text-white');
+            });
+
+            // 클릭된 버튼과 한국어 버튼에 'active' 클래스 추가
+            const activeBtn = document.querySelector('.lang-btn-' + lang);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+                activeBtn.classList.remove('bg-white', 'text-gray-700');
+            }
+            
+            // 한국어 버튼은 항상 활성(선택된) 상태로 보이게 처리 (단, 클릭된 버튼이 한국어가 아닐때)
+            const koBtn = document.querySelector('.lang-btn-ko');
+            if (lang !== 'ko' && koBtn) {
+                koBtn.classList.add('active');
+                koBtn.classList.remove('bg-white', 'text-gray-700');
+            } else if (koBtn) {
+                koBtn.classList.add('active');
+                koBtn.classList.remove('bg-white', 'text-gray-700');
+            }
+        }
+
+        // 페이지 로드 시 한국어 버튼 활성화
+        document.addEventListener('DOMContentLoaded', () => {
+            showLanguage('ko');
+        });
+    </script>
+
+</body>
+</html>
