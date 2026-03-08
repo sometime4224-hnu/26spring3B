@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>11과 문법 통합 퀴즈</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <style>
+        body { margin: 0; font-family: 'Noto Sans KR', sans-serif; background: #0f172a; color: #e2e8f0; }
+        .c11-global-nav {
+            position: sticky; top: 0; z-index: 1000; height: 58px; width: 100%;
+            display: flex; align-items: center; gap: 12px; padding: 0 16px; box-sizing: border-box;
+            background: rgba(15, 23, 42, 0.92); border-bottom: 1px solid rgba(148, 163, 184, 0.3); backdrop-filter: blur(8px);
+        }
+        .c11-global-nav a { color: #a5b4fc; font-weight: 700; text-decoration: none; font-size: 14px; }
+        .c11-divider { color: #64748b; font-weight: 700; }
+        .panel { background: rgba(15, 23, 42, 0.72); border: 1px solid rgba(148, 163, 184, 0.3); }
+    </style>
+</head>
+<body>
+    <nav class="c11-global-nav">
+        <a href="../index.html">메인</a>
+        <span class="c11-divider">|</span>
+        <a href="index.html">11과 목록</a>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 py-6">
+        <section class="panel rounded-2xl p-5 sm:p-7">
+            <div class="flex items-end justify-between flex-wrap gap-3">
+                <div>
+                    <h1 class="text-3xl font-black">11과 문법 통합 퀴즈</h1>
+                    <p class="text-slate-300 mt-1">문법 1, 2, 3을 한 번에 점검합니다.</p>
+                </div>
+                <div>
+                    <label for="mode" class="text-sm text-slate-300">범위 선택</label>
+                    <select id="mode" class="mt-1 bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-sm">
+                        <option value="all">전체</option>
+                        <option value="g1">문법1</option>
+                        <option value="g2">문법2</option>
+                        <option value="g3">문법3</option>
+                    </select>
+                </div>
+            </div>
+
+            <p id="progress" class="mt-5 text-sm text-slate-300"></p>
+            <p id="question" class="mt-2 text-xl font-bold"></p>
+            <div id="choices" class="mt-4 grid gap-2"></div>
+            <p id="feedback" class="mt-3 min-h-[28px] font-bold"></p>
+
+            <div class="mt-4 flex gap-2">
+                <button id="next" class="hidden px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold hover:bg-indigo-600">다음 문제</button>
+                <button id="restart" class="px-4 py-2 rounded-lg bg-slate-200 text-slate-900 font-bold hover:bg-slate-300">다시 시작</button>
+            </div>
+            <p id="result" class="hidden mt-4 text-xl font-black text-indigo-300"></p>
+        </section>
+    </main>
+
+    <script>
+        const bank = [
+            { set: 'g1', q: '"아이에게 밥을 ____"의 자연스러운 표현은?', c: ['먹였다', '먹었다', '먹을래요', '먹고 있다'], a: 0, e: '먹다의 사동은 먹이다입니다.' },
+            { set: 'g1', q: '"학생을 자리에 ____"에서 알맞은 말은?', c: ['앉혔다', '앉았다', '앉는다', '앉을래'], a: 0, e: '앉다의 사동은 앉히다입니다.' },
+            { set: 'g2', q: '"내일 비가 ____ 우산을 가져가세요."', c: ['온다면', '오다면', '오는다면', '왔다면'], a: 0, e: '오다 + ㄴ다면 → 온다면' },
+            { set: 'g2', q: '"내가 면접관____ 이런 대답은 어려워요."', c: ['이라면', '다면', '는다면', '라'], a: 0, e: '명사는 (이)라면을 사용합니다.' },
+            { set: 'g3', q: '"____ 질문해도 됩니다."', c: ['무슨 질문이든지', '무엇 질문이든지', '무슨이든지 질문', '무엇이 질문'], a: 0, e: '명사가 오므로 무슨 N(이)든지가 맞습니다.' },
+            { set: 'g3', q: '"메뉴는 ____ 괜찮아요."', c: ['무엇이든지', '무슨이든지', '무슨 메뉴든지든지', '무엇 메뉴든지'], a: 0, e: '명사가 없을 때는 무엇이든지를 씁니다.' }
+        ];
+
+        const state = { set: 'all', list: [], idx: 0, score: 0 };
+        const modeEl = document.getElementById('mode');
+        const progressEl = document.getElementById('progress');
+        const questionEl = document.getElementById('question');
+        const choicesEl = document.getElementById('choices');
+        const feedbackEl = document.getElementById('feedback');
+        const nextEl = document.getElementById('next');
+        const restartEl = document.getElementById('restart');
+        const resultEl = document.getElementById('result');
+
+        function shuffle(items) {
+            const copy = [...items];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
+        function start() {
+            state.set = modeEl.value;
+            const target = state.set === 'all' ? bank : bank.filter((x) => x.set === state.set);
+            state.list = shuffle(target);
+            state.idx = 0;
+            state.score = 0;
+            resultEl.classList.add('hidden');
+            draw();
+        }
+
+        function draw() {
+            const current = state.list[state.idx];
+            progressEl.textContent = `${state.idx + 1} / ${state.list.length}`;
+            questionEl.textContent = current.q;
+            choicesEl.innerHTML = '';
+            feedbackEl.textContent = '';
+            nextEl.classList.add('hidden');
+
+            current.c.forEach((choice, i) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'text-left px-4 py-3 rounded-lg border border-slate-600 hover:bg-slate-800';
+                btn.textContent = `${i + 1}. ${choice}`;
+                btn.addEventListener('click', () => select(i, btn));
+                choicesEl.appendChild(btn);
+            });
+        }
+
+        function select(i, btn) {
+            const current = state.list[state.idx];
+            Array.from(choicesEl.children).forEach((node, idx) => {
+                node.disabled = true;
+                if (idx === current.a) node.classList.add('bg-emerald-900', 'border-emerald-500');
+            });
+
+            if (i === current.a) {
+                state.score += 1;
+                feedbackEl.className = 'mt-3 min-h-[28px] font-bold text-emerald-300';
+                feedbackEl.textContent = `정답! ${current.e}`;
+            } else {
+                btn.classList.add('bg-rose-900', 'border-rose-500');
+                feedbackEl.className = 'mt-3 min-h-[28px] font-bold text-rose-300';
+                feedbackEl.textContent = `오답. ${current.e}`;
+            }
+
+            if (state.idx < state.list.length - 1) {
+                nextEl.classList.remove('hidden');
+            } else {
+                resultEl.classList.remove('hidden');
+                resultEl.textContent = `최종 점수: ${state.score} / ${state.list.length}`;
+            }
+        }
+
+        nextEl.addEventListener('click', () => {
+            state.idx += 1;
+            draw();
+        });
+        restartEl.addEventListener('click', start);
+        modeEl.addEventListener('change', start);
+
+        start();
+    </script>
+    <script src="../shared/learning-enhancements.js"></script>
+</body>
+</html>

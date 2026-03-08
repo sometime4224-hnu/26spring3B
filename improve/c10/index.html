@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10&#xACFC; &#xD559;&#xC2B5; &#xD5C8;&#xBE0C;</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glass-card {
+            background: linear-gradient(145deg, rgba(55, 65, 81, 0.4) 0%, rgba(31, 41, 55, 0.2) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+        .glass-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.3);
+            border-color: rgba(99, 102, 241, 0.5);
+            background: linear-gradient(145deg, rgba(79, 70, 229, 0.15) 0%, rgba(31, 41, 55, 0.4) 100%);
+        }
+        .glow-circle {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            animation: pulse-glow 10s ease-in-out infinite alternate;
+        }
+        .glow-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: rgba(79, 70, 229, 0.15); }
+        .glow-2 { bottom: -20%; right: -10%; width: 60vw; height: 60vw; background: rgba(56, 189, 248, 0.1); animation-delay: -5s; }
+        .glow-3 { top: 40%; left: 50%; transform: translate(-50%, -50%); width: 40vw; height: 40vw; background: rgba(139, 92, 246, 0.1); animation-duration: 15s; }
+
+        @keyframes pulse-glow {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.5; }
+            100% { transform: scale(1.1) translate(20px, 20px); opacity: 0.8; }
+        }
+
+        .global-nav {
+            width: 100%;
+            background-color: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            height: 64px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #818cf8;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            transition: color 0.2s;
+        }
+        .global-nav a:hover {
+            color: #a5b4fc;
+        }
+    </style>
+</head>
+<body class="min-h-screen relative selection:bg-indigo-500 selection:text-white flex flex-col items-center p-0 m-0">
+    <nav class="global-nav w-full">
+        <a href="../index.html">
+            <i class="fa-solid fa-house"></i>
+            <span>메인으로</span>
+        </a>
+    </nav>
+
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="glow-circle glow-1"></div>
+        <div class="glow-circle glow-2"></div>
+        <div class="glow-circle glow-3"></div>
+    </div>
+
+    <main class="relative z-10 w-full max-w-4xl glass-panel rounded-3xl p-8 sm:p-12 shadow-2xl border border-slate-700/50 flex flex-col mt-10 mb-10 mx-4">
+        <header class="text-center mb-12 relative">
+            <div class="inline-flex items-center justify-center p-3 sm:p-4 rounded-2xl bg-indigo-500/10 text-indigo-400 mb-6 shadow-[0_0_30px_rgba(99,102,241,0.2)] border border-indigo-500/20">
+                <i class="fa-solid fa-book-open-reader text-3xl sm:text-4xl"></i>
+            </div>
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-purple-400 mb-4 tracking-tight">
+                10과: 결혼하려면 아직 멀었어요
+            </h1>
+            <p class="text-lg text-slate-400 font-light tracking-wide">학습 메뉴를 선택해 진행하세요.</p>
+        </header>
+
+        <div class="space-y-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <a href="vocabulary.html" class="glass-card rounded-2xl p-6 flex flex-col items-start text-left group">
+                    <span class="text-xs font-bold text-indigo-400 mb-2 uppercase tracking-wider">어휘</span>
+                    <span class="text-lg font-bold text-slate-200 group-hover:text-white transition-colors">첫 만남부터 고백까지</span>
+                </a>
+                <a href="grammar1.html" class="glass-card rounded-2xl p-6 flex flex-col items-start text-left group">
+                    <span class="text-xs font-bold text-indigo-400 mb-2 uppercase tracking-wider">문법 1</span>
+                    <span class="text-lg font-bold text-slate-200 group-hover:text-white transition-colors">-던</span>
+                </a>
+                <a href="grammar2.html" class="glass-card rounded-2xl p-6 flex flex-col items-start text-left group">
+                    <span class="text-xs font-bold text-indigo-400 mb-2 uppercase tracking-wider">문법 2</span>
+                    <span class="text-lg font-bold text-slate-200 group-hover:text-white transition-colors">-잖아요</span>
+                </a>
+                <a href="grammar3.html" class="glass-card rounded-2xl p-6 flex flex-col items-start text-left group">
+                    <span class="text-xs font-bold text-indigo-400 mb-2 uppercase tracking-wider">문법 3</span>
+                    <span class="text-lg font-bold text-slate-200 group-hover:text-white transition-colors">V-(으)ㄹ 생각/계획/예정이다</span>
+                </a>
+                <a href="grammar4.html" class="glass-card rounded-2xl p-6 flex flex-col items-start text-left group">
+                    <span class="text-xs font-bold text-indigo-400 mb-2 uppercase tracking-wider">문법 4</span>
+                    <span class="text-lg font-bold text-slate-200 group-hover:text-white transition-colors">V-(으)려면 멀었다</span>
+                </a>
+                <a href="listen1.html" class="glass-card rounded-2xl p-6 flex flex-col items-start text-left group" aria-label="듣기1 열기">
+                    <span class="text-xs font-bold text-indigo-400 mb-2 uppercase tracking-wider">듣기 1</span>
+                    <span class="text-lg font-bold text-slate-200 group-hover:text-white transition-colors">10과 듣기 학습</span>
+                </a>
+                <a href="listen2.html" class="glass-card rounded-2xl p-6 flex flex-col items-start text-left group" aria-label="듣기2 열기">
+                    <span class="text-xs font-bold text-indigo-400 mb-2 uppercase tracking-wider">듣기 2</span>
+                    <span class="text-lg font-bold text-slate-200 group-hover:text-white transition-colors">듣기 평가 퀴즈</span>
+                </a>
+                <a href="read.html" class="glass-card rounded-2xl p-6 flex flex-col items-start text-left group" aria-label="읽기 열기">
+                    <span class="text-xs font-bold text-indigo-400 mb-2 uppercase tracking-wider">읽기</span>
+                    <span class="text-lg font-bold text-slate-200 group-hover:text-white transition-colors">연애 칼럼 읽기</span>
+                </a>
+            </div>
+        </div>
+    </main>
+            <script>
+        (function () {
+            const T = {
+                title: "10\uACFC \uD559\uC2B5 \uD5C8\uBE0C",
+                home: "\uBA54\uC778\uC73C\uB85C",
+                heading: "10\uACFC: \uACB0\uD63C\uD558\uB824\uBA74 \uC544\uC9C1 \uBA40\uC5C8\uC5B4\uC694",
+                subtitle: "\uD559\uC2B5 \uBA54\uB274\uB97C \uC120\uD0DD\uD574 \uC9C4\uD589\uD558\uC138\uC694."
+            };
+
+            const lessonMap = {
+                "vocabulary.html": {
+                    label: "\uC5B4\uD718",
+                    subtitle: "\uCCAB \uB9CC\uB0A8\uBD80\uD130 \uACE0\uBC31\uAE4C\uC9C0",
+                    aria: "\uC5B4\uD718 \uD559\uC2B5 \uC5F4\uAE30"
+                },
+                "grammar1.html": {
+                    label: "\uBB38\uBC95 1",
+                    subtitle: "-\uB358",
+                    aria: "\uBB38\uBC95 1 \uC5F4\uAE30"
+                },
+                "grammar2.html": {
+                    label: "\uBB38\uBC95 2",
+                    subtitle: "-\uC796\uC544\uC694",
+                    aria: "\uBB38\uBC95 2 \uC5F4\uAE30"
+                },
+                "grammar3.html": {
+                    label: "\uBB38\uBC95 3",
+                    subtitle: "V-(\uC73C)\u3139 \uC0DD\uAC01/\uACC4\uD68D/\uC608\uC815\uC774\uB2E4",
+                    aria: "\uBB38\uBC95 3 \uC5F4\uAE30"
+                },
+                "grammar4.html": {
+                    label: "\uBB38\uBC95 4",
+                    subtitle: "V-(\uC73C)\uB824\uBA74 \uBA40\uC5C8\uB2E4",
+                    aria: "\uBB38\uBC95 4 \uC5F4\uAE30"
+                },
+                "listen1.html": {
+                    label: "\uB4E3\uAE30 1",
+                    subtitle: "10\uACFC \uB4E3\uAE30 \uD559\uC2B5",
+                    aria: "\uB4E3\uAE30 1 \uC5F4\uAE30"
+                },
+                "listen2.html": {
+                    label: "\uB4E3\uAE30 2",
+                    subtitle: "\uB4E3\uAE30 \uD3C9\uAC00 \uD034\uC988",
+                    aria: "\uB4E3\uAE30 2 \uC5F4\uAE30"
+                },
+                "read.html": {
+                    label: "\uC77D\uAE30",
+                    subtitle: "\uC5F0\uC560 \uCE7C\uB7FC \uC77D\uAE30",
+                    aria: "\uC77D\uAE30 \uD559\uC2B5 \uC5F4\uAE30"
+                },
+                "grammar-practice.html": {
+                    label: "\uD1B5\uD569 \uBB38\uBC95 \uD034\uC988",
+                    subtitle: "\uBB38\uBC95 1~4 \uC2E4\uC804 \uC5F0\uC2B5",
+                    aria: "\uD1B5\uD569 \uBB38\uBC95 \uD034\uC988 \uC5F4\uAE30"
+                }
+            };
+
+            function applyCardText(link) {
+                const key = link.getAttribute('href');
+                const t = lessonMap[key];
+                if (!t) return false;
+
+                const spans = link.querySelectorAll('span');
+                if (spans[0]) spans[0].textContent = t.label;
+                if (spans[1]) spans[1].textContent = t.subtitle;
+                link.setAttribute('aria-label', t.aria);
+                return true;
+            }
+
+            function createLessonCard(href) {
+                const card = document.createElement('a');
+                card.href = href;
+                card.className = 'glass-card rounded-2xl p-6 flex flex-col items-start text-left group';
+
+                const label = document.createElement('span');
+                label.className = 'text-xs font-bold text-indigo-400 mb-2 uppercase tracking-wider';
+
+                const subtitle = document.createElement('span');
+                subtitle.className = 'text-lg font-bold text-slate-200 group-hover:text-white transition-colors';
+
+                card.appendChild(label);
+                card.appendChild(subtitle);
+                applyCardText(card);
+                return card;
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                document.title = T.title;
+
+                const navText = document.querySelector('.global-nav a span');
+                if (navText) navText.textContent = T.home;
+
+                const h1 = document.querySelector('header h1');
+                if (h1) h1.textContent = T.heading;
+
+                const subtitle = document.querySelector('header p');
+                if (subtitle) subtitle.textContent = T.subtitle;
+
+                const grid = document.querySelector('.grid');
+                if (!grid) return;
+
+                const links = Array.from(grid.querySelectorAll('a[href$=".html"]'));
+                links.forEach((link) => {
+                    if (!applyCardText(link)) {
+                        link.remove();
+                    }
+                });
+
+                if (!grid.querySelector('a[href="grammar-practice.html"]')) {
+                    grid.appendChild(createLessonCard('grammar-practice.html'));
+                }
+            });
+        })();
+    </script>
+    <script src="../shared/learning-enhancements.js"></script>
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>10&#xACFC; &#xD1B5;&#xD569; &#xBB38;&#xBC95; &#xC5F0;&#xC2B5; &#xD034;&#xC988;</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        .global-nav {
+            width: 100%;
+            background-color: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            height: 58px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .global-nav a {
+            color: #a5b4fc;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .global-nav a:hover { color: #c7d2fe; }
+        .set-btn.active {
+            background-color: #1d4ed8;
+            color: #ffffff;
+            border-color: #1d4ed8;
+        }
+        .choice-btn.correct {
+            border-color: #16a34a;
+            background: #dcfce7;
+            color: #14532d;
+        }
+        .choice-btn.wrong {
+            border-color: #dc2626;
+            background: #fee2e2;
+            color: #7f1d1d;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen">
+    <nav class="global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i><span id="nav-home">&#xBA54;&#xC778;</span></a>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i><span id="nav-chapter">10&#xACFC; &#xBAA9;&#xB85D;</span></a>
+    </nav>
+
+    <main class="max-w-3xl mx-auto px-4 py-6 sm:py-8">
+        <header class="mb-6">
+            <h1 id="page-title" class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-300 to-indigo-300">
+                10&#xACFC; &#xD1B5;&#xD569; &#xBB38;&#xBC95; &#xC5F0;&#xC2B5; &#xD034;&#xC988;
+            </h1>
+            <p id="page-subtitle" class="text-slate-300 mt-2 text-sm sm:text-base">
+                &#xBB38;&#xBC95; 1~4 &#xB0B4;&#xC6A9;&#xC744; &#xC2E4;&#xC804; &#xC9C8;&#xBB38;&#xC73C;&#xB85C; &#xBCF5;&#xC2B5;&#xD569;&#xB2C8;&#xB2E4;.
+            </p>
+        </header>
+
+        <section class="bg-slate-800/70 border border-slate-700 rounded-2xl p-4 sm:p-5 mb-5">
+            <div class="flex flex-wrap gap-2" id="set-buttons"></div>
+        </section>
+
+        <section id="quiz-card" class="bg-slate-800/70 border border-slate-700 rounded-2xl p-5 sm:p-6">
+            <div class="flex items-center justify-between mb-4">
+                <p id="progress-text" class="text-sm text-slate-300"></p>
+                <p id="score-text" class="text-sm font-semibold text-cyan-300"></p>
+            </div>
+
+            <div class="mb-4">
+                <p id="question-set" class="text-xs tracking-wider text-indigo-300 font-bold mb-2"></p>
+                <h2 id="question-text" class="text-lg sm:text-xl font-bold leading-relaxed"></h2>
+            </div>
+
+            <div id="choices" class="grid gap-2 mb-4"></div>
+
+            <div id="feedback" class="hidden rounded-xl border p-4 text-sm"></div>
+
+            <div class="mt-4 flex gap-2">
+                <button id="next-btn" class="hidden px-4 py-2 rounded-lg font-bold bg-blue-600 hover:bg-blue-500 text-white">
+                    &#xB2E4;&#xC74C; &#xBB38;&#xC81C;
+                </button>
+            </div>
+        </section>
+
+        <section id="result-card" class="hidden bg-slate-800/70 border border-slate-700 rounded-2xl p-5 sm:p-6 mt-5">
+            <h3 id="result-title" class="text-xl font-black mb-2"></h3>
+            <p id="result-summary" class="text-slate-200 mb-2"></p>
+            <p id="best-summary" class="text-slate-400 text-sm mb-4"></p>
+            <div class="flex flex-wrap gap-2">
+                <button id="retry-btn" class="px-4 py-2 rounded-lg font-bold bg-indigo-600 hover:bg-indigo-500 text-white">
+                    &#xB2E4;&#xC2DC; &#xD480;&#xAE30;
+                </button>
+                <button id="wrong-only-btn" class="px-4 py-2 rounded-lg font-bold bg-slate-700 hover:bg-slate-600 text-white">
+                    &#xD2C0;&#xB9B0; &#xBB38;&#xC81C;&#xB9CC; &#xB2E4;&#xC2DC;
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const UI = {
+            labels: {
+                all: "\uC804\uCCB4",
+                g1: "\uBB38\uBC95 1 (-\uB358)",
+                g2: "\uBB38\uBC95 2 (-\uC796\uC544\uC694)",
+                g3: "\uBB38\uBC95 3 (\uACC4\uD68D/\uC608\uC815)",
+                g4: "\uBB38\uBC95 4 (-\uB824\uBA74 \uBA40\uC5C8\uB2E4)"
+            }
+        };
+
+        const QUESTIONS = [
+            { id: "g1_1", set: "g1", prompt: "\uC5B4\uB9B4 \uB54C \uC790\uC8FC ____ \uACF5\uC6D0\uC774\uC5D0\uC694.", choices: ["\uAC00\uB358", "\uAC04", "\uAC08", "\uAC00\uB294"], answer: 0, explain: "\uBC18\uBCF5\uB418\uB358 \uACFC\uAC70 \uC2B5\uAD00\uC5D0\uB294 '-\uB358'\uC744 \uC0AC\uC6A9\uD574\uC694." },
+            { id: "g1_2", set: "g1", prompt: "\uC2DD\uD0C1 \uC704\uC5D0 ____ \uBE75\uC744 \uB9C8\uC800 \uBA39\uC5C8\uC5B4\uC694.", choices: ["\uBA39\uB358", "\uBA39\uC740", "\uBA39\uC744", "\uBA39\uB294"], answer: 0, explain: "\uC774\uC804\uC5D0 \uBA39\uACE0 \uC788\uB358 \uC0C1\uD0DC\uB97C \uC774\uC5B4\uC11C \uB9D0\uD560 \uB54C '-\uB358'\uC774 \uC790\uC5F0\uC2A4\uB7EC\uC6CC\uC694." },
+            { id: "g1_3", set: "g1", prompt: "\uC791\uB144\uC5D0 ____ \uB178\uB798\uB97C \uC9C0\uAE08 \uB2E4\uC2DC \uBD88\uB7EC\uC694.", choices: ["\uBC30\uC6B0\uB358", "\uBC30\uC6C0", "\uBC30\uC6B8", "\uBC30\uC6B0\uB294"], answer: 0, explain: "\uACFC\uAC70\uC5D0 \uD558\uB358 \uD589\uB3D9\uC744 \uD68C\uC0C1\uD560 \uB54C '-\uB358'\uC744 \uC4F0\uC138\uC694." },
+            { id: "g1_4", set: "g1", prompt: "\uC5EC\uAE30\uB294 \uC81C\uAC00 \uC608\uC804\uC5D0 ____ \uB3D9\uB124\uC608\uC694.", choices: ["\uC0B4\uB358", "\uC0B0", "\uC0B4", "\uC0AC\uB294"], answer: 0, explain: "\uACFC\uAC70 \uAC70\uC8FC \uACBD\uD5D8\uC744 \uB9D0\uD560 \uB54C '-\uB358'\uC744 \uC0AC\uC6A9\uD574\uC694." },
+            { id: "g1_5", set: "g1", prompt: "\uADF8\uAC00 \uC608\uC804\uC5D0 ____ \uD734\uB300\uD3F0\uC744 \uC544\uC9C1\uB3C4 \uBCF4\uAD00\uD574\uC694.", choices: ["\uC4F0\uB358", "\uC4F4", "\uC4F8", "\uC4F0\uB294"], answer: 0, explain: "\uC608\uC804\uC5D0 \uC0AC\uC6A9\uD558\uB358 \uBB3C\uAC74\uC740 '-\uB358'\uC73C\uB85C \uD45C\uD604\uD569\uB2C8\uB2E4." },
+
+            { id: "g2_1", set: "g2", prompt: "\uC0C1\uB300\uAC00 \uC774\uBBF8 \uC544\uB294 \uC57D\uC18D\uC744 \uC0C1\uAE30\uC2DC\uD0A4\uB824\uBA74?", choices: ["\uC6B0\uB9AC 3\uC2DC\uC5D0 \uB9CC\uB098\uAE30\uB85C \uD588\uC796\uC544\uC694.", "\uC6B0\uB9AC 3\uC2DC\uC5D0 \uB9CC\uB098\uB824\uACE0 \uD574\uC694.", "\uC6B0\uB9AC 3\uC2DC\uC5D0 \uB9CC\uB098\uBA74 \uB3FC\uC694.", "\uC6B0\uB9AC 3\uC2DC\uC5D0 \uB9CC\uB098\uACE0 \uC2F6\uC5B4\uC694."], answer: 0, explain: "'-\uC796\uC544\uC694'\uB294 \uC0C1\uB300\uAC00 \uC774\uBBF8 \uC544\uB294 \uC0AC\uC2E4\uC744 \uBD80\uB4DC\uB7FD\uAC8C \uC0C1\uAE30\uD560 \uB54C \uC4F0\uC5B4\uC694." },
+            { id: "g2_2", set: "g2", prompt: "\uC774\uBBF8 \uBCF8 \uC601\uD654\uB77C\uB294 \uC810\uC744 \uAC15\uC870\uD558\uB294 \uD45C\uD604\uC740?", choices: ["\uC774 \uC601\uD654 \uC9C0\uB09C\uC8FC\uC5D0 \uBD24\uC796\uC544\uC694.", "\uC774 \uC601\uD654 \uC7AC\uBBF8\uC788\uC744 \uAC83 \uAC19\uC544\uC694.", "\uC774 \uC601\uD654 \uC9C0\uB09C\uC8FC\uC5D0 \uBD10\uC57C \uD574\uC694.", "\uC774 \uC601\uD654 \uBD10\uB3C4 \uB420\uAE4C\uC694?"], answer: 0, explain: "\uACFC\uAC70\uC5D0 \uC774\uBBF8 \uD588\uB358 \uC77C\uC744 \uD655\uC778\uD560 \uB54C\uB3C4 '-\uC796\uC544\uC694'\uB97C \uC4F0\uC5B4\uC694." },
+            { id: "g2_3", set: "g2", prompt: "\uC774\uC720\uB97C \uBD80\uB4DC\uB7FD\uAC8C \uC81C\uC2DC\uD560 \uB54C \uAC00\uC7A5 \uC790\uC5F0\uC2A4\uB7EC\uC6B4 \uBB38\uC7A5\uC740?", choices: ["\uC9C0\uAE08 \uBE44 \uC624\uC796\uC544\uC694. \uC6B0\uC0B0 \uAC00\uC838\uAC00\uC694.", "\uC9C0\uAE08 \uBE44 \uC624\uBA74 \uC88B\uACA0\uC5B4\uC694.", "\uC9C0\uAE08 \uBE44 \uC624\uC790\uB9C8\uC790 \uAC00\uC694.", "\uC9C0\uAE08 \uBE44 \uC624\uACE0 \uC2F6\uC5B4\uC694."], answer: 0, explain: "\uD604\uC7AC \uC0C1\uD669\uC744 \uACF5\uC720\uD558\uBA74\uC11C \uC774\uC720\uB97C \uB9D0\uD560 \uB54C \uD6A8\uACFC\uC801\uC778 \uD615\uD0DC\uC608\uC694." },
+            { id: "g2_4", set: "g2", prompt: "\uC0C1\uB300\uC758 \uC2B5\uAD00\uC744 \uC0C1\uAE30\uD558\uB294 \uD45C\uD604\uC740?", choices: ["\uBBFC\uC218 \uC528 \uC6D0\uB798 \uB2A6\uC796\uC544\uC694.", "\uBBFC\uC218 \uC528 \uC9C0\uAE08 \uB2A6\uACE0 \uC2F6\uC5B4\uC694.", "\uBBFC\uC218 \uC528 \uB2A6\uACE0 \uC2F6\uC5B4\uD588\uC5B4\uC694.", "\uBBFC\uC218 \uC528 \uB2A6\uC744 \uAC83 \uAC19\uC544\uC694."], answer: 0, explain: "\uC2B5\uAD00\uC801\uC73C\uB85C \uADF8\uB7AC\uB358 \uC810\uC744 \uBD80\uB4DC\uB7FD\uAC8C \uC9DA\uC744 \uC218 \uC788\uC5B4\uC694." },
+            { id: "g2_5", set: "g2", prompt: "\uC774\uBBF8 \uC124\uBA85\uD55C \uB0B4\uC6A9\uC744 \uB2E4\uC2DC \uD655\uC778\uD560 \uB54C?", choices: ["\uC544\uAE4C \uC120\uC0DD\uB2D8\uC774 \uC124\uBA85\uD558\uC168\uC796\uC544\uC694.", "\uC544\uAE4C \uC120\uC0DD\uB2D8\uC774 \uC124\uBA85\uD558\uC2ED\uC2DC\uC624.", "\uC544\uAE4C \uC120\uC0DD\uB2D8\uC774 \uC124\uBA85\uD558\uC2E4\uAE4C\uC694?", "\uC544\uAE4C \uC120\uC0DD\uB2D8\uC774 \uC124\uBA85\uD558\uB098\uC694?"], answer: 0, explain: "\uC774\uBBF8 \uACF5\uC720\uB41C \uC815\uBCF4\uB97C \uC0C1\uAE30\uD558\uB294 \uC804\uD615\uC801\uC778 \uD6A9\uBC95\uC785\uB2C8\uB2E4." },
+
+            { id: "g3_1", set: "g3", prompt: "\uB0B4\uB144\uC5D0 \uD55C\uAD6D\uC5D0 ____.", choices: ["\uC720\uD559\uD560 \uACC4\uD68D\uC774\uC5D0\uC694", "\uC720\uD559\uD558\uACE0 \uC2F6\uC5B4\uC694", "\uC720\uD559\uD588\uC5B4\uC694", "\uC720\uD559\uD558\uC790\uB9C8\uC790"], answer: 0, explain: "\uBBF8\uB798 \uACC4\uD68D\uC744 \uB9D0\uD560 \uB54C\uB294 'V-(\uC73C)\u3139 \uACC4\uD68D\uC774\uB2E4'\uB97C \uC4F0\uC138\uC694." },
+            { id: "g3_2", set: "g3", prompt: "\uC624\uB298 \uBC24\uC740 \uC77C\uCC0D ____.", choices: ["\uC798 \uC0DD\uAC01\uC774\uC5D0\uC694", "\uC790\uACE0 \uC2F6\uC5B4\uC694", "\uC790\uC558\uC5B4\uC694", "\uC790\uBA74 \uB420\uAE4C\uC694"], answer: 0, explain: "\uAC1C\uC778\uC758 \uC758\uB3C4\uB97C \uB9D0\uD560 \uB54C\uB294 'V-(\uC73C)\u3139 \uC0DD\uAC01\uC774\uB2E4'\uAC00 \uC790\uC5F0\uC2A4\uB7FD\uC2B5\uB2C8\uB2E4." },
+            { id: "g3_3", set: "g3", prompt: "\uC624\uD6C4\uC5D0 \uBE44\uAC00 ____.", choices: ["\uC62C \uC608\uC815\uC774\uC5D0\uC694", "\uC640\uC11C \uC88B\uACA0\uC5B4\uC694", "\uC624\uBA74 \uB420\uAE4C\uC694", "\uC654\uC5B4\uC694"], answer: 0, explain: "\uC608\uC0C1\uB418\uB294 \uC77C\uC815\uC744 \uB9D0\uD560 \uB54C\uB294 '\uC608\uC815\uC774\uB2E4'\uB97C \uC0AC\uC6A9\uD574\uC694." },
+            { id: "g3_4", set: "g3", prompt: "\uC878\uC5C5 \uD6C4 \uD68C\uC0AC\uC5D0 ____.", choices: ["\uCDE8\uC9C1\uD560 \uACC4\uD68D\uC785\uB2C8\uB2E4", "\uCDE8\uC9C1\uD558\uACE0 \uC2F6\uC5C8\uC5B4\uC694", "\uCDE8\uC9C1\uD588\uC5C8\uC5B4\uC694", "\uCDE8\uC9C1\uD574\uC57C \uD588\uC5B4\uC694"], answer: 0, explain: "\uC7A5\uAE30 \uC9C4\uB85C \uACC4\uD68D\uC740 '\uACC4\uD68D\uC785\uB2C8\uB2E4' \uD615\uD0DC\uB85C \uD45C\uD604\uD569\uB2C8\uB2E4." },
+            { id: "g3_5", set: "g3", prompt: "\uC8FC\uB9D0\uC5D0 \uCE5C\uAD6C\uB97C ____.", choices: ["\uB9CC\uB0A0 \uC0DD\uAC01\uC774\uC5D0\uC694", "\uB9CC\uB098\uC11C \uC88B\uC544\uC694", "\uB9CC\uB0AC\uC5B4\uC694", "\uB9CC\uB0AC\uC5C8\uC5B4\uC694"], answer: 0, explain: "\uAC00\uAE4C\uC6B4 \uBBF8\uB798 \uC608\uC815\uC740 'V-(\uC73C)\u3139 \uC0DD\uAC01\uC774\uB2E4'\uB85C \uB9D0\uD574\uC694." },
+
+            { id: "g4_1", set: "g4", prompt: "\uD55C\uAD6D\uC5B4\uB97C \uC6D0\uC5B4\uBBFC\uCC98\uB7FC \uB9D0\uD558____ \uC544\uC9C1 ____.", choices: ["\uB824\uBA74 \uBA40\uC5C8\uC5B4\uC694", "\uBA74 \uC88B\uACA0\uC5B4\uC694", "\uACE0 \uC2F6\uC5B4\uC694", "\uC790\uB9C8\uC790 \uD588\uC5B4\uC694"], answer: 0, explain: "\uBAA9\uD45C\uAE4C\uC9C0 \uC544\uC9C1 \uBA40\uC5C8\uC74C\uC744 \uB9D0\uD560 \uB54C\uB294 'V-(\uC73C)\uB824\uBA74 \uBA40\uC5C8\uB2E4'\uB97C \uC4F0\uC138\uC694." },
+            { id: "g4_2", set: "g4", prompt: "\uB9C8\uB77C\uD1A4\uC744 \uC644\uC8FC\uD558____ \uC81C \uCCB4\uB825\uC740 \uC544\uC9C1 ____.", choices: ["\uB824\uBA74 \uBA40\uC5C8\uC5B4\uC694", "\uBA70 \uD558\uACE0 \uC2F6\uC5B4\uC694", "\uACE0 \uC788\uC5C8\uC5B4\uC694", "\uBA74 \uC88B\uACA0\uC5B4\uC694"], answer: 0, explain: "\uD604\uC7AC \uC0C1\uD0DC\uAC00 \uBAA9\uD45C\uC5D0 \uD55C\uCC38 \uBBF8\uCE60 \uB54C \uC774 \uAD6C\uBB38\uC744 \uC0AC\uC6A9\uD569\uB2C8\uB2E4." },
+            { id: "g4_3", set: "g4", prompt: "\uB3C5\uB9BD\uD558____ \uC544\uC9C1 ____.", choices: ["\uB824\uBA74 \uBA40\uC5C8\uC5B4", "\uACE0 \uC2F6\uC5B4\uC11C", "\uBA74 \uB9DE\uC544\uC694", "\uC790\uB9C8\uC790 \uD588\uC5B4"], answer: 0, explain: "\uAD6C\uC5B4\uCCB4\uC5D0\uC11C\uB3C4 \uAC19\uC740 \uD328\uD134\uC73C\uB85C \uC4F8 \uC218 \uC788\uC5B4\uC694." },
+            { id: "g4_4", set: "g4", prompt: "\uAC74\uAC15\uC744 \uC644\uC804\uD788 \uD68C\uBCF5\uD558____ \uC544\uC9C1 ____.", choices: ["\uB824\uBA74 \uBA40\uC5C8\uC5B4\uC694", "\uACE0 \uC2F6\uC5C8\uC5B4\uC694", "\uBA74 \uB420 \uAC70\uC608\uC694", "\uC790\uB9C8\uC790 \uC88B\uC544\uC694"], answer: 0, explain: "\uC644\uC804\uD55C \uBAA9\uD45C \uB3C4\uB2EC\uC774 \uBA40\uC5C8\uC744 \uB54C \uC4F0\uB294 \uD45C\uD604\uC785\uB2C8\uB2E4." },
+            { id: "g4_5", set: "g4", prompt: "\uC9D1\uC744 \uC0AC\uAE30 \uC704\uD574 \uB3C8\uC744 \uBAA8\uC73C____ \uC544\uC9C1 ____.", choices: ["\uB824\uBA74 \uBA40\uC5C8\uC5B4\uC694", "\uACE0 \uC788\uC5C8\uC5B4\uC694", "\uBA74 \uB2E4 \uB3FC\uC694", "\uC790\uB9C8\uC790 \uC0AC\uC694"], answer: 0, explain: "\uBAA9\uD45C\uC5D0 \uD544\uC694\uD55C \uC870\uAC74\uC774 \uB9CE\uC774 \uB0A8\uC544 \uC788\uC744 \uB54C\uB3C4 \uC774 \uD45C\uD604\uC744 \uC4F0\uC138\uC694." }
+        ];
+
+        const state = {
+            set: "all",
+            questions: [],
+            index: 0,
+            score: 0,
+            answered: false,
+            wrongIds: []
+        };
+
+        const el = {
+            setButtons: document.getElementById("set-buttons"),
+            progressText: document.getElementById("progress-text"),
+            scoreText: document.getElementById("score-text"),
+            questionSet: document.getElementById("question-set"),
+            questionText: document.getElementById("question-text"),
+            choices: document.getElementById("choices"),
+            feedback: document.getElementById("feedback"),
+            nextBtn: document.getElementById("next-btn"),
+            quizCard: document.getElementById("quiz-card"),
+            resultCard: document.getElementById("result-card"),
+            resultTitle: document.getElementById("result-title"),
+            resultSummary: document.getElementById("result-summary"),
+            bestSummary: document.getElementById("best-summary"),
+            retryBtn: document.getElementById("retry-btn"),
+            wrongOnlyBtn: document.getElementById("wrong-only-btn")
+        };
+
+        function shuffle(list) {
+            const arr = [...list];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function normalizeSet(setName) {
+            const allowed = new Set(["all", "g1", "g2", "g3", "g4"]);
+            return allowed.has(setName) ? setName : "all";
+        }
+
+        function getSetLabel(setName) {
+            return UI.labels[setName] || UI.labels.all;
+        }
+
+        function getQuestionsForSet(setName) {
+            if (setName === "all") return QUESTIONS;
+            return QUESTIONS.filter((q) => q.set === setName);
+        }
+
+        function updateBestScore() {
+            const key = `korean3b.grammar-quiz.best.${state.set}`;
+            const best = Number(localStorage.getItem(key) || "0");
+            const current = state.questions.length === 0 ? 0 : Math.round((state.score / state.questions.length) * 100);
+            const nextBest = Math.max(best, current);
+            localStorage.setItem(key, String(nextBest));
+            return { best: nextBest, current };
+        }
+
+        function startQuiz(setName, customQuestions) {
+            state.set = normalizeSet(setName);
+            const pool = customQuestions && customQuestions.length > 0 ? customQuestions : getQuestionsForSet(state.set);
+            state.questions = shuffle(pool);
+            state.index = 0;
+            state.score = 0;
+            state.answered = false;
+            state.wrongIds = [];
+
+            el.resultCard.classList.add("hidden");
+            el.quizCard.classList.remove("hidden");
+            renderSetButtons();
+            renderQuestion();
+        }
+
+        function renderSetButtons() {
+            el.setButtons.innerHTML = "";
+            ["all", "g1", "g2", "g3", "g4"].forEach((setName) => {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "set-btn px-3 py-2 rounded-lg border border-slate-600 text-slate-200 text-sm font-semibold hover:border-blue-500";
+                if (state.set === setName) btn.classList.add("active");
+                btn.textContent = getSetLabel(setName);
+                btn.addEventListener("click", () => startQuiz(setName));
+                el.setButtons.appendChild(btn);
+            });
+        }
+
+        function renderQuestion() {
+            const total = state.questions.length;
+            if (total === 0) {
+                el.questionSet.textContent = "";
+                el.questionText.textContent = "\uBB38\uC81C\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.";
+                el.choices.innerHTML = "";
+                return;
+            }
+
+            const q = state.questions[state.index];
+            el.progressText.textContent = `\uBB38\uC81C ${state.index + 1} / ${total}`;
+            el.scoreText.textContent = `\uD604\uC7AC \uC810\uC218: ${state.score}`;
+            el.questionSet.textContent = getSetLabel(q.set);
+            el.questionText.textContent = q.prompt;
+            el.feedback.classList.add("hidden");
+            el.feedback.innerHTML = "";
+            el.nextBtn.classList.add("hidden");
+            state.answered = false;
+
+            el.choices.innerHTML = "";
+            q.choices.forEach((choice, index) => {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "choice-btn text-left w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-900/60 hover:border-blue-500";
+                btn.textContent = choice;
+                btn.addEventListener("click", () => handleChoice(index));
+                el.choices.appendChild(btn);
+            });
+        }
+
+        function handleChoice(choiceIndex) {
+            if (state.answered) return;
+            state.answered = true;
+
+            const q = state.questions[state.index];
+            const choiceButtons = Array.from(el.choices.querySelectorAll("button"));
+            const isCorrect = choiceIndex === q.answer;
+
+            choiceButtons.forEach((btn, idx) => {
+                if (idx === q.answer) btn.classList.add("correct");
+                if (idx === choiceIndex && !isCorrect) btn.classList.add("wrong");
+                btn.disabled = true;
+            });
+
+            if (isCorrect) {
+                state.score += 1;
+            } else {
+                state.wrongIds.push(q.id);
+            }
+
+            el.feedback.classList.remove("hidden");
+            el.feedback.className = "rounded-xl border p-4 text-sm " + (isCorrect
+                ? "border-green-500 bg-green-900/30 text-green-200"
+                : "border-red-500 bg-red-900/30 text-red-200");
+            el.feedback.innerHTML = `<strong>${isCorrect ? "\uC815\uB2F5" : "\uC624\uB2F5"}</strong><br>${q.explain}`;
+            el.nextBtn.classList.remove("hidden");
+            el.scoreText.textContent = `\uD604\uC7AC \uC810\uC218: ${state.score}`;
+        }
+
+        function nextQuestion() {
+            if (!state.answered) return;
+            if (state.index < state.questions.length - 1) {
+                state.index += 1;
+                renderQuestion();
+                return;
+            }
+            showResult();
+        }
+
+        function showResult() {
+            el.quizCard.classList.add("hidden");
+            el.resultCard.classList.remove("hidden");
+
+            const total = state.questions.length;
+            const { best, current } = updateBestScore();
+            const wrongCount = total - state.score;
+
+            el.resultTitle.textContent = "\uC644\uB8CC! \uACB0\uACFC\uB97C \uD655\uC778\uD558\uC138\uC694.";
+            el.resultSummary.textContent = `\uCD1D ${total}\uBB38\uC81C \uC911 ${state.score}\uBB38\uC81C \uC815\uB2F5 (${current}%) | \uC624\uB2F5 ${wrongCount}\uBB38\uC81C`;
+            el.bestSummary.textContent = `\uCD5C\uACE0 \uAE30\uB85D (${getSetLabel(state.set)}): ${best}%`;
+
+            el.wrongOnlyBtn.disabled = state.wrongIds.length === 0;
+            if (el.wrongOnlyBtn.disabled) {
+                el.wrongOnlyBtn.classList.add("opacity-50", "cursor-not-allowed");
+            } else {
+                el.wrongOnlyBtn.classList.remove("opacity-50", "cursor-not-allowed");
+            }
+        }
+
+        function retryWrongOnly() {
+            const wrongSet = QUESTIONS.filter((q) => state.wrongIds.includes(q.id));
+            if (wrongSet.length === 0) return;
+            startQuiz(state.set, wrongSet);
+        }
+
+        function init() {
+            const setParam = new URLSearchParams(window.location.search).get("set") || "all";
+            startQuiz(normalizeSet(setParam));
+            el.nextBtn.addEventListener("click", nextQuestion);
+            el.retryBtn.addEventListener("click", () => startQuiz(state.set));
+            el.wrongOnlyBtn.addEventListener("click", retryWrongOnly);
+        }
+
+        init();
+    </script>
+    <script src="../shared/learning-enhancements.js"></script>
+</body>
+</html>

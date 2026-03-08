@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>11과 학습 활동</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <style>
+        body { margin: 0; font-family: 'Noto Sans KR', sans-serif; background: linear-gradient(180deg, #eef2ff 0%, #f8fafc 100%); }
+        .c11-global-nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 16px;
+            box-sizing: border-box;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid #dbeafe;
+            backdrop-filter: blur(8px);
+        }
+        .c11-global-nav a {
+            color: #4f46e5;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .c11-divider { color: #cbd5e1; font-weight: 700; }
+        .card { background: rgba(255,255,255,0.95); border: 1px solid #e2e8f0; box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08); }
+        .lesson { transition: transform .2s ease, box-shadow .2s ease; }
+        .lesson:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(79,70,229,.15); }
+    </style>
+</head>
+<body>
+    <nav class="c11-global-nav">
+        <a href="../index.html">메인</a>
+        <span class="c11-divider">|</span>
+        <strong class="text-slate-700 text-sm">11과 목록</strong>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-4 py-6 sm:py-8">
+        <section class="card rounded-2xl p-5 sm:p-7">
+            <header class="text-center mb-6">
+                <h1 class="text-3xl font-black text-slate-800">11과 활동을 선택하세요</h1>
+                <p class="text-slate-600 mt-2">취업과 회사 생활 주제 학습</p>
+            </header>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <a href="vocabulary.html" class="lesson rounded-xl border border-blue-200 bg-blue-50 p-4 block">
+                    <p class="text-xs font-bold text-blue-600">어휘</p>
+                    <h2 class="mt-1 font-bold text-slate-800">어휘 카드 & 퀴즈</h2>
+                </a>
+                <a href="grammar1.html" class="lesson rounded-xl border border-emerald-200 bg-emerald-50 p-4 block">
+                    <p class="text-xs font-bold text-emerald-600">문법</p>
+                    <h2 class="mt-1 font-bold text-slate-800">문법 1</h2>
+                </a>
+                <a href="grammar2.html" class="lesson rounded-xl border border-emerald-200 bg-emerald-50 p-4 block">
+                    <p class="text-xs font-bold text-emerald-600">문법</p>
+                    <h2 class="mt-1 font-bold text-slate-800">문법 2</h2>
+                </a>
+                <a href="grammar3.html" class="lesson rounded-xl border border-emerald-200 bg-emerald-50 p-4 block">
+                    <p class="text-xs font-bold text-emerald-600">문법</p>
+                    <h2 class="mt-1 font-bold text-slate-800">문법 3</h2>
+                </a>
+                <a href="gram3-1.html" class="lesson rounded-xl border border-lime-200 bg-lime-50 p-4 block">
+                    <p class="text-xs font-bold text-lime-700">보조 연습</p>
+                    <h2 class="mt-1 font-bold text-slate-800">문법3 보조 1</h2>
+                </a>
+                <a href="gram3-2.html" class="lesson rounded-xl border border-lime-200 bg-lime-50 p-4 block">
+                    <p class="text-xs font-bold text-lime-700">보조 연습</p>
+                    <h2 class="mt-1 font-bold text-slate-800">문법3 보조 2</h2>
+                </a>
+                <a href="grammar-practice.html" class="lesson rounded-xl border border-indigo-200 bg-indigo-50 p-4 block">
+                    <p class="text-xs font-bold text-indigo-600">통합 연습</p>
+                    <h2 class="mt-1 font-bold text-slate-800">문법 통합 퀴즈</h2>
+                </a>
+                <a href="listen1.html" class="lesson rounded-xl border border-violet-200 bg-violet-50 p-4 block">
+                    <p class="text-xs font-bold text-violet-600">듣기</p>
+                    <h2 class="mt-1 font-bold text-slate-800">듣기 1 (Track 19)</h2>
+                </a>
+                <a href="listen2.html" class="lesson rounded-xl border border-violet-200 bg-violet-50 p-4 block">
+                    <p class="text-xs font-bold text-violet-600">듣기</p>
+                    <h2 class="mt-1 font-bold text-slate-800">듣기 2 (Track 20)</h2>
+                </a>
+                <a href="read.html" class="lesson rounded-xl border border-amber-200 bg-amber-50 p-4 block">
+                    <p class="text-xs font-bold text-amber-600">읽기</p>
+                    <h2 class="mt-1 font-bold text-slate-800">읽기 활동</h2>
+                </a>
+                <a href="conv2.html" class="lesson rounded-xl border border-orange-200 bg-orange-50 p-4 block">
+                    <p class="text-xs font-bold text-orange-600">말하기</p>
+                    <h2 class="mt-1 font-bold text-slate-800">말하기 2</h2>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <script src="../shared/learning-enhancements.js"></script>
+</body>
+</html>

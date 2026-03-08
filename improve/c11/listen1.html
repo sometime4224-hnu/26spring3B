@@ -1,0 +1,246 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 듣기 퀴즈</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .option-btn {
+            transition: all 0.2s;
+        }
+        .option-btn.correct {
+            background-color: #10b981; /* green-500 */
+            color: white;
+            border-color: #10b981;
+        }
+        .option-btn.incorrect {
+            background-color: #ef4444; /* red-500 */
+            color: white;
+            border-color: #ef4444;
+        }
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+    </style>
+    <style id="c11-global-nav-style">
+        body { margin: 0; }
+        .c11-global-nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 16px;
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.92);
+            border-bottom: 1px solid #dbeafe;
+            backdrop-filter: blur(8px);
+        }
+        .c11-global-nav a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 1;
+        }
+        .c11-divider {
+            color: #cbd5e1;
+            font-weight: 700;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4">
+    <nav class="c11-global-nav" aria-label="상단 이동">
+        <a href="../index.html">메인</a>
+        <span class="c11-divider">|</span>
+        <a href="index.html">11과 목록</a>
+    </nav>
+
+    <div class="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-6 sm:p-8">
+        <div class="text-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">🎧 한국어 듣기 퀴즈</h1>
+            <p class="text-gray-600">듣기 내용을 잘 듣고 질문에 답해 보세요.</p>
+        </div>
+
+        <!-- 오디오 플레이어 -->
+        <div class="audio-player bg-gray-50 p-4 rounded-lg mb-4">
+             <label for="audio-file" class="text-sm font-medium text-gray-700">Track 19 (음원)</label>
+             <audio id="audio-file" controls class="w-full mt-2">
+                 <source src="./track19.mp3" type="audio/mpeg">
+                 Your browser does not support the audio element.
+             </audio>
+        </div>
+
+        <!-- 스크립트 보기 -->
+        <div class="mb-6">
+            <button id="toggle-script-btn" class="w-full text-left text-indigo-600 font-semibold py-2 px-3 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition">
+                <i class="fas fa-file-alt mr-2"></i>스크립트 보기
+            </button>
+            <div id="script-content" class="hidden mt-3 bg-gray-50 p-4 rounded-lg text-sm space-y-2 border">
+                <p><strong>남:</strong> 안녕하세요?</p>
+                <p><strong>여:</strong> 어서 와요. 오늘은 첫날이니까 제가 하는 걸 보고 잘 따라하세요. 전에도 옷가게에서 일한 적이 있으니까 어렵지 않을 거예요.</p>
+                <p><strong>남:</strong> 네, 열심히 하겠습니다.</p>
+                <p><strong>여:</strong> 우선 마네킹이 입고 있는 옷을 벗기고 이 점퍼를 입혀 주세요.</p>
+                <p><strong>남:</strong> 네, 알겠습니다.</p>
+                <p><strong>여:</strong> 옷을 다 입히고 나서 이 모자도 좀 씌워 줄래요? 신발은 이 등산화로 갈아 신겨 주세요.</p>
+                <p><strong>남:</strong> 네, 알겠습니다.</p>
+                <p><strong>여:</strong> 다 했으면 이 포스터를 잘 보이는 데에 붙여 주세요.</p>
+                <p><strong>남:</strong> 가게 문 앞쪽에 붙일까요?</p>
+                <p><strong>여:</strong> 문보다는 저기 계산대 아래 붙이는 게 좋겠네요.</p>
+                <p><strong>남:</strong> 네.</p>
+                <p><strong>여:</strong> 저는 물건 가지러 창고에 좀 다녀올 테니까 무슨 일 생기면 연락하세요.</p>
+                <p><strong>남:</strong> 네, 걱정 마세요.</p>
+            </div>
+        </div>
+
+        <!-- 퀴즈 컨테이너 -->
+        <div id="quiz-container" class="space-y-8 border-t pt-6">
+            <!-- 퀴즈가 여기에 동적으로 생성됩니다. -->
+        </div>
+        
+        <!-- 결과 및 버튼 컨테이너 -->
+        <div class="border-t pt-6 text-center mt-6">
+             <div id="result-container" class="hidden mb-4">
+                <h2 class="text-2xl font-bold text-green-600">퀴즈 완료!</h2>
+                <p id="score-text" class="text-gray-700 text-lg mt-2"></p>
+            </div>
+            <button id="submit-btn" class="bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-indigo-700 transition duration-300 w-full sm:w-auto">결과 보기</button>
+            <button id="retry-btn" class="hidden bg-gray-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-700 transition duration-300 w-full sm:w-auto">다시 풀기</button>
+        </div>
+
+    </div>
+
+<script>
+    const quizData = [
+        {
+            question: "남자는 전에 어디에서 일했습니까?",
+            options: ["신발 가게", "옷가게", "모자 가게", "서점"],
+            answer: "옷가게"
+        },
+        {
+            question: "여자가 남자에게 가장 먼저 시킨 일은 무엇입니까?",
+            options: ["포스터 붙이기", "신발 갈아 신기기", "마네킹 옷 입히기", "창고 다녀오기"],
+            answer: "마네킹 옷 입히기"
+        },
+        {
+            question: "남자는 포스터를 어디에 붙여야 합니까?",
+            options: ["가게 문 앞", "창고 문", "계산대 아래", "마네킹 옆"],
+            answer: "계산대 아래"
+        },
+        {
+            question: "이 대화의 내용과 다른 것은 무엇입니까?",
+            options: [
+                "오늘은 남자가 일하는 첫날입니다.",
+                "남자는 마네킹에 모자를 씌워야 합니다.",
+                "여자는 창고에 물건을 가지러 갑니다.",
+                "남자는 마네킹에 등산화 대신 운동화를 신겨야 합니다."
+            ],
+            answer: "남자는 마네킹에 등산화 대신 운동화를 신겨야 합니다."
+        }
+    ];
+
+    let score = 0;
+    let questionsAnswered = 0;
+
+    const quizContainer = document.getElementById('quiz-container');
+    const resultContainer = document.getElementById('result-container');
+    const scoreText = document.getElementById('score-text');
+    const submitBtn = document.getElementById('submit-btn');
+    const retryBtn = document.getElementById('retry-btn');
+    const toggleScriptBtn = document.getElementById('toggle-script-btn');
+    const scriptContent = document.getElementById('script-content');
+
+    function loadAllQuizzes() {
+        quizContainer.innerHTML = '';
+        quizData.forEach((quiz, index) => {
+            const questionBlock = document.createElement('div');
+            questionBlock.id = `question-${index}`;
+            
+            const questionEl = document.createElement('h2');
+            questionEl.className = 'text-xl font-bold text-gray-800 mb-4';
+            questionEl.innerText = `Q${index + 1}. ${quiz.question}`;
+            
+            const optionsEl = document.createElement('div');
+            optionsEl.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
+            
+            quiz.options.forEach(optionText => {
+                const button = document.createElement('button');
+                button.innerText = optionText;
+                button.classList.add('option-btn', 'w-full', 'p-3', 'text-left', 'border-2', 'rounded-lg', 'hover:bg-gray-100');
+                button.addEventListener('click', () => checkAnswer(index, button, optionText, quiz.answer));
+                optionsEl.appendChild(button);
+            });
+
+            questionBlock.appendChild(questionEl);
+            questionBlock.appendChild(optionsEl);
+            quizContainer.appendChild(questionBlock);
+        });
+    }
+
+    function checkAnswer(questionIndex, button, selected, correct) {
+        const questionBlock = document.getElementById(`question-${questionIndex}`);
+        const optionButtons = questionBlock.querySelectorAll('.option-btn');
+        
+        // Prevent re-answering
+        if (optionButtons[0].disabled) return;
+
+        questionsAnswered++;
+
+        optionButtons.forEach(btn => {
+            btn.disabled = true;
+            if (btn.innerText === correct) {
+                btn.classList.add('correct');
+            }
+        });
+
+        if (selected === correct) {
+            score++;
+        } else {
+            button.classList.add('incorrect');
+        }
+    }
+
+    submitBtn.addEventListener('click', () => {
+        if (questionsAnswered < quizData.length) {
+            alert('모든 문제를 풀어주세요.');
+            return;
+        }
+        resultContainer.classList.remove('hidden');
+        scoreText.innerText = `총 ${quizData.length}문제 중 ${score}문제를 맞혔습니다!`;
+        submitBtn.classList.add('hidden');
+        retryBtn.classList.remove('hidden');
+    });
+
+    retryBtn.addEventListener('click', () => {
+        score = 0;
+        questionsAnswered = 0;
+        resultContainer.classList.add('hidden');
+        submitBtn.classList.remove('hidden');
+        retryBtn.classList.add('hidden');
+        loadAllQuizzes();
+    });
+
+    toggleScriptBtn.addEventListener('click', () => {
+        scriptContent.classList.toggle('hidden');
+        const isHidden = scriptContent.classList.contains('hidden');
+        toggleScriptBtn.innerHTML = isHidden ? '<i class="fas fa-file-alt mr-2"></i>스크립트 보기' : '<i class="fas fa-eye-slash mr-2"></i>스크립트 숨기기';
+    });
+
+    loadAllQuizzes();
+</script>
+
+    <script src="../shared/learning-enhancements.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,538 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Korean Grammar: -든지 vs -도 (Vietnamese Support)</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; touch-action: manipulation; }
+        .no-select { -webkit-user-select: none; user-select: none; }
+        .scroll-hidden::-webkit-scrollbar { display: none; }
+        .scroll-hidden { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+    <style id="c11-global-nav-style">
+        body { margin: 0; }
+        .c11-global-nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 16px;
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.92);
+            border-bottom: 1px solid #dbeafe;
+            backdrop-filter: blur(8px);
+        }
+        .c11-global-nav a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 1;
+        }
+        .c11-divider {
+            color: #cbd5e1;
+            font-weight: 700;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body class="bg-indigo-50 text-gray-800">
+    <nav class="c11-global-nav" aria-label="상단 이동">
+        <a href="../index.html">메인</a>
+        <span class="c11-divider">|</span>
+        <a href="index.html">11과 목록</a>
+    </nav>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const questions = [
+            {
+                id: 1,
+                sentence: "시간이 있으면 ____ 우리 집에 놀러 오세요.",
+                hint: "Nếu có thời gian hãy đến chơi nhà tôi (bất cứ lúc nào).",
+                wh: "언제",
+                suffix: "든지",
+                type: "positive"
+            },
+            {
+                id: 2,
+                sentence: "배가 너무 고파요. ____ 먹고 싶어요.",
+                hint: "Tôi đói quá. Tôi muốn ăn (bất cứ cái gì).",
+                wh: "무엇",
+                suffix: "든지",
+                type: "positive"
+            },
+            {
+                id: 3,
+                sentence: "그 문제는 너무 어려워서 ____ 풀 수 없었어요.",
+                hint: "Vấn đề đó quá khó nên (không ai) giải được.",
+                wh: "누구",
+                suffix: "도",
+                type: "negative"
+            },
+            {
+                id: 4,
+                sentence: "휴가 때 ____ 가고 싶어요. 여행을 떠나고 싶어요.",
+                hint: "Kỳ nghỉ tôi muốn đi (bất cứ đâu). Tôi muốn đi du lịch.",
+                wh: "어디",
+                suffix: "든지",
+                type: "positive"
+            },
+            {
+                id: 5,
+                sentence: "방이 너무 캄캄해서 ____ 보이지 않아요.",
+                hint: "Phòng tối om nên không nhìn thấy (bất cứ cái gì).",
+                wh: "무엇", 
+                suffix: "도",
+                type: "negative"
+            },
+            {
+                id: 6,
+                sentence: "이 파티에는 ____ 올 수 있습니다. 환영합니다!",
+                hint: "(Bất cứ ai) cũng có thể đến bữa tiệc này. Hoan nghênh!",
+                wh: "누구",
+                suffix: "든지",
+                type: "positive"
+            },
+            {
+                id: 7,
+                sentence: "다리를 다쳐서 ____ 갈 수 없어요.",
+                hint: "Tôi bị đau chân nên không thể đi (bất cứ đâu).",
+                wh: "어디",
+                suffix: "도",
+                type: "negative"
+            },
+            {
+                id: 8,
+                sentence: "궁금한 것이 있으면 ____ 물어보세요.",
+                hint: "Nếu thắc mắc thì hãy hỏi (bất cứ điều gì).",
+                wh: "무엇",
+                suffix: "든지",
+                type: "positive"
+            },
+            {
+                id: 9,
+                sentence: "저는 매운 음식을 잘 먹어서 ____ 괜찮아요.",
+                hint: "Tôi ăn cay giỏi nên (bất cứ cái gì) cũng được.",
+                wh: "무엇",
+                suffix: "든지",
+                type: "positive"
+            },
+            {
+                id: 10,
+                sentence: "교실 문이 잠겨 있어서 ____ 들어갈 수 없었습니다.",
+                hint: "Cửa lớp học bị khóa nên (không ai) vào được.",
+                wh: "누구",
+                suffix: "도",
+                type: "negative"
+            },
+            {
+                id: 11,
+                sentence: "필요하면 ____ 전화해. 난 항상 깨어 있어.",
+                hint: "Nếu cần thì hãy gọi điện (bất cứ lúc nào). Tôi luôn thức.",
+                wh: "언제",
+                suffix: "든지",
+                type: "positive"
+            },
+            {
+                id: 12,
+                sentence: "____ 좋으니 편한 자리에 앉으세요.",
+                hint: "(Bất cứ chỗ nào) cũng được nên hãy ngồi vào chỗ thoải mái.",
+                wh: "어디",
+                suffix: "든지",
+                type: "positive"
+            }
+        ];
+
+        function App() {
+            // Views: 'home', 'quiz', 'result', 'history'
+            const [view, setView] = React.useState('home');
+            
+            // Quiz State
+            const [currentQIndex, setCurrentQIndex] = React.useState(0);
+            const [selectedWh, setSelectedWh] = React.useState(null);
+            const [selectedSuffix, setSelectedSuffix] = React.useState(null);
+            const [status, setStatus] = React.useState("waiting"); // waiting, correct, incorrect
+            const [score, setScore] = React.useState(0);
+            
+            // Log for current session
+            const [quizLog, setQuizLog] = React.useState([]); // [{qId, isCorrect, userAnswer, correctAnswer}]
+
+            // Persistent History
+            const [history, setHistory] = React.useState(() => {
+                const saved = localStorage.getItem('korean_grammar_history_v2');
+                return saved ? JSON.parse(saved) : [];
+            });
+
+            // Constants
+            const whList = ["누구", "언제", "어디", "무엇"];
+            const suffixList = [
+                { text: "든지", desc: "tất cả / bất cứ", meaning: "(có thể)" },
+                { text: "도", desc: "hoàn toàn không", meaning: "(phủ định)" }
+            ];
+            const currentQ = questions[currentQIndex];
+
+            // Helper: Combine Words
+            const getCombinedText = (wh, suf) => {
+                if (!wh || !suf) return "______";
+                if (wh === "무엇" && suf === "든지") return "무엇이든지";
+                return wh + suf;
+            };
+
+            // Actions
+            const startQuiz = () => {
+                setCurrentQIndex(0);
+                setScore(0);
+                setQuizLog([]);
+                setStatus("waiting");
+                setSelectedWh(null);
+                setSelectedSuffix(null);
+                setView('quiz');
+            };
+
+            const handleCheck = () => {
+                if (!selectedWh || !selectedSuffix) return;
+
+                const userAnswer = getCombinedText(selectedWh, selectedSuffix.text);
+                const correctAnswer = getCombinedText(currentQ.wh, currentQ.suffix);
+                const isCorrect = selectedWh === currentQ.wh && selectedSuffix.text === currentQ.suffix;
+
+                if (isCorrect) {
+                    setStatus("correct");
+                    setScore(s => s + 1);
+                } else {
+                    setStatus("incorrect");
+                }
+
+                // Add to log (prevent duplicates if user clicks multiple times, though UI prevents it)
+                if (status === 'waiting') {
+                    setQuizLog(prev => [...prev, {
+                        qId: currentQ.id,
+                        qIndex: currentQIndex + 1,
+                        isCorrect: isCorrect,
+                        userAnswer: userAnswer,
+                        correctAnswer: correctAnswer
+                    }]);
+                }
+            };
+
+            const handleNext = () => {
+                if (currentQIndex < questions.length - 1) {
+                    setCurrentQIndex(prev => prev + 1);
+                    setSelectedWh(null);
+                    setSelectedSuffix(null);
+                    setStatus("waiting");
+                } else {
+                    finishQuiz();
+                }
+            };
+
+            const finishQuiz = () => {
+                const newRecord = {
+                    id: Date.now(),
+                    date: new Date().toLocaleString('ko-KR'),
+                    score: score,
+                    total: questions.length,
+                    details: quizLog
+                };
+                
+                // Add last question log if needed (state update might be async, but usually safe here as status changes)
+                // Actually handleCheck adds to log. The log state is updated for next render.
+                // We need to ensure the last answer is included.
+                // Since handleNext is called after handleCheck, quizLog should be updated.
+                
+                const updatedHistory = [newRecord, ...history];
+                setHistory(updatedHistory);
+                localStorage.setItem('korean_grammar_history_v2', JSON.stringify(updatedHistory));
+                setView('result');
+            };
+
+            const goHome = () => {
+                setView('home');
+            };
+
+            const clearHistory = () => {
+                if(confirm("정말로 모든 기록을 삭제하시겠습니까? (Bạn có chắc chắn muốn xóa tất cả lịch sử không?)")) {
+                    setHistory([]);
+                    localStorage.removeItem('korean_grammar_history_v2');
+                }
+            };
+
+            // --- VIEW: HOME ---
+            if (view === 'home') {
+                return (
+                    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-indigo-50 no-select">
+                        <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-sm text-center">
+                            <div className="text-5xl mb-4">🇰🇷🇻🇳</div>
+                            <h1 className="text-2xl font-bold text-indigo-900 mb-2">한국어 문법 연습</h1>
+                            <p className="text-gray-500 mb-8 font-medium">Luyện tập ngữ pháp tiếng Hàn<br/>(-든지 vs -도)</p>
+                            
+                            <button onClick={startQuiz} className="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-indigo-700 shadow-md mb-4 transition transform active:scale-95">
+                                시작하기 (Bắt đầu)
+                            </button>
+                            
+                            {history.length > 0 && (
+                                <button onClick={() => setView('history')} className="w-full bg-white text-indigo-600 border-2 border-indigo-100 py-4 rounded-xl font-bold text-lg hover:bg-indigo-50 shadow-sm transition transform active:scale-95">
+                                    기록 보기 (Lịch sử)
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                );
+            }
+
+            // --- VIEW: HISTORY ---
+            if (view === 'history') {
+                return (
+                    <div className="min-h-screen flex flex-col p-4 bg-indigo-50 no-select">
+                        <div className="w-full max-w-md mx-auto flex-1 flex flex-col">
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-xl font-bold text-gray-800">나의 기록 (Lịch sử)</h2>
+                                <button onClick={goHome} className="text-sm bg-white px-3 py-1.5 rounded-lg border shadow-sm">
+                                    🏠 홈 (Home)
+                                </button>
+                            </div>
+
+                            <div className="flex-1 overflow-y-auto space-y-3 pb-4 scroll-hidden">
+                                {history.map((record) => (
+                                    <div key={record.id} className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                                        <div className="flex justify-between items-start mb-3">
+                                            <span className="text-xs text-gray-400 font-mono">{record.date}</span>
+                                            <span className={`font-bold text-lg ${record.score >= 10 ? 'text-green-600' : 'text-indigo-600'}`}>
+                                                {record.score} / {record.total}
+                                            </span>
+                                        </div>
+                                        {/* Simple summary grid */}
+                                        <div className="grid grid-cols-6 gap-1">
+                                            {record.details && record.details.map((log) => (
+                                                <div key={log.qId} className={`h-1.5 rounded-full ${log.isCorrect ? 'bg-green-400' : 'bg-red-300'}`}></div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <button onClick={clearHistory} className="mt-4 w-full py-3 text-red-400 text-sm font-medium hover:text-red-600">
+                                기록 삭제 (Xóa lịch sử)
+                            </button>
+                        </div>
+                    </div>
+                );
+            }
+
+            // --- VIEW: RESULT ---
+            if (view === 'result') {
+                return (
+                    <div className="min-h-screen bg-indigo-50 p-4 overflow-y-auto">
+                        <div className="max-w-md mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+                            {/* Header Section */}
+                            <div className="bg-indigo-600 p-6 text-center text-white">
+                                <h2 className="text-2xl font-bold mb-1">결과 (Kết quả)</h2>
+                                <p className="text-indigo-100 text-sm mb-4">수고했습니다! (Vất vả rồi!)</p>
+                                <div className="text-6xl font-bold mb-2">{score} <span className="text-2xl font-normal opacity-70">/ {questions.length}</span></div>
+                            </div>
+
+                            {/* Teacher Instruction */}
+                            <div className="bg-yellow-50 border-b border-yellow-100 p-4 text-center">
+                                <p className="text-red-600 font-bold text-sm leading-relaxed">
+                                    ⚠️ 선생님 확인용 (Dành cho giáo viên)<br/>
+                                    <span className="text-gray-800 text-lg">"Sau khi làm xong, hãy đưa màn hình này cho giáo viên xem."</span>
+                                </p>
+                            </div>
+
+                            {/* Detailed Table */}
+                            <div className="p-4">
+                                <h3 className="font-bold text-gray-700 mb-3 text-sm">상세 결과 (Chi tiết)</h3>
+                                <div className="border rounded-xl overflow-hidden text-sm">
+                                    <div className="grid grid-cols-12 bg-gray-100 border-b p-2 font-bold text-gray-600 text-center">
+                                        <div className="col-span-2">#</div>
+                                        <div className="col-span-7">답안 (Trả lời)</div>
+                                        <div className="col-span-3">O/X</div>
+                                    </div>
+                                    {quizLog.map((log, idx) => (
+                                        <div key={idx} className={`grid grid-cols-12 p-3 border-b last:border-0 items-center ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                                            <div className="col-span-2 text-center font-bold text-gray-500">{log.qIndex}</div>
+                                            <div className="col-span-7 pl-2">
+                                                <span className={`${log.isCorrect ? 'text-gray-800' : 'text-red-500 line-through'}`}>
+                                                    {log.userAnswer}
+                                                </span>
+                                                {!log.isCorrect && (
+                                                    <div className="text-xs text-green-600 mt-1">
+                                                        → {log.correctAnswer}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="col-span-3 text-center">
+                                                {log.isCorrect 
+                                                    ? <span className="text-green-500 font-bold text-lg">⭕</span> 
+                                                    : <span className="text-red-500 font-bold text-lg">❌</span>}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Footer Actions */}
+                            <div className="p-4 bg-gray-50 border-t">
+                                <button 
+                                    onClick={goHome}
+                                    className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition"
+                                >
+                                    처음으로 (Về trang chủ)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            // --- VIEW: QUIZ (Existing Game UI) ---
+            return (
+                <div className="min-h-screen flex flex-col py-4 px-3 max-w-md mx-auto no-select">
+                    {/* Header */}
+                    <header className="flex justify-between items-center mb-4 px-1">
+                        <button onClick={goHome} className="text-gray-400 text-sm hover:text-gray-600">
+                             ← Home
+                        </button>
+                        <div className="bg-white px-3 py-1 rounded-lg shadow-sm border border-indigo-100">
+                            <span className="text-xs text-gray-400 mr-2">Score</span>
+                            <span className="text-lg font-bold text-indigo-600">{score}/{questions.length}</span>
+                        </div>
+                    </header>
+
+                    {/* Progress Bar */}
+                    <div className="w-full bg-indigo-100 rounded-full h-2 mb-6">
+                        <div 
+                            className="bg-indigo-500 h-2 rounded-full transition-all duration-300" 
+                            style={{ width: `${((currentQIndex + 1) / questions.length) * 100}%` }}
+                        ></div>
+                    </div>
+
+                    {/* Question Card */}
+                    <div className="bg-white rounded-2xl shadow-lg p-5 w-full mb-6 relative border-l-4 border-indigo-500 flex flex-col justify-center min-h-[180px]">
+                        <div className="absolute top-3 right-3 text-xs font-bold text-gray-300">Q.{currentQIndex + 1}</div>
+                        
+                        <div className="text-xl sm:text-2xl font-bold text-gray-800 leading-relaxed text-center mb-3 break-keep">
+                            {currentQ.sentence.split('____')[0]}
+                            <span className={`inline-block border-b-2 px-1 mx-1 transition-colors duration-300 min-w-[60px] text-center
+                                ${status === 'correct' ? 'border-green-500 text-green-600 bg-green-50 rounded' : 
+                                  status === 'incorrect' ? 'border-red-500 text-red-600 bg-red-50 rounded' : 'border-indigo-300 text-indigo-600'}
+                            `}>
+                                {status === 'waiting' ? getCombinedText(selectedWh, selectedSuffix?.text) : getCombinedText(currentQ.wh, currentQ.suffix)}
+                            </span>
+                            {currentQ.sentence.split('____')[1]}
+                        </div>
+
+                        <div className="text-center">
+                            <span className="inline-block bg-indigo-50 text-indigo-600 text-xs sm:text-sm px-3 py-1.5 rounded-full font-medium">
+                                🇻🇳 {currentQ.hint}
+                            </span>
+                        </div>
+                        
+                        {status === 'incorrect' && (
+                             <div className="mt-3 text-center text-xs text-red-500 font-medium bg-red-50 p-2 rounded">
+                                정답: <strong>{getCombinedText(currentQ.wh, currentQ.suffix)}</strong>
+                                <br/>
+                                {currentQ.type === 'positive' ? "'-든지': bất cứ (khẳng định)" : "'-도': hoàn toàn (phủ định)"}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Controls Area */}
+                    <div className="flex-1 flex flex-col justify-end space-y-4 pb-4">
+                        <div>
+                            <p className="text-xs font-bold text-gray-500 mb-1.5 flex items-center">
+                                <span className="bg-gray-200 text-gray-600 rounded-full w-5 h-5 inline-flex items-center justify-center mr-1.5">1</span>
+                                의문사 (Từ để hỏi)
+                            </p>
+                            <div className="grid grid-cols-4 gap-2">
+                                {whList.map(wh => (
+                                    <button
+                                        key={wh}
+                                        disabled={status !== 'waiting'}
+                                        onClick={() => setSelectedWh(wh)}
+                                        className={`py-3 rounded-xl font-bold text-base transition-all touch-manipulation
+                                            ${selectedWh === wh 
+                                                ? 'bg-indigo-600 text-white shadow-md transform scale-105' 
+                                                : 'bg-white text-gray-600 border-b-2 border-gray-200 active:bg-gray-50'}
+                                            ${status !== 'waiting' && wh !== currentQ.wh ? 'opacity-30' : ''}
+                                        `}
+                                    >
+                                        {wh}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div>
+                            <p className="text-xs font-bold text-gray-500 mb-1.5 flex items-center">
+                                <span className="bg-gray-200 text-gray-600 rounded-full w-5 h-5 inline-flex items-center justify-center mr-1.5">2</span>
+                                조사 (Tiểu từ)
+                            </p>
+                            <div className="grid grid-cols-2 gap-3">
+                                {suffixList.map(suf => (
+                                    <button
+                                        key={suf.text}
+                                        disabled={status !== 'waiting'}
+                                        onClick={() => setSelectedSuffix(suf)}
+                                        className={`py-3 px-2 rounded-xl flex items-center justify-between transition-all touch-manipulation border-b-2
+                                            ${selectedSuffix?.text === suf.text 
+                                                ? 'bg-purple-600 text-white shadow-md border-purple-800' 
+                                                : 'bg-white text-gray-600 border-gray-200 active:bg-gray-50'}
+                                            ${status !== 'waiting' && suf.text !== currentQ.suffix ? 'opacity-30' : ''}
+                                        `}
+                                    >
+                                        <span className="text-lg font-bold ml-2">-{suf.text}</span>
+                                        <span className={`text-xs mr-2 ${selectedSuffix?.text === suf.text ? 'text-purple-200' : 'text-gray-400'}`}>
+                                            {suf.desc}
+                                        </span>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="h-16 mt-2">
+                            {status === 'waiting' ? (
+                                <button 
+                                    onClick={handleCheck}
+                                    disabled={!selectedWh || !selectedSuffix}
+                                    className={`w-full h-full rounded-2xl font-bold text-lg transition-all shadow-md flex items-center justify-center
+                                        ${(!selectedWh || !selectedSuffix) 
+                                            ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+                                            : 'bg-green-500 text-white hover:bg-green-600 active:scale-95'}
+                                    `}
+                                >
+                                    확인 (Kiểm tra)
+                                </button>
+                            ) : (
+                                <button 
+                                    onClick={handleNext}
+                                    className={`w-full h-full rounded-2xl font-bold text-lg text-white shadow-md flex items-center justify-center active:scale-95 transition-all
+                                        ${status === 'correct' ? 'bg-blue-600' : 'bg-gray-700'}
+                                    `}
+                                >
+                                    {currentQIndex < questions.length - 1 ? '다음 문제 (Tiếp theo) →' : '결과 보기 (Xem kết quả)'}
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+    <script src="../shared/learning-enhancements.js"></script>
+</body>
+</html>

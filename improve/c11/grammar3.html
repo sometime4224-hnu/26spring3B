@@ -1,0 +1,220 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 문법 학습</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .input-group label {
+            min-width: 150px;
+            font-weight: bold;
+            color: #4b5563;
+        }
+        .input-group input {
+            flex: 1;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            transition: border-color 0.3s;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+        .btn-check-all {
+            background-color: #10b981;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .btn-check-all:hover {
+            background-color: #059669;
+        }
+        .correct {
+            border-color: #10b981 !important;
+        }
+        .incorrect {
+            border-color: #ef4444 !important;
+        }
+        .result-box {
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+    <style id="c11-global-nav-style">
+        body { margin: 0; }
+        .c11-global-nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 16px;
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.92);
+            border-bottom: 1px solid #dbeafe;
+            backdrop-filter: blur(8px);
+        }
+        .c11-global-nav a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 1;
+        }
+        .c11-divider {
+            color: #cbd5e1;
+            font-weight: 700;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen p-4">
+    <nav class="c11-global-nav" aria-label="상단 이동">
+        <a href="../index.html">메인</a>
+        <span class="c11-divider">|</span>
+        <a href="index.html">11과 목록</a>
+    </nav>
+    <div class="container p-4">
+        <div class="card">
+            <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">한국어 문법 연습: -든지</h1>
+            
+            <div class="space-y-10">
+                <!-- Section 1: 무엇이든지 -->
+                <div>
+                    <h2 class="text-2xl font-semibold mb-4 text-blue-600">1. 무엇이든지</h2>
+                    <p class="mb-4 text-gray-600">
+                        '무엇이든지'는 '뭐든지 괜찮아요'라는 뜻이에요. 질문에 있는 단어를 사용하지 않고, '어떤 것이라도 다 좋아요'라고 말할 때 씁니다.
+                    </p>
+                    <div class="space-y-4" id="muot-section">
+                        <div class="input-group flex-col md:flex-row items-start md:items-center">
+                            <label>질문: 뭐 먹고 싶어요?</label>
+                            <input type="text" id="muot1" class="w-full mt-2 md:mt-0" placeholder="무엇이든지 잘 먹어요.">
+                        </div>
+                        <div class="input-group flex-col md:flex-row items-start md:items-center">
+                            <label>질문: 지금 뭘 해야 해요?</label>
+                            <input type="text" id="muot2" class="w-full mt-2 md:mt-0" placeholder="무엇이든지 열심히 할게요.">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: 무슨 N(이)든지 -->
+                <div>
+                    <h2 class="text-2xl font-semibold mb-4 text-green-600">2. 무슨 N(이)든지</h2>
+                    <p class="mb-4 text-gray-600">
+                        '무슨 N(이)든지'는 '어떤 명사(N)라도 괜찮다'는 뜻이에요. 질문에 있는 명사(N)를 그대로 사용해서 말할 때 씁니다.
+                    </p>
+                    <div class="space-y-4" id="musuen-section">
+                        <div class="input-group flex-col md:flex-row items-start md:items-center">
+                            <label>질문: 무슨 요일에 만날까요?</label>
+                            <input type="text" id="musuen1" class="w-full mt-2 md:mt-0" placeholder="무슨 요일이든지 괜찮아요.">
+                        </div>
+                        <div class="input-group flex-col md:flex-row items-start md:items-center">
+                            <label>질문: 무슨 음악 들을까요?</label>
+                            <input type="text" id="musuen2" class="w-full mt-2 md:mt-0" placeholder="무슨 음악이든지 다 좋아요.">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center">
+                <button id="checkButton" class="btn-check-all">정답 확인</button>
+            </div>
+
+            <div id="result" class="result-box mt-6" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const answers = {
+                'muot1': ['무엇이든지 잘 먹어요.', '무엇이든지 잘 먹어요', '무엇이든지'],
+                'muot2': ['무엇이든지 열심히 할게요.', '무엇이든지 열심히 할게요', '무엇이든지'],
+                'musuen1': ['무슨 요일이든지 괜찮아요.', '무슨 요일이든지 괜찮아요', '무슨 요일이든지'],
+                'musuen2': ['무슨 음악이든지 다 좋아요.', '무슨 음악이든지 다 좋아요', '무슨 음악이든지'],
+            };
+            
+            const checkButton = document.getElementById('checkButton');
+            const resultDiv = document.getElementById('result');
+
+            checkButton.addEventListener('click', () => {
+                const inputs = document.querySelectorAll('input');
+                let allCorrect = true;
+
+                inputs.forEach(input => {
+                    const inputId = input.id;
+                    const inputValue = input.value.trim();
+                    const correctAnswers = answers[inputId];
+
+                    // Normalize input value by removing spaces and punctuation for flexible checking
+                    const normalizedInput = inputValue.replace(/[.?!, ]/g, '');
+                    const isCorrect = correctAnswers.some(correct => correct.replace(/[.?!, ]/g, '') === normalizedInput);
+                    
+                    if (isCorrect) {
+                        input.classList.add('correct');
+                        input.classList.remove('incorrect');
+                    } else {
+                        input.classList.add('incorrect');
+                        input.classList.remove('correct');
+                        allCorrect = false;
+                    }
+                });
+
+                if (allCorrect) {
+                    resultDiv.style.display = 'block';
+                    resultDiv.textContent = '모든 문장을 바르게 완성했어요! 🎉';
+                    resultDiv.style.backgroundColor = '#d1fae5';
+                    resultDiv.style.color = '#065f46';
+                } else {
+                    resultDiv.style.display = 'block';
+                    resultDiv.textContent = '다시 시도해 보세요. 💪';
+                    resultDiv.style.backgroundColor = '#fee2e2';
+                    resultDiv.style.color = '#991b1b';
+                }
+            });
+        });
+    </script>
+    <script src="../shared/learning-enhancements.js"></script>
+</body>
+</html>

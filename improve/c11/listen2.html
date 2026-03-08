@@ -1,0 +1,246 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 듣기 퀴즈 2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .option-btn {
+            transition: all 0.2s;
+        }
+        .option-btn.correct {
+            background-color: #10b981; /* green-500 */
+            color: white;
+            border-color: #10b981;
+        }
+        .option-btn.incorrect {
+            background-color: #ef4444; /* red-500 */
+            color: white;
+            border-color: #ef4444;
+        }
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+        #script-content {
+            display: none;
+        }
+    </style>
+    <style id="c11-global-nav-style">
+        body { margin: 0; }
+        .c11-global-nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 16px;
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.92);
+            border-bottom: 1px solid #dbeafe;
+            backdrop-filter: blur(8px);
+        }
+        .c11-global-nav a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 1;
+        }
+        .c11-divider {
+            color: #cbd5e1;
+            font-weight: 700;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4">
+    <nav class="c11-global-nav" aria-label="상단 이동">
+        <a href="../index.html">메인</a>
+        <span class="c11-divider">|</span>
+        <a href="index.html">11과 목록</a>
+    </nav>
+
+    <div class="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-6 sm:p-8 space-y-6">
+        <div class="text-center">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">🎧 한국어 듣기 퀴즈 2</h1>
+            <p class="text-gray-600">듣기 내용을 잘 듣고 질문에 답해 보세요.</p>
+        </div>
+
+        <!-- 오디오 플레이어 -->
+        <div class="audio-player bg-gray-50 p-4 rounded-lg">
+             <label for="audio-file" class="text-sm font-medium text-gray-700">Track 20 (음원)</label>
+             <audio id="audio-file" controls class="w-full mt-2">
+                 <source src="track20.mp3" type="audio/mpeg">
+                 Your browser does not support the audio element.
+             </audio>
+        </div>
+
+        <!-- 스크립트 보기 -->
+        <div>
+            <button id="toggle-script-btn" class="w-full text-left text-indigo-600 font-semibold py-2 px-3 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition">
+                <i class="fas fa-file-alt mr-2"></i>스크립트 보기
+            </button>
+            <div id="script-content" class="mt-3 bg-gray-50 p-4 rounded-lg text-sm space-y-2 border">
+                <p><strong>남:</strong> 요즘 회사를 옮길까 말까 고민 중이야.</p>
+                <p><strong>여:</strong> 아니, 왜? 연봉이 높아서 좋다고 했잖아.</p>
+                <p><strong>남:</strong> 연봉은 마음에 드는데 너무 바빠서 내 생활이 없어. 지난 주말에도 늦게까지 회사에서 일하느라고 다른 일은 아무것도 못 했어.</p>
+                <p><strong>여:</strong> 많이 힘들겠다. 만약 회사를 옮긴다면 어떤 곳에서 일하고 싶은데?</p>
+                <p><strong>남:</strong> 연봉은 좀 낮아도 휴가가 길었으면 좋겠어. 또 야근도 없었으면 좋겠고.</p>
+                <p><strong>여:</strong> 어떤 회사든지 힘든 점은 있을 거야. 그리고 아무리 휴가가 길어도 월급이 적으면 좋아하는 일을 할 수 없잖아.</p>
+                <p><strong>남:</strong> 그 말도 맞네. 정말 어떻게 해야 할지 모르겠어.</p>
+                <p><strong>여:</strong> 지금 다니는 회사의 좋은 점을 한번 생각해 보는 건 어때? 무엇이든지 좋으니까 얘기해 봐.</p>
+                <p><strong>남:</strong> 우선 집에서 가깝고 무엇보다 함께 일하는 동료들이 마음에 들어. 그리고 새로 온 상사도 나한테 잘해 주고 사무실 분위기도 좋고.</p>
+                <p><strong>여:</strong> 이렇게 좋은 점이 많은데 옮길 수 있겠어?</p>
+                <p><strong>남:</strong> 그래, 다시 한 번 생각해 볼게. 고마워.</p>
+            </div>
+        </div>
+
+        <!-- 퀴즈 컨테이너 -->
+        <div id="quiz-container" class="space-y-8 border-t pt-6">
+            <!-- 퀴즈가 여기에 동적으로 생성됩니다. -->
+        </div>
+        
+        <!-- 결과 및 버튼 컨테이너 -->
+        <div class="border-t pt-6 text-center">
+             <div id="result-container" class="hidden mb-4">
+                <h2 class="text-2xl font-bold text-green-600">퀴즈 완료!</h2>
+                <p id="score-text" class="text-gray-700 text-lg mt-2"></p>
+            </div>
+            <button id="submit-btn" class="bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-indigo-700 transition duration-300 w-full sm:w-auto">결과 보기</button>
+            <button id="retry-btn" class="hidden bg-gray-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-700 transition duration-300 w-full sm:w-auto">다시 풀기</button>
+        </div>
+
+    </div>
+
+<script>
+    const quizData = [
+        {
+            question: "남자가 회사를 옮기고 싶어 하는 이유는 무엇입니까?",
+            options: ["연봉이 낮아서", "휴가가 짧아서", "너무 바빠서", "동료들이 마음에 안 들어서"],
+            answer: "너무 바빠서"
+        },
+        {
+            question: "남자가 새로 옮기고 싶은 회사의 조건이 아닌 것은 무엇입니까?",
+            options: ["휴가가 길었으면 좋겠다", "야근이 없었으면 좋겠다", "연봉이 높았으면 좋겠다", "집에서 가까웠으면 좋겠다"],
+            answer: "연봉이 높았으면 좋겠다"
+        },
+        {
+            question: "남자가 현재 다니는 회사의 장점으로 이야기하지 않은 것은 무엇입니까?",
+            options: ["집에서 가깝다", "동료들이 좋다", "상사가 잘해준다", "월급이 많다"],
+            answer: "월급이 많다"
+        },
+        {
+            question: "대화의 마지막에 남자는 어떻게 하기로 했습니까?",
+            options: [
+                "바로 회사를 그만두기로 했다",
+                "친구에게 회사를 소개해달라고 했다",
+                "이직 문제에 대해 다시 생각해 보기로 했다",
+                "상사에게 휴가를 달라고 하기로 했다"
+            ],
+            answer: "이직 문제에 대해 다시 생각해 보기로 했다"
+        }
+    ];
+
+    let score = 0;
+    let questionsAnswered = 0;
+
+    const quizContainer = document.getElementById('quiz-container');
+    const resultContainer = document.getElementById('result-container');
+    const scoreText = document.getElementById('score-text');
+    const submitBtn = document.getElementById('submit-btn');
+    const retryBtn = document.getElementById('retry-btn');
+    const toggleScriptBtn = document.getElementById('toggle-script-btn');
+    const scriptContent = document.getElementById('script-content');
+
+    function loadAllQuizzes() {
+        quizContainer.innerHTML = '';
+        quizData.forEach((quiz, index) => {
+            const questionBlock = document.createElement('div');
+            questionBlock.id = `question-${index}`;
+            
+            const questionEl = document.createElement('h2');
+            questionEl.className = 'text-xl font-bold text-gray-800 mb-4';
+            questionEl.innerText = `Q${index + 1}. ${quiz.question}`;
+            
+            const optionsEl = document.createElement('div');
+            optionsEl.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
+            
+            quiz.options.forEach(optionText => {
+                const button = document.createElement('button');
+                button.innerText = optionText;
+                button.classList.add('option-btn', 'w-full', 'p-3', 'text-left', 'border-2', 'rounded-lg', 'hover:bg-gray-100');
+                button.addEventListener('click', () => checkAnswer(index, button, optionText, quiz.answer));
+                optionsEl.appendChild(button);
+            });
+
+            questionBlock.appendChild(questionEl);
+            questionBlock.appendChild(optionsEl);
+            quizContainer.appendChild(questionBlock);
+        });
+    }
+
+    function checkAnswer(questionIndex, button, selected, correct) {
+        const questionBlock = document.getElementById(`question-${questionIndex}`);
+        const optionButtons = questionBlock.querySelectorAll('.option-btn');
+        
+        // Prevent re-answering
+        if (optionButtons[0].disabled) return;
+
+        questionsAnswered++;
+
+        optionButtons.forEach(btn => {
+            btn.disabled = true;
+            if (btn.innerText === correct) {
+                btn.classList.add('correct');
+            }
+        });
+
+        if (selected === correct) {
+            score++;
+        } else {
+            button.classList.add('incorrect');
+        }
+    }
+
+    submitBtn.addEventListener('click', () => {
+        if (questionsAnswered < quizData.length) {
+            alert('모든 문제를 풀어주세요.');
+            return;
+        }
+        resultContainer.classList.remove('hidden');
+        scoreText.innerText = `총 ${quizData.length}문제 중 ${score}문제를 맞혔습니다!`;
+        submitBtn.classList.add('hidden');
+        retryBtn.classList.remove('hidden');
+    });
+
+    retryBtn.addEventListener('click', () => {
+        score = 0;
+        questionsAnswered = 0;
+        resultContainer.classList.add('hidden');
+        submitBtn.classList.remove('hidden');
+        retryBtn.classList.add('hidden');
+        loadAllQuizzes();
+    });
+
+    toggleScriptBtn.addEventListener('click', () => {
+        const isHidden = scriptContent.style.display === 'none' || scriptContent.style.display === '';
+        scriptContent.style.display = isHidden ? 'block' : 'none';
+        toggleScriptBtn.innerHTML = isHidden ? '<i class="fas fa-eye-slash mr-2"></i>스크립트 숨기기' : '<i class="fas fa-file-alt mr-2"></i>스크립트 보기';
+    });
+
+    loadAllQuizzes();
+</script>
+
+    <script src="../shared/learning-enhancements.js"></script>
+</body>
+</html>

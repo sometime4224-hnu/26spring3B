@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 문법: V-(으)려면 멀었다</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        
+        /* Vietnamese text hidden by default */
+        .vietnamese { 
+            color: #4b5563; 
+            font-size: 0.9em; 
+            font-style: italic; 
+            display: none; 
+            margin-top: 0.25rem;
+        }
+
+        /* Show when body has 'show-vi' class */
+        body.show-vi .vietnamese {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+
+    <!-- Tailwind & Fonts Injected -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e0e7ff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #3730a3;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+        /* Ensure body has no top margin/padding resetting the nav */
+        body { margin: 0; }
+    </style>
+    </head>
+<body class="bg-indigo-50 min-h-screen flex flex-col items-center p-4">
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    
+
+    <!-- App Container -->
+    <div class="bg-white max-w-md w-full rounded-xl shadow-lg overflow-hidden flex flex-col min-h-[80vh]">
+        
+        <!-- Header -->
+        <header class="bg-indigo-600 text-white p-4 relative">
+            <div class="flex justify-between items-start mb-2">
+                <div class="bg-white/20 px-2 py-1 rounded text-xs inline-block h-fit">
+                    Level 3
+                </div>
+                
+                <div class="flex space-x-2">
+                    <!-- Game Page Link Button -->
+                    <a href="grammar-practice.html?set=g4" class="bg-amber-400 text-indigo-900 px-3 py-1 rounded-full text-xs font-bold hover:bg-amber-300 transition shadow flex items-center no-underline">
+                        <i class="fas fa-gamepad mr-1"></i> 게임
+                    </a>
+
+                    <!-- Language Toggle Button -->
+                    <button onclick="toggleLanguage()" id="lang-btn" class="bg-white text-indigo-700 px-3 py-1 rounded-full text-xs font-bold hover:bg-indigo-50 transition shadow">
+                        <i class="fas fa-language mr-1"></i> Tiếng Việt
+                    </button>
+                </div>
+            </div>
+            
+            <div class="text-center pb-2">
+                <h1 class="text-xl font-bold">오늘의 문법 (Ngữ pháp)</h1>
+                <p class="text-sm opacity-90 mt-1">V-(으)려면 멀었다</p>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="flex border-b">
+            <button onclick="switchTab('learn')" id="tab-learn" class="flex-1 py-3 text-sm font-medium text-indigo-600 border-b-2 border-indigo-600 focus:outline-none transition-colors">
+                학습
+            </button>
+            <button onclick="switchTab('quiz')" id="tab-quiz" class="flex-1 py-3 text-sm font-medium text-gray-500 hover:text-indigo-600 focus:outline-none transition-colors">
+                퀴즈
+            </button>
+            <button onclick="switchTab('practice')" id="tab-practice" class="flex-1 py-3 text-sm font-medium text-gray-500 hover:text-indigo-600 focus:outline-none transition-colors">
+                활동
+            </button>
+        </div>
+
+        <!-- Content Area -->
+        <main class="flex-1 p-5 overflow-y-auto">
+            
+            <!-- Tab 1: Learn -->
+            <div id="content-learn" class="fade-in space-y-6">
+                
+                <!-- Meaning -->
+                <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
+                    <h3 class="font-bold text-indigo-800 mb-1">의미</h3>
+                    <p class="mb-1">어떤 일을 끝내거나 어떤 상태가 되기까지 아직 시간이 많이 남았을 때 사용해요.</p>
+                    <p class="vietnamese">Dùng khi còn nhiều thời gian hoặc còn lâu mới đạt được một kết quả hay trạng thái nào đó.</p>
+                </div>
+
+                <!-- Conjugation Rules -->
+                <div class="space-y-3">
+                    <h3 class="font-bold text-gray-800 border-l-4 border-indigo-500 pl-2">형태 변화</h3>
+                    <p class="vietnamese mb-2">Cách chia</p>
+                    
+                    <div class="grid grid-cols-2 gap-3 text-sm">
+                        <!-- Vowel Ending -->
+                        <div class="bg-gray-50 p-3 rounded-lg text-center">
+                            <div class="font-bold text-blue-600 mb-1">받침 X / ㄹ 받침</div>
+                            <div class="text-xl font-bold mb-1">+ 려면 멀었다</div>
+                            <div class="text-gray-500 text-xs">
+                                가다 &rarr; 가려면 멀었다<br>
+                                살다 &rarr; 살려면 멀었다
+                            </div>
+                        </div>
+                        <!-- Consonant Ending -->
+                        <div class="bg-gray-50 p-3 rounded-lg text-center">
+                            <div class="font-bold text-red-500 mb-1">받침 O</div>
+                            <div class="text-xl font-bold mb-1">+ 으려면 멀었다</div>
+                            <div class="text-gray-500 text-xs">
+                                먹다 &rarr; 먹으려면 멀었다<br>
+                                찾다 &rarr; 찾으려면 멀었다
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Examples from Image -->
+                <div class="space-y-3">
+                    <h3 class="font-bold text-gray-800 border-l-4 border-indigo-500 pl-2">예문</h3>
+                    <p class="vietnamese mb-2">Ví dụ</p>
+                    
+                    <div class="bg-white border rounded-lg p-3 shadow-sm hover:shadow-md transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-xs text-indigo-500 font-bold block mb-1">Q: 언제 결혼할 생각이에요?</span>
+                                <p class="text-gray-800 font-medium">A: 결혼하려면 멀었어요. 아직 취직도 못 했는데요.</p>
+                            </div>
+                            <button onclick="speakText('결혼하려면 멀었어요. 아직 취직도 못 했는데요.')" class="text-indigo-500 hover:text-indigo-700 ml-2 mt-4">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                        </div>
+                        <p class="vietnamese mt-2 text-sm border-t pt-2">Còn lâu tôi mới kết hôn. Tôi còn chưa xin được việc mà.</p>
+                    </div>
+
+                    <div class="bg-white border rounded-lg p-3 shadow-sm hover:shadow-md transition">
+                        <div class="flex justify-between items-start">
+                            <p class="text-gray-800 font-medium">한국말을 잘하려면 아직 멀었어요.</p>
+                            <button onclick="speakText('한국말을 잘하려면 아직 멀었어요')" class="text-indigo-500 hover:text-indigo-700 ml-2">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                        </div>
+                        <p class="vietnamese mt-1">Còn lâu tôi mới nói tiếng Hàn giỏi được.</p>
+                    </div>
+
+                    <div class="bg-white border rounded-lg p-3 shadow-sm hover:shadow-md transition">
+                        <div class="flex justify-between items-start">
+                            <p class="text-gray-800 font-medium">졸업하려면 멀었어요.</p>
+                            <button onclick="speakText('졸업하려면 멀었어요')" class="text-indigo-500 hover:text-indigo-700 ml-2">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                        </div>
+                        <p class="vietnamese mt-1">Còn lâu tôi mới tốt nghiệp.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Quiz -->
+            <div id="content-quiz" class="hidden fade-in space-y-6">
+                <div class="text-center mb-4">
+                    <h3 class="font-bold text-lg text-gray-800">알맞은 것을 고르세요.</h3>
+                    <p class="vietnamese">Chọn đáp án đúng.</p>
+                </div>
+
+                <!-- Quiz Item 1 -->
+                <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                    <p class="mb-3 font-medium text-lg">가: 숙제를 다 했어요?<br>나: 아니요, 다 ( 끝내다 ) ______.</p>
+                    <div class="grid grid-cols-1 gap-2">
+                        <!-- Distractor -->
+                        <button onclick="checkAnswer(this, false)" class="w-full text-left p-3 bg-white border rounded hover:bg-gray-100">1. 끝내으려면 멀었어요</button>
+                        <!-- Correct Answer -->
+                        <button onclick="checkAnswer(this, true)" class="w-full text-left p-3 bg-white border rounded hover:bg-gray-100">2. 끝내려면 멀었어요</button>
+                        <!-- Distractor -->
+                        <button onclick="checkAnswer(this, false)" class="w-full text-left p-3 bg-white border rounded hover:bg-gray-100">3. 끝냈으면 멀었어요</button>
+                    </div>
+                    <div class="result-msg hidden mt-2 text-sm font-bold"></div>
+                </div>
+
+                 <!-- Quiz Item 2 -->
+                 <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                    <p class="mb-3 font-medium text-lg">가: 집을 샀어요?<br>나: 아니요, 돈을 많이 ( 벌다 ) ______.</p>
+                    <div class="grid grid-cols-1 gap-2">
+                        <!-- Distractor -->
+                        <button onclick="checkAnswer(this, false)" class="w-full text-left p-3 bg-white border rounded hover:bg-gray-100">1. 벌으려면 멀었어요</button>
+                        <!-- Correct Answer -->
+                        <button onclick="checkAnswer(this, true)" class="w-full text-left p-3 bg-white border rounded hover:bg-gray-100">2. 벌려면 멀었어요</button>
+                         <!-- Distractor -->
+                        <button onclick="checkAnswer(this, false)" class="w-full text-left p-3 bg-white border rounded hover:bg-gray-100">3. 벌으면 멀었어요</button>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">* 'ㄹ' 받침은 '으'를 쓰지 않아요! <span class="vietnamese inline">(Không dùng '으' với phụ âm cuối 'ㄹ'!)</span></p>
+                    <div class="result-msg hidden mt-2 text-sm font-bold"></div>
+                </div>
+
+                <div class="text-center">
+                    <button onclick="resetQuiz()" class="bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition shadow">
+                        다시 풀기 <span class="vietnamese inline">(Làm lại)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab 3: Practice (Scenarios) -->
+            <div id="content-practice" class="hidden fade-in space-y-5">
+                <div class="text-center">
+                    <h3 class="font-bold text-lg text-gray-800">대화를 완성해 보세요.</h3>
+                    <p class="vietnamese text-sm mb-4">빈칸을 채우거나 알맞은 말을 생각해 보세요.</p>
+                </div>
+
+                <div class="space-y-6">
+                    
+                    <!-- Scenario 1: Baby -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-center mb-3">
+                            <div class="bg-yellow-100 p-2 rounded-full mr-3 text-yellow-600">
+                                <i class="fas fa-baby fa-lg"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">상황 1: 갓난아기 (Trẻ sơ sinh)</p>
+                                <p class="font-bold">가: 아이가 초등학생이에요?</p>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded text-center">
+                            <p class="text-indigo-700 font-medium mb-2">나: 아니요, 초등학생이 ______ 멀었어요.</p>
+                            <button onclick="revealAnswer(this, '되려면')" class="text-sm bg-white border border-indigo-200 px-3 py-1 rounded hover:bg-indigo-50 text-indigo-600">
+                                정답 보기 (Xem đáp án)
+                            </button>
+                            <p class="answer-text hidden font-bold text-lg mt-2 animate-bounce text-indigo-600">되려면</p>
+                        </div>
+                    </div>
+
+                    <!-- Scenario 2: Guitar -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-center mb-3">
+                            <div class="bg-green-100 p-2 rounded-full mr-3 text-green-600">
+                                <i class="fas fa-guitar fa-lg"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">상황 2: 기타 초보 (Mới học guitar)</p>
+                                <p class="font-bold">가: 이제 기타를 잘 치겠네요.</p>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded text-center">
+                            <p class="text-indigo-700 font-medium mb-2">나: 아니요, 잘 ______ 멀었어요.</p>
+                            <button onclick="revealAnswer(this, '치려면')" class="text-sm bg-white border border-indigo-200 px-3 py-1 rounded hover:bg-indigo-50 text-indigo-600">
+                                정답 보기 (Xem đáp án)
+                            </button>
+                            <p class="answer-text hidden font-bold text-lg mt-2 animate-bounce text-indigo-600">치려면</p>
+                        </div>
+                    </div>
+
+                    <!-- Scenario 3: Payday -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-center mb-3">
+                            <div class="bg-red-100 p-2 rounded-full mr-3 text-red-600">
+                                <i class="fas fa-calendar-alt fa-lg"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">상황 3: 오늘 2일, 월급날 25일</p>
+                                <p class="font-bold">가: 언제 월급을 받아요?</p>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded text-center">
+                            <p class="text-indigo-700 font-medium mb-2">나: 월급을 ______ 멀었어요.</p>
+                            <button onclick="revealAnswer(this, '받으려면')" class="text-sm bg-white border border-indigo-200 px-3 py-1 rounded hover:bg-indigo-50 text-indigo-600">
+                                정답 보기 (Xem đáp án)
+                            </button>
+                            <p class="answer-text hidden font-bold text-lg mt-2 animate-bounce text-indigo-600">받으려면</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+        
+        <!-- Footer -->
+        <footer class="bg-gray-100 p-3 text-center text-xs text-gray-500">
+            © 2025 Korean Grammar Class | Designed for You
+        </footer>
+
+    </div>
+
+    <script>
+        // Language Toggle Logic
+        function toggleLanguage() {
+            document.body.classList.toggle('show-vi');
+            const btn = document.getElementById('lang-btn');
+            
+            if (document.body.classList.contains('show-vi')) {
+                btn.classList.add('bg-indigo-700', 'text-white');
+                btn.classList.remove('bg-white', 'text-indigo-700');
+            } else {
+                btn.classList.remove('bg-indigo-700', 'text-white');
+                btn.classList.add('bg-white', 'text-indigo-700');
+            }
+        }
+
+        // Tab Switching Logic
+        function switchTab(tabName) {
+            // Hide all contents
+            document.getElementById('content-learn').classList.add('hidden');
+            document.getElementById('content-quiz').classList.add('hidden');
+            document.getElementById('content-practice').classList.add('hidden');
+            
+            // Remove active styles from tabs
+            const tabs = ['learn', 'quiz', 'practice'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                btn.classList.remove('text-indigo-600', 'border-b-2', 'border-indigo-600');
+                btn.classList.add('text-gray-500');
+            });
+
+            // Show selected content
+            document.getElementById(`content-${tabName}`).classList.remove('hidden');
+            
+            // Add active style to selected tab
+            const activeBtn = document.getElementById(`tab-${tabName}`);
+            activeBtn.classList.remove('text-gray-500');
+            activeBtn.classList.add('text-indigo-600', 'border-b-2', 'border-indigo-600');
+        }
+
+        // TTS Function
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'ko-KR';
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('이 브라우저는 음성 지원을 하지 않습니다.');
+            }
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const msgDiv = parent.nextElementSibling;
+            
+            // Reset styles
+            Array.from(parent.children).forEach(child => {
+                child.classList.remove('bg-green-100', 'border-green-500', 'bg-red-100', 'border-red-500');
+                child.classList.add('bg-white');
+            });
+
+            msgDiv.classList.remove('hidden', 'text-green-600', 'text-red-600');
+
+            if (isCorrect) {
+                btn.classList.remove('bg-white');
+                btn.classList.add('bg-green-100', 'border-green-500');
+                msgDiv.innerHTML = "정답입니다! <span class='vietnamese inline font-normal'>(Chính xác!)</span>";
+                msgDiv.classList.add('text-green-600');
+            } else {
+                btn.classList.remove('bg-white');
+                btn.classList.add('bg-red-100', 'border-red-500');
+                msgDiv.innerHTML = "틀렸습니다. <span class='vietnamese inline font-normal'>(Sai rồi)</span>";
+                msgDiv.classList.add('text-red-600');
+            }
+        }
+
+        function resetQuiz() {
+            const resultMsgs = document.querySelectorAll('.result-msg');
+            resultMsgs.forEach(msg => msg.classList.add('hidden'));
+            
+            const options = document.querySelectorAll('#content-quiz button');
+            options.forEach(opt => {
+                if(opt.innerText.includes('다시 풀기')) return;
+                opt.classList.remove('bg-green-100', 'border-green-500', 'bg-red-100', 'border-red-500');
+                opt.classList.add('bg-white');
+            });
+        }
+
+        // Practice Reveal Logic
+        function revealAnswer(btn, answer) {
+            const answerEl = btn.nextElementSibling;
+            const inputArea = btn.previousElementSibling;
+            
+            // Fill the blank in the text
+            inputArea.innerHTML = inputArea.innerHTML.replace('______', `<span class="text-red-500 underline">${answer}</span>`);
+            
+            btn.classList.add('hidden');
+            // answerEl.classList.remove('hidden'); // Optional: show big text below too
+            
+            // Play sound
+            speakText(answer + ' 멀었어요');
+        }
+    </script>
+    <script src="../shared/learning-enhancements.js"></script>
+</body>
+</html>
