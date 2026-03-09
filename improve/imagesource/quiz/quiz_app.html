@@ -1,0 +1,851 @@
+﻿<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>한국어 어휘 그림 퀴즈</title>
+  <style>
+    :root {
+      --bg-top: #f8f4df;
+      --bg-bottom: #f3ddd1;
+      --card: #fffdf8;
+      --ink: #1f2937;
+      --muted: #5b6470;
+      --line: #d6d3c9;
+      --accent: #2563eb;
+      --ok: #128a48;
+      --bad: #c53030;
+      --warn: #a16207;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: "SUIT", "Noto Sans KR", "Malgun Gothic", sans-serif;
+      background:
+        radial-gradient(circle at 8% 12%, #ffffffaa 0 14%, transparent 15%),
+        radial-gradient(circle at 92% 84%, #ffffff66 0 10%, transparent 11%),
+        linear-gradient(160deg, var(--bg-top), var(--bg-bottom));
+      display: flex;
+      justify-content: center;
+      padding: 22px 14px 28px;
+    }
+
+    .app {
+      width: min(1100px, 100%);
+      display: grid;
+      gap: 14px;
+    }
+
+    .panel,
+    .quiz-card,
+    .nav-card,
+    .result-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 8px 20px #0000000d;
+    }
+
+    .panel {
+      padding: 14px 16px;
+    }
+
+    .title {
+      margin: 0;
+      font-size: clamp(1.2rem, 2.8vw, 1.7rem);
+      line-height: 1.2;
+    }
+
+    .sub {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .status-row {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .status-text {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      font-size: 0.95rem;
+    }
+
+    .status-pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 11px;
+      background: #fff;
+    }
+
+    .progress {
+      width: min(360px, 100%);
+      height: 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .progress > span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, #6ea8ff, var(--accent));
+      transition: width 200ms ease;
+    }
+
+    .quiz-card {
+      padding: 14px;
+      display: grid;
+      gap: 14px;
+      grid-template-columns: 1.25fr 1fr;
+    }
+
+    .image-wrap {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+      min-height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .qa {
+      display: grid;
+      align-content: start;
+      gap: 10px;
+    }
+
+    .q-title {
+      margin: 0;
+      font-size: 1.08rem;
+      line-height: 1.35;
+    }
+
+    .hint-box {
+      border: 1px dashed #b7c7e8;
+      background: #edf4ff;
+      border-radius: 10px;
+      padding: 9px 10px;
+      font-size: 0.93rem;
+      line-height: 1.45;
+    }
+
+    .hint-box ul {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 2px;
+    }
+
+    .answer-input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      min-height: 74px;
+      resize: vertical;
+      font: inherit;
+    }
+
+    .answer-input:focus {
+      outline: 2px solid #a7c6ff;
+      border-color: #8bb4ff;
+    }
+
+    .input-guide {
+      margin: -2px 0 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.4;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    button {
+      border: 1px solid transparent;
+      background: #fff;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font: inherit;
+      cursor: pointer;
+      transition: 120ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-main {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-main:hover {
+      background: #1f57cb;
+    }
+
+    .btn-plain {
+      border-color: var(--line);
+      background: #fff;
+    }
+
+    .feedback {
+      margin: 0;
+      min-height: 1.6em;
+      font-weight: 600;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    .feedback.ok {
+      color: var(--ok);
+    }
+
+    .feedback.bad {
+      color: var(--bad);
+    }
+
+    .feedback.warn {
+      color: var(--warn);
+    }
+
+    .source {
+      color: var(--muted);
+      font-size: 0.82rem;
+      word-break: break-all;
+    }
+
+    .nav-card {
+      padding: 14px;
+    }
+
+    .nav-title {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+
+    .nav-grid {
+      display: grid;
+      gap: 7px;
+      grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
+    }
+
+    .nav-grid button {
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 8px 6px;
+      font-weight: 700;
+    }
+
+    .nav-grid button.current {
+      border-color: #6b9cff;
+      background: #e8f0ff;
+    }
+
+    .nav-grid button.correct {
+      background: #e9f9ef;
+      border-color: #9cd8b1;
+      color: #166534;
+    }
+
+    .nav-grid button.wrong {
+      background: #fff1f1;
+      border-color: #f3b0b0;
+      color: #b42318;
+    }
+
+    .nav-grid button.touched {
+      background: #fff8e6;
+      border-color: #e5c98d;
+      color: #7f5311;
+    }
+
+    .result-card {
+      padding: 14px;
+      display: none;
+      gap: 12px;
+    }
+
+    .result-card.show {
+      display: grid;
+    }
+
+    .result-title {
+      margin: 0;
+      font-size: 1.06rem;
+    }
+
+    .result-capture {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .result-meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 0.95rem;
+    }
+
+    .result-table th,
+    .result-table td {
+      border: 1px solid var(--line);
+      padding: 9px 10px;
+      text-align: left;
+      vertical-align: top;
+      word-break: break-word;
+      line-height: 1.45;
+    }
+
+    .result-table th {
+      width: 120px;
+      background: #f6f9ff;
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-capture {
+      border-color: #0f766e;
+      background: #0f766e;
+      color: #fff;
+    }
+
+    .btn-capture:hover {
+      background: #0d615b;
+    }
+
+    @media (max-width: 900px) {
+      .quiz-card {
+        grid-template-columns: 1fr;
+      }
+      .image-wrap {
+        min-height: 180px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="panel">
+      <h1 class="title">한국어 어휘 그림 퀴즈</h1>
+      <p class="sub">마스킹된 그림을 보고 알맞은 어휘를 입력하세요. 여러 정답은 쉼표(<b>,</b>)로 구분해 입력하세요.</p>
+      <div class="status-row">
+        <div class="status-text">
+          <span class="status-pill" id="counter">문제 1 / 16</span>
+          <span class="status-pill" id="score">정답 0개</span>
+          <span class="status-pill" id="solved">진행 0/16</span>
+        </div>
+        <div class="progress" aria-label="진행률"><span id="progressFill"></span></div>
+      </div>
+    </section>
+
+    <section class="quiz-card">
+      <div class="image-wrap">
+        <img id="quizImage" alt="퀴즈 그림">
+      </div>
+      <div class="qa">
+        <h2 class="q-title" id="questionTitle"></h2>
+        <div class="hint-box">
+          <ul id="hintList"></ul>
+        </div>
+        <textarea id="answerInput" class="answer-input" placeholder="정답 입력 예: 사과, 포도, 귤"></textarea>
+        <p class="input-guide">예) 사과, 포도, 귤</p>
+        <div class="actions">
+          <button class="btn-main" id="checkBtn" type="button">채점</button>
+          <button class="btn-plain" id="showBtn" type="button">정답 보기</button>
+          <button class="btn-plain" id="prevBtn" type="button">이전</button>
+          <button class="btn-plain" id="nextBtn" type="button">다음</button>
+        </div>
+        <p id="feedback" class="feedback"></p>
+        <div class="source" id="sourcePath"></div>
+      </div>
+    </section>
+
+    <section class="nav-card">
+      <h3 class="nav-title">문항 이동</h3>
+      <div id="navGrid" class="nav-grid"></div>
+    </section>
+
+
+    <section class="result-card" id="resultCard">
+      <h3 class="result-title">최종 결과표</h3>
+      <div class="result-capture" id="resultCaptureArea">
+        <p class="result-meta" id="resultTime"></p>
+        <table class="result-table" aria-label="최종 결과 요약표">
+          <tbody>
+            <tr>
+              <th>점수</th>
+              <td id="finalScore">-</td>
+            </tr>
+            <tr>
+              <th>맞춘 문제</th>
+              <td id="finalCorrectList">-</td>
+            </tr>
+            <tr>
+              <th>틀린 문제</th>
+              <td id="finalWrongList">-</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="result-actions">
+        <button class="btn-capture" id="captureBtn" type="button">결과표 캡쳐</button>
+        <button class="btn-plain" id="restartBtn" type="button">다시 풀기</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        image: "../split_text_hidden_mobile/lovewords (1)_cut1.webp",
+        prompt: "연인 사이의 행동 표현 3개를 쓰세요.",
+        hints: ["인물 배치: ㄴㄹㅎ ㅇㄷ", "손: ㅅㅇ ㅈㄷ", "어깨: ㅇㄲㅇ ㄱㄷㄷ"],
+        answers: ["나란히 앉다", "손을 잡다", "어깨에 기대다"]
+      },
+      {
+        image: "../split_text_hidden_mobile/lovewords (1)_cut2.webp",
+        prompt: "팔을 서로 걸고 걷는 행동을 나타내는 표현을 쓰세요.",
+        hints: ["초성: ㅍㅉㅇ ㄲㄷ"],
+        answers: ["팔짱을 끼다"]
+      },
+      {
+        image: "../split_text_hidden_mobile/lovewords (1)_cut3.webp",
+        prompt: "긴장/설렘 상태를 나타내는 표현 2개를 쓰세요.",
+        hints: ["얼굴: ㅇㄱㅇ ㅃㄱㅈㄷ", "가슴: ㄱㅅㅇ ㄷㄱㄱㄹㄷ"],
+        answers: ["얼굴이 빨개지다", "가슴이 두근거리다"]
+      },
+      {
+        image: "../split_text_hidden_mobile/lovewords (1)_cut4.webp",
+        prompt: "결혼 관련 어휘 3개를 쓰세요.",
+        hints: ["왼쪽: ㅈㅁㄱㅎ", "가운데: ㅇㅇㄱㅎ", "오른쪽: ㅊㅊㅈ"],
+        answers: ["중매결혼", "연애결혼", "청첩장"]
+      },
+      {
+        image: "../split_text_hidden_mobile/lovewords (2)_cut1.webp",
+        prompt: "마음을 표현하며 관계를 시작하려 할 때의 동사를 쓰세요.",
+        hints: ["초성: ㄱㅂㅎㄷ"],
+        answers: ["고백하다"]
+      },
+      {
+        image: "../split_text_hidden_mobile/lovewords (2)_cut2.webp",
+        prompt: "결혼 상대를 만나는 전통적인 만남을 뜻하는 동사를 쓰세요.",
+        hints: ["초성: ㅅㅂㄷ"],
+        answers: ["선보다"]
+      },
+      {
+        image: "../split_text_hidden_mobile/lovewords (2)_cut3.webp",
+        prompt: "결혼을 제안하는 동사를 쓰세요.",
+        hints: ["초성: ㅊㅎㅎㄷ"],
+        answers: ["청혼하다"]
+      },
+      {
+        image: "../split_text_hidden_mobile/lovewords (2)_cut4.webp",
+        prompt: "결혼 후 일정 관련 어휘 2개를 쓰세요.",
+        hints: ["왼쪽: ㅅㅎㅇㅎ", "오른쪽: ㅇㅅㅈ"],
+        answers: ["신혼여행", "예식장"]
+      },
+      {
+        image: "../split_text_hidden_mobile/lovewords (3)_cut1.webp",
+        prompt: "처음 만남(소개로 하는 데이트)을 뜻하는 동사를 쓰세요.",
+        hints: ["초성: ㅅㄱㅌㅎㄷ"],
+        answers: ["소개팅하다"]
+      },
+      {
+        image: "../split_text_hidden_mobile/lovewords (3)_cut2.webp",
+        prompt: "보자마자 호감을 갖는 표현을 쓰세요.",
+        hints: ["초성: ㅊㄴㅇ ㅂㅎㄷ"],
+        answers: ["첫눈에 반하다"]
+      },
+      {
+        image: "../split_text_hidden_mobile/lovewords (3)_cut3.webp",
+        prompt: "연인 관계 형성과 상태를 나타내는 표현 2개를 쓰세요.",
+        hints: ["관계 시작: ㅅㄱㄷ", "연애 상태: ㅇㅇㅎㄷ"],
+        answers: ["사귀다", "연애하다"]
+      },
+      {
+        image: "../split_text_hidden_mobile/lovewords (3)_cut4.webp",
+        prompt: "강한 사랑 감정을 나타내는 표현을 쓰세요.",
+        hints: ["초성: ㅅㄹㅇ ㅃㅈㄷ"],
+        answers: ["사랑에 빠지다"]
+      },
+      {
+        image: "../split_text_hidden_mobile/lovewords (4)_cut1.webp",
+        prompt: "궁합/대화 궁합을 나타내는 표현 2개를 쓰세요.",
+        hints: ["성격: ㅅㄱㅇ ㅈ ㅁㄷ", "대화: ㅁㅇ ㅈ ㅌㅎㄷ"],
+        answers: ["성격이 잘 맞다", "말이 잘 통하다"]
+      },
+      {
+        image: "../split_text_hidden_mobile/lovewords (4)_cut2.webp",
+        prompt: "첫인상과 매력에 관한 표현 2개를 쓰세요.",
+        hints: ["첫인상: ㅇㅅㅇ ㅈㄷ", "매력: ㅁㄹㅇ ㅇㄷ"],
+        answers: ["인상이 좋다", "매력이 있다"]
+      },
+      {
+        image: "../split_text_hidden_mobile/lovewords (4)_cut3.webp",
+        prompt: "결혼/만남의 기준이 맞는 상황을 뜻하는 표현을 쓰세요.",
+        hints: ["초성: ㅈㄱㅇ ㅁㄷ"],
+        answers: ["조건이 맞다"]
+      },
+      {
+        image: "../split_text_hidden_mobile/lovewords (4)_cut4.webp",
+        prompt: "친절한 인성을 나타내는 표현을 쓰세요.",
+        hints: ["초성: ㅁㅇㅆㄱ ㅊㅎㄷ"],
+        answers: ["마음씨가 착하다"]
+      }
+    ];
+
+    const state = questions.map(() => ({
+      input: "",
+      checked: false,
+      correct: false,
+      feedback: "",
+      feedbackClass: ""
+    }));
+
+    const els = {
+      counter: document.getElementById("counter"),
+      score: document.getElementById("score"),
+      solved: document.getElementById("solved"),
+      progressFill: document.getElementById("progressFill"),
+      image: document.getElementById("quizImage"),
+      title: document.getElementById("questionTitle"),
+      hintList: document.getElementById("hintList"),
+      input: document.getElementById("answerInput"),
+      feedback: document.getElementById("feedback"),
+      source: document.getElementById("sourcePath"),
+      navGrid: document.getElementById("navGrid"),
+      checkBtn: document.getElementById("checkBtn"),
+      showBtn: document.getElementById("showBtn"),
+      prevBtn: document.getElementById("prevBtn"),
+      nextBtn: document.getElementById("nextBtn"),
+      resultCard: document.getElementById("resultCard"),
+      resultTime: document.getElementById("resultTime"),
+      finalScore: document.getElementById("finalScore"),
+      finalCorrectList: document.getElementById("finalCorrectList"),
+      finalWrongList: document.getElementById("finalWrongList"),
+      captureBtn: document.getElementById("captureBtn"),
+      restartBtn: document.getElementById("restartBtn")
+    };
+
+    let current = 0;
+
+    function normalize(text) {
+      return String(text || "")
+        .toLowerCase()
+        .replace(/[\s"'`~!@#$%^&*()_\-+=[\]{}\\|;:,.<>/?]/g, "");
+    }
+
+    function persistInput() {
+      state[current].input = els.input.value;
+    }
+
+    function isCorrectAnswer(rawInput, answers) {
+      const merged = normalize(rawInput);
+      if (!merged) return false;
+      return answers.every((a) => merged.includes(normalize(a)));
+    }
+
+    function countSolved() {
+      return state.filter((s) => s.correct).length;
+    }
+
+    function countTouched() {
+      return state.filter((s) => s.checked || s.input.trim()).length;
+    }
+
+    function setFeedback(message, className) {
+      state[current].feedback = message;
+      state[current].feedbackClass = className;
+      els.feedback.textContent = message;
+      els.feedback.className = `feedback ${className || ""}`.trim();
+    }
+
+
+
+    function toProblemText(numbers) {
+      if (!numbers.length) return "없음";
+      return numbers.map((n) => `${n}번`).join(", ");
+    }
+
+    function getResultSummary() {
+      const correctNumbers = [];
+      const wrongNumbers = [];
+
+      state.forEach((item, idx) => {
+        if (!item.checked) return;
+        if (item.correct) correctNumbers.push(idx + 1);
+        else wrongNumbers.push(idx + 1);
+      });
+
+      const total = questions.length;
+      const solved = correctNumbers.length;
+      const percent = Math.round((solved / total) * 100);
+      return { total, solved, percent, correctNumbers, wrongNumbers };
+    }
+
+    function updateFinalResult() {
+      const allChecked = state.every((s) => s.checked);
+      els.resultCard.classList.toggle("show", allChecked);
+      if (!allChecked) return;
+
+      const summary = getResultSummary();
+      els.finalScore.textContent = `${summary.solved} / ${summary.total} (정답률 ${summary.percent}%)`;
+      els.finalCorrectList.textContent = toProblemText(summary.correctNumbers);
+      els.finalWrongList.textContent = toProblemText(summary.wrongNumbers);
+      els.resultTime.textContent = `완료 시각: ${new Date().toLocaleString("ko-KR")}`;
+    }
+
+    function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+      const tokens = String(text).split(", ");
+      let line = "";
+      let cursorY = y;
+
+      tokens.forEach((token) => {
+        const testLine = line ? `${line}, ${token}` : token;
+        if (ctx.measureText(testLine).width <= maxWidth) {
+          line = testLine;
+        } else {
+          if (line) {
+            ctx.fillText(line, x, cursorY);
+            cursorY += lineHeight;
+          }
+          line = token;
+        }
+      });
+
+      if (line) {
+        ctx.fillText(line, x, cursorY);
+        cursorY += lineHeight;
+      }
+
+      return cursorY;
+    }
+
+    function captureResultAsImage() {
+      if (!state.every((s) => s.checked)) {
+        setFeedback("모든 문제를 채점한 뒤 결과표를 캡쳐할 수 있습니다.", "warn");
+        return;
+      }
+
+      const summary = getResultSummary();
+      const width = 1200;
+      const height = 780;
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, width, height);
+      ctx.fillStyle = "#1f2937";
+      ctx.font = "700 56px 'Noto Sans KR', 'Malgun Gothic', sans-serif";
+      ctx.fillText("한국어 어휘 퀴즈 최종 결과", 70, 95);
+
+      ctx.strokeStyle = "#d1d5db";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(60, 135, width - 120, height - 200);
+
+      ctx.fillStyle = "#334155";
+      ctx.font = "600 32px 'Noto Sans KR', 'Malgun Gothic', sans-serif";
+      ctx.fillText("점수", 90, 205);
+      ctx.fillStyle = "#0f766e";
+      ctx.font = "700 44px 'Noto Sans KR', 'Malgun Gothic', sans-serif";
+      ctx.fillText(`${summary.solved} / ${summary.total} (정답률 ${summary.percent}%)`, 300, 210);
+
+      const maxWidth = width - 390;
+      let y = 300;
+      ctx.fillStyle = "#334155";
+      ctx.font = "600 32px 'Noto Sans KR', 'Malgun Gothic', sans-serif";
+      ctx.fillText("맞춘 문제", 90, y);
+      ctx.fillStyle = "#166534";
+      ctx.font = "600 30px 'Noto Sans KR', 'Malgun Gothic', sans-serif";
+      y = wrapText(ctx, toProblemText(summary.correctNumbers), 300, y, maxWidth, 46) + 38;
+
+      ctx.fillStyle = "#334155";
+      ctx.font = "600 32px 'Noto Sans KR', 'Malgun Gothic', sans-serif";
+      ctx.fillText("틀린 문제", 90, y);
+      ctx.fillStyle = "#b42318";
+      ctx.font = "600 30px 'Noto Sans KR', 'Malgun Gothic', sans-serif";
+      y = wrapText(ctx, toProblemText(summary.wrongNumbers), 300, y, maxWidth, 46);
+
+      ctx.fillStyle = "#64748b";
+      ctx.font = "500 24px 'Noto Sans KR', 'Malgun Gothic', sans-serif";
+      ctx.fillText(`생성 시각: ${new Date().toLocaleString("ko-KR")}`, 70, height - 55);
+
+      const link = document.createElement("a");
+      const stamp = new Date().toISOString().replace(/[:T]/g, "-").slice(0, 19);
+      link.href = canvas.toDataURL("image/png");
+      link.download = `quiz-result-${stamp}.png`;
+      link.click();
+      setFeedback("결과표 이미지를 저장했습니다.", "ok");
+    }
+
+    function resetQuiz() {
+      state.forEach((item) => {
+        item.input = "";
+        item.checked = false;
+        item.correct = false;
+        item.feedback = "";
+        item.feedbackClass = "";
+      });
+      current = 0;
+      render();
+      setFeedback("퀴즈를 초기화했습니다.", "warn");
+    }
+
+    function updateHeader() {
+      const solved = countSolved();
+      const touched = countTouched();
+      els.counter.textContent = `\ubb38\uc81c ${current + 1} / ${questions.length}`;
+      els.score.textContent = `\uc815\ub2f5 ${solved}\uac1c`;
+      els.solved.textContent = `\uc9c4\ud589 ${touched}/${questions.length}`;
+      els.progressFill.style.width = `${(touched / questions.length) * 100}%`;
+      updateFinalResult();
+    }
+
+    function updateNav() {
+      els.navGrid.innerHTML = "";
+      questions.forEach((_, idx) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = idx + 1;
+        const item = state[idx];
+        if (idx === current) btn.classList.add("current");
+        if (item.correct) btn.classList.add("correct");
+        else if (item.checked) btn.classList.add("wrong");
+        else if (item.input.trim()) btn.classList.add("touched");
+        btn.addEventListener("click", () => {
+          persistInput();
+          current = idx;
+          render();
+        });
+        els.navGrid.appendChild(btn);
+      });
+    }
+
+    function render() {
+      const q = questions[current];
+      const st = state[current];
+
+      els.image.src = encodeURI(q.image);
+      els.image.alt = `문제 ${current + 1} 그림`;
+      els.title.textContent = `${current + 1}. ${q.prompt}`;
+
+      els.hintList.innerHTML = "";
+      q.hints.forEach((hint) => {
+        const li = document.createElement("li");
+        li.textContent = hint;
+        els.hintList.appendChild(li);
+      });
+
+      els.input.value = st.input;
+      els.feedback.textContent = st.feedback;
+      els.feedback.className = `feedback ${st.feedbackClass || ""}`.trim();
+      els.source.textContent = `파일: ${q.image}`;
+
+      updateHeader();
+      updateNav();
+    }
+
+    function goNext() {
+      persistInput();
+      current = (current + 1) % questions.length;
+      render();
+    }
+
+    function goPrev() {
+      persistInput();
+      current = (current - 1 + questions.length) % questions.length;
+      render();
+    }
+
+    els.checkBtn.addEventListener("click", () => {
+      const q = questions[current];
+      const raw = els.input.value.trim();
+      persistInput();
+
+      if (!raw) {
+        setFeedback("답을 먼저 입력해 주세요.", "warn");
+        updateNav();
+        return;
+      }
+
+      state[current].checked = true;
+      const correct = isCorrectAnswer(raw, q.answers);
+      state[current].correct = correct;
+
+      if (correct) {
+        setFeedback("정답입니다.", "ok");
+      } else {
+        setFeedback("오답입니다. 힌트를 더 보고 다시 시도해 보세요.", "bad");
+      }
+
+      updateHeader();
+      updateNav();
+    });
+
+    els.showBtn.addEventListener("click", () => {
+      const q = questions[current];
+      const answerText = q.answers.join(" / ");
+      setFeedback(`정답: ${answerText}`, "warn");
+      updateNav();
+    });
+
+    els.prevBtn.addEventListener("click", goPrev);
+    els.nextBtn.addEventListener("click", goNext);
+    els.captureBtn.addEventListener("click", captureResultAsImage);
+    els.restartBtn.addEventListener("click", resetQuiz);
+
+    els.input.addEventListener("keydown", (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+        els.checkBtn.click();
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>
