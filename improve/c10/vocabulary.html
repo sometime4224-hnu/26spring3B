@@ -95,6 +95,31 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(0,0,0,0.05);
         }
+        .korean-image-front {
+            padding: 0.65rem;
+            justify-content: flex-start;
+            overflow: hidden;
+        }
+        .korean-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 0.85rem;
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+        }
+        .korean-image-hint {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(17, 24, 39, 0.65);
+            color: #fff;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            padding: 0.2rem 0.55rem;
+            letter-spacing: 0.01em;
+        }
     </style>
 
     <!-- Tailwind & Fonts Injected -->
@@ -157,7 +182,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="flex flex-col sm:flex-row gap-3 items-center w-full sm:w-auto">
                 <!-- Language Selector -->
                 <div id="language-selector" class="flex flex-wrap justify-center gap-2 p-1 rounded-lg bg-gray-100">
-                    <button data-lang="korean" class="lang-btn px-3 py-1.5 text-xs sm:text-sm font-medium text-white bg-indigo-500 rounded-md shadow-sm hover:bg-indigo-600 transition-all">한국어 뜻</button>
+                    <button data-lang="korean" class="lang-btn px-3 py-1.5 text-xs sm:text-sm font-medium text-white bg-indigo-500 rounded-md shadow-sm hover:bg-indigo-600 transition-all">한국어</button>
                     <button data-lang="vietnamese" class="lang-btn px-3 py-1.5 text-xs sm:text-sm font-medium text-white bg-green-500 rounded-md shadow-sm hover:bg-green-600 transition-all">베트남어</button>
                     <button data-lang="japanese" class="lang-btn px-3 py-1.5 text-xs sm:text-sm font-medium text-white bg-blue-500 rounded-md shadow-sm hover:bg-blue-600 transition-all">일본어</button>
                     <button data-lang="chinese" class="lang-btn px-3 py-1.5 text-xs sm:text-sm font-medium text-white bg-red-500 rounded-md shadow-sm hover:bg-red-600 transition-all">중국어</button>
@@ -185,25 +210,25 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     themeColor: 'indigo',
                     langCode: 'ko-KR',
                     data: [
-                        { korean: "고백하다", foreign: "사랑하는 마음을 말로 표현하는 것.", foreignLangCode: 'ko-KR' },
-                        { korean: "가슴이 두근거리다", foreign: "좋아하거나 놀랐을 때 심장이 빨리 뛰는 것.", foreignLangCode: 'ko-KR' },
-                        { korean: "나란히 앉다", foreign: "옆으로 같이 앉는 것.", foreignLangCode: 'ko-KR' },
-                        { korean: "마음씨가 착하다", foreign: "마음이 따뜻하고 좋은 것.", foreignLangCode: 'ko-KR' },
-                        { korean: "말(생각)이 잘 통하다", foreign: "서로의 생각이나 이야기가 잘 이해되는 것.", foreignLangCode: 'ko-KR' },
-                        { korean: "매력이 있다", foreign: "사람의 마음을 끄는 힘이 있는 것.", foreignLangCode: 'ko-KR' },
-                        { korean: "사랑에 빠지다", foreign: "누군가를 아주 많이 좋아하게 되는 것.", foreignLangCode: 'ko-KR' },
-                        { korean: "사귀다", foreign: "서로 좋아하는 사이가 되어 만나는 것.", foreignLangCode: 'ko-KR' },
-                        { korean: "성격(마음)이 잘 맞다", foreign: "두 사람의 성격이 비슷해서 잘 어울리는 것.", foreignLangCode: 'ko-KR' },
-                        { korean: "선보다", foreign: "결혼할 사람을 정하기 위해 소개로 만나는 것.", foreignLangCode: 'ko-KR' },
-                        { korean: "소개팅하다", foreign: "다른 사람이 소개해 줘서 처음 만나는 것.", foreignLangCode: 'ko-KR' },
-                        { korean: "손을 잡다", foreign: "한 사람이 다른 사람의 손을 잡는 것.", foreignLangCode: 'ko-KR' },
-                        { korean: "어깨에 기대다", foreign: "다른 사람의 어깨에 머리를 편하게 두는 것.", foreignLangCode: 'ko-KR' },
-                        { korean: "얼굴이 빨개지다", foreign: "부끄럽거나 당황할 때 얼굴이 붉게 변하는 것.", foreignLangCode: 'ko-KR' },
-                        { korean: "연애하다", foreign: "좋아하는 사람과 사귀는 관계를 이어가는 것.", foreignLangCode: 'ko-KR' },
-                        { korean: "인상이 좋다", foreign: "처음 봤을 때 느껴지는 이미지가 좋은 것.", foreignLangCode: 'ko-KR' },
-                        { korean: "조건이 맞다", foreign: "서로 원하는 상황이나 환경이 잘 맞는 것.", foreignLangCode: 'ko-KR' },
-                        { korean: "첫눈에 반하다", foreign: "처음 보자마자 바로 좋아하게 되는 것.", foreignLangCode: 'ko-KR' },
-                        { korean: "팔짱을 끼다", foreign: "한 사람이 다른 사람의 팔에 자기 팔을 거는 것.", foreignLangCode: 'ko-KR' }
+                        { korean: "고백하다", foreign: "사랑하는 마음을 말로 표현하는 것.", foreignLangCode: 'ko-KR', image: '../imagesource/split_text_hidden_mobile/lovewords (2)_cut1.webp' },
+                        { korean: "가슴이 두근거리다", foreign: "좋아하거나 놀랐을 때 심장이 빨리 뛰는 것.", foreignLangCode: 'ko-KR', image: '../imagesource/split_text_hidden_mobile/lovewords (1)_cut3.webp' },
+                        { korean: "나란히 앉다", foreign: "옆으로 같이 앉는 것.", foreignLangCode: 'ko-KR', image: '../imagesource/split_text_hidden_mobile/lovewords (1)_cut1.webp' },
+                        { korean: "마음씨가 착하다", foreign: "마음이 따뜻하고 좋은 것.", foreignLangCode: 'ko-KR', image: '../imagesource/split_text_hidden_mobile/lovewords (4)_cut4.webp' },
+                        { korean: "말(생각)이 잘 통하다", foreign: "서로의 생각이나 이야기가 잘 이해되는 것.", foreignLangCode: 'ko-KR', image: '../imagesource/split_text_hidden_mobile/lovewords (4)_cut1.webp' },
+                        { korean: "매력이 있다", foreign: "사람의 마음을 끄는 힘이 있는 것.", foreignLangCode: 'ko-KR', image: '../imagesource/split_text_hidden_mobile/lovewords (4)_cut2.webp' },
+                        { korean: "사랑에 빠지다", foreign: "누군가를 아주 많이 좋아하게 되는 것.", foreignLangCode: 'ko-KR', image: '../imagesource/split_text_hidden_mobile/lovewords (3)_cut4.webp' },
+                        { korean: "사귀다", foreign: "서로 좋아하는 사이가 되어 만나는 것.", foreignLangCode: 'ko-KR', image: '../imagesource/split_text_hidden_mobile/lovewords (3)_cut3.webp' },
+                        { korean: "성격(마음)이 잘 맞다", foreign: "두 사람의 성격이 비슷해서 잘 어울리는 것.", foreignLangCode: 'ko-KR', image: '../imagesource/split_text_hidden_mobile/lovewords (4)_cut1.webp' },
+                        { korean: "선보다", foreign: "결혼할 사람을 정하기 위해 소개로 만나는 것.", foreignLangCode: 'ko-KR', image: '../imagesource/split_text_hidden_mobile/lovewords (2)_cut2.webp' },
+                        { korean: "소개팅하다", foreign: "다른 사람이 소개해 줘서 처음 만나는 것.", foreignLangCode: 'ko-KR', image: '../imagesource/split_text_hidden_mobile/lovewords (3)_cut1.webp' },
+                        { korean: "손을 잡다", foreign: "한 사람이 다른 사람의 손을 잡는 것.", foreignLangCode: 'ko-KR', image: '../imagesource/split_text_hidden_mobile/lovewords (1)_cut1.webp' },
+                        { korean: "어깨에 기대다", foreign: "다른 사람의 어깨에 머리를 편하게 두는 것.", foreignLangCode: 'ko-KR', image: '../imagesource/split_text_hidden_mobile/lovewords (1)_cut1.webp' },
+                        { korean: "얼굴이 빨개지다", foreign: "부끄럽거나 당황할 때 얼굴이 붉게 변하는 것.", foreignLangCode: 'ko-KR', image: '../imagesource/split_text_hidden_mobile/lovewords (1)_cut3.webp' },
+                        { korean: "연애하다", foreign: "좋아하는 사람과 사귀는 관계를 이어가는 것.", foreignLangCode: 'ko-KR', image: '../imagesource/split_text_hidden_mobile/lovewords (3)_cut3.webp' },
+                        { korean: "인상이 좋다", foreign: "처음 봤을 때 느껴지는 이미지가 좋은 것.", foreignLangCode: 'ko-KR', image: '../imagesource/split_text_hidden_mobile/lovewords (4)_cut2.webp' },
+                        { korean: "조건이 맞다", foreign: "서로 원하는 상황이나 환경이 잘 맞는 것.", foreignLangCode: 'ko-KR', image: '../imagesource/split_text_hidden_mobile/lovewords (4)_cut3.webp' },
+                        { korean: "첫눈에 반하다", foreign: "처음 보자마자 바로 좋아하게 되는 것.", foreignLangCode: 'ko-KR', image: '../imagesource/split_text_hidden_mobile/lovewords (3)_cut2.webp' },
+                        { korean: "팔짱을 끼다", foreign: "한 사람이 다른 사람의 팔에 자기 팔을 거는 것.", foreignLangCode: 'ko-KR', image: '../imagesource/split_text_hidden_mobile/lovewords (1)_cut2.webp' }
                     ]
                 },
                 vietnamese: {
@@ -309,15 +334,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             function createCard(item, colors, targetLangData) {
                 const cardContainer = document.createElement('div');
-                cardContainer.className = 'card-container h-48 sm:h-56 select-none'; // 높이 조정 및 드래그 방지
-                
+                cardContainer.className = 'card-container h-48 sm:h-56 select-none';
+
                 const cardInner = document.createElement('div');
                 cardInner.className = 'card-inner';
 
-                // Front Side (Korean)
+                const isKoreanImageMode = currentLang === 'korean' && item.image;
+
+                // Front Side
                 const cardFront = document.createElement('div');
-                cardFront.className = `card-front bg-white ${colors.text}`;
-                
+
                 // Front TTS Button
                 const frontTtsBtn = document.createElement('button');
                 frontTtsBtn.className = 'tts-btn';
@@ -327,40 +353,62 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     speak(item.korean, 'ko-KR');
                 };
 
-                const koreanText = document.createElement('h2');
-                koreanText.className = 'text-xl sm:text-2xl font-bold break-keep px-2';
-                koreanText.textContent = item.korean;
-                
-                cardFront.appendChild(frontTtsBtn);
-                cardFront.appendChild(koreanText);
+                if (isKoreanImageMode) {
+                    cardFront.className = `card-front korean-image-front bg-white ${colors.text}`;
 
-                // Back Side (Foreign Language)
+                    const img = document.createElement('img');
+                    img.className = 'korean-image';
+                    img.src = item.image;
+                    img.alt = `${item.korean} 삽화`;
+                    img.loading = 'lazy';
+                    img.decoding = 'async';
+
+                    const hint = document.createElement('span');
+                    hint.className = 'korean-image-hint';
+                    hint.textContent = '탭해서 단어 보기';
+
+                    cardFront.appendChild(frontTtsBtn);
+                    cardFront.appendChild(img);
+                    cardFront.appendChild(hint);
+                } else {
+                    cardFront.className = `card-front bg-white ${colors.text}`;
+                    const koreanText = document.createElement('h2');
+                    koreanText.className = 'text-xl sm:text-2xl font-bold break-keep px-2';
+                    koreanText.textContent = item.korean;
+
+                    cardFront.appendChild(frontTtsBtn);
+                    cardFront.appendChild(koreanText);
+                }
+
+                // Back Side
                 const cardBack = document.createElement('div');
                 cardBack.className = `card-back text-white ${colors.cardBack}`;
 
-                // Back TTS Button
                 const backTtsBtn = document.createElement('button');
                 backTtsBtn.className = 'tts-btn';
                 backTtsBtn.innerHTML = '<i class="ph ph-speaker-high text-xl"></i>';
                 backTtsBtn.onclick = (e) => {
                     e.stopPropagation();
-                    speak(item.foreign, targetLangData.langCode); // Use correct lang code
+                    const ttsText = isKoreanImageMode ? item.korean : item.foreign;
+                    const ttsLang = isKoreanImageMode ? 'ko-KR' : targetLangData.langCode;
+                    speak(ttsText, ttsLang);
                 };
 
-                const foreignText = document.createElement('p');
-                foreignText.className = 'text-lg sm:text-xl font-semibold break-keep px-2';
-                foreignText.textContent = item.foreign;
-                
+                const backPrimary = document.createElement(isKoreanImageMode ? 'h2' : 'p');
+                backPrimary.className = isKoreanImageMode
+                    ? 'text-xl sm:text-2xl font-bold break-keep px-2'
+                    : 'text-lg sm:text-xl font-semibold break-keep px-2';
+                backPrimary.textContent = isKoreanImageMode ? item.korean : item.foreign;
+
                 cardBack.appendChild(backTtsBtn);
-                cardBack.appendChild(foreignText);
-                
+                cardBack.appendChild(backPrimary);
+
                 cardInner.appendChild(cardFront);
                 cardInner.appendChild(cardBack);
                 cardContainer.appendChild(cardInner);
 
                 cardContainer.addEventListener('click', () => {
                     cardContainer.classList.toggle('flipped');
-                    // Optional: Play click sound or vibration here for mobile
                     if (navigator.vibrate) navigator.vibrate(10);
                 });
 
