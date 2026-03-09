@@ -10,25 +10,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet" />
 
     <style>
         body {
-            font-family: 'Noto Sans KR', 'Noto Sans', sans-serif;
+            font-family: 'Noto Sans KR', sans-serif;
             -webkit-tap-highlight-color: transparent;
             margin: 0;
         }
 
-        .sticky-header {
-            background: rgba(255, 255, 255, 0.9);
+        .top-bar {
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .lang-btn.active {
-            transform: scale(1.04);
-            box-shadow: 0 0 0 2px rgba(255,255,255,1), 0 0 14px rgba(0,0,0,0.15);
-            font-weight: 700;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
         }
 
         .quiz-image {
@@ -74,94 +68,39 @@
             object-fit: cover;
             background: #fff;
         }
-
-        .injected-global-nav {
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid #e0e7ff;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            padding: 0 16px;
-            position: sticky;
-            top: 0;
-            z-index: 999999;
-            box-sizing: border-box;
-            gap: 15px;
-        }
-
-        .injected-global-nav a {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: #4f46e5;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 14px;
-            transition: color 0.2s;
-        }
-
-        .injected-global-nav a:hover {
-            color: #3730a3;
-        }
-
-        .injected-global-nav .divider {
-            color: #cbd5e1;
-        }
     </style>
 </head>
 
-<body class="bg-indigo-50 min-h-screen flex flex-col transition-colors duration-500">
-    <nav id="injected-global-nav" class="injected-global-nav">
-        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
-        <span class="divider">|</span>
-        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
-    </nav>
+<body class="bg-indigo-50 min-h-screen flex flex-col">
+    <header class="top-bar sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-3 sm:px-4 h-14 flex items-center justify-between gap-3">
+            <h1 class="text-sm sm:text-base font-extrabold text-indigo-600 truncate">
+                10과 사진 어휘 퀴즈
+            </h1>
 
-    <header class="sticky-header sticky top-[60px] z-50 px-4 py-3 shadow-sm">
-        <div class="w-full max-w-6xl mx-auto flex flex-col gap-4">
-            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                <div>
-                    <h1 id="title-text" class="text-xl sm:text-2xl font-extrabold text-indigo-600 leading-tight">
-                        첫 만남부터 고백까지
-                    </h1>
-                    <p class="text-sm text-gray-500 mt-1">사진을 보고 알맞은 어휘를 고르는 4지선다 퀴즈</p>
-                </div>
-
-                <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-                    <div id="language-selector" class="flex flex-wrap gap-2 p-1 rounded-xl bg-white/80 border border-gray-200 shadow-sm">
-                        <button type="button" data-lang="korean" class="lang-btn px-3 py-1.5 text-xs sm:text-sm font-medium text-white bg-indigo-500 rounded-lg hover:bg-indigo-600 transition-all">한국어</button>
-                        <button type="button" data-lang="vietnamese" class="lang-btn px-3 py-1.5 text-xs sm:text-sm font-medium text-white bg-green-500 rounded-lg hover:bg-green-600 transition-all">베트남어</button>
-                        <button type="button" data-lang="japanese" class="lang-btn px-3 py-1.5 text-xs sm:text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition-all">일본어</button>
-                        <button type="button" data-lang="chinese" class="lang-btn px-3 py-1.5 text-xs sm:text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 transition-all">중국어</button>
-                    </div>
-
-                    <div class="flex gap-2">
-                        <button id="restart-btn" type="button" class="px-4 py-2 text-sm font-bold text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition shadow-sm whitespace-nowrap">
-                            <i class="ph ph-arrow-counter-clockwise mr-1"></i> 처음부터
-                        </button>
-                        <button id="shuffle-btn" type="button" class="px-4 py-2 text-sm font-bold text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition shadow-sm whitespace-nowrap">
-                            <i class="ph ph-shuffle mr-1"></i> 문항 섞기
-                        </button>
-                    </div>
-                </div>
+            <div class="flex items-center gap-2 shrink-0">
+                <button id="restart-btn" type="button" class="px-3 py-1.5 text-xs sm:text-sm font-bold text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition shadow-sm whitespace-nowrap">
+                    다시
+                </button>
+                <button id="shuffle-btn" type="button" class="px-3 py-1.5 text-xs sm:text-sm font-bold text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition shadow-sm whitespace-nowrap">
+                    <i class="ph ph-shuffle mr-1"></i> 섞기
+                </button>
             </div>
         </div>
     </header>
 
     <main class="w-full flex-1 px-4 pb-12">
-        <div class="w-full max-w-6xl mx-auto mt-6">
+        <div class="w-full max-w-6xl mx-auto mt-4">
             <div id="quiz-stage" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <section class="bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden">
                     <div class="p-5 border-b border-gray-100">
                         <div class="flex items-center justify-between gap-4">
                             <div>
-                                <p class="text-xs uppercase tracking-[0.18em] text-gray-400">Progress</p>
+                                <p class="text-xs uppercase tracking-[0.18em] text-gray-400">문항</p>
                                 <h2 id="progress-text" class="text-lg sm:text-xl font-extrabold text-gray-900 mt-1">1 / 17</h2>
                             </div>
                             <div class="text-right">
-                                <p class="text-xs uppercase tracking-[0.18em] text-gray-400">Score</p>
+                                <p class="text-xs uppercase tracking-[0.18em] text-gray-400">점수</p>
                                 <p id="score-text" class="text-lg sm:text-xl font-extrabold text-gray-900 mt-1">0</p>
                             </div>
                         </div>
@@ -179,7 +118,6 @@
                         <div class="mt-4 flex items-start justify-between gap-3">
                             <div>
                                 <p class="text-base font-bold text-gray-900">사진을 보고 알맞은 어휘를 고르세요.</p>
-                                <p class="text-sm text-gray-500 mt-1">보기 언어를 바꿔도 현재 점수와 문제 순서는 유지됩니다.</p>
                             </div>
 
                             <button id="speak-answer-btn" type="button" class="hidden shrink-0 px-3 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 transition shadow-sm">
@@ -192,14 +130,9 @@
                 </section>
 
                 <section class="bg-white border border-gray-200 rounded-3xl shadow-sm p-4 sm:p-5">
-                    <div class="flex items-center justify-between gap-4 mb-4">
-                        <div>
-                            <h3 class="text-lg font-extrabold text-gray-900">선택지</h3>
-                            <p class="text-sm text-gray-500 mt-1">정답을 고르면 바로 채점됩니다.</p>
-                        </div>
-                        <span id="choice-lang-label" class="inline-flex items-center rounded-full bg-indigo-100 text-indigo-700 px-3 py-1 text-xs font-bold">
-                            한국어 보기
-                        </span>
+                    <div class="mb-4">
+                        <h3 class="text-lg font-extrabold text-gray-900">선택지</h3>
+                        <p class="text-sm text-gray-500 mt-1">정답을 고르면 바로 채점됩니다.</p>
                     </div>
 
                     <div id="options-grid" class="grid grid-cols-1 gap-3"></div>
@@ -220,198 +153,110 @@
                 {
                     id: 'v01',
                     korean: '고백하다',
-                    vietnamese: 'tỏ tình',
-                    japanese: '告白する',
-                    chinese: '告白',
                     hint: '사랑하는 마음을 말로 표현하다.',
                     image: '../imagesource/split_text_hidden_mobile_vocab/v01_confess.webp'
                 },
                 {
                     id: 'v02',
                     korean: '가슴이 두근거리다',
-                    vietnamese: 'tim đập rộn ràng (hồi hộp)',
-                    japanese: '胸がドキドキする',
-                    chinese: '心怦怦跳',
                     hint: '좋아하거나 놀랐을 때 심장이 빨리 뛰다.',
                     image: '../imagesource/split_text_hidden_mobile_vocab/v02_heart_pound.webp'
                 },
                 {
                     id: 'v03',
                     korean: '나란히 앉다',
-                    vietnamese: 'ngồi cạnh nhau',
-                    japanese: '隣に座る',
-                    chinese: '并排坐',
                     hint: '옆으로 같이 앉다.',
                     image: '../imagesource/split_text_hidden_mobile_vocab/v03_sit_together.webp'
                 },
                 {
                     id: 'v04',
                     korean: '마음씨가 착하다',
-                    vietnamese: 'tốt bụng / hiền lành',
-                    japanese: '心が優しい',
-                    chinese: '心地善良',
                     hint: '마음이 따뜻하고 좋다.',
                     image: '../imagesource/split_text_hidden_mobile_vocab/v04_kind_heart.webp'
                 },
                 {
                     id: 'v05',
                     korean: '말이 잘 통하다/성격이 잘 맞다',
-                    vietnamese: 'nói chuyện hợp nhau / hợp tính cách',
-                    japanese: '話がよく通じる / 性格がよく合う',
-                    chinese: '话很投机 / 性格很合得来',
                     hint: '대화와 성격이 잘 맞아 편하고 잘 어울리다.',
                     image: '../imagesource/split_text_hidden_mobile_vocab/v20_match_communicate.webp'
                 },
                 {
                     id: 'v06',
                     korean: '매력이 있다',
-                    vietnamese: 'có sức hút / quyến rũ',
-                    japanese: '魅力がある',
-                    chinese: '有魅力',
                     hint: '사람의 마음을 끄는 힘이 있다.',
                     image: '../imagesource/split_text_hidden_mobile_vocab/v06_attractive.webp'
                 },
                 {
                     id: 'v07',
                     korean: '사랑에 빠지다',
-                    vietnamese: 'phải lòng / rơi vào lưới tình',
-                    japanese: '恋に落ちる',
-                    chinese: '坠入爱河',
                     hint: '누군가를 아주 많이 좋아하게 되다.',
                     image: '../imagesource/split_text_hidden_mobile_vocab/v07_fall_in_love.webp'
                 },
                 {
                     id: 'v08',
                     korean: '사귀다/연애하다',
-                    vietnamese: 'hẹn hò / yêu nhau',
-                    japanese: '付き合う / 恋愛する',
-                    chinese: '交往 / 谈恋爱',
                     hint: '서로 좋아하는 사이가 되어 관계를 이어가다.',
                     image: '../imagesource/split_text_hidden_mobile_vocab/v21_dating_relationship.webp'
                 },
                 {
                     id: 'v09',
                     korean: '선보다',
-                    vietnamese: 'đi xem mắt (để kết hôn)',
-                    japanese: 'お見合いする',
-                    chinese: '(以结婚为目的)相亲',
                     hint: '결혼할 사람을 정하기 위해 소개로 만나다.',
                     image: '../imagesource/split_text_hidden_mobile_vocab/v10_blind_date.webp'
                 },
                 {
                     id: 'v10',
                     korean: '소개팅하다',
-                    vietnamese: 'đi xem mắt (qua giới thiệu)',
-                    japanese: '紹介で会う',
-                    chinese: '联谊, 相亲',
                     hint: '다른 사람이 소개해 줘서 처음 만나다.',
                     image: '../imagesource/split_text_hidden_mobile_vocab/v11_group_date_intro.webp'
                 },
                 {
                     id: 'v11',
                     korean: '손을 잡다',
-                    vietnamese: 'nắm tay',
-                    japanese: '手を繋ぐ',
-                    chinese: '牵手',
                     hint: '한 사람이 다른 사람의 손을 잡다.',
                     image: '../imagesource/split_text_hidden_mobile_vocab/v12_hold_hands.webp'
                 },
                 {
                     id: 'v12',
                     korean: '어깨에 기대다',
-                    vietnamese: 'tựa vào vai',
-                    japanese: '肩にもたれる',
-                    chinese: '靠在肩膀上',
                     hint: '다른 사람의 어깨에 머리를 편하게 두다.',
                     image: '../imagesource/split_text_hidden_mobile_vocab/v13_lean_on_shoulder.webp'
                 },
                 {
                     id: 'v13',
                     korean: '얼굴이 빨개지다',
-                    vietnamese: 'đỏ mặt',
-                    japanese: '顔が赤くなる',
-                    chinese: '脸红',
                     hint: '부끄럽거나 당황할 때 얼굴이 붉게 변하다.',
                     image: '../imagesource/split_text_hidden_mobile_vocab/v14_blush.webp'
                 },
                 {
                     id: 'v14',
                     korean: '인상이 좋다',
-                    vietnamese: 'có ấn tượng tốt',
-                    japanese: '印象が良い',
-                    chinese: '印象很好',
                     hint: '처음 봤을 때 느껴지는 이미지가 좋다.',
                     image: '../imagesource/split_text_hidden_mobile_vocab/v16_good_impression.webp'
                 },
                 {
                     id: 'v15',
                     korean: '조건이 맞다',
-                    vietnamese: 'hợp điều kiện',
-                    japanese: '条件が合う',
-                    chinese: '条件合适',
                     hint: '서로 원하는 상황이나 환경이 잘 맞다.',
                     image: '../imagesource/split_text_hidden_mobile_vocab/v17_match_conditions.webp'
                 },
                 {
                     id: 'v16',
                     korean: '첫눈에 반하다',
-                    vietnamese: 'yêu từ cái nhìn đầu tiên',
-                    japanese: '一目惚れする',
-                    chinese: '一见钟情',
                     hint: '처음 보자마자 바로 좋아하게 되다.',
                     image: '../imagesource/split_text_hidden_mobile_vocab/v18_love_at_first_sight.webp'
                 },
                 {
                     id: 'v17',
                     korean: '팔짱을 끼다',
-                    vietnamese: 'khoác tay',
-                    japanese: '腕を組む',
-                    chinese: '挽着胳膊',
                     hint: '다른 사람의 팔에 자기 팔을 걸다.',
                     image: '../imagesource/split_text_hidden_mobile_vocab/v19_lock_arms.webp'
                 }
             ];
 
-            const LANG_META = {
-                korean: {
-                    label: '한국어',
-                    theme: 'indigo',
-                    pillClass: 'bg-indigo-100 text-indigo-700',
-                    bodyClass: 'bg-indigo-50',
-                    titleClass: 'text-indigo-600',
-                    progressClass: 'bg-indigo-500'
-                },
-                vietnamese: {
-                    label: '베트남어',
-                    theme: 'green',
-                    pillClass: 'bg-green-100 text-green-700',
-                    bodyClass: 'bg-green-50',
-                    titleClass: 'text-green-600',
-                    progressClass: 'bg-green-500'
-                },
-                japanese: {
-                    label: '일본어',
-                    theme: 'blue',
-                    pillClass: 'bg-blue-100 text-blue-700',
-                    bodyClass: 'bg-blue-50',
-                    titleClass: 'text-blue-600',
-                    progressClass: 'bg-blue-500'
-                },
-                chinese: {
-                    label: '중국어',
-                    theme: 'red',
-                    pillClass: 'bg-red-100 text-red-700',
-                    bodyClass: 'bg-red-50',
-                    titleClass: 'text-red-600',
-                    progressClass: 'bg-red-500'
-                }
-            };
-
             const OPTION_LABELS = ['A', 'B', 'C', 'D'];
             const itemMap = new Map(vocabularyData.map(item => [item.id, item]));
 
-            const body = document.body;
-            const titleText = document.getElementById('title-text');
             const progressText = document.getElementById('progress-text');
             const scoreText = document.getElementById('score-text');
             const progressBar = document.getElementById('progress-bar');
@@ -424,11 +269,8 @@
             const resultSection = document.getElementById('result-section');
             const quizStage = document.getElementById('quiz-stage');
             const speakAnswerBtn = document.getElementById('speak-answer-btn');
-            const choiceLangLabel = document.getElementById('choice-lang-label');
-            const langButtons = Array.from(document.querySelectorAll('.lang-btn'));
 
             const state = {
-                currentLang: 'korean',
                 questionSet: [],
                 questionIndex: 0,
                 score: 0,
@@ -466,21 +308,6 @@
                 return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
             }
 
-            function getChoiceText(item) {
-                if (state.currentLang === 'korean') return item.korean;
-                return item[state.currentLang];
-            }
-
-            function getKoreanAndSupportText(item) {
-                if (state.currentLang === 'korean') {
-                    return `<span class="font-bold text-gray-900">${item.korean}</span>`;
-                }
-                return `
-                    <span class="font-bold text-gray-900">${item.korean}</span>
-                    <span class="block text-sm text-gray-500 mt-1">${item[state.currentLang]}</span>
-                `;
-            }
-
             function buildQuestionSet() {
                 const shuffledItems = shuffleArray(vocabularyData);
                 return shuffledItems.map(correctItem => {
@@ -494,20 +321,6 @@
                         itemId: correctItem.id,
                         choiceIds: choices
                     };
-                });
-            }
-
-            function applyTheme() {
-                const meta = LANG_META[state.currentLang];
-
-                body.className = `min-h-screen flex flex-col transition-colors duration-500 ${meta.bodyClass}`;
-                titleText.className = `text-xl sm:text-2xl font-extrabold leading-tight ${meta.titleClass}`;
-                progressBar.className = `h-full rounded-full transition-all duration-300 ${meta.progressClass}`;
-                choiceLangLabel.className = `inline-flex items-center rounded-full px-3 py-1 text-xs font-bold ${meta.pillClass}`;
-                choiceLangLabel.textContent = `${meta.label} 보기`;
-
-                langButtons.forEach(btn => {
-                    btn.classList.toggle('active', btn.dataset.lang === state.currentLang);
                 });
             }
 
@@ -529,7 +342,7 @@
                     feedbackBox.innerHTML = `
                         <p class="text-sm font-bold text-emerald-700">정답입니다.</p>
                         <div class="mt-2 text-sm leading-6 text-gray-700">
-                            <div>${getKoreanAndSupportText(correctItem)}</div>
+                            <div><span class="font-bold text-gray-900">${correctItem.korean}</span></div>
                             <p class="mt-2 text-gray-600">${correctItem.hint}</p>
                         </div>
                     `;
@@ -539,9 +352,9 @@
                         <p class="text-sm font-bold text-rose-700">틀렸습니다.</p>
                         <div class="mt-2 text-sm leading-6 text-gray-700">
                             <p>정답은 다음과 같습니다.</p>
-                            <div class="mt-1">${getKoreanAndSupportText(correctItem)}</div>
+                            <div class="mt-1"><span class="font-bold text-gray-900">${correctItem.korean}</span></div>
                             <p class="mt-2 text-gray-600">${correctItem.hint}</p>
-                            <p class="mt-3 text-sm text-gray-600">내가 고른 답: <span class="font-semibold text-rose-700">${getChoiceText(selectedItem)}</span></p>
+                            <p class="mt-3 text-sm text-gray-600">내가 고른 답: <span class="font-semibold text-rose-700">${selectedItem.korean}</span></p>
                         </div>
                     `;
                 }
@@ -599,16 +412,9 @@
 
                     const label = document.createElement('p');
                     label.className = 'font-bold text-gray-900 break-keep';
-                    label.textContent = getChoiceText(choiceItem);
+                    label.textContent = choiceItem.korean;
 
                     textWrap.appendChild(label);
-
-                    if (state.currentLang !== 'korean') {
-                        const sub = document.createElement('p');
-                        sub.className = 'text-xs text-gray-500 mt-1';
-                        sub.textContent = choiceItem.korean;
-                        textWrap.appendChild(sub);
-                    }
 
                     row.appendChild(badge);
                     row.appendChild(textWrap);
@@ -678,32 +484,32 @@
                 resultSection.innerHTML = `
                     <div class="bg-white border border-gray-200 rounded-3xl shadow-sm p-6 sm:p-8">
                         <div class="text-center">
-                            <p class="text-sm uppercase tracking-[0.22em] text-gray-400">Quiz Completed</p>
+                            <p class="text-sm uppercase tracking-[0.22em] text-gray-400">완료</p>
                             <h2 class="mt-2 text-2xl sm:text-3xl font-extrabold text-gray-900">${state.score} / ${total}</h2>
                             <p class="mt-2 text-gray-600">정답률 ${accuracy}%</p>
                         </div>
 
                         <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
                             <div class="rounded-2xl bg-gray-50 border border-gray-200 p-4 text-center">
-                                <p class="text-xs uppercase tracking-[0.2em] text-gray-400">Total</p>
+                                <p class="text-xs uppercase tracking-[0.2em] text-gray-400">전체</p>
                                 <p class="mt-2 text-xl font-extrabold text-gray-900">${total}</p>
                             </div>
                             <div class="rounded-2xl bg-emerald-50 border border-emerald-200 p-4 text-center">
-                                <p class="text-xs uppercase tracking-[0.2em] text-emerald-600">Correct</p>
+                                <p class="text-xs uppercase tracking-[0.2em] text-emerald-600">정답</p>
                                 <p class="mt-2 text-xl font-extrabold text-emerald-700">${state.score}</p>
                             </div>
                             <div class="rounded-2xl bg-rose-50 border border-rose-200 p-4 text-center">
-                                <p class="text-xs uppercase tracking-[0.2em] text-rose-600">Wrong</p>
+                                <p class="text-xs uppercase tracking-[0.2em] text-rose-600">오답</p>
                                 <p class="mt-2 text-xl font-extrabold text-rose-700">${wrongAnswers.length}</p>
                             </div>
                         </div>
 
                         <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
                             <button id="retry-same-btn" type="button" class="px-5 py-3 rounded-2xl bg-gray-900 text-white font-bold hover:bg-black transition">
-                                같은 순서로 다시 풀기
+                                다시 풀기
                             </button>
                             <button id="retry-shuffle-btn" type="button" class="px-5 py-3 rounded-2xl bg-white border border-gray-300 text-gray-800 font-bold hover:bg-gray-50 transition">
-                                문항 섞어서 다시 풀기
+                                섞어서 다시
                             </button>
                         </div>
                     </div>
@@ -713,7 +519,6 @@
                             ? `
                             <div class="mt-6 bg-white border border-gray-200 rounded-3xl shadow-sm p-5 sm:p-6">
                                 <h3 class="text-xl font-extrabold text-gray-900">틀린 문제 다시 보기</h3>
-                                <p class="text-sm text-gray-500 mt-1">정답과 내가 고른 답을 비교할 수 있습니다.</p>
 
                                 <div class="mt-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                                     ${wrongAnswers.map(result => {
@@ -732,14 +537,9 @@
                                                 <div class="p-4">
                                                     <p class="text-xs uppercase tracking-[0.18em] text-gray-400">정답</p>
                                                     <p class="mt-1 font-bold text-gray-900">${correctItem.korean}</p>
-                                                    ${
-                                                        state.currentLang !== 'korean'
-                                                            ? `<p class="text-sm text-gray-500 mt-1">${correctItem[state.currentLang]}</p>`
-                                                            : ''
-                                                    }
 
                                                     <p class="mt-4 text-xs uppercase tracking-[0.18em] text-gray-400">내 답</p>
-                                                    <p class="mt-1 font-semibold text-rose-700">${selectedItem ? getChoiceText(selectedItem) : '선택 안 함'}</p>
+                                                    <p class="mt-1 font-semibold text-rose-700">${selectedItem ? selectedItem.korean : '선택 안 함'}</p>
 
                                                     <p class="mt-4 text-sm text-gray-600">${correctItem.hint}</p>
                                                 </div>
@@ -780,19 +580,6 @@
                 renderQuestion();
             }
 
-            langButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    state.currentLang = button.dataset.lang;
-                    applyTheme();
-
-                    if (state.questionIndex >= state.questionSet.length && state.questionSet.length) {
-                        renderResult();
-                    } else {
-                        renderQuestion();
-                    }
-                });
-            });
-
             nextBtn.addEventListener('click', goNext);
             restartBtn.addEventListener('click', () => resetQuiz(false));
             shuffleBtn.addEventListener('click', () => resetQuiz(true));
@@ -804,7 +591,6 @@
                 speak(correctItem.korean, 'ko-KR');
             });
 
-            applyTheme();
             resetQuiz(true);
         });
     </script>
