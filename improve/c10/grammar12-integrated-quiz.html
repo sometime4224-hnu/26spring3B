@@ -58,154 +58,172 @@
                 grammar: "-던",
                 type: "mcq",
                 prompt: "내가 아까 ____ 커피가 어디 갔지?",
+                contextKo: "상황: 커피를 마시다 잠깐 자리를 비운 뒤 컵을 찾는 장면",
+                contextVi: "Tình huống: đang uống dở cà phê rồi quay lại tìm cốc",
                 options: ["마시던", "마신", "마시는"],
                 answer: "마시던",
-                correctFeedback: "정답입니다.",
-                wrongFeedback: "이 문장은 아직 끝나지 않은 과거 행동(마시다 중단)을 떠올리는 상황입니다.",
-                ruleHint: "과거 반복/미완료 회상은 '-던'을 씁니다."
+                explainKo: "커피를 마시다 중단된 미완료 과거를 떠올리는 상황이라 '-던'이 맞아요.",
+                explainVi: "Vì đây là hành động quá khứ chưa hoàn tất (uống dở cà phê), dùng '-던' là đúng."
             },
             {
                 id: "g1_02",
                 grammar: "-던",
                 type: "mcq",
                 prompt: "어릴 때 자주 ____ 놀이터예요.",
+                contextKo: "상황: 어린 시절에 자주 가던 놀이터를 지금 회상",
+                contextVi: "Tình huống: đang hồi tưởng sân chơi hay đến khi còn nhỏ",
                 options: ["가던", "간", "가는"],
                 answer: "가던",
-                correctFeedback: "정답입니다.",
-                wrongFeedback: "어릴 때의 반복 습관을 말하므로 현재형이나 완료형이 아니라 회상형이 필요합니다.",
-                ruleHint: "과거에 자주 하던 습관 = '-던'."
+                explainKo: "어릴 때의 반복 습관을 회상하므로 '-던'이 자연스럽습니다.",
+                explainVi: "Vì đang hồi tưởng thói quen lặp lại thời nhỏ, '-던' là phù hợp."
             },
             {
                 id: "g1_03",
                 grammar: "-던",
                 type: "mcq",
                 prompt: "지난주에 ____ 영화가 정말 슬펐어요.",
+                contextKo: "상황: 지난주에 끝까지 다 본 영화에 대한 감상을 말하는 장면",
+                contextVi: "Tình huống: nói cảm nhận về bộ phim đã xem hết tuần trước",
                 options: ["보던", "봤던", "보는"],
                 answer: "봤던",
-                correctFeedback: "정답입니다.",
-                wrongFeedback: "영화 시청은 이미 끝난 경험이므로 미완료 회상 '-던'보다 완료 경험형이 자연스럽습니다.",
-                ruleHint: "완료된 과거 경험은 보통 '-았/었던' 계열을 씁니다."
+                explainKo: "지난주에 이미 끝나서 본 영화는 완료된 경험이므로 '봤던'이 맞습니다.",
+                explainVi: "Vì là trải nghiệm đã hoàn tất (đã xem xong tuần trước), '봤던' là đáp án đúng."
             },
             {
                 id: "g1_04",
                 grammar: "-던",
                 type: "short",
                 prompt: "엄마가 젊을 때 자주 ____ 치마예요. (입다)",
+                contextKo: "상황: 엄마가 젊을 때 자주 입던 치마를 보여 주는 장면",
+                contextVi: "Tình huống: đang chỉ chiếc váy mẹ hay mặc lúc trẻ",
                 answers: ["입던"],
                 placeholder: "정답 입력",
-                correctFeedback: "정답입니다.",
-                wrongFeedback: "과거에 반복해서 입은 습관을 회상하는 문맥입니다.",
-                ruleHint: "동사 어간 + '-던' 형태를 사용합니다."
+                explainKo: "과거에 반복해서 입은 습관을 회상하는 문맥이라 '입던'이 맞아요.",
+                explainVi: "Đây là ngữ cảnh hồi tưởng thói quen đã mặc lặp lại trong quá khứ, nên '입던' đúng."
             },
             {
                 id: "g1_05",
                 grammar: "-던",
                 type: "short",
                 prompt: "제가 읽다가 만 ____ 소설이에요. (읽다)",
+                contextKo: "상황: 읽다가 멈춰 아직 끝내지 못한 소설을 말하는 장면",
+                contextVi: "Tình huống: nói về cuốn tiểu thuyết đọc dở, chưa đọc xong",
                 answers: ["읽던"],
                 placeholder: "정답 입력",
-                correctFeedback: "정답입니다.",
-                wrongFeedback: "문장에서 '읽다가 만'은 미완료를 직접 보여주므로 '-던'이 맞습니다.",
-                ruleHint: "중단된 과거 행동은 '-던'을 사용합니다."
+                explainKo: "'읽다가 만'은 미완료를 직접 보여 주므로 '읽던'을 써야 합니다.",
+                explainVi: "Cụm '읽다가 만' cho thấy hành động chưa hoàn tất, vì vậy phải dùng '읽던'."
             },
             {
                 id: "g1_06",
                 grammar: "-던",
                 type: "mcq",
                 prompt: "요즘 매일 ____ 뉴스예요.",
+                contextKo: "상황: 요즘 매일 보는 뉴스(현재 습관)를 설명하는 장면",
+                contextVi: "Tình huống: mô tả thói quen hiện tại là xem tin mỗi ngày",
                 options: ["보던", "봤던", "보는"],
                 answer: "보는",
-                correctFeedback: "정답입니다.",
-                wrongFeedback: "'요즘 매일'은 현재 습관이므로 과거 회상 표현 '-던'이 맞지 않습니다.",
-                ruleHint: "현재 습관/사실은 '-는' 관형형을 씁니다."
+                explainKo: "'요즘 매일'은 현재 습관이므로 과거 회상형 '-던'이 아니라 '-는'이 맞습니다.",
+                explainVi: "Vì '요즘 매일' là thói quen hiện tại, phải dùng '-는', không phải '-던'."
             },
             {
                 id: "g1_07",
                 grammar: "-던",
                 type: "short",
                 prompt: "작년에 제가 ____ 동네가 지금 많이 변했어요. (살다)",
+                contextKo: "상황: 작년에 살던 동네를 떠올리며 지금과 비교하는 장면",
+                contextVi: "Tình huống: hồi tưởng khu từng sống năm ngoái và so sánh hiện tại",
                 answers: ["살던"],
                 placeholder: "정답 입력",
-                correctFeedback: "정답입니다.",
-                wrongFeedback: "작년의 거주 상태를 회상하는 문맥이므로 '-던'이 자연스럽습니다.",
-                ruleHint: "과거의 상태를 떠올릴 때 '-던'을 사용합니다."
+                explainKo: "작년의 거주 상태를 떠올리는 회상 문맥이라 '살던'이 적절합니다.",
+                explainVi: "Vì đây là ngữ cảnh hồi tưởng nơi từng sống năm ngoái, '살던' là phù hợp."
             },
             {
                 id: "g2_01",
                 grammar: "-잖아요",
                 type: "mcq",
-                prompt: "오늘은 일찍 가요. 내일 시험 ____.",
+                prompt: "오늘은 일찍 가요. 내일 시험 ____. ",
+                contextKo: "상황: 상대도 내일 시험이 있다는 사실을 이미 알고 있는 대화",
+                contextVi: "Tình huống: người nghe cũng đã biết ngày mai có bài kiểm tra",
                 options: ["있잖아요", "있거든요", "있죠"],
                 answer: "있잖아요",
-                correctFeedback: "정답입니다.",
-                wrongFeedback: "상대도 이미 아는 사실(시험 일정)을 상기시키는 문맥입니다.",
-                ruleHint: "공유된 정보를 확인/상기할 때 '-잖아요'."
+                explainKo: "상대도 이미 아는 시험 일정을 상기하는 문맥이라 '-잖아요'가 맞습니다.",
+                explainVi: "Đây là ngữ cảnh nhắc lại lịch thi mà người nghe cũng đã biết, nên '-잖아요' đúng."
             },
             {
                 id: "g2_02",
                 grammar: "-잖아요",
                 type: "mcq",
                 prompt: "오늘은 못 가요. 일이 너무 많____.",
+                contextKo: "상황: 상대가 모를 수 있는 새 이유(일이 많음)를 설명하는 장면",
+                contextVi: "Tình huống: đang đưa ra lý do mới (quá nhiều việc) mà người nghe có thể chưa biết",
                 options: ["잖아요", "거든요", "죠"],
                 answer: "거든요",
-                correctFeedback: "정답입니다.",
-                wrongFeedback: "이 문장은 상대가 모를 수 있는 새로운 이유를 설명하는 상황입니다.",
-                ruleHint: "새 이유 설명은 '-거든요'가 자연스럽고, '-잖아요'는 공유지식 전제입니다."
+                explainKo: "상대가 모를 수 있는 새로운 이유를 설명할 때는 '-거든요'가 더 자연스럽습니다.",
+                explainVi: "Khi đưa ra lý do mới mà người nghe có thể chưa biết, '-거든요' tự nhiên hơn.",
+                nonTargetKo: "보충 문법: 이 문장은 학습 목표(-잖아요)보다 '-거든요'가 맞는 상황입니다. '-거든요'는 상대가 모를 수 있는 새 이유/배경을 설명할 때 자주 씁니다.",
+                nonTargetVi: "Ngữ pháp bổ sung: Ở câu này, '-거든요' phù hợp hơn mục tiêu học (-잖아요). '-거든요' thường dùng để giải thích lý do/thông tin nền mới cho người nghe."
             },
             {
                 id: "g2_03",
                 grammar: "-잖아요",
                 type: "short",
                 prompt: "민수 씨는 ____ 다들 알고 있잖아요. (의사)",
+                contextKo: "상황: 민수의 직업(의사)을 모두 알고 있는 상태에서 다시 상기",
+                contextVi: "Tình huống: nhắc lại nghề của Minsu (bác sĩ) mà mọi người đều biết",
                 answers: ["의사잖아요"],
                 placeholder: "정답 입력",
-                correctFeedback: "정답입니다.",
-                wrongFeedback: "받침 없는 명사 뒤에서는 '잖아요'를 붙이는 형태가 기본입니다.",
-                ruleHint: "명사(받침 X) + 잖아요"
+                explainKo: "받침 없는 명사 '의사' 뒤에는 '잖아요'를 붙여 '의사잖아요'로 씁니다.",
+                explainVi: "Sau danh từ không 받침 như '의사', dùng '잖아요', nên '의사잖아요' là đúng."
             },
             {
                 id: "g2_04",
                 grammar: "-잖아요",
                 type: "short",
                 prompt: "오늘은 ____ 회의 있는 날이에요. (월요일)",
+                contextKo: "상황: 오늘이 월요일(회의 날)이라는 공유 정보를 다시 확인",
+                contextVi: "Tình huống: nhắc lại thông tin chung rằng hôm nay là thứ Hai (ngày họp)",
                 answers: ["월요일이잖아요"],
                 placeholder: "정답 입력",
-                correctFeedback: "정답입니다.",
-                wrongFeedback: "'월요일'은 받침 있는 명사라 '이잖아요'를 써야 합니다.",
-                ruleHint: "명사(받침 O) + 이잖아요"
+                explainKo: "받침 있는 명사 '월요일' 뒤에는 '이잖아요'를 써서 '월요일이잖아요'가 됩니다.",
+                explainVi: "Với danh từ có 받침 như '월요일', phải dùng '이잖아요', nên đáp án là '월요일이잖아요'."
             },
             {
                 id: "g2_05",
                 grammar: "-잖아요",
                 type: "mcq",
                 prompt: "우리 내일 9시에 만나기로 했___?",
+                contextKo: "상황: 약속 시간을 질문 형태로 확인하는 장면",
+                contextVi: "Tình huống: xác nhận giờ hẹn bằng câu hỏi",
                 options: ["잖아요", "거든요", "죠"],
                 answer: "죠",
-                correctFeedback: "정답입니다.",
-                wrongFeedback: "이 문장은 상대 동의를 묻는 질문이라 단정형 '-잖아요'보다 확인 질문형이 맞습니다.",
-                ruleHint: "동의 확인 질문은 '-죠?'가 자연스럽습니다."
+                explainKo: "이 문장은 상대 동의를 묻는 질문이므로 확인 질문형 '-죠?'가 가장 자연스럽습니다.",
+                explainVi: "Vì đây là câu hỏi xác nhận sự đồng ý của người nghe, '-죠?' là tự nhiên nhất.",
+                nonTargetKo: "보충 문법: '-죠'는 보통 물음표(?)와 함께 '-죠?' 형태로 써서 상대의 동의/확인을 묻습니다. 즉, '-죠'는 질문 문맥과 짝을 이루는 표현입니다.",
+                nonTargetVi: "Ngữ pháp bổ sung: '-죠' thường đi cùng dấu hỏi thành '-죠?' để hỏi xác nhận/đồng thuận. Nói cách khác, '-죠' gắn với ngữ cảnh câu hỏi."
             },
             {
                 id: "g2_06",
                 grammar: "-잖아요",
                 type: "mcq",
                 prompt: "제가 아까 문자 보냈____. 확인해 보세요.",
+                contextKo: "상황: 아까 문자 보낸 사실을 상대에게 다시 상기시키는 장면",
+                contextVi: "Tình huống: nhắc lại việc vừa gửi tin nhắn lúc nãy",
                 options: ["잖아요", "거든요", "죠"],
                 answer: "잖아요",
-                correctFeedback: "정답입니다.",
-                wrongFeedback: "이미 말하거나 이미 있었던 사실을 다시 상기시키는 장면입니다.",
-                ruleHint: "상대가 알거나 알아야 하는 사실 상기 = '-잖아요'."
+                explainKo: "이미 있었던 사실을 다시 상기시키는 문맥이므로 '-잖아요'가 맞습니다.",
+                explainVi: "Đây là ngữ cảnh nhắc lại một sự thật đã xảy ra, nên dùng '-잖아요' là đúng."
             },
             {
                 id: "g2_07",
                 grammar: "-잖아요",
                 type: "short",
                 prompt: "한국 드라마 ____ 다들 많이 보잖아요. (재미있다)",
+                contextKo: "상황: 한국 드라마가 재미있다는 공감대를 다시 확인하는 장면",
+                contextVi: "Tình huống: nhắc lại sự đồng thuận rằng phim Hàn rất thú vị",
                 answers: ["재미있잖아요"],
                 placeholder: "정답 입력",
-                correctFeedback: "정답입니다.",
-                wrongFeedback: "형용사 어간 뒤에 바로 '-잖아요'를 붙여 공유 사실을 강조합니다.",
-                ruleHint: "형용사 어간 + 잖아요"
+                explainKo: "형용사 어간 '재미있-' 뒤에 '-잖아요'를 붙여 공유된 평가를 상기합니다.",
+                explainVi: "Thêm '-잖아요' sau gốc tính từ '재미있-' để nhắc lại đánh giá chung đã biết."
             }
         ];
 
@@ -215,7 +233,9 @@
                 questions: [],
                 index: 0,
                 answers: [],
-                startedAt: 0
+                startedAt: 0,
+                submitted: false,
+                currentFeedback: null
             },
             selectedRecordId: null
         };
@@ -291,6 +311,8 @@
             state.quiz.index = 0;
             state.quiz.answers = [];
             state.quiz.startedAt = Date.now();
+            state.quiz.submitted = false;
+            state.quiz.currentFeedback = null;
             state.view = "quiz";
             state.selectedRecordId = null;
             render();
@@ -323,14 +345,14 @@
 
         function submitMcq(choiceIndex) {
             const q = currentQuestion();
-            if (!q || q.type !== "mcq") return;
+            if (!q || q.type !== "mcq" || state.quiz.submitted) return;
             const selected = q.options[choiceIndex];
             submitAnswer(selected);
         }
 
         function submitShort() {
             const q = currentQuestion();
-            if (!q || q.type !== "short") return;
+            if (!q || q.type !== "short" || state.quiz.submitted) return;
             const input = document.getElementById("short-answer");
             if (!input) return;
             const value = input.value.trim();
@@ -340,7 +362,7 @@
 
         function submitAnswer(rawAnswer) {
             const q = currentQuestion();
-            if (!q) return;
+            if (!q || state.quiz.submitted) return;
 
             const isCorrect = evaluate(q, rawAnswer);
             const answerRecord = {
@@ -351,15 +373,25 @@
                 userAnswer: String(rawAnswer || ""),
                 correctAnswer: q.type === "mcq" ? q.answer : q.answers[0],
                 isCorrect,
-                correctFeedback: q.correctFeedback,
-                wrongFeedback: q.wrongFeedback,
-                ruleHint: q.ruleHint
+                explainKo: q.explainKo,
+                explainVi: q.explainVi,
+                nonTargetKo: q.nonTargetKo || "",
+                nonTargetVi: q.nonTargetVi || ""
             };
 
             state.quiz.answers.push(answerRecord);
+            state.quiz.currentFeedback = answerRecord;
+            state.quiz.submitted = true;
+            render();
+        }
+
+        function nextInQuiz() {
+            if (!state.quiz.submitted) return;
 
             if (state.quiz.index < state.quiz.questions.length - 1) {
                 state.quiz.index += 1;
+                state.quiz.submitted = false;
+                state.quiz.currentFeedback = null;
                 render();
                 focusShortInput();
             } else {
@@ -400,7 +432,7 @@
 
         function focusShortInput() {
             const q = currentQuestion();
-            if (!q || q.type !== "short") return;
+            if (!q || q.type !== "short" || state.quiz.submitted) return;
             const input = document.getElementById("short-answer");
             if (input) input.focus();
         }
@@ -422,8 +454,8 @@
                 <section class="space-y-4">
                     <div class="bg-gradient-to-br from-blue-50 to-white border border-blue-100 rounded-2xl p-5 shadow-sm">
                         <h1 class="text-xl font-black text-blue-700 safe-wrap">문법 1+2 통합 퀴즈</h1>
-                        <p class="text-sm text-slate-700 mt-2">-던 / -잖아요를 섞어 연습합니다. 객관식은 선택 즉시 다음 문제로 이동합니다.</p>
-                        <p class="text-xs text-slate-500 mt-1">주관식은 답 입력 후 Enter 또는 입력 완료 버튼만 누르면 됩니다.</p>
+                        <p class="text-sm text-slate-700 mt-2">-던 / -잖아요를 섞어 연습합니다.</p>
+                        <p class="text-xs text-slate-500 mt-1">각 문항은 정오답 피드백을 먼저 확인한 뒤 다음 버튼으로 진행합니다.</p>
                         <div class="mt-4 grid grid-cols-2 gap-2 text-xs">
                             <div class="bg-white border border-blue-100 rounded-lg p-2">
                                 <p class="text-slate-500">문항 수</p>
@@ -455,19 +487,59 @@
             const idx = state.quiz.index + 1;
             const total = state.quiz.questions.length;
             const progress = Math.round((idx / total) * 100);
+            const submitted = state.quiz.submitted;
+            const fb = state.quiz.currentFeedback;
 
             const choicesHtml = q.type === "mcq"
-                ? q.options.map((opt, i) => `
-                    <button type="button" onclick="submitMcq(${i})" class="option-btn w-full border border-slate-300 bg-white rounded-xl px-4 py-3 text-left text-sm font-semibold text-slate-800 hover:border-blue-400 hover:bg-blue-50 transition safe-wrap">
-                        ${esc(opt)}
-                    </button>
-                `).join("")
+                ? q.options.map((opt, i) => {
+                    let cls = "border-slate-300 bg-white text-slate-800 hover:border-blue-400 hover:bg-blue-50";
+                    if (submitted && fb) {
+                        if (opt === fb.correctAnswer) {
+                            cls = "border-emerald-400 bg-emerald-50 text-emerald-800";
+                        } else if (opt === fb.userAnswer && !fb.isCorrect) {
+                            cls = "border-rose-400 bg-rose-50 text-rose-800";
+                        } else {
+                            cls = "border-slate-200 bg-slate-50 text-slate-400";
+                        }
+                    }
+                    return `
+                        <button type="button" onclick="submitMcq(${i})" ${submitted ? "disabled" : ""}
+                            class="option-btn w-full border rounded-xl px-4 py-3 text-left text-sm font-semibold transition safe-wrap ${cls}">
+                            ${esc(opt)}
+                        </button>
+                    `;
+                }).join("")
                 : `
                     <div class="space-y-2">
-                        <input id="short-answer" type="text" autocomplete="off" placeholder="${esc(q.placeholder || "정답 입력")}" onkeydown="if(event.key==='Enter'){submitShort();}" class="w-full border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
-                        <button type="button" onclick="submitShort()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold text-sm hover:bg-blue-700">입력 완료</button>
+                        <input id="short-answer" type="text" autocomplete="off" ${submitted ? "disabled" : ""}
+                            placeholder="${esc(q.placeholder || "정답 입력")}" onkeydown="if(event.key==='Enter'){submitShort();}"
+                            class="w-full border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 ${submitted ? "bg-slate-100 text-slate-500" : ""}">
+                        <button type="button" onclick="submitShort()" ${submitted ? "disabled" : ""}
+                            class="w-full py-3 rounded-xl font-bold text-sm ${submitted ? "bg-slate-300 text-slate-500" : "bg-blue-600 text-white hover:bg-blue-700"}">
+                            정답 확인
+                        </button>
                     </div>
                 `;
+
+            const feedbackHtml = submitted && fb ? `
+                <div class="mt-4 rounded-xl border p-4 ${fb.isCorrect ? "bg-emerald-50 border-emerald-200" : "bg-rose-50 border-rose-200"}">
+                    <p class="text-sm font-bold ${fb.isCorrect ? "text-emerald-700" : "text-rose-700"}">
+                        ${fb.isCorrect ? "정답입니다." : "오답입니다."}
+                        <span class="text-xs ml-1">(${fb.isCorrect ? "Bạn làm đúng." : "Bạn làm sai."})</span>
+                    </p>
+                    <p class="text-xs text-slate-700 mt-2"><b>내 답:</b> ${esc(fb.userAnswer || "(무응답)")}</p>
+                    <p class="text-xs text-slate-700 mt-1"><b>정답:</b> ${esc(fb.correctAnswer)}</p>
+                    <p class="text-xs text-slate-700 mt-2 safe-wrap"><b>설명 (KO):</b> ${esc(fb.explainKo || "")}</p>
+                    <p class="text-xs text-blue-700 mt-1 safe-wrap"><b>Giải thích (VI):</b> ${esc(fb.explainVi || "")}</p>
+                    ${fb.nonTargetKo ? `
+                        <div class="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3">
+                            <p class="text-xs font-bold text-amber-800">학습 범위 보충</p>
+                            <p class="text-xs text-slate-700 mt-1 safe-wrap"><b>KO:</b> ${esc(fb.nonTargetKo)}</p>
+                            <p class="text-xs text-blue-700 mt-1 safe-wrap"><b>VI:</b> ${esc(fb.nonTargetVi || "")}</p>
+                        </div>
+                    ` : ""}
+                </div>
+            ` : "";
 
             return `
                 <section class="space-y-4">
@@ -484,8 +556,13 @@
                     <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
                         <p class="text-xs font-bold text-slate-500">문제</p>
                         <p class="text-base font-bold text-slate-800 mt-2 leading-relaxed safe-wrap">${esc(q.prompt)}</p>
+                        <div class="mt-2 rounded-lg border border-slate-200 bg-slate-50 p-3">
+                            <p class="text-[11px] text-slate-600 safe-wrap"><b>상황 (KO):</b> ${esc(q.contextKo || "")}</p>
+                            <p class="text-[11px] text-blue-700 mt-1 safe-wrap"><b>Tình huống (VI):</b> ${esc(q.contextVi || "")}</p>
+                        </div>
                         <div class="mt-4 space-y-2">${choicesHtml}</div>
-                        <p class="text-[11px] text-slate-500 mt-3">객관식은 탭 즉시 제출됩니다. (버튼 입력 최소화)</p>
+                        ${feedbackHtml}
+                        ${submitted ? `<button type="button" onclick="nextInQuiz()" class="mt-3 w-full bg-blue-600 text-white py-3 rounded-xl font-bold text-sm hover:bg-blue-700">다음 문제</button>` : ""}
                     </div>
                 </section>
             `;
@@ -508,7 +585,16 @@
                         <article class="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
                             <p class="text-xs text-emerald-700 font-bold">${index + 1}. ${esc(a.grammar)} · 정답</p>
                             <p class="text-sm text-slate-800 mt-1 safe-wrap">${esc(a.prompt)}</p>
-                            <p class="text-xs text-emerald-700 mt-2">${esc(a.correctFeedback || "정답입니다.")}</p>
+                            <p class="text-xs text-emerald-700 mt-2">정답입니다.</p>
+                            <p class="text-xs text-slate-700 mt-1 safe-wrap"><b>설명 (KO):</b> ${esc(a.explainKo || a.correctFeedback || "")}</p>
+                            <p class="text-xs text-blue-700 mt-1 safe-wrap"><b>Giải thích (VI):</b> ${esc(a.explainVi || a.correctFeedbackVi || "")}</p>
+                            ${a.nonTargetKo ? `
+                                <div class="mt-2 rounded-lg border border-amber-200 bg-amber-50 p-2">
+                                    <p class="text-xs font-bold text-amber-800">학습 범위 보충</p>
+                                    <p class="text-xs text-slate-700 mt-1 safe-wrap"><b>KO:</b> ${esc(a.nonTargetKo)}</p>
+                                    <p class="text-xs text-blue-700 mt-1 safe-wrap"><b>VI:</b> ${esc(a.nonTargetVi || "")}</p>
+                                </div>
+                            ` : ""}
                         </article>
                     `;
                 }
@@ -519,8 +605,15 @@
                         <p class="text-sm text-slate-800 mt-1 safe-wrap">${esc(a.prompt)}</p>
                         <p class="text-xs text-slate-700 mt-2"><b>내 답:</b> ${esc(a.userAnswer || "(무응답)")}</p>
                         <p class="text-xs text-slate-700 mt-1"><b>정답:</b> ${esc(a.correctAnswer)}</p>
-                        <p class="text-xs text-rose-700 mt-2 safe-wrap"><b>왜 틀렸나요:</b> ${esc(a.wrongFeedback)}</p>
-                        <p class="text-xs text-slate-700 mt-1 safe-wrap"><b>핵심 규칙:</b> ${esc(a.ruleHint)}</p>
+                        <p class="text-xs text-rose-700 mt-2 safe-wrap"><b>설명 (KO):</b> ${esc(a.explainKo || a.wrongFeedback || "")}</p>
+                        <p class="text-xs text-blue-700 mt-1 safe-wrap"><b>Giải thích (VI):</b> ${esc(a.explainVi || a.wrongFeedbackVi || "")}</p>
+                        ${a.nonTargetKo ? `
+                            <div class="mt-2 rounded-lg border border-amber-200 bg-amber-50 p-2">
+                                <p class="text-xs font-bold text-amber-800">학습 범위 보충</p>
+                                <p class="text-xs text-slate-700 mt-1 safe-wrap"><b>KO:</b> ${esc(a.nonTargetKo)}</p>
+                                <p class="text-xs text-blue-700 mt-1 safe-wrap"><b>VI:</b> ${esc(a.nonTargetVi || "")}</p>
+                            </div>
+                        ` : ""}
                     </article>
                 `;
             }).join("");
@@ -563,5 +656,10 @@
     <script src="../shared/learning-enhancements.js"></script>
 </body>
 </html>
+
+
+
+
+
 
 
