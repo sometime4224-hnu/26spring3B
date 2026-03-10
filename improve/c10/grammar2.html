@@ -3,41 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>한국어 문법 학습: -잖아요</title>
-    <!-- Tailwind CSS -->
+    <title>한국어 문법 업그레이드: -잖아요</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
-        body { font-family: 'Noto Sans KR', sans-serif; }
-        .animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
-
-    <!-- Tailwind & Fonts Injected -->
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        body { font-family: 'Noto Sans KR', sans-serif; margin: 0; }
         .injected-global-nav {
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(8px);
             border-bottom: 1px solid #e0e7ff;
             height: 60px;
             display: flex;
             align-items: center;
+            gap: 14px;
             padding: 0 16px;
             position: sticky;
             top: 0;
-            z-index: 999999;
+            z-index: 99999;
             box-sizing: border-box;
-            gap: 15px;
         }
         .injected-global-nav a {
             display: flex;
@@ -47,443 +33,549 @@
             text-decoration: none;
             font-weight: 700;
             font-size: 14px;
-            transition: color 0.2s;
         }
-        .injected-global-nav a:hover {
-            color: #3730a3;
-        }
-        .injected-global-nav .divider {
-            color: #cbd5e1;
-        }
-        /* Ensure body has no top margin/padding resetting the nav */
-        body { margin: 0; }
+        .injected-global-nav .divider { color: #cbd5e1; }
     </style>
-    </head>
-<body class="bg-gray-50 min-h-screen flex flex-col max-w-md mx-auto shadow-xl">
-    <nav id="injected-global-nav" class="injected-global-nav">
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col max-w-md mx-auto shadow-xl">
+    <nav class="injected-global-nav">
         <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
         <span class="divider">|</span>
         <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
     </nav>
-    
 
-    <!-- Header -->
-    <header class="bg-white px-6 py-4 shadow-sm border-b border-gray-100 sticky top-0 z-10">
-        <div class="flex justify-between items-center">
+    <header class="bg-white px-5 py-4 border-b border-slate-200 sticky top-[60px] z-20">
+        <div class="flex justify-between items-start gap-3">
             <div>
-                <h1 class="text-lg font-bold text-gray-900 flex items-center">
-                    한국어 문법
-                </h1>
-                <p class="text-xs text-gray-500 mt-1">3과: 확인과 이유 (-잖아요)</p>
+                <p class="text-xs text-blue-600 font-bold uppercase tracking-wide">Grammar Upgrade</p>
+                <h1 class="text-lg font-extrabold text-slate-900 mt-0.5">A/V-(이)잖아요</h1>
+                <p class="text-xs text-slate-500 mt-1">3과: 서로 아는 사실 확인/상기</p>
             </div>
-            <button id="translation-btn" class="flex items-center px-3 py-1.5 rounded-full text-xs font-medium transition-all bg-gray-100 text-gray-500 border border-gray-200">
-                <i data-lucide="globe" class="w-3 h-3 mr-1"></i>
+            <button id="translation-btn" type="button" class="flex items-center px-3 py-1.5 rounded-full text-xs font-semibold transition-all bg-slate-100 text-slate-600 border border-slate-200">
+                <i data-lucide="languages" class="w-3 h-3 mr-1"></i>
                 <span id="translation-text">Tiếng Việt OFF</span>
             </button>
         </div>
     </header>
 
-    <!-- Navigation Tabs -->
-    <div class="flex border-b border-gray-200 bg-white">
-        <button onclick="setTab('learn')" id="tab-learn" class="flex items-center justify-center flex-1 py-3 text-sm font-medium transition-colors duration-200 text-blue-600 border-b-2 border-blue-600 bg-blue-50">
-            <i data-lucide="book" class="w-4 h-4 mr-2"></i>
-            공부해요 (Học)
-        </button>
-        <button onclick="setTab('practice')" id="tab-practice" class="flex items-center justify-center flex-1 py-3 text-sm font-medium transition-colors duration-200 text-gray-500 hover:text-gray-700">
-            <i data-lucide="graduation-cap" class="w-4 h-4 mr-2"></i>
-            연습해요 (Luyện tập)
-        </button>
+    <div class="flex border-b border-slate-200 bg-white sticky top-[139px] z-10">
+        <button id="tab-learn" type="button" onclick="setTab('learn')" class="flex-1 py-3 text-sm font-semibold text-blue-600 border-b-2 border-blue-600 bg-blue-50">공부해요</button>
+        <button id="tab-practice" type="button" onclick="setTab('practice')" class="flex-1 py-3 text-sm font-semibold text-slate-500">연습해요</button>
     </div>
 
-    <!-- Main Content Area -->
-    <main id="app-content" class="flex-1 p-4 pb-12">
-        <!-- Content will be injected here by JavaScript -->
-    </main>
-
-    <!-- Footer Tip Area (Only for Learn Tab) -->
-    <div id="footer-tip" class="px-4 pb-6 hidden">
-        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <h4 class="text-sm font-bold text-yellow-800 mb-1">💡 선생님의 팁</h4>
-            <p class="text-xs text-yellow-700 mb-2">
-                화를 내거나 짜증을 낼 때도 쓸 수 있어요. ("내가 말했잖아요!" = I told you so!) <br/>
-                하지만 보통은 부드럽게 확인하는 의미예요.
-            </p>
-            <div id="tip-translation" class="hidden text-xs text-yellow-600 border-t border-yellow-200 pt-2">
-                Cũng có thể dùng khi tức giận hoặc khó chịu ("Tôi đã nói rồi mà!"). <br/>
-                Nhưng thông thường mang ý nghĩa xác nhận một cách nhẹ nhàng.
-            </div>
-        </div>
-    </div>
+    <main id="app-content" class="flex-1 p-4 pb-14"></main>
 
     <script>
-        // --- Data ---
-        const grammarPoint = {
-            title: "A/V-잖아요",
-            meaning_kr: "알잖아요 / 알지? (확인)",
-            meaning_vn: "...mà / Chẳng phải là...sao (Xác nhận)",
-            description_kr: "듣는 사람도 이미 알고 있는 사실을 말할 때 써요. \n또는 듣는 사람이 잊어버린 것을 다시 알려줄 때 써요.",
-            description_vn: "Dùng khi nói về một sự thật mà người nghe cũng đã biết. Hoặc dùng để nhắc nhở lại điều mà người nghe đã quên.",
-            examples: [
-                {
-                    kr: "유진 씨는 영어를 참 잘하네요.",
-                    vn: "Yujin nói tiếng Anh giỏi thật đấy.",
-                    answer_kr: "미국에서 왔잖아요.",
-                    answer_vn: "Cô ấy đến từ Mỹ mà.",
-                    context_kr: "유진 씨가 미국 사람인 것을 상대방도 알아요.",
-                    context_vn: "Người nghe cũng biết Yujin là người Mỹ.",
-                },
-                {
-                    kr: "지금은 지하철을 타는 게 나아요.",
-                    vn: "Bây giờ đi tàu điện ngầm thì tốt hơn.",
-                    answer_kr: "길이 막히잖아요.",
-                    answer_vn: "Đường đang tắc mà.",
-                    context_kr: "길이 막히는 것을 모두 알아요.",
-                    context_vn: "Ai cũng biết là đường đang tắc.",
-                }
+        const lessonData = {
+            title: "A/V-(이)잖아요",
+            meaningKo: "상대도 이미 아는 사실을 확인하거나 다시 떠올리게 할 때",
+            meaningVi: "Dùng khi xác nhận hoặc nhắc lại điều cả người nói và người nghe đều biết",
+            goalsKo: [
+                "'-잖아요'의 핵심 기능을 1문장으로 설명할 수 있어요.",
+                "'-잖아요'와 '-거든요', '-죠?'를 구별할 수 있어요.",
+                "문맥에 맞는 어미를 선택해 자연스럽게 말할 수 있어요."
+            ],
+            goalsVi: [
+                "Giải thích được chức năng chính của '-잖아요'.",
+                "Phân biệt '-잖아요', '-거든요', '-죠?'.",
+                "Chọn đúng đuôi câu theo ngữ cảnh."
             ]
         };
 
-        const quizData = [
+        const questionBank = [
             {
-                id: 1,
-                item: "한글날 (Ngày Hangeul)",
-                icon: "📅",
-                question: "10월 9일에 왜 학교에 안 가요?",
-                answer_prefix: "그 날은 ",
-                options: ["한글날이잖아요", "한글날인데요", "한글날이라서"],
-                correct: "한글날이잖아요",
-                explanation_kr: "한국 달력에 빨간 날(휴일)인 것을 모두 알아요.",
-                explanation_vn: "Ai cũng biết đó là ngày lễ (ngày đỏ) trên lịch Hàn Quốc."
+                id: "q1",
+                type: "mcq",
+                prompt: "10월 9일에 왜 학교에 안 가요?",
+                answerPrefix: "그날은 ",
+                promptVi: "Vì sao ngày 9/10 không đi học?",
+                options: ["한글날이잖아요", "한글날인데요", "한글날이라서요"],
+                answer: "한글날이잖아요",
+                explanationKo: "듣는 사람도 아는 공휴일 사실을 확인하므로 '-잖아요'가 자연스러워요.",
+                explanationVi: "Vì là thông tin hai bên đều biết (ngày lễ), dùng '-잖아요'."
             },
             {
-                id: 2,
-                item: "김밥 (Kimbap)",
-                icon: "🍙",
-                question: "정우 씨는 김밥을 자주 먹네요.",
-                answer_prefix: "싸고 ",
-                options: ["맛있어서요", "맛있잖아요", "맛있는데"],
-                correct: "맛있잖아요",
-                explanation_kr: "김밥이 싸고 맛있는 것은 모두가 아는 사실이에요.",
-                explanation_vn: "Việc Kimbap rẻ và ngon là sự thật mà ai cũng biết."
+                id: "q2",
+                type: "mcq",
+                prompt: "누가 프랑스어를 잘해요?",
+                answerPrefix: "줄리앙 씨가 ",
+                promptVi: "Ai nói tiếng Pháp giỏi?",
+                options: ["프랑스 사람이잖아요", "프랑스 사람이거든요", "프랑스 사람인데요"],
+                answer: "프랑스 사람이잖아요",
+                explanationKo: "상대도 아는 배경지식을 상기시키는 문맥이어서 '-잖아요'가 맞아요.",
+                explanationVi: "Đây là ngữ cảnh nhắc lại kiến thức chung, nên dùng '-잖아요'."
             },
             {
-                id: 3,
-                item: "프랑스어 (Tiếng Pháp)",
-                icon: "🇫🇷",
-                question: "누가 프랑스어를 할 수 있어요?",
-                answer_prefix: "줄리앙 씨에게 물어보세요. ",
-                options: ["프랑스 사람이잖아요", "프랑스 사람이라서요", "프랑스 사람인데요"],
-                correct: "프랑스 사람이잖아요",
-                explanation_kr: "줄리앙 씨가 프랑스 사람인 것을 잊지 마세요.",
-                explanation_vn: "Đừng quên rằng Julien là người Pháp (bạn biết mà)."
+                id: "q3",
+                type: "mcq",
+                prompt: "오늘 약속을 취소할게요. 비가 많이 ____. ",
+                promptVi: "Tôi hủy hẹn hôm nay. Vì đang mưa to...",
+                options: ["오잖아요", "오거든요", "오는데요"],
+                answer: "오거든요",
+                explanationKo: "상대가 모를 수 있는 새 이유를 설명할 때는 '-거든요'가 더 자연스러워요.",
+                explanationVi: "Khi đưa lý do mới cho người nghe, '-거든요' phù hợp hơn."
             },
             {
-                id: 4,
-                item: "드라마 (Phim truyền hình)",
-                icon: "📺",
-                question: "한국 드라마를 왜 많이 봐요?",
-                answer_prefix: "",
-                options: ["재미있어서", "재미있잖아요", "재미있고"],
-                correct: "재미있잖아요",
-                explanation_kr: "한국 드라마가 재미있는 것은 당연해요(알잖아요).",
-                explanation_vn: "Phim Hàn Quốc hay là điều đương nhiên (bạn biết mà)."
+                id: "q4",
+                type: "mcq",
+                prompt: "우리 내일 9시에 만나기로 했__?",
+                promptVi: "Ngày mai chúng ta hẹn 9 giờ đúng không?",
+                options: ["잖아요", "거든요", "죠"],
+                answer: "죠",
+                explanationKo: "상대 동의를 부드럽게 확인하는 질문은 '-죠?'가 자연스러워요.",
+                explanationVi: "Để hỏi xác nhận nhẹ nhàng, dùng '-죠?'."
+            },
+            {
+                id: "q5",
+                type: "fill",
+                prompt: "민수 씨는 ____ 다들 알고 있잖아요. (의사)",
+                promptVi: "Minsu là bác sĩ, mọi người đều biết mà.",
+                answers: ["의사잖아요"],
+                hint: "명사 + 잖아요",
+                explanationKo: "받침 없는 명사 뒤에는 '잖아요'를 붙여요.",
+                explanationVi: "Với danh từ không 받침, thêm '잖아요'."
+            },
+            {
+                id: "q6",
+                type: "fill",
+                prompt: "오늘은 ____ 회의 있는 날이에요. (월요일)",
+                promptVi: "Hôm nay là thứ Hai, ngày có cuộc họp mà.",
+                answers: ["월요일이잖아요"],
+                hint: "받침 O 명사 + 이잖아요",
+                explanationKo: "받침 있는 명사 뒤에는 '이잖아요'를 써요.",
+                explanationVi: "Danh từ có 받침 + '이잖아요'."
+            },
+            {
+                id: "q7",
+                type: "fill",
+                prompt: "이 음식 ____ 지난번에도 맛있다고 했어요. (맛있다)",
+                promptVi: "Món này ngon mà, lần trước cũng đã nói rồi.",
+                answers: ["맛있잖아요"],
+                hint: "형용사 어간 + 잖아요",
+                explanationKo: "형용사 어간 뒤에 바로 '-잖아요'를 붙여요.",
+                explanationVi: "Thêm '-잖아요' trực tiếp sau gốc tính từ."
+            },
+            {
+                id: "q8",
+                type: "mcq",
+                prompt: "상대가 처음 듣는 정보라면 가장 자연스러운 표현은?",
+                promptVi: "Nếu người nghe nghe thông tin này lần đầu, cách nói tự nhiên nhất là?",
+                options: ["-잖아요", "-거든요", "-죠"],
+                answer: "-거든요",
+                explanationKo: "'-잖아요'는 공유지식 전제, 처음 주는 정보는 '-거든요'가 보통 더 자연스러워요.",
+                explanationVi: "'-잖아요' giả định kiến thức chung; thông tin mới thường dùng '-거든요'."
             }
         ];
 
-        // --- State ---
-        let state = {
-            activeTab: 'learn',
-            showTranslation: false,
-            quizScore: 0,
-            currentQuizIndex: 0,
-            showResult: false,
-            selectedAnswer: null,
-            quizFinished: false
+        const KEY = "c10.grammar2.upgraded.v1";
+
+        function loadPref() {
+            try {
+                return JSON.parse(localStorage.getItem(KEY) || "{}");
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function savePref(data) {
+            try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) {}
+        }
+
+        function shuffle(arr) {
+            const copied = [...arr];
+            for (let i = copied.length - 1; i > 0; i -= 1) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copied[i], copied[j]] = [copied[j], copied[i]];
+            }
+            return copied;
+        }
+
+        function cloneQuestions(pool) {
+            return shuffle(pool).map((q) => ({
+                ...q,
+                options: q.options ? [...q.options] : undefined,
+                answers: q.answers ? [...q.answers] : undefined
+            }));
+        }
+
+        function createQuiz(pool, modeLabel = "전체 문제") {
+            return {
+                modeLabel,
+                questions: cloneQuestions(pool),
+                index: 0,
+                score: 0,
+                selected: "",
+                showResult: false,
+                showHint: false,
+                finished: false,
+                mistakes: []
+            };
+        }
+
+        const pref = loadPref();
+        const state = {
+            activeTab: "learn",
+            showVi: Boolean(pref.showVi),
+            best: pref.best || { score: 0, total: questionBank.length, percent: 0 },
+            quiz: createQuiz(questionBank)
         };
 
-        // --- Render Functions ---
+        function viClass() { return state.showVi ? "block" : "hidden"; }
+        function norm(v) { return String(v || "").replace(/\s+/g, "").trim(); }
+        function currentQ() { return state.quiz.questions[state.quiz.index]; }
+        function setTab(tab) { state.activeTab = tab; render(); }
 
-        function renderApp() {
-            const contentDiv = document.getElementById('app-content');
-            const footerTip = document.getElementById('footer-tip');
-            
-            // Update Tab Styles
-            const learnTab = document.getElementById('tab-learn');
-            const practiceTab = document.getElementById('tab-practice');
-            
-            if (state.activeTab === 'learn') {
-                learnTab.className = "flex items-center justify-center flex-1 py-3 text-sm font-medium transition-colors duration-200 text-blue-600 border-b-2 border-blue-600 bg-blue-50";
-                practiceTab.className = "flex items-center justify-center flex-1 py-3 text-sm font-medium transition-colors duration-200 text-gray-500 hover:text-gray-700";
-                contentDiv.innerHTML = renderLearnSection();
-                footerTip.classList.remove('hidden');
-                updateTranslationVisibility();
+        function toggleTranslation() {
+            state.showVi = !state.showVi;
+            savePref({ showVi: state.showVi, best: state.best });
+            render();
+        }
+
+        function chooseOption(option) {
+            const quiz = state.quiz;
+            const q = currentQ();
+            if (!q || q.type !== "mcq" || quiz.showResult || quiz.finished) return;
+
+            quiz.selected = option;
+            quiz.showResult = true;
+            if (option === q.answer) {
+                quiz.score += 1;
             } else {
-                learnTab.className = "flex items-center justify-center flex-1 py-3 text-sm font-medium transition-colors duration-200 text-gray-500 hover:text-gray-700";
-                practiceTab.className = "flex items-center justify-center flex-1 py-3 text-sm font-medium transition-colors duration-200 text-blue-600 border-b-2 border-blue-600 bg-blue-50";
-                contentDiv.innerHTML = renderPracticeSection();
-                footerTip.classList.add('hidden');
+                quiz.mistakes.push({ question: q, userAnswer: option });
             }
-            
-            // Update Translation Button
-            const transBtn = document.getElementById('translation-btn');
-            const transText = document.getElementById('translation-text');
-            if (state.showTranslation) {
-                transBtn.className = "flex items-center px-3 py-1.5 rounded-full text-xs font-medium transition-all bg-blue-100 text-blue-700 border border-blue-200 cursor-pointer";
+            render();
+        }
+
+        function submitFill() {
+            const quiz = state.quiz;
+            const q = currentQ();
+            if (!q || q.type !== "fill" || quiz.showResult || quiz.finished) return;
+
+            const input = document.getElementById("fill-input");
+            const value = input ? input.value : "";
+            if (!norm(value)) return;
+
+            quiz.selected = value;
+            quiz.showResult = true;
+            const ok = q.answers.some((a) => norm(a) === norm(value));
+            if (ok) {
+                quiz.score += 1;
+            } else {
+                quiz.mistakes.push({ question: q, userAnswer: value });
+            }
+            render();
+        }
+
+        function toggleHint() {
+            if (state.quiz.showResult || state.quiz.finished) return;
+            state.quiz.showHint = !state.quiz.showHint;
+            render();
+        }
+
+        function nextQuestion() {
+            const quiz = state.quiz;
+            if (!quiz.showResult) return;
+
+            quiz.selected = "";
+            quiz.showResult = false;
+            quiz.showHint = false;
+
+            if (quiz.index < quiz.questions.length - 1) {
+                quiz.index += 1;
+            } else {
+                quiz.finished = true;
+                updateBest();
+            }
+            render();
+        }
+
+        function updateBest() {
+            const quiz = state.quiz;
+            const percent = Math.round((quiz.score / quiz.questions.length) * 100);
+            if (
+                percent > state.best.percent ||
+                (percent === state.best.percent && quiz.questions.length >= state.best.total && quiz.score > state.best.score)
+            ) {
+                state.best = { score: quiz.score, total: quiz.questions.length, percent };
+                savePref({ showVi: state.showVi, best: state.best });
+            }
+        }
+
+        function restartQuiz() {
+            state.quiz = createQuiz(questionBank);
+            render();
+        }
+
+        function retryWrong() {
+            const unique = [];
+            const seen = new Set();
+            state.quiz.mistakes.forEach((m) => {
+                if (!seen.has(m.question.id)) {
+                    seen.add(m.question.id);
+                    unique.push(m.question);
+                }
+            });
+            if (!unique.length) return;
+            state.quiz = createQuiz(unique, "오답 다시 풀기");
+            render();
+        }
+
+        function badgeFor(percent) {
+            if (percent >= 90) return { label: "완전 이해", cls: "bg-emerald-100 text-emerald-700" };
+            if (percent >= 75) return { label: "좋아요", cls: "bg-blue-100 text-blue-700" };
+            if (percent >= 60) return { label: "조금 더 연습", cls: "bg-amber-100 text-amber-700" };
+            return { label: "핵심 복습 필요", cls: "bg-rose-100 text-rose-700" };
+        }
+
+        function renderLearn() {
+            const vi = viClass();
+            return `
+                <div class="space-y-4">
+                    <section class="bg-gradient-to-br from-blue-50 to-white border border-blue-100 rounded-2xl p-5 shadow-sm">
+                        <h2 class="text-2xl font-black text-blue-700">${lessonData.title}</h2>
+                        <p class="text-sm font-semibold text-slate-700 mt-1">${lessonData.meaningKo}</p>
+                        <p class="text-xs text-blue-600 mt-1 ${vi}">${lessonData.meaningVi}</p>
+
+                        <div class="mt-4 bg-white border border-blue-100 rounded-xl p-3">
+                            <p class="text-xs font-bold text-slate-500">학습 전략 (효과 강화)</p>
+                            <ol class="mt-2 text-sm text-slate-700 list-decimal pl-5 space-y-1">
+                                <li>공유지식인지 먼저 판단하기</li>
+                                <li>유사 어미(-거든요, -죠)와 기능 비교하기</li>
+                                <li>오답 근거 확인 후 재풀이로 고정하기</li>
+                            </ol>
+                            <ul class="mt-2 text-xs text-blue-600 list-disc pl-5 space-y-1 ${vi}">
+                                ${lessonData.goalsVi.map((g) => `<li>${g}</li>`).join("")}
+                            </ul>
+                        </div>
+                    </section>
+
+                    <section class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                        <h3 class="font-bold text-slate-800 flex items-center">
+                            <i data-lucide="git-compare" class="w-4 h-4 mr-2 text-blue-600"></i>
+                            헷갈림 비교
+                        </h3>
+                        <div class="mt-3 overflow-x-auto">
+                            <table class="w-full text-sm border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-100">
+                                        <th class="text-left p-2 border border-slate-200">표현</th>
+                                        <th class="text-left p-2 border border-slate-200">핵심 기능</th>
+                                        <th class="text-left p-2 border border-slate-200">예문</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="p-2 border border-slate-200 font-bold text-blue-700">-잖아요</td>
+                                        <td class="p-2 border border-slate-200">
+    <p>공유지식 확인/상기</p>
+    <p class="text-[11px] leading-4 text-blue-600 mt-1 break-words ${vi}">Xác nhận/nhắc lại kiến thức hai bên cùng biết</p>
+</td>
+                                        <td class="p-2 border border-slate-200">오늘 월요일이잖아요.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2 border border-slate-200 font-bold text-emerald-700">-거든요</td>
+                                        <td class="p-2 border border-slate-200">
+    <p>새 이유 설명</p>
+    <p class="text-[11px] leading-4 text-blue-600 mt-1 break-words ${vi}">Giải thích lý do mới cho người nghe</p>
+</td>
+                                        <td class="p-2 border border-slate-200">비가 오거든요.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2 border border-slate-200 font-bold text-amber-700">-죠?</td>
+                                        <td class="p-2 border border-slate-200">
+    <p>동의 확인 질문</p>
+    <p class="text-[11px] leading-4 text-blue-600 mt-1 break-words ${vi}">Hỏi xác nhận sự đồng thuận một cách nhẹ nhàng</p>
+</td>
+                                        <td class="p-2 border border-slate-200">내일 9시죠?</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-xs text-rose-600 mt-2">주의: '-잖아요'는 말투에 따라 따지는 느낌이 날 수 있어요.</p>
+                        <p class="text-xs text-blue-600 mt-1 ${vi}">Lưu ý: '-잖아요' có thể nghe như trách nhẹ nếu ngữ điệu mạnh.</p>
+                    </section>
+
+                    <section class="bg-amber-50 border border-amber-200 rounded-2xl p-5 shadow-sm">
+                        <h3 class="font-bold text-amber-900 flex items-center">
+                            <i data-lucide="brain" class="w-4 h-4 mr-2"></i>
+                            미니 인출 연습
+                        </h3>
+                        <p class="text-xs text-amber-700 mt-1">정답을 먼저 머릿속에서 말한 후 펼쳐보세요.</p>
+                        <div class="mt-3 space-y-2">
+                            <details class="bg-white border border-amber-200 rounded-lg p-3">
+                                <summary class="text-sm cursor-pointer font-semibold">"오늘 회의 있는 날___" (월요일)</summary>
+                                <p class="text-sm mt-2">정답: <b>월요일이잖아요</b></p>
+                            </details>
+                            <details class="bg-white border border-amber-200 rounded-lg p-3">
+                                <summary class="text-sm cursor-pointer font-semibold">"오늘은 못 가요. 일이 많___" (새 정보)</summary>
+                                <p class="text-sm mt-2">정답: <b>많거든요</b> (-거든요)</p>
+                            </details>
+                            <details class="bg-white border border-amber-200 rounded-lg p-3">
+                                <summary class="text-sm cursor-pointer font-semibold">"내일 시험___?" (확인 질문)</summary>
+                                <p class="text-sm mt-2">정답: <b>시험이죠?</b></p>
+                            </details>
+                        </div>
+                    </section>
+                </div>
+            `;
+        }
+
+        function renderPractice() {
+            const quiz = state.quiz;
+            const vi = viClass();
+
+            if (quiz.finished) {
+                const percent = Math.round((quiz.score / quiz.questions.length) * 100);
+                const badge = badgeFor(percent);
+                const mistakes = quiz.mistakes.length
+                    ? quiz.mistakes.map((m, i) => `
+                        <li class="bg-slate-50 border border-slate-200 rounded-lg p-3 text-xs">
+                            <p class="font-semibold">${i + 1}. ${m.question.prompt}</p>
+                            <p class="mt-1">내 답: <b>${m.userAnswer}</b></p>
+                            <p>정답: <b>${m.question.type === 'mcq' ? m.question.answer : m.question.answers[0]}</b></p>
+                            <p class="mt-1">${m.question.explanationKo}</p>
+                        </li>
+                    `).join("")
+                    : `<li class="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-xs text-emerald-700">오답이 없습니다. 훌륭해요!</li>`;
+
+                return `
+                    <div class="space-y-4">
+                        <section class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm text-center">
+                            <div class="w-16 h-16 rounded-full bg-blue-100 mx-auto flex items-center justify-center text-blue-600">
+                                <i data-lucide="trophy" class="w-8 h-8"></i>
+                            </div>
+                            <h2 class="text-xl font-black text-slate-800 mt-3">${quiz.score} / ${quiz.questions.length}</h2>
+                            <p class="text-sm text-slate-600 mt-1">정답률 ${percent}%</p>
+                            <span class="inline-block mt-2 px-3 py-1 rounded-full text-xs font-bold ${badge.cls}">${badge.label}</span>
+                            <p class="text-xs text-slate-500 mt-2">최고 기록: ${state.best.score}/${state.best.total} (${state.best.percent}%)</p>
+                            <p class="text-xs text-blue-600 mt-1 ${vi}">Best score: ${state.best.percent}%</p>
+                            <div class="grid gap-2 mt-4">
+                                <button onclick="restartQuiz()" class="w-full bg-blue-600 text-white rounded-lg py-2.5 text-sm font-semibold hover:bg-blue-700">처음부터 다시</button>
+                                <button onclick="retryWrong()" ${quiz.mistakes.length ? "" : "disabled"} class="w-full border border-slate-300 rounded-lg py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 disabled:opacity-50">오답만 다시 풀기</button>
+                            </div>
+                        </section>
+                        <section class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                            <h3 class="font-bold text-slate-800 mb-3">오답 노트</h3>
+                            <ul class="space-y-2">${mistakes}</ul>
+                        </section>
+                    </div>
+                `;
+            }
+
+            const q = currentQ();
+            const progress = Math.round(((quiz.showResult ? quiz.index + 1 : quiz.index) / quiz.questions.length) * 100);
+            const isCorrect = q.type === "mcq"
+                ? quiz.selected === q.answer
+                : q.answers.some((a) => norm(a) === norm(quiz.selected));
+
+            const options = q.type === "mcq"
+                ? q.options.map((opt) => {
+                    let style = "border-slate-200 hover:border-blue-300 hover:bg-blue-50";
+                    let icon = "";
+                    if (quiz.showResult) {
+                        if (opt === q.answer) {
+                            style = "border-emerald-500 bg-emerald-50 text-emerald-700";
+                            icon = "<i data-lucide='check' class='w-4 h-4 text-emerald-600'></i>";
+                        } else if (opt === quiz.selected) {
+                            style = "border-rose-400 bg-rose-50 text-rose-700";
+                            icon = "<i data-lucide='x' class='w-4 h-4 text-rose-600'></i>";
+                        } else {
+                            style = "border-slate-200 text-slate-400";
+                        }
+                    }
+                    return `<button onclick="chooseOption('${opt}')" ${quiz.showResult ? "disabled" : ""} class="w-full border-2 rounded-lg px-4 py-3 text-left font-semibold mb-2 flex justify-between items-center ${style}"><span>${opt}</span>${icon}</button>`;
+                }).join("")
+                : `
+                    <label for="fill-input" class="text-xs font-semibold text-slate-500">정답 입력</label>
+                    <input id="fill-input" type="text" autocomplete="off" ${quiz.showResult ? "disabled" : ""} class="w-full mt-1 border border-slate-300 rounded-lg px-3 py-2 text-sm" placeholder="예: 월요일이잖아요" onkeydown="if(event.key==='Enter'){submitFill();}">
+                    <div class="flex gap-2 mt-3">
+                        <button onclick="submitFill()" ${quiz.showResult ? "disabled" : ""} class="flex-1 bg-blue-600 text-white rounded-lg py-2.5 text-sm font-semibold">정답 확인</button>
+                        <button onclick="toggleHint()" ${quiz.showResult ? "disabled" : ""} class="px-3 border border-slate-300 rounded-lg text-sm font-semibold text-slate-600">힌트</button>
+                    </div>
+                    <p class="text-xs text-amber-700 mt-2 ${quiz.showHint ? "block" : "hidden"}">힌트: ${q.hint || "-"}</p>
+                `;
+
+            const feedback = quiz.showResult ? `
+                <div class="mt-4 rounded-xl border p-4 ${isCorrect ? "bg-emerald-50 border-emerald-200" : "bg-rose-50 border-rose-200"}">
+                    <p class="text-sm font-bold ${isCorrect ? "text-emerald-700" : "text-rose-700"}">${isCorrect ? "정답입니다!" : "오답입니다. 근거를 확인하세요."}</p>
+                    <p class="text-xs text-slate-600 mt-2">내 답: <b>${quiz.selected}</b></p>
+                    <p class="text-xs text-slate-700 mt-1">정답: <b>${q.type === "mcq" ? q.answer : q.answers[0]}</b></p>
+                    <p class="text-sm text-slate-700 mt-3">${q.explanationKo}</p>
+                    <p class="text-xs text-blue-600 mt-1 ${vi}">${q.explanationVi}</p>
+                    <button onclick="nextQuestion()" class="mt-4 w-full bg-blue-600 text-white rounded-lg py-2.5 text-sm font-semibold">다음 문제</button>
+                </div>
+            ` : "";
+
+            return `
+                <div class="space-y-4">
+                    <section class="bg-blue-50 border border-blue-100 rounded-2xl p-4 shadow-sm">
+                        <h2 class="text-sm font-bold text-blue-700">전략 기반 연습</h2>
+                        <p class="text-xs text-slate-600 mt-1">공유지식/새정보를 구분하고, 근거 피드백으로 정확도를 높입니다.</p>
+                    </section>
+
+                    <section class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-blue-600">${quiz.modeLabel}</span>
+                            <span class="text-xs text-slate-500">문제 ${quiz.index + 1}/${quiz.questions.length}</span>
+                        </div>
+                        <div class="mt-2 h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-blue-500" style="width: ${progress}%;"></div></div>
+                        <p class="text-xs text-slate-500 mt-1">점수 ${quiz.score}점</p>
+
+                        <div class="mt-4 bg-slate-50 border border-slate-200 rounded-xl p-4">
+                            <p class="text-sm font-semibold text-slate-800">${q.prompt}</p>
+                            <p class="text-sm text-slate-700 mt-1 ${q.answerPrefix ? "block" : "hidden"}">${q.answerPrefix || ""}<span class="text-slate-400">_____</span></p>
+                            <p class="text-xs text-blue-600 mt-1 ${vi}">${q.promptVi || ""}</p>
+                        </div>
+
+                        <div class="mt-4">${options}</div>
+                        ${feedback}
+                    </section>
+                </div>
+            `;
+        }
+
+        function render() {
+            const content = document.getElementById("app-content");
+            const tabLearn = document.getElementById("tab-learn");
+            const tabPractice = document.getElementById("tab-practice");
+            const transBtn = document.getElementById("translation-btn");
+            const transText = document.getElementById("translation-text");
+
+            if (state.activeTab === "learn") {
+                tabLearn.className = "flex-1 py-3 text-sm font-semibold text-blue-600 border-b-2 border-blue-600 bg-blue-50";
+                tabPractice.className = "flex-1 py-3 text-sm font-semibold text-slate-500";
+                content.innerHTML = renderLearn();
+            } else {
+                tabPractice.className = "flex-1 py-3 text-sm font-semibold text-blue-600 border-b-2 border-blue-600 bg-blue-50";
+                tabLearn.className = "flex-1 py-3 text-sm font-semibold text-slate-500";
+                content.innerHTML = renderPractice();
+            }
+
+            if (state.showVi) {
+                transBtn.className = "flex items-center px-3 py-1.5 rounded-full text-xs font-semibold transition-all bg-blue-100 text-blue-700 border border-blue-200";
                 transText.textContent = "Tiếng Việt ON";
             } else {
-                transBtn.className = "flex items-center px-3 py-1.5 rounded-full text-xs font-medium transition-all bg-gray-100 text-gray-500 border border-gray-200 cursor-pointer";
+                transBtn.className = "flex items-center px-3 py-1.5 rounded-full text-xs font-semibold transition-all bg-slate-100 text-slate-600 border border-slate-200";
                 transText.textContent = "Tiếng Việt OFF";
             }
 
-            // Re-initialize icons
             lucide.createIcons();
-        }
 
-        function renderLearnSection() {
-            const vnClass = state.showTranslation ? "block animate-fade-in" : "hidden";
-            return `
-                <div class="space-y-6">
-                    <!-- Concept -->
-                    <div class="bg-gradient-to-br from-blue-50 to-white border border-blue-100 rounded-xl p-6 shadow-sm">
-                        <h2 class="text-2xl font-bold text-blue-800 mb-2">${grammarPoint.title}</h2>
-                        <p class="text-gray-800 font-bold mb-1">${grammarPoint.meaning_kr}</p>
-                        <p class="text-blue-600 font-medium mb-4 text-sm ${vnClass}">${grammarPoint.meaning_vn}</p>
-                        
-                        <div class="bg-white p-4 rounded-lg border border-blue-100 text-sm text-gray-700 leading-relaxed mt-2 whitespace-pre-line">
-                            <p>${grammarPoint.description_kr}</p>
-                            <p class="text-blue-600 mt-2 pt-2 border-t border-blue-50 ${vnClass}">${grammarPoint.description_vn}</p>
-                        </div>
-                    </div>
-
-                    <!-- Example -->
-                    <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                        <div class="flex items-center mb-4">
-                            <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600 mr-3">
-                                <i data-lucide="volume-2" class="w-5 h-5"></i>
-                            </div>
-                            <h3 class="font-bold text-gray-800">상황: 유진 씨 (Tình huống: Yujin)</h3>
-                        </div>
-                        
-                        <div class="space-y-4">
-                            <div class="bg-gray-50 p-4 rounded-lg relative">
-                                <div class="absolute -left-2 top-4 w-1 h-8 bg-blue-500 rounded-r"></div>
-                                <div class="space-y-3">
-                                    <div>
-                                        <p class="text-gray-600 text-sm">A: ${grammarPoint.examples[0].kr}</p>
-                                        <p class="text-gray-400 text-xs ${vnClass}">${grammarPoint.examples[0].vn}</p>
-                                    </div>
-                                    <div class="pl-4 border-l-2 border-blue-200">
-                                        <p class="text-gray-800 font-bold">B: "${grammarPoint.examples[0].answer_kr}"</p>
-                                        <p class="text-blue-600 text-xs ${vnClass}">${grammarPoint.examples[0].answer_vn}</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="mt-4 text-xs bg-blue-100 text-blue-800 px-3 py-2 rounded-lg inline-block w-full">
-                                    <span class="font-bold">이유:</span> ${grammarPoint.examples[0].context_kr}
-                                    <span class="mt-1 pt-1 border-t border-blue-200 text-blue-700 ${state.showTranslation ? 'block' : 'hidden'}">${grammarPoint.examples[0].context_vn}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Rule -->
-                    <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                        <h3 class="font-bold text-gray-800 mb-4 flex items-center">
-                           <i data-lucide="graduation-cap" class="w-5 h-5 mr-2 text-green-600"></i>
-                           만드는 법 (Quy tắc)
-                        </h3>
-                        <div class="grid grid-cols-2 gap-4 mb-4">
-                            <div class="bg-gray-50 p-3 rounded-lg text-center">
-                                <span class="block text-xs text-gray-500 uppercase tracking-wide">동사/형용사</span>
-                                <span class="font-bold text-gray-800">가다 / 좋다</span>
-                            </div>
-                            <div class="bg-blue-50 p-3 rounded-lg text-center border border-blue-100">
-                                <span class="block text-xs text-blue-500 uppercase tracking-wide">+ 잖아요</span>
-                                <span class="font-bold text-blue-800">가잖아요 / 좋잖아요</span>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-gray-50 p-3 rounded-lg text-center">
-                                <span class="block text-xs text-gray-500 uppercase tracking-wide">명사 (이다)</span>
-                                <span class="font-bold text-gray-800">학생 / 가수</span>
-                            </div>
-                            <div class="bg-blue-50 p-3 rounded-lg text-center border border-blue-100">
-                                <span class="block text-xs text-blue-500 uppercase tracking-wide">+ (이)잖아요</span>
-                                <span class="font-bold text-blue-800">학생이잖아요 / 가수잖아요</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderPracticeSection() {
-            if (state.quizFinished) {
-                return `
-                    <div class="text-center py-12">
-                        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 text-green-600">
-                            <i data-lucide="check" class="w-10 h-10"></i>
-                        </div>
-                        <h2 class="text-2xl font-bold text-gray-800 mb-2">참 잘했어요!</h2>
-                        <p class="text-gray-500 text-sm mb-2 ${state.showTranslation ? 'block' : 'hidden'}">Làm tốt lắm!</p>
-                        <p class="text-gray-600 mb-8">점수: ${state.quizScore} / ${quizData.length}</p>
-                        <button onclick="resetQuiz()" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center mx-auto">
-                            <i data-lucide="rotate-ccw" class="w-4 h-4 mr-2"></i>
-                            다시 하기
-                        </button>
-                    </div>
-                `;
-            }
-
-            const currentQuiz = quizData[state.currentQuizIndex];
-            const vnClass = state.showTranslation ? "block" : "hidden";
-
-            let optionsHtml = currentQuiz.options.map(option => {
-                let btnClass = "border-gray-200 hover:border-blue-300 hover:bg-blue-50 text-gray-700";
-                let iconHtml = "";
-
-                if (state.showResult) {
-                    if (option === currentQuiz.correct) {
-                        btnClass = "border-green-500 bg-green-50 text-green-700";
-                        iconHtml = '<i data-lucide="check" class="w-5 h-5 text-green-600"></i>';
-                    } else if (option === state.selectedAnswer) {
-                        btnClass = "border-red-300 bg-red-50 text-red-700";
-                        iconHtml = '<i data-lucide="x" class="w-5 h-5 text-red-500"></i>';
-                    } else {
-                        btnClass = "border-gray-100 text-gray-400";
-                    }
+            if (state.activeTab === "practice") {
+                const q = currentQ();
+                if (q && q.type === "fill" && !state.quiz.showResult) {
+                    const input = document.getElementById("fill-input");
+                    if (input) input.focus();
                 }
-
-                return `
-                    <button 
-                        onclick="handleAnswer('${option}')" 
-                        ${state.showResult ? 'disabled' : ''}
-                        class="w-full p-4 rounded-lg border-2 text-left transition-all mb-3 flex justify-between items-center ${btnClass}">
-                        <span class="font-medium">${option}</span>
-                        ${iconHtml}
-                    </button>
-                `;
-            }).join('');
-
-            return `
-                <div class="space-y-6">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-sm font-medium text-gray-500">문제 ${state.currentQuizIndex + 1}/${quizData.length}</span>
-                        <span class="text-sm font-medium text-blue-600">점수: ${state.quizScore}</span>
-                    </div>
-
-                    <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                        <!-- Visual Aid -->
-                        <div class="flex justify-center mb-6">
-                            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center text-5xl shadow-inner">
-                                ${currentQuiz.icon}
-                            </div>
-                        </div>
-                        
-                        <h3 class="text-center text-gray-500 text-sm mb-4 uppercase tracking-wide font-semibold">${currentQuiz.item}</h3>
-
-                        <!-- Question -->
-                        <div class="mb-6 text-center">
-                            <p class="text-gray-600 mb-2 text-sm">Q: ${currentQuiz.question}</p>
-                            <p class="text-lg font-bold text-gray-800">
-                            A: ${currentQuiz.answer_prefix}
-                            <span class="text-blue-600 border-b-2 border-blue-400 px-1 inline-block min-w-[80px]">
-                                ${state.selectedAnswer || "_______"}
-                            </span>
-                            </p>
-                        </div>
-
-                        <!-- Options -->
-                        <div class="grid grid-cols-1">
-                            ${optionsHtml}
-                        </div>
-
-                        <!-- Explanation -->
-                        ${state.showResult ? `
-                            <div class="mt-6 animate-fade-in">
-                                <div class="bg-blue-50 p-4 rounded-lg mb-4 text-sm text-blue-800 flex items-start flex-col">
-                                    <div class="flex items-start mb-2">
-                                        <i data-lucide="help-circle" class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5"></i>
-                                        <span>${currentQuiz.explanation_kr}</span>
-                                    </div>
-                                    <div class="pl-7 pt-2 border-t border-blue-200 text-blue-600 w-full ${vnClass}">
-                                        ${currentQuiz.explanation_vn}
-                                    </div>
-                                </div>
-                                <button onclick="nextQuiz()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center justify-center">
-                                    다음 문제
-                                    <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
-                                </button>
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
-            `;
-        }
-
-        // --- Logic Handlers ---
-
-        function setTab(tab) {
-            state.activeTab = tab;
-            renderApp();
-        }
-
-        function toggleTranslation() {
-            state.showTranslation = !state.showTranslation;
-            updateTranslationVisibility();
-            // Re-render button state and any visible content that depends on it
-            renderApp();
-        }
-
-        function updateTranslationVisibility() {
-            const transElements = document.querySelectorAll('.animate-fade-in, .text-blue-600.text-xs, .text-gray-400.text-xs');
-            // Re-render handles most of this, but footer tip needs specific handling if outside main render
-            const tipTrans = document.getElementById('tip-translation');
-            if (tipTrans) {
-                if (state.showTranslation) tipTrans.classList.remove('hidden');
-                else tipTrans.classList.add('hidden');
             }
         }
 
-        function handleAnswer(option) {
-            if (state.showResult) return;
-            state.selectedAnswer = option;
-            state.showResult = true;
-            if (option === quizData[state.currentQuizIndex].correct) {
-                state.quizScore++;
-            }
-            renderApp();
-        }
-
-        function nextQuiz() {
-            state.selectedAnswer = null;
-            state.showResult = false;
-            if (state.currentQuizIndex < quizData.length - 1) {
-                state.currentQuizIndex++;
-            } else {
-                state.quizFinished = true;
-            }
-            renderApp();
-        }
-
-        function resetQuiz() {
-            state.quizScore = 0;
-            state.currentQuizIndex = 0;
-            state.showResult = false;
-            state.selectedAnswer = null;
-            state.quizFinished = false;
-            renderApp();
-        }
-
-        // --- Initial Render & Events ---
-        document.addEventListener('DOMContentLoaded', () => {
-            renderApp();
-            
-            // Translation Toggle Event
-            document.getElementById('translation-btn').addEventListener('click', toggleTranslation);
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("translation-btn").addEventListener("click", toggleTranslation);
+            render();
         });
-
     </script>
     <script src="../shared/learning-enhancements.js"></script>
 </body>
 </html>
+

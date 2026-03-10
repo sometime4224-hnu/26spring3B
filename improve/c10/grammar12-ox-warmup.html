@@ -1,0 +1,458 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>문법 1+2 O/X 워밍업</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; margin: 0; -webkit-tap-highlight-color: transparent; }
+        .injected-global-nav {
+            width: 100%;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e2e8f0;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 0 14px;
+            position: sticky;
+            top: 0;
+            z-index: 9999;
+            box-sizing: border-box;
+        }
+        .injected-global-nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #1d4ed8;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 800;
+        }
+        .injected-global-nav .divider { color: #94a3b8; }
+        .safe-wrap { word-break: keep-all; overflow-wrap: break-word; }
+        .ox-btn { min-height: 56px; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen max-w-md mx-auto shadow-xl">
+    <nav class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+
+    <main id="app" class="p-4 pb-8"></main>
+
+    <script>
+        const QUESTION_BANK = [
+            {
+                id: "d1",
+                grammar: "-던",
+                sentence: "내가 마시던 커피 어디 갔지?",
+                contextKo: "상황: 아직 커피를 다 마시지 못하고 찾는 중",
+                contextVi: "Tình huống: đang uống dở cà phê rồi không thấy cốc",
+                isCorrectUsage: true,
+                reasonKo: "과거에 진행 중이던(미완료) 행동을 회상하므로 '-던'이 맞습니다.",
+                reasonVi: "Đây là hành động quá khứ chưa hoàn tất, nên dùng '-던' là đúng.",
+                correction: ""
+            },
+            {
+                id: "d2",
+                grammar: "-던",
+                sentence: "요즘 매일 읽던 뉴스예요.",
+                contextKo: "상황: 현재의 매일 습관을 말하는 중",
+                contextVi: "Tình huống: đang nói thói quen hiện tại mỗi ngày",
+                isCorrectUsage: false,
+                reasonKo: "'요즘 매일'은 현재 습관이므로 '-던'이 아니라 현재 관형형 '-는'이 자연스럽습니다.",
+                reasonVi: "'요즘 매일' là thói quen hiện tại, nên phải dùng '-는', không phải '-던'.",
+                correction: "요즘 매일 읽는 뉴스예요."
+            },
+            {
+                id: "d3",
+                grammar: "-던",
+                sentence: "어릴 때 타던 자전거를 아직도 갖고 있어요.",
+                contextKo: "상황: 어릴 때의 반복 습관을 회상",
+                contextVi: "Tình huống: hồi tưởng thói quen thời nhỏ",
+                isCorrectUsage: true,
+                reasonKo: "과거 반복 습관을 떠올리는 맥락이므로 '-던' 사용이 맞습니다.",
+                reasonVi: "Đây là thói quen lặp lại trong quá khứ, dùng '-던' đúng.",
+                correction: ""
+            },
+            {
+                id: "d4",
+                grammar: "-던",
+                sentence: "지난주에 보던 영화가 정말 좋았어요. (끝까지 다 봄)",
+                contextKo: "상황: 영화를 끝까지 다 본 완료 경험",
+                contextVi: "Tình huống: đã xem xong hoàn toàn bộ phim",
+                isCorrectUsage: false,
+                reasonKo: "완료된 과거 경험이면 '-던'보다 '-았/었던' 계열이 자연스럽습니다.",
+                reasonVi: "Với trải nghiệm đã hoàn tất, dùng '-았/었던' tự nhiên hơn '-던'.",
+                correction: "지난주에 봤던 영화가 정말 좋았어요."
+            },
+            {
+                id: "d5",
+                grammar: "-던",
+                sentence: "아까 읽던 책을 아직 못 끝냈어요.",
+                contextKo: "상황: 읽던 행동이 중단되어 미완료 상태",
+                contextVi: "Tình huống: hành động đọc bị dừng, chưa hoàn thành",
+                isCorrectUsage: true,
+                reasonKo: "미완료 과거 행동 회상이므로 '-던'이 적절합니다.",
+                reasonVi: "Đây là hành động quá khứ chưa hoàn tất nên '-던' phù hợp.",
+                correction: ""
+            },
+            {
+                id: "d6",
+                grammar: "-던",
+                sentence: "지금 듣던 노래가 좋아요.",
+                contextKo: "상황: 지금 이 순간 듣는 노래를 소개",
+                contextVi: "Tình huống: giới thiệu bài hát đang nghe ngay lúc này",
+                isCorrectUsage: false,
+                reasonKo: "현재 진행 소개 문맥은 '-던'보다 현재형 '-는'이 자연스럽습니다.",
+                reasonVi: "Ngữ cảnh hiện tại nên dùng '-는', không dùng '-던'.",
+                correction: "지금 듣는 노래가 좋아요."
+            },
+            {
+                id: "d7",
+                grammar: "-던",
+                sentence: "제가 전에 살던 동네가 많이 변했어요.",
+                contextKo: "상황: 과거 거주 상태를 회상",
+                contextVi: "Tình huống: hồi tưởng nơi từng sống trong quá khứ",
+                isCorrectUsage: true,
+                reasonKo: "과거 상태 회상에 '-던'을 쓰는 것이 자연스럽습니다.",
+                reasonVi: "Hồi tưởng trạng thái quá khứ nên '-던' là đúng.",
+                correction: ""
+            },
+            {
+                id: "j1",
+                grammar: "-잖아요",
+                sentence: "오늘 월요일이잖아요. 회의 준비해요.",
+                contextKo: "상황: 팀원 모두 월요일 회의 일정을 알고 있음",
+                contextVi: "Tình huống: cả nhóm đều biết lịch họp thứ Hai",
+                isCorrectUsage: true,
+                reasonKo: "서로 아는 사실을 상기시키는 문맥이라 '-잖아요'가 맞습니다.",
+                reasonVi: "Đây là thông tin hai bên cùng biết, nên '-잖아요' đúng.",
+                correction: ""
+            },
+            {
+                id: "j2",
+                grammar: "-잖아요",
+                sentence: "오늘 모임 못 가요. 회사에 급한 일이 생겼잖아요.",
+                contextKo: "상황: 상대는 '급한 일' 정보를 지금 처음 들음",
+                contextVi: "Tình huống: người nghe nghe 'việc gấp' lần đầu tiên",
+                isCorrectUsage: false,
+                reasonKo: "상대가 모르는 새 이유를 설명할 때는 '-잖아요'보다 '-거든요'가 자연스럽습니다.",
+                reasonVi: "Khi đưa lý do mới cho người nghe, '-거든요' tự nhiên hơn '-잖아요'.",
+                correction: "오늘 모임 못 가요. 회사에 급한 일이 생겼거든요."
+            },
+            {
+                id: "j3",
+                grammar: "-잖아요",
+                sentence: "우리 내일 9시에 만나기로 했잖아요.",
+                contextKo: "상황: 이미 정한 약속 시간을 다시 상기",
+                contextVi: "Tình huống: nhắc lại giờ hẹn đã thống nhất",
+                isCorrectUsage: true,
+                reasonKo: "공유된 약속 정보를 다시 확인하는 기능으로 '-잖아요' 사용이 맞습니다.",
+                reasonVi: "Đây là nhắc lại thông tin chung, nên '-잖아요' đúng.",
+                correction: ""
+            },
+            {
+                id: "j4",
+                grammar: "-잖아요",
+                sentence: "오늘은 월요일잖아요.",
+                contextKo: "상황: 명사 '월요일'을 사용한 문장",
+                contextVi: "Tình huống: câu dùng danh từ '월요일'",
+                isCorrectUsage: false,
+                reasonKo: "받침 있는 명사 뒤에는 '이잖아요' 형태를 써야 합니다.",
+                reasonVi: "Sau danh từ có 받침, phải dùng dạng '이잖아요'.",
+                correction: "오늘은 월요일이잖아요."
+            },
+            {
+                id: "j5",
+                grammar: "-잖아요",
+                sentence: "한국 드라마 재미있잖아요.",
+                contextKo: "상황: 서로 이미 공감하는 일반 평가",
+                contextVi: "Tình huống: hai bên cùng công nhận đánh giá chung",
+                isCorrectUsage: true,
+                reasonKo: "서로 공감하는 사실/평가를 상기하므로 '-잖아요'가 자연스럽습니다.",
+                reasonVi: "Đây là đánh giá chung cả hai cùng biết, '-잖아요' phù hợp.",
+                correction: ""
+            },
+            {
+                id: "j6",
+                grammar: "-잖아요",
+                sentence: "우산 가져가세요. 오늘 비가 오잖아요.",
+                contextKo: "상황: 상대는 오늘 비 소식을 아직 모름",
+                contextVi: "Tình huống: người nghe chưa biết tin trời mưa hôm nay",
+                isCorrectUsage: false,
+                reasonKo: "새로운 정보 제공 상황이면 '-잖아요'보다 설명형 표현이 더 자연스럽습니다.",
+                reasonVi: "Nếu là thông tin mới, cách nói giải thích (như '-거든요') tự nhiên hơn '-잖아요'.",
+                correction: "우산 가져가세요. 오늘 비가 오거든요."
+            },
+            {
+                id: "j7",
+                grammar: "-잖아요",
+                sentence: "이건 제가 아까 말씀드렸잖아요.",
+                contextKo: "상황: 이미 말한 내용을 다시 상기",
+                contextVi: "Tình huống: nhắc lại điều đã nói trước đó",
+                isCorrectUsage: true,
+                reasonKo: "이미 공유된 내용을 상기시키는 전형적인 '-잖아요' 문맥입니다.",
+                reasonVi: "Đây là ngữ cảnh điển hình của '-잖아요' khi nhắc lại thông tin đã chia sẻ.",
+                correction: ""
+            }
+        ];
+
+        const state = {
+            screen: "start",
+            selectedSet: "all",
+            questions: [],
+            index: 0,
+            answers: [],
+            answered: false
+        };
+
+        function esc(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        function shuffle(list) {
+            const arr = [...list];
+            for (let i = arr.length - 1; i > 0; i -= 1) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function getPool(setName) {
+            if (setName === "all") return QUESTION_BANK;
+            return QUESTION_BANK.filter((q) => q.grammar === setName);
+        }
+
+        function currentQuestion() {
+            return state.questions[state.index] || null;
+        }
+
+        function setSet(setName) {
+            state.selectedSet = setName;
+            render();
+        }
+
+        function startQuiz() {
+            state.questions = shuffle(getPool(state.selectedSet));
+            state.index = 0;
+            state.answers = [];
+            state.answered = false;
+            state.screen = "quiz";
+            render();
+        }
+
+        function backToStart() {
+            state.screen = "start";
+            render();
+        }
+
+        function answerOX(choiceIsO) {
+            if (state.answered) return;
+            const q = currentQuestion();
+            if (!q) return;
+
+            const userCorrect = choiceIsO === q.isCorrectUsage;
+            state.answers.push({
+                id: q.id,
+                grammar: q.grammar,
+                sentence: q.sentence,
+                contextKo: q.contextKo,
+                contextVi: q.contextVi,
+                userChoice: choiceIsO ? "O" : "X",
+                correctChoice: q.isCorrectUsage ? "O" : "X",
+                userCorrect,
+                reasonKo: q.reasonKo,
+                reasonVi: q.reasonVi,
+                correction: q.correction
+            });
+            state.answered = true;
+            render();
+        }
+
+        function nextQuestion() {
+            if (!state.answered) return;
+            if (state.index < state.questions.length - 1) {
+                state.index += 1;
+                state.answered = false;
+                render();
+            } else {
+                state.screen = "result";
+                render();
+            }
+        }
+
+        function restartQuiz() {
+            startQuiz();
+        }
+
+        function feedbackBlock(answer) {
+            const ok = answer.userCorrect;
+            const truthIsO = answer.correctChoice === "O";
+
+            const statusKo = ok ? "정답입니다." : "오답입니다.";
+            const statusVi = ok ? "Bạn làm đúng." : "Bạn làm sai.";
+
+            const summaryKo = truthIsO
+                ? "이 문장은 문법 사용이 올바른 예문입니다."
+                : "이 문장은 문법 사용이 잘못된 예문입니다.";
+
+            const summaryVi = truthIsO
+                ? "Câu này dùng ngữ pháp đúng."
+                : "Câu này dùng ngữ pháp chưa đúng.";
+
+            return `
+                <div class="mt-4 rounded-xl border p-4 ${ok ? "bg-emerald-50 border-emerald-200" : "bg-rose-50 border-rose-200"}">
+                    <p class="text-sm font-bold ${ok ? "text-emerald-700" : "text-rose-700"}">${statusKo} (${statusVi})</p>
+                    <p class="text-xs text-slate-700 mt-2"><b>정답:</b> ${answer.correctChoice} / <b>내 선택:</b> ${answer.userChoice}</p>
+                    <p class="text-xs text-slate-700 mt-1">${summaryKo}</p>
+                    <p class="text-xs text-blue-700 mt-1">${summaryVi}</p>
+                    <div class="mt-3 text-xs text-slate-700 safe-wrap">
+                        <p><b>이유 (KO):</b> ${esc(answer.reasonKo)}</p>
+                        <p class="mt-1 text-blue-700"><b>Lý do (VI):</b> ${esc(answer.reasonVi)}</p>
+                        ${answer.correction ? `<p class="mt-2"><b>교정 문장:</b> ${esc(answer.correction)}</p><p class="mt-1 text-blue-700"><b>Câu sửa:</b> ${esc(answer.correction)}</p>` : ""}
+                    </div>
+                </div>
+            `;
+        }
+        function renderStart() {
+            const totalAll = QUESTION_BANK.length;
+            const totalD = QUESTION_BANK.filter((q) => q.grammar === "-던").length;
+            const totalJ = QUESTION_BANK.filter((q) => q.grammar === "-잖아요").length;
+
+            return `
+                <section class="space-y-4">
+                    <div class="bg-gradient-to-br from-blue-50 to-white border border-blue-100 rounded-2xl p-5 shadow-sm">
+                        <h1 class="text-xl font-black text-blue-700 safe-wrap">문법 1+2 사전 O/X 퀴즈</h1>
+                        <p class="text-sm text-slate-700 mt-2">문장을 보고 '-던' / '-잖아요' 사용이 맞으면 O, 틀리면 X를 누르세요.</p>
+                        <p class="text-xs text-slate-500 mt-1">정답/오답 모두 이유를 한국어+베트남어로 제공합니다.</p>
+
+                        <div class="mt-4 grid grid-cols-3 gap-2 text-xs">
+                            <div class="bg-white border border-blue-100 rounded-lg p-2 text-center"><p class="text-slate-500">전체</p><p class="font-bold">${totalAll}</p></div>
+                            <div class="bg-white border border-blue-100 rounded-lg p-2 text-center"><p class="text-slate-500">-던</p><p class="font-bold">${totalD}</p></div>
+                            <div class="bg-white border border-blue-100 rounded-lg p-2 text-center"><p class="text-slate-500">-잖아요</p><p class="font-bold">${totalJ}</p></div>
+                        </div>
+
+                        <div class="mt-4 grid grid-cols-3 gap-2">
+                            <button onclick="setSet('all')" class="border rounded-lg py-2 text-xs font-bold ${state.selectedSet === "all" ? "bg-blue-600 text-white border-blue-600" : "bg-white text-slate-700 border-slate-300"}">전체</button>
+                            <button onclick="setSet('-던')" class="border rounded-lg py-2 text-xs font-bold ${state.selectedSet === "-던" ? "bg-blue-600 text-white border-blue-600" : "bg-white text-slate-700 border-slate-300"}">-던</button>
+                            <button onclick="setSet('-잖아요')" class="border rounded-lg py-2 text-xs font-bold ${state.selectedSet === "-잖아요" ? "bg-blue-600 text-white border-blue-600" : "bg-white text-slate-700 border-slate-300"}">-잖아요</button>
+                        </div>
+
+                        <button onclick="startQuiz()" class="mt-4 w-full bg-blue-600 text-white py-3 rounded-xl font-bold text-sm hover:bg-blue-700">연습 시작</button>
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderQuiz() {
+            const q = currentQuestion();
+            if (!q) return "";
+
+            const idx = state.index + 1;
+            const total = state.questions.length;
+            const progress = Math.round((idx / total) * 100);
+            const latest = state.answers[state.answers.length - 1];
+
+            const oxButtons = `
+                <div class="grid grid-cols-2 gap-2 mt-4">
+                    <button onclick="answerOX(true)" ${state.answered ? "disabled" : ""} class="ox-btn border-2 rounded-xl font-black text-lg ${state.answered ? "border-slate-200 text-slate-300" : "border-emerald-400 text-emerald-700 bg-emerald-50"}">O</button>
+                    <button onclick="answerOX(false)" ${state.answered ? "disabled" : ""} class="ox-btn border-2 rounded-xl font-black text-lg ${state.answered ? "border-slate-200 text-slate-300" : "border-rose-400 text-rose-700 bg-rose-50"}">X</button>
+                </div>
+            `;
+
+            return `
+                <section class="space-y-4">
+                    <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-bold text-blue-600">${idx} / ${total}</span>
+                            <span class="text-slate-500">${q.grammar}</span>
+                        </div>
+                        <div class="mt-2 h-2 bg-slate-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-blue-500" style="width:${progress}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                        <p class="text-xs font-bold text-slate-500">문장</p>
+                        <p class="text-base font-bold text-slate-800 mt-2 leading-relaxed safe-wrap">${esc(q.sentence)}</p>
+
+                        <div class="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+                            <p class="text-xs text-slate-700 safe-wrap"><b>상황 (KO):</b> ${esc(q.contextKo)}</p>
+                            <p class="text-xs text-blue-700 mt-1 safe-wrap"><b>Tình huống (VI):</b> ${esc(q.contextVi)}</p>
+                        </div>
+
+                        ${oxButtons}
+
+                        ${state.answered && latest ? feedbackBlock(latest) : ""}
+
+                        ${state.answered ? `<button onclick="nextQuestion()" class="mt-3 w-full bg-blue-600 text-white py-3 rounded-xl font-bold text-sm">다음 문제</button>` : ""}
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderResult() {
+            const total = state.answers.length;
+            const correct = state.answers.filter((a) => a.userCorrect).length;
+            const wrong = total - correct;
+            const percent = total ? Math.round((correct / total) * 100) : 0;
+
+            const wrongList = state.answers.filter((a) => !a.userCorrect).map((a, i) => `
+                <article class="bg-rose-50 border border-rose-200 rounded-xl p-3">
+                    <p class="text-xs font-bold text-rose-700">오답 ${i + 1}</p>
+                    <p class="text-sm text-slate-800 mt-1 safe-wrap">${esc(a.sentence)}</p>
+                    <p class="text-xs text-slate-700 mt-2"><b>정답:</b> ${a.correctChoice}</p>
+                    <p class="text-xs text-slate-700 mt-1 safe-wrap"><b>이유 (KO):</b> ${esc(a.reasonKo)}</p>
+                    <p class="text-xs text-blue-700 mt-1 safe-wrap"><b>Lý do (VI):</b> ${esc(a.reasonVi)}</p>
+                    ${a.correction ? `<p class="text-xs text-slate-700 mt-1 safe-wrap"><b>교정:</b> ${esc(a.correction)}</p>` : ""}
+                </article>
+            `).join("");
+
+            return `
+                <section class="space-y-4">
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm text-center">
+                        <h1 class="text-2xl font-black text-slate-800">${correct} / ${total}</h1>
+                        <p class="text-sm text-slate-600 mt-1">정답률 ${percent}% · 오답 ${wrong}개</p>
+                        <div class="grid gap-2 mt-4">
+                            <button onclick="restartQuiz()" class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-bold text-sm">다시 연습</button>
+                            <a href="grammar12-integrated-quiz.html" class="w-full border border-slate-300 text-slate-700 py-2.5 rounded-xl font-bold text-sm text-center no-underline">통합 퀴즈로 이동</a>
+                            <button onclick="backToStart()" class="w-full border border-slate-300 text-slate-700 py-2.5 rounded-xl font-bold text-sm">시작 화면</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm ${wrong ? "" : "hidden"}">
+                        <h2 class="text-sm font-bold text-slate-800 mb-3">오답 복기</h2>
+                        <div class="space-y-2">${wrongList}</div>
+                    </div>
+                </section>
+            `;
+        }
+
+        function render() {
+            const app = document.getElementById("app");
+            if (state.screen === "start") app.innerHTML = renderStart();
+            else if (state.screen === "quiz") app.innerHTML = renderQuiz();
+            else app.innerHTML = renderResult();
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            render();
+        });
+    </script>
+    <script src="../shared/learning-enhancements.js"></script>
+</body>
+</html>
