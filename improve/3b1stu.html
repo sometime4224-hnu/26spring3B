@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3B-1반 학생 뽑기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 커스텀 스크롤바 (출석부 및 기록 영역용) */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8; 
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen p-4 md:p-8">
+
+    <div class="max-w-3xl mx-auto space-y-6">
+        
+        <!-- 헤더 영역 -->
+        <header class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-800">3B-1반 학생 뽑기</h1>
+                <p class="text-sm text-slate-500 mt-1" id="attendance-status">총 29명 중 29명 출석</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="openModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-2 rounded-lg font-medium transition-colors">
+                    출석 체크
+                </button>
+            </div>
+        </header>
+
+        <!-- 컨트롤 및 뽑기 버튼 영역 -->
+        <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col items-center gap-6">
+            <div class="flex flex-col items-center gap-2">
+                <label for="draw-count" class="font-medium text-slate-700">뽑을 인원 선택 (1~8명)</label>
+                <select id="draw-count" class="border border-slate-300 rounded-lg px-4 py-2 bg-white text-lg w-32 text-center focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="1">1명</option>
+                    <option value="2">2명</option>
+                    <option value="3">3명</option>
+                    <option value="4">4명</option>
+                    <option value="5">5명</option>
+                    <option value="6">6명</option>
+                    <option value="7">7명</option>
+                    <option value="8">8명</option>
+                </select>
+            </div>
+            
+            <button onclick="drawStudents()" class="bg-blue-600 hover:bg-blue-700 text-white text-xl font-bold px-12 py-4 rounded-full shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0">
+                뽑기 실행!
+            </button>
+            
+            <!-- 에러/알림 메시지 표시 영역 -->
+            <div id="message-box" class="hidden text-red-600 font-medium bg-red-50 px-4 py-2 rounded-lg border border-red-200">
+                에러 메시지
+            </div>
+        </section>
+
+        <!-- 현재 뽑기 결과 영역 -->
+        <section id="current-result-section" class="hidden bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <h2 class="text-xl font-bold text-slate-800 mb-4 border-b pb-2">🎉 이번 뽑기 결과</h2>
+            <div id="current-result-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- 결과 아이템이 여기에 추가됩니다 -->
+            </div>
+        </section>
+
+        <!-- 과거 뽑기 기록 영역 -->
+        <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <div class="flex justify-between items-center mb-4 border-b pb-2">
+                <h2 class="text-lg font-bold text-slate-800">🕒 과거 뽑기 기록</h2>
+                <button onclick="clearHistory()" class="text-sm text-slate-500 hover:text-red-500 transition-colors">기록 초기화</button>
+            </div>
+            <div id="history-container" class="space-y-4 max-h-96 overflow-y-auto pr-2">
+                <div class="text-slate-400 text-center py-8">아직 기록이 없습니다.</div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- 출석 체크 모달 (팝업) -->
+    <div id="attendance-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50 opacity-0 transition-opacity duration-200">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col transform scale-95 transition-transform duration-200" id="modal-content">
+            
+            <div class="p-6 border-b flex justify-between items-center">
+                <h2 class="text-xl font-bold text-slate-800">출석 체크</h2>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="p-4 bg-slate-50 border-b flex gap-2 justify-end">
+                <button onclick="setAllAttendance(true)" class="bg-white border border-slate-300 px-3 py-1.5 rounded text-sm font-medium hover:bg-slate-100 transition-colors">모두 선택</button>
+                <button onclick="setAllAttendance(false)" class="bg-white border border-slate-300 px-3 py-1.5 rounded text-sm font-medium hover:bg-slate-100 transition-colors">모두 해제</button>
+            </div>
+
+            <div class="p-6 overflow-y-auto flex-1">
+                <div id="student-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <!-- 학생 목록 체크박스가 여기에 렌더링됩니다 -->
+                </div>
+            </div>
+
+            <div class="p-6 border-t bg-slate-50 flex justify-end rounded-b-2xl">
+                <button onclick="closeModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                    완료 및 닫기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 원본 학생 명단 데이터
+        const rawStudentData = [
+            "DOAN THI NGUYET HA, 도안 티 응옛 하", "PHAM VAN THANH, 팜 반 탄", "HOANG THI THUY DUONG, 황 티 튀 드엉",
+            "HO THI HOAI, 호 티 화이", "NGUYEN PHAM TUONG VY, 응웬 팜 드엉 비", "VO THANH TRONG, 버 탄 쩡",
+            "DANG VAN VINH, 당 반 빙", "NGUYEN HUU DUC, 응웬 휴 득", "VO XUAN THAI, 보 쑤안 타이",
+            "TRAN BAO NGOC, 짠 바오 응옥", "TRAN NHAT QUAN, 짠 낫 콴", "LE DINH HAI, 레 딘 하이",
+            "DO GIA HAO, 또 자 하오", "HUYNH THI HONG GAM, 휜 티 홍 깜", "NGUYEN THI NGOC GIANG, 응웬 티 응옥 즈앙",
+            "VU THI VY, 부 티 비", "CAO THI NGA, 까오 티 응아", "NGUYEN DANG KHOI, 응웬 당 코이",
+            "LE VAN LOI, 레 반 러이", "NGUYEN THIEN TRI, 응웬 티엔 찌", "NGUYEN THI HOANG HUY HIEU, 응우엔 티 호앙 후이 히에우",
+            "DANG THI MY DIEN, 당 티 미 디엔", "NGUYEN PHUONG ANH, 응웬 프엉 아잉", "PHAM THI PHUONG UYEN, 팜 티 프엉 웬",
+            "NGUYEN THI THANH HUE, 응웬 티 타잉 후에", "PHAM THI NGOC LAN, 팜 티 응억 란", "LE DUC HAN, 레 득 한",
+            "CAO TRAN TUAN TU, 까어 쩐 뚜언 뚜", "DAO THI THU TRANG, 다오 티 투 짱"
+        ];
+
+        // 상태 관리
+        let students = rawStudentData.map((item, index) => {
+            const parts = item.split(',');
+            return {
+                id: index,
+                engName: parts[0].trim(),
+                korName: parts[1].trim(),
+                isPresent: true // 기본값: 전원 출석
+            };
+        });
+
+        let drawHistory = [];
+
+        // DOM 요소
+        const modal = document.getElementById('attendance-modal');
+        const modalContent = document.getElementById('modal-content');
+        const studentListContainer = document.getElementById('student-list');
+        const attendanceStatusEl = document.getElementById('attendance-status');
+        const messageBox = document.getElementById('message-box');
+        const currentResultSection = document.getElementById('current-result-section');
+        const currentResultGrid = document.getElementById('current-result-grid');
+        const historyContainer = document.getElementById('history-container');
+
+        // 초기화
+        function init() {
+            renderAttendanceList();
+            updateAttendanceStatus();
+        }
+
+        // 메시지 박스 표시 함수
+        function showMessage(msg, isError = true) {
+            messageBox.textContent = msg;
+            messageBox.className = isError 
+                ? "text-red-600 font-medium bg-red-50 px-4 py-3 rounded-lg border border-red-200 block text-center"
+                : "text-blue-600 font-medium bg-blue-50 px-4 py-3 rounded-lg border border-blue-200 block text-center";
+            
+            setTimeout(() => {
+                messageBox.classList.add("hidden");
+                messageBox.classList.remove("block");
+            }, 3000);
+        }
+
+        // 모달 제어
+        function openModal() {
+            modal.classList.remove('hidden');
+            // 애니메이션을 위해 약간의 지연 후 opacity 및 scale 적용
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+            updateAttendanceStatus(); // 닫을 때 상태 업데이트
+        }
+
+        // 출석 상태 요약 업데이트
+        function updateAttendanceStatus() {
+            const presentCount = students.filter(s => s.isPresent).length;
+            attendanceStatusEl.textContent = `총 ${students.length}명 중 ${presentCount}명 출석`;
+        }
+
+        // 출석 리스트 렌더링
+        function renderAttendanceList() {
+            studentListContainer.innerHTML = '';
+            students.forEach(student => {
+                const label = document.createElement('label');
+                label.className = `flex items-center p-3 rounded-lg border cursor-pointer transition-colors ${student.isPresent ? 'bg-blue-50 border-blue-200' : 'bg-white border-slate-200 hover:bg-slate-50'}`;
+                
+                label.innerHTML = `
+                    <input type="checkbox" class="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" 
+                           ${student.isPresent ? 'checked' : ''} 
+                           onchange="toggleAttendance(${student.id}, this.checked)">
+                    <div class="ml-3">
+                        <div class="font-medium text-slate-800">${student.korName}</div>
+                        <div class="text-xs text-slate-500">${student.engName}</div>
+                    </div>
+                `;
+                studentListContainer.appendChild(label);
+            });
+        }
+
+        // 개별 출석 토글
+        function toggleAttendance(id, isChecked) {
+            const student = students.find(s => s.id === id);
+            if (student) {
+                student.isPresent = isChecked;
+                renderAttendanceList(); // 배경색 업데이트를 위해 다시 렌더링
+            }
+        }
+
+        // 모두 선택/해제
+        function setAllAttendance(status) {
+            students.forEach(s => s.isPresent = status);
+            renderAttendanceList();
+        }
+
+        // 피셔-예이츠 셔플 (배열 무작위 섞기)
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // 뽑기 실행
+        function drawStudents() {
+            const count = parseInt(document.getElementById('draw-count').value, 10);
+            const presentStudents = students.filter(s => s.isPresent);
+
+            if (presentStudents.length < count) {
+                showMessage(`출석한 학생(${presentStudents.length}명)이 뽑을 인원(${count}명)보다 적습니다.`);
+                return;
+            }
+
+            // 섞은 후 요청한 수만큼 추출
+            const shuffled = shuffleArray(presentStudents);
+            const selected = shuffled.slice(0, count);
+
+            // 현재 결과 표시
+            displayCurrentResult(selected);
+
+            // 기록에 추가
+            addHistory(selected);
+        }
+
+        // 현재 결과 화면에 그리기
+        function displayCurrentResult(selectedStudents) {
+            currentResultSection.classList.remove('hidden');
+            currentResultGrid.innerHTML = '';
+
+            selectedStudents.forEach(student => {
+                const card = document.createElement('div');
+                card.className = 'bg-blue-50 border border-blue-100 p-4 rounded-lg flex flex-col items-center justify-center text-center shadow-sm transform transition-all hover:scale-105';
+                card.innerHTML = `
+                    <span class="text-xl font-bold text-blue-900 mb-1">${student.korName}</span>
+                    <span class="text-xs text-blue-600 line-clamp-1 break-all">${student.engName}</span>
+                `;
+                currentResultGrid.appendChild(card);
+            });
+        }
+
+        // 기록 추가 및 렌더링
+        function addHistory(selectedStudents) {
+            const timestamp = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second:'2-digit' });
+            
+            drawHistory.unshift({
+                time: timestamp,
+                students: selectedStudents
+            });
+
+            renderHistory();
+        }
+
+        // 기록 렌더링
+        function renderHistory() {
+            if (drawHistory.length === 0) {
+                historyContainer.innerHTML = '<div class="text-slate-400 text-center py-8">아직 기록이 없습니다.</div>';
+                return;
+            }
+
+            historyContainer.innerHTML = '';
+            drawHistory.forEach((record, index) => {
+                const item = document.createElement('div');
+                item.className = 'p-4 bg-slate-50 border border-slate-200 rounded-lg';
+                
+                const names = record.students.map(s => `<span class="inline-block bg-white border border-slate-200 px-2 py-1 rounded text-sm mr-2 mb-2 font-medium text-slate-700">${s.korName}</span>`).join('');
+
+                item.innerHTML = `
+                    <div class="text-xs text-slate-500 mb-2 font-medium">기록 #${drawHistory.length - index} • ${record.time} (${record.students.length}명)</div>
+                    <div class="flex flex-wrap">${names}</div>
+                `;
+                historyContainer.appendChild(item);
+            });
+        }
+
+        // 기록 초기화
+        function clearHistory() {
+            drawHistory = [];
+            currentResultSection.classList.add('hidden');
+            renderHistory();
+            showMessage('과거 기록이 초기화되었습니다.', false);
+        }
+
+        // 앱 초기화 실행
+        init();
+    </script>
+</body>
+</html>
+
