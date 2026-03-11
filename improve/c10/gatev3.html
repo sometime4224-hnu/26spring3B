@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>문법 입장 심사소 - 인터뷰 버전</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-1: #1f2937;
+            --bg-2: #7c2d12;
+            --panel: #fffdf5;
+            --panel-2: #f8f1df;
+            --ink: #1f2937;
+            --muted: #475569;
+            --line: #d6c9ab;
+            --allow: #166534;
+            --deny: #991b1b;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: "IBM Plex Sans KR", sans-serif;
+            background:
+                radial-gradient(circle at 20% 15%, rgba(250, 204, 21, 0.2) 0%, transparent 30%),
+                radial-gradient(circle at 80% 70%, rgba(20, 184, 166, 0.15) 0%, transparent 28%),
+                linear-gradient(150deg, var(--bg-1), var(--bg-2));
+            color: var(--ink);
+            display: grid;
+            place-items: center;
+        }
+
+        .phone {
+            width: min(100vw, 430px);
+            height: 100dvh;
+            padding: max(10px, env(safe-area-inset-top)) 10px max(10px, env(safe-area-inset-bottom));
+            display: grid;
+            grid-template-rows: auto auto auto 1fr auto auto;
+            gap: 8px;
+        }
+
+        .hud,
+        .rule-box,
+        .npc-box,
+        .interview-box,
+        .feedback {
+            border: 2px solid var(--line);
+            border-radius: 14px;
+            background: linear-gradient(160deg, var(--panel), var(--panel-2));
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.18);
+        }
+
+        .hud {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 10px;
+        }
+
+        .logo {
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            font-size: clamp(0.9rem, 3.7vw, 1.05rem);
+        }
+
+        .metric {
+            text-align: center;
+            min-width: 72px;
+            border-radius: 10px;
+            border: 1px solid #ccb993;
+            background: #fff8e7;
+            padding: 5px 6px;
+        }
+
+        .metric .k {
+            font-size: 0.64rem;
+            color: #6b7280;
+            font-weight: 700;
+        }
+
+        .metric .v {
+            font-size: 0.94rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-top: 1px;
+        }
+
+        .rule-box {
+            padding: 10px 11px;
+            background: linear-gradient(155deg, #ecfeff 0%, #fefce8 100%);
+            transform-origin: center center;
+        }
+
+        .rule-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+            font-size: 0.72rem;
+            color: #0f766e;
+            font-weight: 700;
+        }
+
+        .stage-track {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 5px;
+            margin: 6px 0 7px;
+        }
+
+        .stage-chip {
+            text-align: center;
+            font-size: clamp(0.62rem, 2.4vw, 0.7rem);
+            font-weight: 700;
+            border: 1px solid #cbd5e1;
+            border-radius: 999px;
+            padding: 4px 2px;
+            color: #475569;
+            background: #f8fafc;
+            transition: all 0.2s ease;
+        }
+
+        .stage-chip.active {
+            color: #ffffff;
+            border-color: transparent;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
+        }
+
+        .stage-alert {
+            min-height: 20px;
+            margin: 0 0 6px;
+            border-radius: 8px;
+            font-size: clamp(0.68rem, 2.5vw, 0.77rem);
+            font-weight: 700;
+            text-align: center;
+            background: rgba(15, 118, 110, 0.08);
+            border: 1px solid rgba(15, 118, 110, 0);
+            padding: 2px 6px;
+            opacity: 0;
+            transform: translateY(-2px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .stage-alert.show {
+            opacity: 1;
+            transform: translateY(0);
+            animation: stageAlertPop 0.65s ease;
+            border-color: rgba(15, 118, 110, 0.45);
+        }
+
+        .rule-box.swap {
+            animation: stageRuleSwap 0.62s cubic-bezier(0.2, 0.9, 0.2, 1);
+        }
+
+        .phone.stage-done .rule-box {
+            border-color: #93c5fd;
+            background: linear-gradient(155deg, #eff6ff 0%, #fefce8 100%);
+        }
+
+        .phone.stage-progress .rule-box {
+            border-color: #86efac;
+            background: linear-gradient(155deg, #ecfdf5 0%, #f0fdf4 100%);
+        }
+
+        .phone.stage-plan .rule-box {
+            border-color: #fcd34d;
+            background: linear-gradient(155deg, #fffbeb 0%, #fef3c7 100%);
+        }
+
+        .phone.stage-no-plan .rule-box {
+            border-color: #d8b4fe;
+            background: linear-gradient(155deg, #f5f3ff 0%, #fdf4ff 100%);
+        }
+
+        .phone.stage-done .stage-chip[data-key="done"].active {
+            background: #2563eb;
+        }
+
+        .phone.stage-progress .stage-chip[data-key="progress"].active {
+            background: #059669;
+        }
+
+        .phone.stage-plan .stage-chip[data-key="plan"].active {
+            background: #d97706;
+        }
+
+        .phone.stage-no-plan .stage-chip[data-key="no-plan"].active {
+            background: #9333ea;
+        }
+
+        .rule-title {
+            margin: 0;
+            font-size: clamp(0.92rem, 3.7vw, 1.04rem);
+            line-height: 1.32;
+            font-weight: 700;
+        }
+
+        .rule-vi {
+            margin: 4px 0 0;
+            font-size: clamp(0.68rem, 2.5vw, 0.78rem);
+            color: #334155;
+            line-height: 1.3;
+        }
+
+        .rule-hint {
+            margin: 6px 0 0;
+            font-size: clamp(0.72rem, 2.7vw, 0.81rem);
+            color: var(--muted);
+            line-height: 1.3;
+        }
+
+        .npc-box {
+            min-height: 0;
+            padding: 9px;
+            display: grid;
+            grid-template-columns: 62px 1fr;
+            gap: 8px;
+            align-items: start;
+        }
+
+        .avatar {
+            width: 62px;
+            height: 62px;
+            border-radius: 14px;
+            border: 2px solid #0f766e;
+            background: #f0fdfa;
+            display: grid;
+            place-items: center;
+            font-size: 1.7rem;
+            font-weight: 700;
+        }
+
+        .avatar.react-good {
+            background: #dcfce7;
+            border-color: #22c55e;
+            animation: avatarCheer 0.9s ease;
+        }
+
+        .avatar.react-bad {
+            background: #fee2e2;
+            border-color: #ef4444;
+            animation: avatarOops 0.9s ease;
+        }
+
+        .speech {
+            background: #ffffff;
+            border: 1px solid #d5dbe4;
+            border-radius: 12px;
+            padding: 8px 9px;
+            line-height: 1.35;
+            min-height: 70px;
+            overflow: auto;
+        }
+
+        .npc-name {
+            margin: 0;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .npc-line {
+            margin: 4px 0 0;
+            font-size: clamp(0.88rem, 3.5vw, 0.98rem);
+            font-weight: 500;
+        }
+
+        .tag-row {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            border-radius: 999px;
+            padding: 4px 8px;
+            border: 1px solid #c9d3e4;
+            background: #eff6ff;
+            color: #1e3a8a;
+        }
+
+        .interview-box {
+            min-height: 0;
+            padding: 8px;
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 7px;
+        }
+
+        .question-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .q-btn {
+            border: 1px solid #c7d2fe;
+            border-radius: 10px;
+            background: #eef2ff;
+            color: #1e3a8a;
+            padding: 6px 6px;
+            min-height: 46px;
+            font-family: inherit;
+            font-size: clamp(0.73rem, 2.7vw, 0.8rem);
+            font-weight: 700;
+            line-height: 1.2;
+            display: grid;
+            align-content: center;
+            gap: 2px;
+            cursor: pointer;
+        }
+
+        .q-btn .vi {
+            font-size: clamp(0.61rem, 2.2vw, 0.67rem);
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .q-btn:disabled {
+            opacity: 0.45;
+            cursor: default;
+        }
+
+        .q-counter {
+            font-size: clamp(0.7rem, 2.4vw, 0.78rem);
+            color: #64748b;
+            font-weight: 700;
+        }
+
+        .interview-log {
+            min-height: 0;
+            overflow: auto;
+            border: 1px solid #d6deeb;
+            border-radius: 10px;
+            background: #ffffff;
+            padding: 6px;
+            display: grid;
+            gap: 6px;
+            align-content: start;
+        }
+
+        .interview-log.empty::before {
+            content: "질문 버튼을 눌러 인터뷰를 시작하세요.";
+            color: #64748b;
+            font-size: clamp(0.72rem, 2.5vw, 0.8rem);
+        }
+
+        .qa-item {
+            border-radius: 8px;
+            border: 1px solid #dbe6f7;
+            background: #f8fbff;
+            padding: 5px 6px;
+            font-size: clamp(0.73rem, 2.6vw, 0.82rem);
+            line-height: 1.3;
+        }
+
+        .qa-q {
+            color: #1d4ed8;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .qa-a {
+            margin: 2px 0 0;
+        }
+
+        .qa-gram {
+            margin-left: 4px;
+            font-size: 0.65rem;
+            color: #0f766e;
+            font-weight: 700;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        button {
+            border: 0;
+            border-radius: 12px;
+            min-height: 56px;
+            font-family: inherit;
+            color: #fff;
+            cursor: pointer;
+            transition: transform 0.08s ease, filter 0.2s ease;
+            display: grid;
+            align-content: center;
+            justify-items: center;
+            gap: 1px;
+            padding: 8px;
+        }
+
+        button:active {
+            transform: scale(0.985);
+        }
+
+        .btn-ko {
+            font-size: clamp(1rem, 3.7vw, 1.08rem);
+            font-weight: 700;
+            line-height: 1.05;
+        }
+
+        .btn-vi {
+            font-size: clamp(0.64rem, 2.5vw, 0.74rem);
+            font-weight: 500;
+            opacity: 0.9;
+            line-height: 1.1;
+        }
+
+        .allow-btn {
+            background: linear-gradient(160deg, #16a34a 0%, var(--allow) 100%);
+        }
+
+        .deny-btn {
+            background: linear-gradient(160deg, #ef4444 0%, var(--deny) 100%);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+
+        .feedback {
+            padding: 9px 11px;
+            font-size: clamp(0.81rem, 3vw, 0.89rem);
+            line-height: 1.35;
+            min-height: 66px;
+            display: grid;
+            align-content: center;
+        }
+
+        .feedback.good {
+            border-color: #86efac;
+            background: linear-gradient(150deg, #ecfdf5 0%, #f0fdf4 100%);
+        }
+
+        .feedback.bad {
+            border-color: #fca5a5;
+            background: linear-gradient(150deg, #fff1f2 0%, #fef2f2 100%);
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.58);
+            display: none;
+            place-items: center;
+            padding: 20px;
+        }
+
+        .overlay.show {
+            display: grid;
+        }
+
+        .result-card {
+            width: min(92vw, 390px);
+            border-radius: 16px;
+            border: 2px solid var(--line);
+            background: linear-gradient(150deg, #fffef8 0%, #fef3c7 100%);
+            box-shadow: 0 14px 30px rgba(15, 23, 42, 0.3);
+            padding: 14px;
+        }
+
+        .result-card h2 {
+            margin: 0;
+            font-size: 1.18rem;
+        }
+
+        .result-score {
+            margin: 6px 0 8px;
+            font-size: 0.96rem;
+            font-weight: 700;
+        }
+
+        .result-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: grid;
+            gap: 4px;
+            font-size: 0.84rem;
+        }
+
+        .retry {
+            margin-top: 10px;
+            width: 100%;
+            min-height: 46px;
+            background: linear-gradient(140deg, #0d9488 0%, #115e59 100%);
+        }
+
+        .phone.hit-good {
+            animation: phoneBoomGood 0.75s ease;
+            box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.45), 0 12px 30px rgba(34, 197, 94, 0.35);
+        }
+
+        .phone.hit-bad {
+            animation: phoneShakeBad 0.75s ease;
+            box-shadow: 0 0 0 5px rgba(239, 68, 68, 0.45), 0 12px 30px rgba(239, 68, 68, 0.35);
+        }
+
+        .global-fx {
+            position: fixed;
+            inset: 0;
+            z-index: 90;
+            pointer-events: none;
+            display: none;
+            place-items: center;
+        }
+
+        .global-fx.show {
+            display: grid;
+        }
+
+        .global-fx.good {
+            background: radial-gradient(circle at center, rgba(34, 197, 94, 0.5) 0%, rgba(16, 185, 129, 0.22) 35%, rgba(0, 0, 0, 0) 70%);
+            animation: screenFlashGood 0.85s ease forwards;
+        }
+
+        .global-fx.bad {
+            background: radial-gradient(circle at center, rgba(239, 68, 68, 0.54) 0%, rgba(244, 63, 94, 0.24) 35%, rgba(0, 0, 0, 0) 70%);
+            animation: screenFlashBad 0.85s ease forwards;
+        }
+
+        .fx-text {
+            position: absolute;
+            top: 22%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: clamp(2.4rem, 16vw, 4.8rem);
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            text-shadow: 0 8px 24px rgba(15, 23, 42, 0.55);
+            opacity: 0;
+        }
+
+        .fx-text.good {
+            color: #dcfce7;
+            animation: textPopGood 0.8s ease forwards;
+        }
+
+        .fx-text.bad {
+            color: #fee2e2;
+            animation: textPopBad 0.8s ease forwards;
+        }
+
+        .fx-burst {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+        }
+
+        .fx-particle {
+            position: absolute;
+            left: 50%;
+            top: 56%;
+            width: 10px;
+            height: 20px;
+            border-radius: 99px;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            animation: particleBlast 0.85s ease-out forwards;
+            animation-delay: var(--delay, 0ms);
+            background: var(--pcolor, #ffffff);
+        }
+
+        @keyframes avatarCheer {
+            0% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.24) rotate(-6deg); }
+            50% { transform: scale(1.08) rotate(6deg); }
+            75% { transform: scale(1.16) rotate(-4deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        @keyframes stageAlertPop {
+            0% { transform: translateY(-7px) scale(0.94); opacity: 0; }
+            45% { transform: translateY(0) scale(1.06); opacity: 1; }
+            100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        @keyframes stageRuleSwap {
+            0% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+                filter: blur(0);
+            }
+            34% {
+                opacity: 0.05;
+                transform: translateX(-20px) scale(0.96);
+                filter: blur(2px);
+            }
+            35% {
+                opacity: 0.05;
+                transform: translateX(20px) scale(0.96);
+                filter: blur(2px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+                filter: blur(0);
+            }
+        }
+
+        @keyframes avatarOops {
+            0% { transform: scale(1) translateX(0); }
+            18% { transform: scale(1.05) translateX(-8px) rotate(-5deg); }
+            36% { transform: scale(1.03) translateX(8px) rotate(5deg); }
+            54% { transform: scale(1.05) translateX(-6px) rotate(-4deg); }
+            72% { transform: scale(1.02) translateX(6px) rotate(4deg); }
+            100% { transform: scale(1) translateX(0) rotate(0deg); }
+        }
+
+        @keyframes phoneBoomGood {
+            0% { transform: scale(1); }
+            20% { transform: scale(1.035); }
+            40% { transform: scale(0.985); }
+            60% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes phoneShakeBad {
+            0% { transform: translateX(0) rotate(0deg); }
+            15% { transform: translateX(-9px) rotate(-1.5deg); }
+            30% { transform: translateX(9px) rotate(1.5deg); }
+            45% { transform: translateX(-8px) rotate(-1.4deg); }
+            60% { transform: translateX(8px) rotate(1.2deg); }
+            75% { transform: translateX(-5px) rotate(-0.8deg); }
+            100% { transform: translateX(0) rotate(0deg); }
+        }
+
+        @keyframes screenFlashGood {
+            0% { opacity: 0; }
+            18% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        @keyframes screenFlashBad {
+            0% { opacity: 0; }
+            15% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        @keyframes textPopGood {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.35); }
+            22% { opacity: 1; transform: translate(-50%, -50%) scale(1.18); }
+            40% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.05); }
+        }
+
+        @keyframes textPopBad {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.45) rotate(0deg); }
+            22% { opacity: 1; transform: translate(-50%, -50%) scale(1.16) rotate(-4deg); }
+            42% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(3deg); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.06) rotate(0deg); }
+        }
+
+        @keyframes particleBlast {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.2) rotate(0deg);
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) rotate(var(--rot));
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="phone stage-done" id="phoneApp" aria-live="polite">
+        <section class="hud">
+            <div class="logo">문법 입장 심사소: 인터뷰</div>
+            <div class="metric">
+                <div class="k">STAGE</div>
+                <div class="v" id="stageView">1/4</div>
+            </div>
+            <div class="metric">
+                <div class="k">ROUND</div>
+                <div class="v" id="roundView">1/16</div>
+            </div>
+        </section>
+
+        <section class="rule-box" id="ruleBox">
+            <div class="rule-head">
+                <span id="stageNameView">완료 스테이지</span>
+                <span id="scoreView">점수 0</span>
+            </div>
+            <div class="stage-track" id="stageTrack">
+                <span class="stage-chip active" data-key="done">완료</span>
+                <span class="stage-chip" data-key="progress">진행</span>
+                <span class="stage-chip" data-key="plan">계획</span>
+                <span class="stage-chip" data-key="no-plan">계획 없음</span>
+            </div>
+            <div class="stage-alert" id="stageAlert" aria-live="polite"></div>
+            <h1 class="rule-title" id="ruleText">규칙 로딩 중...</h1>
+            <p class="rule-vi" id="ruleVi"></p>
+            <p class="rule-hint" id="ruleHint"></p>
+        </section>
+
+        <section class="npc-box">
+            <div class="avatar" id="npcAvatar">🙂</div>
+            <article class="speech">
+                <p class="npc-name" id="npcName">...</p>
+                <p class="npc-line" id="npcLine">...</p>
+                <div class="tag-row" style="margin-top:6px;">
+                    <span class="tag" id="grammarTag">문법</span>
+                    <span class="tag" id="focusTag">힌트</span>
+                </div>
+            </article>
+        </section>
+
+        <section class="interview-box">
+            <div class="question-grid" id="questionGrid"></div>
+            <div class="q-counter" id="questionCounter">질문 0/3</div>
+            <div class="interview-log empty" id="interviewLog"></div>
+        </section>
+
+        <section class="actions">
+            <button class="allow-btn" id="allowBtn" type="button">
+                <span class="btn-ko">허락</span>
+                <span class="btn-vi">Cho vào</span>
+            </button>
+            <button class="deny-btn" id="denyBtn" type="button">
+                <span class="btn-ko">허락 안 함</span>
+                <span class="btn-vi">Không cho vào</span>
+            </button>
+        </section>
+
+        <section class="feedback" id="feedback">
+            스테이지 조건을 보고 허락/허락 안 함을 판단하세요.
+        </section>
+    </main>
+
+    <div class="global-fx" id="globalFx" aria-hidden="true">
+        <div class="fx-text" id="fxText"></div>
+        <div class="fx-burst" id="fxBurst"></div>
+    </div>
+
+    <section class="overlay" id="resultOverlay" aria-modal="true" role="dialog">
+        <div class="result-card">
+            <h2>심사 종료</h2>
+            <p class="result-score" id="finalScore">총점: 0점</p>
+            <ul class="result-list" id="resultList"></ul>
+            <button class="retry" id="retryBtn" type="button">
+                <span class="btn-ko">다시 하기</span>
+                <span class="btn-vi">Chơi lại</span>
+            </button>
+        </div>
+    </section>
+
+    <script>
+        const STAGES = [
+            {
+                key: "done",
+                name: "완료 스테이지",
+                hint: "핵심 문법: -았어요 (이미 한 일)"
+            },
+            {
+                key: "progress",
+                name: "진행 스테이지",
+                hint: "핵심 문법: -고 있어요 / -려면 멀었어요"
+            },
+            {
+                key: "plan",
+                name: "계획 스테이지",
+                hint: "핵심 문법: -(으)ㄹ 생각/예정/계획이에요"
+            },
+            {
+                key: "no-plan",
+                name: "계획 없음 스테이지",
+                hint: "핵심 문법: -(으)ㄹ 생각/계획이 없어요"
+            }
+        ];
+
+        const TOPICS = [
+            {
+                key: "topik",
+                labelKo: "TOPIK",
+                labelVi: "TOPIK",
+                rules: {
+                    done: {
+                        ko: "TOPIK 자격증을 이미 받은 사람만 들어오세요.",
+                        vi: "Chi nhung nguoi da co chung chi TOPIK moi duoc vao."
+                    },
+                    progress: {
+                        ko: "지금 TOPIK을 준비하고 있는 사람만 들어오세요.",
+                        vi: "Chi nhung nguoi dang chuan bi TOPIK moi duoc vao."
+                    },
+                    plan: {
+                        ko: "아직 TOPIK 시험을 안 봤고, 지금 공부를 안 하지만, 앞으로 볼 계획이 있으면 들어오세요.",
+                        vi: "Chi nhung nguoi chua thi TOPIK, hien khong hoc, nhung co ke hoach thi moi duoc vao."
+                    },
+                    "no-plan": {
+                        ko: "아직 TOPIK 시험을 안 봤고, 지금 공부도 안 하고, 앞으로도 볼 계획이 없는 사람만 들어오세요.",
+                        vi: "Chi nhung nguoi chua thi TOPIK, hien khong hoc va cung khong co ke hoach thi moi duoc vao."
+                    }
+                },
+                questions: [
+                    { id: "cert", ko: "TOPIK 자격증이 있어요?", vi: "Ban co chung chi TOPIK khong?" },
+                    { id: "study", ko: "요즘 TOPIK 공부하고 있어요?", vi: "Dao nay ban dang hoc TOPIK khong?" },
+                    { id: "plan", ko: "앞으로 TOPIK 시험 볼 계획이 있어요?", vi: "Ban co ke hoach thi TOPIK khong?" },
+                    { id: "level", ko: "TOPIK 준비는 얼마나 됐어요?", vi: "Ban da chuan bi TOPIK den dau roi?" }
+                ],
+                answers: {
+                    certDone: "네, TOPIK 자격증을 받았어요.",
+                    certNo: "아직 TOPIK 자격증은 없어요.",
+                    studyProgress: "네, 요즘 TOPIK 시험을 준비하고 있어요.",
+                    studyDone: "요즘은 TOPIK 공부를 안 하고 있어요.",
+                    studyNo: "요즘은 TOPIK 공부를 안 하고 있어요.",
+                    planYes: "네, 앞으로 TOPIK 시험을 볼 {planStyle}",
+                    planNo: "지금은 TOPIK 시험을 볼 계획이 없어요.",
+                    levelDone: "더 높은 점수를 받으려면 아직 멀었어요.",
+                    levelProgress: "목표 점수를 받으려면 아직 멀었어요.",
+                    levelPlan: "준비가 부족해서 아직 멀었어요.",
+                    levelNo: "시험을 잘 보려면 아직 멀었어요."
+                }
+            },
+            {
+                key: "shopping",
+                labelKo: "쇼핑",
+                labelVi: "Mua sam",
+                rules: {
+                    done: {
+                        ko: "쇼핑을 이미 해 본 사람만 들어오세요.",
+                        vi: "Chi nhung nguoi da tung mua sam moi duoc vao."
+                    },
+                    progress: {
+                        ko: "지금 쇼핑을 하고 있거나 물건을 고르는 사람만 들어오세요.",
+                        vi: "Chi nhung nguoi dang mua sam hoac dang chon do moi duoc vao."
+                    },
+                    plan: {
+                        ko: "아직 쇼핑을 안 했고, 지금 물건을 고르지 않지만, 앞으로 쇼핑할 계획이 있으면 들어오세요.",
+                        vi: "Chi nhung nguoi chua mua sam, hien khong tim do, nhung co ke hoach mua moi duoc vao."
+                    },
+                    "no-plan": {
+                        ko: "아직 쇼핑을 안 했고, 지금도 안 하고, 앞으로도 쇼핑할 계획이 없는 사람만 들어오세요.",
+                        vi: "Chi nhung nguoi chua mua sam, hien khong mua va cung khong co ke hoach mua moi duoc vao."
+                    }
+                },
+                questions: [
+                    { id: "cert", ko: "최근에 쇼핑해 봤어요?", vi: "Gan day ban da mua sam chua?" },
+                    { id: "study", ko: "요즘 물건을 찾고 있어요?", vi: "Dao nay ban dang tim do khong?" },
+                    { id: "plan", ko: "앞으로 쇼핑할 계획이 있어요?", vi: "Ban co ke hoach mua sam sap toi khong?" },
+                    { id: "level", ko: "필요한 물건 고르기 어때요?", vi: "Viec chon do can thiet cua ban the nao?" }
+                ],
+                answers: {
+                    certDone: "네, 최근에 필요한 물건을 샀어요.",
+                    certNo: "아직 쇼핑은 안 했어요.",
+                    studyProgress: "네, 요즘 물건 가격을 비교하고 있어요.",
+                    studyDone: "요즘은 쇼핑을 안 하고 있어요.",
+                    studyNo: "요즘은 쇼핑을 안 하고 있어요.",
+                    planYes: "네, 주말에 쇼핑할 {planStyle}",
+                    planNo: "지금은 쇼핑할 계획이 없어요.",
+                    levelDone: "현명하게 사려면 아직 멀었어요.",
+                    levelProgress: "할인을 잘 고르려면 아직 멀었어요.",
+                    levelPlan: "필요 목록을 만들려면 아직 멀었어요.",
+                    levelNo: "충동구매를 줄이려면 아직 멀었어요."
+                }
+            },
+            {
+                key: "exercise",
+                labelKo: "운동",
+                labelVi: "Tap luyen",
+                rules: {
+                    done: {
+                        ko: "운동을 이미 한 사람만 들어오세요.",
+                        vi: "Chi nhung nguoi da tap luyen roi moi duoc vao."
+                    },
+                    progress: {
+                        ko: "지금 운동하고 있는 사람만 들어오세요.",
+                        vi: "Chi nhung nguoi dang tap luyen moi duoc vao."
+                    },
+                    plan: {
+                        ko: "아직 운동을 안 했고, 지금 운동을 안 하지만, 앞으로 운동할 계획이 있으면 들어오세요.",
+                        vi: "Chi nhung nguoi chua tap, hien khong tap, nhung co ke hoach tap moi duoc vao."
+                    },
+                    "no-plan": {
+                        ko: "아직 운동을 안 했고, 지금도 안 하고, 앞으로도 운동할 계획이 없는 사람만 들어오세요.",
+                        vi: "Chi nhung nguoi chua tap, hien khong tap va cung khong co ke hoach tap moi duoc vao."
+                    }
+                },
+                questions: [
+                    { id: "cert", ko: "최근에 운동했어요?", vi: "Gan day ban da tap luyen chua?" },
+                    { id: "study", ko: "요즘 규칙적으로 운동하고 있어요?", vi: "Dao nay ban co dang tap deu khong?" },
+                    { id: "plan", ko: "앞으로 운동할 계획이 있어요?", vi: "Ban co ke hoach tap luyen sap toi khong?" },
+                    { id: "level", ko: "체력은 지금 어때요?", vi: "The luc hien tai cua ban the nao?" }
+                ],
+                answers: {
+                    certDone: "네, 이번 주에도 운동했어요.",
+                    certNo: "아직 운동은 못 했어요.",
+                    studyProgress: "네, 요즘 매일 조금씩 운동하고 있어요.",
+                    studyDone: "요즘은 운동을 쉬고 있어요.",
+                    studyNo: "요즘은 운동을 안 하고 있어요.",
+                    planYes: "네, 다음 주부터 운동할 {planStyle}",
+                    planNo: "지금은 운동할 계획이 없어요.",
+                    levelDone: "더 오래 하려면 아직 멀었어요.",
+                    levelProgress: "체력을 올리려면 아직 멀었어요.",
+                    levelPlan: "습관을 만들려면 아직 멀었어요.",
+                    levelNo: "규칙적으로 하려면 아직 멀었어요."
+                }
+            },
+            {
+                key: "travel",
+                labelKo: "여행",
+                labelVi: "Du lich",
+                rules: {
+                    done: {
+                        ko: "여행을 다녀온 사람만 들어오세요.",
+                        vi: "Chi nhung nguoi da di du lich moi duoc vao."
+                    },
+                    progress: {
+                        ko: "지금 여행을 준비하고 있는 사람만 들어오세요.",
+                        vi: "Chi nhung nguoi dang chuan bi du lich moi duoc vao."
+                    },
+                    plan: {
+                        ko: "아직 여행을 안 갔고, 지금 준비를 안 하지만, 앞으로 여행 갈 계획이 있으면 들어오세요.",
+                        vi: "Chi nhung nguoi chua di du lich, hien khong chuan bi, nhung co ke hoach di moi duoc vao."
+                    },
+                    "no-plan": {
+                        ko: "아직 여행을 안 갔고, 지금도 준비 안 하고, 앞으로도 갈 계획이 없는 사람만 들어오세요.",
+                        vi: "Chi nhung nguoi chua di du lich, hien khong chuan bi va cung khong co ke hoach di moi duoc vao."
+                    }
+                },
+                questions: [
+                    { id: "cert", ko: "최근에 여행 다녀왔어요?", vi: "Gan day ban co di du lich khong?" },
+                    { id: "study", ko: "요즘 여행 준비하고 있어요?", vi: "Dao nay ban dang chuan bi du lich khong?" },
+                    { id: "plan", ko: "앞으로 여행 갈 계획이 있어요?", vi: "Ban co ke hoach di du lich sap toi khong?" },
+                    { id: "level", ko: "여행 준비는 얼마나 됐어요?", vi: "Ban da chuan bi chuyen di den dau roi?" }
+                ],
+                answers: {
+                    certDone: "네, 지난달에 여행을 다녀왔어요.",
+                    certNo: "아직 여행은 못 갔어요.",
+                    studyProgress: "네, 요즘 숙소와 표를 찾고 있어요.",
+                    studyDone: "요즘은 여행 준비를 안 하고 있어요.",
+                    studyNo: "요즘은 여행 준비를 안 하고 있어요.",
+                    planYes: "네, 다음 휴가에 여행 갈 {planStyle}",
+                    planNo: "지금은 여행 갈 계획이 없어요.",
+                    levelDone: "더 멀리 가려면 아직 멀었어요.",
+                    levelProgress: "준비를 완벽하게 하려면 아직 멀었어요.",
+                    levelPlan: "일정을 짜려면 아직 멀었어요.",
+                    levelNo: "준비물을 챙기려면 아직 멀었어요."
+                }
+            }
+        ];
+
+        const MAX_QUESTIONS = 3;
+        const ROUNDS_PER_STAGE = 4;
+        const TOTAL_ROUNDS = STAGES.length * ROUNDS_PER_STAGE;
+
+        const NPCS = [
+            {
+                name: "민지",
+                avatar: "👩",
+                line: "들어가도 돼요?",
+                grammar: "-았어요",
+                status: "done"
+            },
+            {
+                name: "지나",
+                avatar: "👨",
+                line: "저도 들어가고 싶어요.",
+                grammar: "-았어요",
+                status: "done"
+            },
+            {
+                name: "태오",
+                avatar: "🧑",
+                line: "입장해도 될까요?",
+                grammar: "-았어요",
+                status: "done"
+            },
+            {
+                name: "라라",
+                avatar: "👩",
+                line: "안에 들어가서 상담받아도 돼요?",
+                grammar: "-고 있어요",
+                status: "progress"
+            },
+            {
+                name: "준호",
+                avatar: "👨",
+                line: "저도 입장하고 싶어요.",
+                grammar: "-고 있어요",
+                status: "progress"
+            },
+            {
+                name: "루카",
+                avatar: "🧑",
+                line: "지금 들어가도 될까요?",
+                grammar: "-려면 멀었어요",
+                status: "progress"
+            },
+            {
+                name: "리나",
+                avatar: "👩",
+                line: "오늘 입장 요청해도 돼요?",
+                grammar: "-(으)ㄹ 예정이에요",
+                status: "plan"
+            },
+            {
+                name: "다니엘",
+                avatar: "👨",
+                line: "들어가게 해 주세요.",
+                grammar: "-(으)ㄹ 생각이에요",
+                status: "plan"
+            },
+            {
+                name: "현우",
+                avatar: "🧑",
+                line: "입장해도 괜찮을까요?",
+                grammar: "-(으)ㄹ 계획이에요",
+                status: "plan"
+            },
+            {
+                name: "아담",
+                avatar: "👨",
+                line: "저도 안으로 들어가고 싶어요.",
+                grammar: "-(으)ㄹ 생각이 없어요",
+                status: "no-plan"
+            },
+            {
+                name: "에바",
+                avatar: "👩",
+                line: "입장 부탁드려도 될까요?",
+                grammar: "-(으)ㄹ 계획이 없어요",
+                status: "no-plan"
+            },
+            {
+                name: "유진",
+                avatar: "🧑",
+                line: "들어가고 싶은데 가능해요?",
+                grammar: "-려면 멀었어요",
+                status: "no-plan"
+            }
+        ];
+
+        const grammarStatsTemplate = {
+            "-았어요": { seen: 0, correct: 0 },
+            "-고 있어요": { seen: 0, correct: 0 },
+            "-(으)ㄹ 생각이에요": { seen: 0, correct: 0 },
+            "-(으)ㄹ 예정이에요": { seen: 0, correct: 0 },
+            "-(으)ㄹ 계획이에요": { seen: 0, correct: 0 },
+            "-려면 멀었어요": { seen: 0, correct: 0 },
+            "-(으)ㄹ 생각이 없어요": { seen: 0, correct: 0 },
+            "-(으)ㄹ 계획이 없어요": { seen: 0, correct: 0 }
+        };
+
+        const stageStatsTemplate = {
+            done: { seen: 0, correct: 0 },
+            progress: { seen: 0, correct: 0 },
+            plan: { seen: 0, correct: 0 },
+            "no-plan": { seen: 0, correct: 0 }
+        };
+
+        const el = {
+            phoneApp: document.getElementById("phoneApp"),
+            stageView: document.getElementById("stageView"),
+            roundView: document.getElementById("roundView"),
+            stageNameView: document.getElementById("stageNameView"),
+            scoreView: document.getElementById("scoreView"),
+            stageTrack: document.getElementById("stageTrack"),
+            stageAlert: document.getElementById("stageAlert"),
+            ruleBox: document.getElementById("ruleBox"),
+            ruleText: document.getElementById("ruleText"),
+            ruleVi: document.getElementById("ruleVi"),
+            ruleHint: document.getElementById("ruleHint"),
+            npcAvatar: document.getElementById("npcAvatar"),
+            npcName: document.getElementById("npcName"),
+            npcLine: document.getElementById("npcLine"),
+            grammarTag: document.getElementById("grammarTag"),
+            focusTag: document.getElementById("focusTag"),
+            questionGrid: document.getElementById("questionGrid"),
+            questionCounter: document.getElementById("questionCounter"),
+            interviewLog: document.getElementById("interviewLog"),
+            feedback: document.getElementById("feedback"),
+            allowBtn: document.getElementById("allowBtn"),
+            denyBtn: document.getElementById("denyBtn"),
+            globalFx: document.getElementById("globalFx"),
+            fxText: document.getElementById("fxText"),
+            fxBurst: document.getElementById("fxBurst"),
+            resultOverlay: document.getElementById("resultOverlay"),
+            finalScore: document.getElementById("finalScore"),
+            resultList: document.getElementById("resultList"),
+            retryBtn: document.getElementById("retryBtn")
+        };
+
+        let state = {};
+
+        function shuffle(arr) {
+            const clone = [...arr];
+            for (let i = clone.length - 1; i > 0; i -= 1) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [clone[i], clone[j]] = [clone[j], clone[i]];
+            }
+            return clone;
+        }
+
+        function cloneTemplate(template) {
+            return JSON.parse(JSON.stringify(template));
+        }
+
+        function pickMany(pool, count) {
+            if (pool.length === 0) {
+                return [];
+            }
+            const picked = [];
+            let idx = 0;
+            const shuffled = shuffle(pool);
+            while (picked.length < count) {
+                picked.push(shuffled[idx % shuffled.length]);
+                idx += 1;
+            }
+            return picked;
+        }
+
+        function pickPlanStyle(name) {
+            const pool = ["생각이에요", "예정이에요", "계획이에요"];
+            const code = name.charCodeAt(0) || 0;
+            return pool[code % pool.length];
+        }
+
+        function buildStageTopicMap() {
+            const shuffledTopics = shuffle(TOPICS);
+            const stageTopicMap = {};
+            STAGES.forEach((stage, index) => {
+                stageTopicMap[stage.key] = shuffledTopics[index % shuffledTopics.length];
+            });
+            return stageTopicMap;
+        }
+
+        function getCurrentScenario() {
+            return state.deck[state.index] || null;
+        }
+
+        function getAnswerForQuestion(npc, topic, questionId) {
+            const planStyle = pickPlanStyle(npc.name);
+            const answers = topic.answers;
+            if (questionId === "cert") {
+                if (npc.status === "done") {
+                    return { text: answers.certDone, grammar: "-았어요" };
+                }
+                return { text: answers.certNo, grammar: "-았어요(부정)" };
+            }
+
+            if (questionId === "study") {
+                if (npc.status === "progress") {
+                    return { text: answers.studyProgress, grammar: "-고 있어요" };
+                }
+                if (npc.status === "done") {
+                    return { text: answers.studyDone, grammar: "-고 있어요" };
+                }
+                return { text: answers.studyNo, grammar: "-고 있어요(부정)" };
+            }
+
+            if (questionId === "plan") {
+                if (npc.status === "no-plan") {
+                    return { text: answers.planNo, grammar: "-(으)ㄹ 계획이 없어요" };
+                }
+                return {
+                    text: answers.planYes.replace("{planStyle}", planStyle),
+                    grammar: `-(으)ㄹ ${planStyle}`
+                };
+            }
+
+            if (npc.status === "done") {
+                return { text: answers.levelDone, grammar: "-려면 멀었어요" };
+            }
+            if (npc.status === "progress") {
+                return { text: answers.levelProgress, grammar: "-려면 멀었어요" };
+            }
+            if (npc.status === "plan") {
+                return { text: answers.levelPlan, grammar: "-려면 멀었어요" };
+            }
+            return { text: answers.levelNo, grammar: "-려면 멀었어요" };
+        }
+
+        function updateQuestionCounter() {
+            el.questionCounter.textContent = `질문 ${state.askedIds.length}/${MAX_QUESTIONS}`;
+        }
+
+        function renderQuestionButtons() {
+            const scenario = getCurrentScenario();
+            const questions = scenario ? scenario.topic.questions : [];
+            const disabledAll = state.askedIds.length >= MAX_QUESTIONS || state.roundLocked;
+            el.questionGrid.innerHTML = questions.map((q) => {
+                const disabled = disabledAll || state.askedIds.includes(q.id) ? "disabled" : "";
+                return `<button class="q-btn" data-qid="${q.id}" ${disabled}><span>${q.ko}</span><span class="vi">${q.vi}</span></button>`;
+            }).join("");
+        }
+
+        function resetInterviewPanel() {
+            state.askedIds = [];
+            el.interviewLog.innerHTML = "";
+            el.interviewLog.classList.add("empty");
+            updateQuestionCounter();
+            renderQuestionButtons();
+        }
+
+        function appendInterview(question, answer) {
+            el.interviewLog.classList.remove("empty");
+            const node = document.createElement("div");
+            node.className = "qa-item";
+            node.innerHTML = `<p class="qa-q">Q. ${question.ko}</p><p class="qa-a">A. ${answer.text}<span class="qa-gram">${answer.grammar}</span></p>`;
+            el.interviewLog.appendChild(node);
+            el.interviewLog.scrollTop = el.interviewLog.scrollHeight;
+        }
+
+        function askQuestion(questionId) {
+            if (state.roundLocked) return;
+            if (state.askedIds.includes(questionId)) return;
+            if (state.askedIds.length >= MAX_QUESTIONS) return;
+
+            const scenario = getCurrentScenario();
+            if (!scenario) return;
+            const question = scenario.topic.questions.find((q) => q.id === questionId);
+            if (!question) return;
+            const answer = getAnswerForQuestion(scenario.npc, scenario.topic, questionId);
+            state.askedIds.push(questionId);
+            appendInterview(question, answer);
+            updateQuestionCounter();
+            renderQuestionButtons();
+
+            if (state.askedIds.length >= MAX_QUESTIONS) {
+                el.feedback.className = "feedback";
+                el.feedback.textContent = "질문 3개를 모두 사용했어요. 이제 허락/허락 안 함을 선택하세요.";
+            } else {
+                el.feedback.className = "feedback";
+                el.feedback.textContent = "질문을 더 하거나 지금 바로 판정할 수 있어요.";
+            }
+        }
+
+        function buildDeck(stageTopicMap) {
+            const deck = [];
+            STAGES.forEach((stage) => {
+                const topic = stageTopicMap[stage.key];
+                const passPool = NPCS.filter((npc) => npc.status === stage.key);
+                const failPool = NPCS.filter((npc) => npc.status !== stage.key);
+                const passList = pickMany(passPool, 2).map((npc) => ({ stage, topic, npc, shouldAllow: true }));
+                const failList = pickMany(failPool, 2).map((npc) => ({ stage, topic, npc, shouldAllow: false }));
+                const stageDeck = shuffle([...passList, ...failList]);
+                deck.push(...stageDeck);
+            });
+            return deck;
+        }
+
+        function setStageTheme(stageKey) {
+            const classes = ["stage-done", "stage-progress", "stage-plan", "stage-no-plan"];
+            classes.forEach((className) => el.phoneApp.classList.remove(className));
+            el.phoneApp.classList.add(`stage-${stageKey}`);
+        }
+
+        function setStageTrack(stageKey) {
+            const chips = el.stageTrack.querySelectorAll(".stage-chip");
+            chips.forEach((chip) => {
+                const active = chip.dataset.key === stageKey;
+                chip.classList.toggle("active", active);
+            });
+        }
+
+        function showStageAlert(stage, topic) {
+            if (state.lastStageKey === null) {
+                state.lastStageKey = stage.key;
+                return;
+            }
+            if (state.lastStageKey === stage.key) {
+                return;
+            }
+            state.lastStageKey = stage.key;
+            if (state.stageAlertTimer) {
+                clearTimeout(state.stageAlertTimer);
+            }
+            el.stageAlert.textContent = `다음 상황! ${stage.name} · ${topic.labelKo}`;
+            el.stageAlert.classList.add("show");
+            el.ruleBox.classList.remove("swap");
+            void el.ruleBox.offsetWidth;
+            el.ruleBox.classList.add("swap");
+            state.stageAlertTimer = setTimeout(() => {
+                el.stageAlert.classList.remove("show");
+                el.ruleBox.classList.remove("swap");
+            }, 1200);
+        }
+
+        function clearAvatarReaction() {
+            el.npcAvatar.classList.remove("react-good", "react-bad");
+        }
+
+        function makeFxParticles(isCorrect) {
+            const palette = isCorrect
+                ? ["#86efac", "#22c55e", "#bbf7d0", "#fef08a", "#ffffff"]
+                : ["#fda4af", "#ef4444", "#fecaca", "#fb7185", "#ffffff"];
+            el.fxBurst.innerHTML = "";
+            for (let i = 0; i < 28; i += 1) {
+                const dot = document.createElement("span");
+                const dx = Math.round((Math.random() - 0.5) * 340);
+                const dy = Math.round((Math.random() - 0.5) * 300 - 30);
+                const rot = `${Math.round((Math.random() - 0.5) * 540)}deg`;
+                const delay = `${Math.round(Math.random() * 140)}ms`;
+                const color = palette[Math.floor(Math.random() * palette.length)];
+                dot.className = "fx-particle";
+                dot.style.setProperty("--dx", `${dx}px`);
+                dot.style.setProperty("--dy", `${dy}px`);
+                dot.style.setProperty("--rot", rot);
+                dot.style.setProperty("--delay", delay);
+                dot.style.setProperty("--pcolor", color);
+                el.fxBurst.appendChild(dot);
+            }
+        }
+
+        function triggerVisualFeedback(isCorrect) {
+            clearAvatarReaction();
+            el.phoneApp.classList.remove("hit-good", "hit-bad");
+            el.globalFx.classList.remove("show", "good", "bad");
+            void el.phoneApp.offsetWidth;
+
+            const isGood = isCorrect;
+            el.npcAvatar.textContent = isGood ? "😄" : "😵";
+            el.npcAvatar.classList.add(isGood ? "react-good" : "react-bad");
+
+            el.phoneApp.classList.add(isGood ? "hit-good" : "hit-bad");
+            el.globalFx.classList.add("show", isGood ? "good" : "bad");
+            el.fxText.textContent = isGood ? "정답!" : "오답!";
+            el.fxText.className = `fx-text ${isGood ? "good" : "bad"}`;
+            makeFxParticles(isGood);
+
+            if (state.fxTimer) {
+                clearTimeout(state.fxTimer);
+            }
+            state.fxTimer = setTimeout(() => {
+                el.globalFx.classList.remove("show", "good", "bad");
+                el.phoneApp.classList.remove("hit-good", "hit-bad");
+                clearAvatarReaction();
+            }, 900);
+        }
+
+        function syncHud() {
+            const current = state.deck[state.index];
+            const stageIndex = current ? STAGES.findIndex((s) => s.key === current.stage.key) + 1 : STAGES.length;
+            el.stageView.textContent = `${stageIndex}/${STAGES.length}`;
+            el.roundView.textContent = `${Math.min(state.index + 1, TOTAL_ROUNDS)}/${TOTAL_ROUNDS}`;
+            el.scoreView.textContent = `점수 ${state.score}`;
+        }
+
+        function showRound() {
+            if (state.index >= TOTAL_ROUNDS) {
+                finishGame();
+                return;
+            }
+
+            const scenario = getCurrentScenario();
+            const { stage, topic, npc } = scenario;
+            const stageRule = topic.rules[stage.key];
+            syncHud();
+
+            setStageTheme(stage.key);
+            setStageTrack(stage.key);
+            showStageAlert(stage, topic);
+            el.stageNameView.textContent = `${stage.name} · ${topic.labelKo}`;
+            el.ruleText.textContent = stageRule.ko;
+            el.ruleVi.textContent = stageRule.vi;
+            el.ruleHint.textContent = `${stage.hint} · 주제: ${topic.labelKo}`;
+            el.npcAvatar.textContent = npc.avatar;
+            clearAvatarReaction();
+            el.npcName.textContent = `${npc.name}의 첫 말`;
+            el.npcLine.textContent = `"${npc.line}"`;
+            el.grammarTag.textContent = `문법: ${npc.grammar}`;
+            el.focusTag.textContent = `주제: ${topic.labelKo}`;
+            state.roundLocked = false;
+            resetInterviewPanel();
+            el.feedback.className = "feedback";
+            el.feedback.textContent = "질문을 1개 이상 한 뒤 허락/허락 안 함을 결정하세요.";
+            toggleButtons(true);
+        }
+
+        function toggleButtons(enabled) {
+            el.allowBtn.disabled = !enabled;
+            el.denyBtn.disabled = !enabled;
+        }
+
+        function touchGrammarStat(npc, isCorrect) {
+            const key = npc.grammar;
+            if (!state.grammarStats[key]) {
+                state.grammarStats[key] = { seen: 0, correct: 0 };
+            }
+            state.grammarStats[key].seen += 1;
+            if (isCorrect) {
+                state.grammarStats[key].correct += 1;
+            }
+        }
+
+        function touchStageStat(stageKey, isCorrect) {
+            state.stageStats[stageKey].seen += 1;
+            if (isCorrect) {
+                state.stageStats[stageKey].correct += 1;
+            }
+        }
+
+        function judge(allowPressed) {
+            if (state.askedIds.length < 1) {
+                el.feedback.className = "feedback bad";
+                el.feedback.textContent = "최소 1개 질문을 해야 판정할 수 있어요.";
+                return;
+            }
+
+            const scenario = state.deck[state.index];
+            const isCorrect = allowPressed === scenario.shouldAllow;
+            const questionBonus = Math.max(0, MAX_QUESTIONS - state.askedIds.length) * 15;
+            state.roundLocked = true;
+            toggleButtons(false);
+            renderQuestionButtons();
+
+            touchGrammarStat(scenario.npc, isCorrect);
+            touchStageStat(scenario.stage.key, isCorrect);
+            triggerVisualFeedback(isCorrect);
+
+            if (isCorrect) {
+                state.correct += 1;
+                state.streak += 1;
+                state.score += 100 + questionBonus + Math.min(60, state.streak * 8);
+                el.feedback.className = "feedback good";
+                el.feedback.textContent = `정답! 이 사람은 ${scenario.shouldAllow ? "허락" : "허락 안 함"}이 맞아요.`;
+            } else {
+                state.wrong += 1;
+                state.streak = 0;
+                el.feedback.className = "feedback bad";
+                el.feedback.textContent = `오답. 이 사람은 ${scenario.shouldAllow ? "허락" : "허락 안 함"}이 맞아요.`;
+            }
+
+            syncHud();
+            state.index += 1;
+            setTimeout(showRound, 1200);
+        }
+
+        function stageSummaryLine(stage) {
+            const s = state.stageStats[stage.key];
+            const topic = state.stageTopicMap[stage.key];
+            return `${stage.name} (${topic.labelKo}): ${s.correct}/${s.seen} 정답`;
+        }
+
+        function finishGame() {
+            el.finalScore.textContent = `총점: ${state.score}점 · 정답 ${state.correct}/${TOTAL_ROUNDS}`;
+            const lines = [
+                "4개 스테이지를 모두 완료했습니다.",
+                ...STAGES.map(stageSummaryLine)
+            ];
+            el.resultList.innerHTML = lines.map((line) => `<li>${line}</li>`).join("");
+            el.resultOverlay.classList.add("show");
+        }
+
+        function startGame() {
+            const stageTopicMap = buildStageTopicMap();
+            state = {
+                index: 0,
+                score: 0,
+                correct: 0,
+                wrong: 0,
+                streak: 0,
+                askedIds: [],
+                roundLocked: false,
+                lastStageKey: null,
+                stageAlertTimer: null,
+                fxTimer: null,
+                stageTopicMap,
+                deck: buildDeck(stageTopicMap),
+                grammarStats: cloneTemplate(grammarStatsTemplate),
+                stageStats: cloneTemplate(stageStatsTemplate)
+            };
+            el.resultOverlay.classList.remove("show");
+            showRound();
+        }
+
+        el.allowBtn.addEventListener("click", () => judge(true));
+        el.denyBtn.addEventListener("click", () => judge(false));
+        el.retryBtn.addEventListener("click", startGame);
+        el.questionGrid.addEventListener("click", (event) => {
+            const btn = event.target.closest("button[data-qid]");
+            if (!btn) return;
+            askQuestion(btn.dataset.qid);
+        });
+
+        window.addEventListener("keydown", (event) => {
+            if (el.resultOverlay.classList.contains("show")) return;
+            if (event.key.toLowerCase() === "a" && !el.allowBtn.disabled) judge(true);
+            if (event.key.toLowerCase() === "d" && !el.denyBtn.disabled) judge(false);
+        });
+
+        startGame();
+    </script>
+</body>
+</html>
