@@ -1,140 +1,173 @@
 <!DOCTYPE html><html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>유학생 입장 심사 게임</title>
   <style>
     :root {
-      --bg: #f4efe4;
+      --bg: #efe5d2;
       --panel: #ddd1b8;
+      --panel-soft: #f8f1e4;
       --panel-dark: #b49e78;
       --ink: #2b2217;
       --accent: #7a2e1f;
       --green: #2e7d32;
       --red: #b3261e;
-      --yellow: #c78c1f;
       --line: #6a5a43;
-      --shadow: rgba(0,0,0,0.18);
-    }* { box-sizing: border-box; }
+      --shadow: rgba(0,0,0,0.16);
+      --radius: 14px;
+    }* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-body {
+html, body {
   margin: 0;
-  font-family: "Noto Sans KR", system-ui, -apple-system, Segoe UI, sans-serif;
-  background: linear-gradient(180deg, #e8dfcf 0%, #f7f2e9 100%);
+  height: 100%;
+  background: var(--bg);
   color: var(--ink);
+  font-family: "Noto Sans KR", system-ui, -apple-system, Segoe UI, sans-serif;
+  overflow: hidden;
 }
 
-.wrap {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 16px;
+body {
+  display: flex;
+  justify-content: center;
+}
+
+.app {
+  width: min(100vw, 430px);
+  height: 100dvh;
+  background: linear-gradient(180deg, #e8dfcf 0%, #f7f2e9 100%);
+  display: grid;
+  grid-template-rows: auto auto 1fr auto auto;
+  padding: 8px;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.titlebar,
+.rule-panel,
+.npc-card,
+.desk,
+.history-sheet,
+.footer-bar {
+  border: 3px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 3px 0 var(--line), 0 6px 10px var(--shadow);
 }
 
 .titlebar {
   background: var(--accent);
   color: #fff7ea;
-  border: 4px solid #4d1c13;
-  box-shadow: 0 6px 0 #4d1c13;
-  padding: 14px 18px;
-  margin-bottom: 14px;
+  padding: 10px 12px;
 }
 
 .titlebar h1 {
-  margin: 0 0 6px;
-  font-size: 1.4rem;
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.2;
 }
 
 .titlebar p {
-  margin: 0;
-  opacity: 0.95;
-  font-size: 0.95rem;
+  margin: 4px 0 0;
+  font-size: 0.74rem;
+  opacity: 0.96;
+  line-height: 1.35;
 }
 
-.top-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 14px;
-  margin-bottom: 14px;
-}
-
-.panel {
+.rule-panel {
   background: var(--panel);
-  border: 4px solid var(--line);
-  box-shadow: 0 6px 0 var(--line), 0 8px 14px var(--shadow);
-  padding: 14px;
-}
-
-.rule-box {
-  background: #f9f3e8;
-  border: 3px dashed var(--line);
-  padding: 12px;
-  margin-top: 10px;
-  min-height: 86px;
-  display: flex;
-  align-items: center;
-  font-weight: 800;
-  line-height: 1.6;
-  font-size: 1.08rem;
+  padding: 8px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: stretch;
+  min-height: 92px;
 }
 
 .subhead {
-  font-size: 0.82rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
   color: #5a452e;
   text-transform: uppercase;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
-.stats {
+.rule-box {
+  background: var(--panel-soft);
+  border: 2px dashed var(--line);
+  border-radius: 10px;
+  padding: 8px 10px;
+  min-height: 70px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  line-height: 1.45;
+  display: flex;
+  align-items: center;
+}
+
+.mini-stats {
+  width: 100px;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  grid-template-columns: 1fr;
+  gap: 6px;
 }
 
-.stat {
+.mini-stat {
   background: #f9f3e8;
-  border: 3px solid var(--line);
-  padding: 10px;
-  min-height: 74px;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  padding: 6px;
+  text-align: center;
 }
 
-.stat .label {
-  font-size: 0.82rem;
+.mini-stat .label {
+  font-size: 0.62rem;
   color: #6c583c;
-  margin-bottom: 6px;
-  font-weight: 700;
+  font-weight: 800;
+  margin-bottom: 2px;
 }
 
-.stat .value {
-  font-size: 1.45rem;
+.mini-stat .value {
+  font-size: 1rem;
   font-weight: 900;
+  line-height: 1.1;
 }
 
-.main-grid {
+.main-zone {
+  min-height: 0;
   display: grid;
-  grid-template-columns: 0.95fr 1.05fr;
-  gap: 14px;
-  align-items: start;
+  grid-template-rows: 1fr 1.18fr;
+  gap: 8px;
+  overflow: hidden;
 }
 
 .npc-card {
   background: #efe3ca;
-  border: 4px solid var(--line);
-  padding: 14px;
-  min-height: 470px;
-  position: relative;
+  padding: 8px;
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 8px;
+  align-items: center;
+  min-height: 0;
+}
+
+.npc-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
 .npc-face {
-  width: 160px;
-  height: 160px;
-  border-radius: 18px;
-  margin: 8px auto 14px;
+  width: 82px;
+  height: 82px;
+  border-radius: 14px;
   background: #fff5e5;
-  border: 4px solid var(--line);
+  border: 3px solid var(--line);
   position: relative;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .hair, .eye, .mouth, .body {
@@ -142,253 +175,273 @@ body {
 }
 
 .hair {
-  top: 10px;
-  left: 20px;
-  width: 116px;
-  height: 56px;
+  top: 6px;
+  left: 10px;
+  width: 58px;
+  height: 28px;
   background: #4b3521;
-  border-radius: 30px 30px 10px 10px;
+  border-radius: 20px 20px 8px 8px;
 }
 
 .eye {
-  top: 72px;
-  width: 18px;
-  height: 18px;
+  top: 34px;
+  width: 9px;
+  height: 9px;
   background: #2c2115;
   border-radius: 50%;
 }
 
-.eye.left { left: 46px; }
-.eye.right { right: 46px; }
+.eye.left { left: 22px; }
+.eye.right { right: 22px; }
 
 .mouth {
-  bottom: 34px;
+  bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
-  width: 48px;
-  height: 18px;
-  border-bottom: 4px solid #7a2e1f;
-  border-radius: 0 0 30px 30px;
+  width: 22px;
+  height: 8px;
+  border-bottom: 3px solid #7a2e1f;
+  border-radius: 0 0 16px 16px;
 }
 
 .body {
-  left: 24px;
-  right: 24px;
-  bottom: -36px;
-  height: 78px;
+  left: 12px;
+  right: 12px;
+  bottom: -20px;
+  height: 38px;
   background: #7b8fb8;
-  border-radius: 18px 18px 0 0;
-  border: 4px solid var(--line);
+  border-radius: 12px 12px 0 0;
+  border: 3px solid var(--line);
 }
 
 .npc-name {
   text-align: center;
   font-weight: 900;
-  font-size: 1.2rem;
-  margin-bottom: 8px;
+  font-size: 0.88rem;
+  line-height: 1.15;
+  word-break: keep-all;
+}
+
+.npc-right {
+  min-width: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 6px;
+  min-height: 0;
 }
 
 .speech {
   background: #fffaf0;
-  border: 4px solid var(--line);
-  padding: 14px;
-  line-height: 1.8;
-  min-height: 128px;
-  font-size: 1.1rem;
-  font-weight: 700;
+  border: 3px solid var(--line);
+  border-radius: 12px;
+  padding: 10px;
+  line-height: 1.5;
+  font-size: 1rem;
+  font-weight: 800;
+  min-height: 86px;
+  display: flex;
+  align-items: center;
+  word-break: keep-all;
 }
 
 .tags {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
-  margin-top: 12px;
 }
 
 .tag {
   background: #f7ead0;
   border: 2px solid var(--line);
-  padding: 6px 10px;
-  font-size: 0.88rem;
-  font-weight: 700;
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.1;
 }
 
 .desk {
   background: #ece0c7;
-  border: 4px solid var(--line);
-  padding: 14px;
-  min-height: 470px;
+  padding: 8px;
+  display: grid;
+  grid-template-rows: auto auto auto 1fr;
+  gap: 8px;
+  min-height: 0;
+  overflow: hidden;
 }
 
-.question-card {
+.question-card,
+.memo,
+.feedback {
   background: #fff8ea;
-  border: 4px solid var(--line);
-  padding: 14px;
-  margin-bottom: 14px;
+  border: 3px solid var(--line);
+  border-radius: 12px;
+  padding: 8px 10px;
 }
 
 .question-card h2 {
-  margin: 0 0 10px;
-  font-size: 1.12rem;
+  margin: 0 0 6px;
+  font-size: 0.9rem;
 }
 
 .question-line {
   background: #f4ead7;
-  border-left: 6px solid var(--accent);
-  padding: 12px;
-  line-height: 1.7;
-  font-size: 1.06rem;
+  border-left: 5px solid var(--accent);
+  border-radius: 8px;
+  padding: 8px;
+  line-height: 1.45;
+  font-size: 0.92rem;
   font-weight: 800;
+  word-break: keep-all;
 }
 
 .memo {
   background: #fef6cf;
-  border: 3px dashed #9a7a1f;
-  padding: 12px;
-  margin-bottom: 14px;
-  line-height: 1.7;
-  font-size: 0.96rem;
+  border-style: dashed;
+  border-color: #9a7a1f;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  padding: 8px;
 }
 
-.buttons {
+.action-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 14px;
+  gap: 8px;
 }
 
 button {
-  border: 4px solid var(--line);
-  padding: 14px 12px;
-  font-size: 1.04rem;
+  border: 3px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 10px;
+  font-size: 0.95rem;
   font-weight: 900;
   cursor: pointer;
   background: #fff8ea;
   color: var(--ink);
-  box-shadow: 0 4px 0 var(--line);
-  transition: transform 0.05s ease, filter 0.15s ease;
+  box-shadow: 0 3px 0 var(--line);
+  transition: transform 0.04s ease, filter 0.15s ease;
+  min-height: 52px;
 }
 
-button:hover { filter: brightness(0.98); }
-button:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--line); }
+button:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--line);
+}
+
 button.pass { background: #d8efd8; }
 button.reject { background: #f5d8d5; }
-button.small {
-  padding: 10px 12px;
-  font-size: 0.96rem;
-}
 
 .feedback {
-  min-height: 82px;
-  background: #fff8ea;
-  border: 4px solid var(--line);
-  padding: 12px;
-  line-height: 1.65;
-  font-weight: 700;
+  min-height: 70px;
+  line-height: 1.42;
+  font-size: 0.82rem;
+  font-weight: 800;
+  overflow: auto;
 }
 
 .feedback.good { border-color: var(--green); }
 .feedback.bad { border-color: var(--red); }
 
-.footer-controls {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 14px;
+.footer-bar {
+  background: var(--panel);
+  padding: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
 }
 
-.history {
-  margin-top: 14px;
+.footer-bar button {
+  min-height: 44px;
+  padding: 8px 6px;
+  font-size: 0.78rem;
+}
+
+.history-sheet {
   background: #f8f0df;
-  border: 4px solid var(--line);
-  padding: 12px;
-  max-height: 280px;
+  padding: 8px;
+  min-height: 72px;
+  max-height: 110px;
   overflow: auto;
 }
 
 .history-item {
-  border-bottom: 2px dashed #9f8a68;
-  padding: 10px 0;
-  line-height: 1.6;
-  font-size: 0.95rem;
+  border-bottom: 1px dashed #9f8a68;
+  padding: 6px 0;
+  line-height: 1.35;
+  font-size: 0.72rem;
 }
 
 .history-item:last-child { border-bottom: 0; }
 
-.legend {
-  margin-top: 10px;
-  font-size: 0.92rem;
+.small-note {
+  font-size: 0.7rem;
   color: #5b4930;
-  line-height: 1.7;
+  line-height: 1.35;
+  margin-top: 4px;
 }
 
-.hidden { display: none; }
-
-@media (max-width: 900px) {
-  .top-grid, .main-grid {
-    grid-template-columns: 1fr;
-  }
-  .npc-card, .desk {
-    min-height: auto;
-  }
-  .buttons {
-    grid-template-columns: 1fr;
-  }
+@media (max-width: 360px) {
+  .app { width: 100vw; padding: 6px; gap: 6px; }
+  .npc-card { grid-template-columns: 78px 1fr; }
+  .npc-face { width: 70px; height: 70px; }
+  .speech { font-size: 0.92rem; min-height: 78px; }
+  button { font-size: 0.88rem; }
+  .rule-box, .question-line { font-size: 0.86rem; }
 }
 
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="titlebar">
+  <div class="app">
+    <header class="titlebar">
       <h1>유학생 입장 심사 게임</h1>
-      <p>-았/었어요, -고 있어요, -(으)ㄹ 생각이에요 / 예정이에요 / 계획이에요를 보고 통과 여부를 판단하세요.</p>
-    </div><div class="top-grid">
-  <section class="panel">
-    <div class="subhead">오늘의 입장 규칙</div>
+      <p>문장을 읽고 허락 여부를 빠르게 판단하세요.</p>
+    </header><section class="rule-panel">
+  <div>
+    <div class="subhead">오늘의 규칙</div>
     <div id="ruleBox" class="rule-box"></div>
-  </section>
-
-  <section class="panel">
-    <div class="subhead">상태</div>
-    <div class="stats">
-      <div class="stat">
-        <div class="label">상황</div>
-        <div id="scenarioName" class="value">-</div>
-      </div>
-      <div class="stat">
-        <div class="label">남은 사람</div>
-        <div id="remainingCount" class="value">0</div>
-      </div>
-      <div class="stat">
-        <div class="label">점수</div>
-        <div id="score" class="value">0</div>
-      </div>
-      <div class="stat">
-        <div class="label">연속 정답</div>
-        <div id="combo" class="value">0</div>
-      </div>
+  </div>
+  <div class="mini-stats">
+    <div class="mini-stat">
+      <div class="label">상황</div>
+      <div id="scenarioName" class="value">-</div>
     </div>
-  </section>
-</div>
+    <div class="mini-stat">
+      <div class="label">남음</div>
+      <div id="remainingCount" class="value">0</div>
+    </div>
+    <div class="mini-stat">
+      <div class="label">점수</div>
+      <div id="score" class="value">0</div>
+    </div>
+    <div class="mini-stat">
+      <div class="label">연속</div>
+      <div id="combo" class="value">0</div>
+    </div>
+  </div>
+</section>
 
-<div class="main-grid">
+<main class="main-zone">
   <section class="npc-card">
-    <div class="subhead">대기자</div>
-    <div class="npc-face" aria-hidden="true">
-      <div class="hair"></div>
-      <div class="eye left"></div>
-      <div class="eye right"></div>
-      <div class="mouth"></div>
-      <div class="body"></div>
+    <div class="npc-left">
+      <div class="npc-face" aria-hidden="true">
+        <div class="hair"></div>
+        <div class="eye left"></div>
+        <div class="eye right"></div>
+        <div class="mouth"></div>
+        <div class="body"></div>
+      </div>
+      <div id="npcName" class="npc-name">-</div>
     </div>
-    <div id="npcName" class="npc-name">-</div>
-    <div id="speech" class="speech">시작 버튼을 누르세요.</div>
-    <div id="tags" class="tags"></div>
+    <div class="npc-right">
+      <div class="subhead">대기자 말</div>
+      <div id="speech" class="speech">시작 버튼을 누르세요.</div>
+      <div id="tags" class="tags"></div>
+    </div>
   </section>
 
   <section class="desk">
-    <div class="subhead">심사대</div>
     <div class="question-card">
       <h2>질문</h2>
       <div id="questionLine" class="question-line"></div>
@@ -396,234 +449,89 @@ button.small {
 
     <div id="memoBox" class="memo"></div>
 
-    <div class="buttons">
+    <div class="action-grid">
       <button id="passBtn" class="pass">허락</button>
       <button id="rejectBtn" class="reject">허락 안 함</button>
     </div>
 
-    <div id="feedback" class="feedback">문장을 읽고 판단하세요.</div>
-
-    <div class="footer-controls">
-      <button id="startBtn" class="small">시작 / 다음 사람</button>
-      <button id="scenarioBtn" class="small">상황 바꾸기</button>
-      <button id="resetBtn" class="small">점수 초기화</button>
-    </div>
-
-    <div class="legend">
-      판단 기준은 문장의 핵심 문법입니다. 완료된 일은 <strong>-았/었어요</strong>, 지금 진행 중인 일은 <strong>-고 있어요</strong>, 앞으로 할 일은 <strong>-(으)ㄹ 생각이에요 / 예정이에요 / 계획이에요</strong>에 주의하세요.
+    <div>
+      <div id="feedback" class="feedback">문장을 읽고 판단하세요.</div>
+      <div class="small-note">기록은 아래에 최근 항목만 짧게 표시됩니다.</div>
     </div>
   </section>
-</div>
+</main>
 
-<section class="history">
-  <div class="subhead">판단 기록</div>
+<section class="history-sheet">
+  <div class="subhead">최근 기록</div>
   <div id="historyList"></div>
 </section>
+
+<nav class="footer-bar">
+  <button id="startBtn">시작 / 다음</button>
+  <button id="scenarioBtn">상황 바꾸기</button>
+  <button id="resetBtn">점수 초기화</button>
+</nav>
 
   </div>  <script>
     const scenarios = [
       {
         id: "topik",
-        name: "토픽 센터",
+        name: "토픽",
         rule: "토픽 자격증이 있는 사람만 들어올 수 있어요.",
         question: "토픽 자격증이 있습니까?",
-        memo: "핵심: 이미 자격증을 가지고 있어야 합니다. 시험을 볼 예정인 사람은 아직 안 됩니다.",
+        memo: "이미 자격증이 있어야 합니다. 시험을 볼 예정인 사람은 아직 안 됩니다.",
         people: [
-          {
-            name: "린",
-            speech: "저는 토픽 4급이 있어요.",
-            tags: ["자격증 있음", "현재 상태"],
-            allow: true,
-            explanation: "'토픽 4급이 있어요'는 현재 자격증을 가진 상태를 말하므로 입장할 수 있습니다."
-          },
-          {
-            name: "민호",
-            speech: "다음 달에 토픽 시험을 볼 예정이에요.",
-            tags: ["미래", "예정"],
-            allow: false,
-            explanation: "시험을 볼 예정이라는 뜻이므로 아직 자격증이 있다고 볼 수 없습니다."
-          },
-          {
-            name: "투안",
-            speech: "작년에 토픽 시험을 봤어요. 그런데 아직 합격은 못 했어요.",
-            tags: ["과거", "불합격"],
-            allow: false,
-            explanation: "시험을 본 경험은 있지만 자격증이 있는 상태는 아닙니다."
-          },
-          {
-            name: "수진",
-            speech: "지금 토픽을 준비하고 있어요.",
-            tags: ["진행", "준비 중"],
-            allow: false,
-            explanation: "공부 중인 상태일 뿐, 자격증이 있다고 말하지 않았습니다."
-          },
-          {
-            name: "하이",
-            speech: "저는 토픽 3급을 받았어요.",
-            tags: ["과거 완료", "자격 취득"],
-            allow: true,
-            explanation: "과거에 자격을 받았으므로 현재 자격증이 있는 사람으로 볼 수 있습니다."
-          },
-          {
-            name: "도윤",
-            speech: "이번 학기에 토픽 4급을 딸 계획이에요.",
-            tags: ["계획", "미래"],
-            allow: false,
-            explanation: "딸 계획은 미래 계획이므로 아직 자격증이 없습니다."
-          }
+          { name: "린", speech: "저는 토픽 4급이 있어요.", tags: ["자격증 있음", "현재"], allow: true, explanation: "현재 자격증이 있는 상태이므로 입장 가능합니다." },
+          { name: "민호", speech: "다음 달에 토픽 시험을 볼 예정이에요.", tags: ["미래", "예정"], allow: false, explanation: "시험을 볼 예정일 뿐, 아직 자격증이 없습니다." },
+          { name: "투안", speech: "작년에 토픽 시험을 봤어요. 그런데 아직 합격은 못 했어요.", tags: ["과거", "불합격"], allow: false, explanation: "시험 경험은 있지만 자격증이 있는 상태는 아닙니다." },
+          { name: "수진", speech: "지금 토픽을 준비하고 있어요.", tags: ["진행", "준비 중"], allow: false, explanation: "공부 중이지만 자격증이 있다고 말하지 않았습니다." },
+          { name: "하이", speech: "저는 토픽 3급을 받았어요.", tags: ["과거 완료", "자격 취득"], allow: true, explanation: "과거에 자격을 받았으므로 현재 자격증이 있는 사람입니다." },
+          { name: "도윤", speech: "이번 학기에 토픽 4급을 딸 계획이에요.", tags: ["계획", "미래"], allow: false, explanation: "미래 계획이므로 아직 자격증이 없습니다." }
         ]
       },
       {
         id: "exam",
-        name: "시험 접수실",
+        name: "시험",
         rule: "이번 주에 토픽 시험을 볼 사람만 들어올 수 있어요.",
         question: "이번 주에 토픽 시험을 봅니까?",
-        memo: "핵심: 미래의 시험 응시 여부입니다. 이미 시험을 본 사람이나 그냥 공부 중인 사람은 안 됩니다.",
+        memo: "미래의 시험 응시 여부입니다. 이미 시험을 본 사람은 안 됩니다.",
         people: [
-          {
-            name: "안나",
-            speech: "토요일에 토픽 시험을 볼 생각이에요.",
-            tags: ["미래", "생각"],
-            allow: true,
-            explanation: "이번 주 토요일에 시험을 볼 생각이라고 했으므로 조건에 맞습니다."
-          },
-          {
-            name: "지훈",
-            speech: "저는 지난달에 토픽 시험을 봤어요.",
-            tags: ["과거", "완료"],
-            allow: false,
-            explanation: "지난달에 이미 봤으므로 '이번 주에 볼 사람'은 아닙니다."
-          },
-          {
-            name: "마이",
-            speech: "이번 주 일요일에 토픽 시험을 볼 예정이에요.",
-            tags: ["예정", "미래"],
-            allow: true,
-            explanation: "이번 주 안에 시험 예정이 있으므로 입장 가능합니다."
-          },
-          {
-            name: "태호",
-            speech: "지금 토픽 듣기를 연습하고 있어요.",
-            tags: ["진행", "연습 중"],
-            allow: false,
-            explanation: "연습 중이라는 정보만 있고 시험 응시 계획은 말하지 않았습니다."
-          },
-          {
-            name: "나트",
-            speech: "다음 학기에 토픽 시험을 볼 계획이에요.",
-            tags: ["계획", "시기 불일치"],
-            allow: false,
-            explanation: "시험을 볼 계획은 있지만 이번 주가 아니라 다음 학기입니다."
-          },
-          {
-            name: "세영",
-            speech: "저는 오늘 오후에 토픽 시험을 볼 예정이에요.",
-            tags: ["오늘", "예정"],
-            allow: true,
-            explanation: "오늘 오후 시험 예정이므로 조건을 충족합니다."
-          }
+          { name: "안나", speech: "토요일에 토픽 시험을 볼 생각이에요.", tags: ["미래", "생각"], allow: true, explanation: "이번 주 토요일 시험 예정이므로 조건에 맞습니다." },
+          { name: "지훈", speech: "저는 지난달에 토픽 시험을 봤어요.", tags: ["과거", "완료"], allow: false, explanation: "지난달에 이미 본 사람이라 이번 주에 볼 사람은 아닙니다." },
+          { name: "마이", speech: "이번 주 일요일에 토픽 시험을 볼 예정이에요.", tags: ["예정", "미래"], allow: true, explanation: "이번 주 안에 시험을 볼 예정이므로 맞습니다." },
+          { name: "태호", speech: "지금 토픽 듣기를 연습하고 있어요.", tags: ["진행", "연습 중"], allow: false, explanation: "연습 중이라는 말만 있고 시험 응시 정보는 없습니다." },
+          { name: "나트", speech: "다음 학기에 토픽 시험을 볼 계획이에요.", tags: ["계획", "시기 불일치"], allow: false, explanation: "이번 주가 아니라 다음 학기 계획입니다." },
+          { name: "세영", speech: "저는 오늘 오후에 토픽 시험을 볼 예정이에요.", tags: ["오늘", "예정"], allow: true, explanation: "오늘 오후 시험 예정이면 이번 주 조건을 충족합니다." }
         ]
       },
       {
         id: "studyroom",
-        name: "스터디룸",
+        name: "공부",
         rule: "지금 한국어를 공부하고 있는 사람만 들어올 수 있어요.",
         question: "지금 한국어를 공부하고 있어요?",
-        memo: "핵심: 바로 지금 진행 중인 상태입니다. 과거 경험이나 미래 계획은 해당되지 않습니다.",
+        memo: "바로 지금 진행 중인 상태여야 합니다. 과거나 미래는 아닙니다.",
         people: [
-          {
-            name: "유리",
-            speech: "지금 토픽 쓰기를 공부하고 있어요.",
-            tags: ["진행", "현재"],
-            allow: true,
-            explanation: "'공부하고 있어요'는 현재 진행 중인 행동이므로 입장 가능합니다."
-          },
-          {
-            name: "빈",
-            speech: "어제 한국어 문법을 공부했어요.",
-            tags: ["과거", "완료"],
-            allow: false,
-            explanation: "어제 공부한 것은 과거 사실이므로 지금 공부 중이라는 뜻이 아닙니다."
-          },
-          {
-            name: "수아",
-            speech: "저는 저녁에 한국어를 공부할 계획이에요.",
-            tags: ["미래", "계획"],
-            allow: false,
-            explanation: "저녁에 공부할 계획은 미래 정보이므로 지금 공부 중은 아닙니다."
-          },
-          {
-            name: "호앙",
-            speech: "지금 도서관에서 한국어 숙제를 하고 있어요.",
-            tags: ["진행", "현재"],
-            allow: true,
-            explanation: "현재 도서관에서 숙제를 하고 있다고 하므로 조건에 맞습니다."
-          },
-          {
-            name: "가은",
-            speech: "지난주에 한국어 수업을 들었어요.",
-            tags: ["과거", "수강"],
-            allow: false,
-            explanation: "지난주 수업을 들은 경험은 현재 진행 상태가 아닙니다."
-          },
-          {
-            name: "람",
-            speech: "지금 친구하고 한국어 단어를 외우고 있어요.",
-            tags: ["진행", "암기 중"],
-            allow: true,
-            explanation: "현재 단어를 외우고 있는 중이므로 입장 가능합니다."
-          }
+          { name: "유리", speech: "지금 토픽 쓰기를 공부하고 있어요.", tags: ["진행", "현재"], allow: true, explanation: "현재 공부 중이라고 직접 말했으므로 입장 가능합니다." },
+          { name: "빈", speech: "어제 한국어 문법을 공부했어요.", tags: ["과거", "완료"], allow: false, explanation: "어제 공부한 것은 과거 사실이라 지금 공부 중은 아닙니다." },
+          { name: "수아", speech: "저는 저녁에 한국어를 공부할 계획이에요.", tags: ["미래", "계획"], allow: false, explanation: "저녁에 할 계획은 현재 진행 상태가 아닙니다." },
+          { name: "호앙", speech: "지금 도서관에서 한국어 숙제를 하고 있어요.", tags: ["진행", "현재"], allow: true, explanation: "현재 숙제를 하고 있으므로 조건에 맞습니다." },
+          { name: "가은", speech: "지난주에 한국어 수업을 들었어요.", tags: ["과거", "수강"], allow: false, explanation: "지난주 수업 경험은 현재 공부 중이라는 뜻이 아닙니다." },
+          { name: "람", speech: "지금 친구하고 한국어 단어를 외우고 있어요.", tags: ["진행", "암기 중"], allow: true, explanation: "현재 단어를 외우고 있는 중이므로 입장 가능합니다." }
         ]
       },
       {
         id: "health",
-        name: "건강검진 데스크",
+        name: "검진",
         rule: "내일 건강검진을 받을 사람만 들어올 수 있어요.",
         question: "내일 건강검진을 받을 예정입니까?",
-        memo: "핵심: 미래의 예약이나 계획이 있어야 합니다. 이미 끝났거나 단순 준비 중인 것은 다릅니다.",
+        memo: "내일 받을 예정이나 계획이 있어야 합니다. 이미 끝난 일은 해당되지 않습니다.",
         people: [
-          {
-            name: "예나",
-            speech: "내일 아침에 건강검진을 받을 예정이에요.",
-            tags: ["예정", "예약"],
-            allow: true,
-            explanation: "내일 검진 예정이라고 했으므로 조건을 만족합니다."
-          },
-          {
-            name: "꽝",
-            speech: "지난주에 건강검진을 받았어요.",
-            tags: ["과거", "완료"],
-            allow: false,
-            explanation: "이미 받은 일이라서 내일 받을 사람에 해당하지 않습니다."
-          },
-          {
-            name: "시우",
-            speech: "지금 건강검진 서류를 준비하고 있어요.",
-            tags: ["진행", "준비"],
-            allow: false,
-            explanation: "준비 중이라는 뜻만 있고 내일 받는다고 직접 말하지 않았습니다."
-          },
-          {
-            name: "뚜",
-            speech: "저는 내일 건강검진을 받을 생각이에요.",
-            tags: ["생각", "미래"],
-            allow: true,
-            explanation: "내일 검진을 받을 생각이라고 했으므로 입장 가능합니다."
-          },
-          {
-            name: "현우",
-            speech: "다음 달에 건강검진을 받을 계획이에요.",
-            tags: ["계획", "시기 불일치"],
-            allow: false,
-            explanation: "건강검진 계획은 있지만 내일이 아니라 다음 달입니다."
-          },
-          {
-            name: "리엔",
-            speech: "병원에서 내일 오라고 했어요. 그래서 내일 건강검진을 받을 예정이에요.",
-            tags: ["예정", "미래"],
-            allow: true,
-            explanation: "내일 검진 예정이라는 표현이 분명하므로 조건에 맞습니다."
-          }
+          { name: "예나", speech: "내일 아침에 건강검진을 받을 예정이에요.", tags: ["예정", "예약"], allow: true, explanation: "내일 검진 예정이므로 조건을 만족합니다." },
+          { name: "꽝", speech: "지난주에 건강검진을 받았어요.", tags: ["과거", "완료"], allow: false, explanation: "이미 받은 일이므로 내일 받을 사람은 아닙니다." },
+          { name: "시우", speech: "지금 건강검진 서류를 준비하고 있어요.", tags: ["진행", "준비"], allow: false, explanation: "준비 중이라는 말만 있고 내일 받는다고 직접 말하지 않았습니다." },
+          { name: "뚜", speech: "저는 내일 건강검진을 받을 생각이에요.", tags: ["생각", "미래"], allow: true, explanation: "내일 받을 생각이 있으므로 입장 가능합니다." },
+          { name: "현우", speech: "다음 달에 건강검진을 받을 계획이에요.", tags: ["계획", "시기 불일치"], allow: false, explanation: "다음 달 계획이라서 내일 조건과 다릅니다." },
+          { name: "리엔", speech: "병원에서 내일 오라고 했어요. 그래서 내일 건강검진을 받을 예정이에요.", tags: ["예정", "미래"], allow: true, explanation: "내일 검진 예정이 분명하므로 조건에 맞습니다." }
         ]
       }
     ];
@@ -697,7 +605,7 @@ button.small {
       if (queue.length === 0) {
         queue = shuffle(s.people);
         feedback.className = "feedback";
-        feedback.innerHTML = `이 상황의 사람을 모두 심사했습니다. 같은 상황을 다시 시작합니다.`;
+        feedback.innerHTML = "이 상황의 사람을 모두 심사했습니다. 같은 상황을 다시 시작합니다.";
       }
       currentPerson = queue.shift();
       renderPerson(currentPerson);
@@ -706,13 +614,10 @@ button.small {
 
     function addHistory(item) {
       history.unshift(item);
-      history = history.slice(0, 20);
+      history = history.slice(0, 8);
       historyList.innerHTML = history.map(h => `
         <div class="history-item">
-          <strong>[${h.scenario}]</strong> ${h.name}<br>
-          말: ${h.speech}<br>
-          판단: ${h.userDecision} / 정답: ${h.correctAnswer}<br>
-          결과: <strong>${h.result}</strong>
+          <strong>[${h.scenario}]</strong> ${h.name} · ${h.userDecision} / 정답 ${h.correctAnswer} · <strong>${h.result}</strong>
         </div>
       `).join("");
     }
@@ -720,7 +625,7 @@ button.small {
     function judge(userAllows) {
       if (!currentPerson) {
         feedback.className = "feedback bad";
-        feedback.textContent = "먼저 시작 / 다음 사람 버튼을 눌러 주세요.";
+        feedback.textContent = "먼저 시작 / 다음 버튼을 누르세요.";
         return;
       }
 
@@ -743,7 +648,6 @@ button.small {
       addHistory({
         scenario: scenarios[currentScenarioIndex].name,
         name: currentPerson.name,
-        speech: currentPerson.speech,
         userDecision,
         correctAnswer,
         result: correct ? "정답" : "오답"
@@ -751,7 +655,7 @@ button.small {
 
       currentPerson = null;
       npcName.textContent = "-";
-      speech.textContent = "다음 사람을 받으려면 시작 / 다음 사람 버튼을 누르세요.";
+      speech.textContent = "다음 사람을 받으려면 시작 / 다음 버튼을 누르세요.";
       tags.innerHTML = "";
       renderStats();
     }
@@ -762,7 +666,7 @@ button.small {
       currentPerson = null;
       renderScenario();
       npcName.textContent = "-";
-      speech.textContent = "상황이 바뀌었습니다. 시작 / 다음 사람 버튼을 누르세요.";
+      speech.textContent = "상황이 바뀌었습니다. 시작 / 다음 버튼을 누르세요.";
       tags.innerHTML = "";
       feedback.className = "feedback";
       feedback.textContent = "새 규칙을 읽고 판단하세요.";
@@ -772,12 +676,12 @@ button.small {
       score = 0;
       combo = 0;
       history = [];
-      historyList.innerHTML = "";
+      historyList.innerHTML = '<div class="history-item">아직 기록이 없습니다.</div>';
       queue = [];
       currentPerson = null;
       renderScenario();
       npcName.textContent = "-";
-      speech.textContent = "점수가 초기화되었습니다. 시작 / 다음 사람 버튼을 누르세요.";
+      speech.textContent = "점수가 초기화되었습니다. 시작 / 다음 버튼을 누르세요.";
       tags.innerHTML = "";
       feedback.className = "feedback";
       feedback.textContent = "문장을 읽고 판단하세요.";
