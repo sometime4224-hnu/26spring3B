@@ -56,6 +56,77 @@
         }
         /* Ensure body has no top margin/padding resetting the nav */
         body { margin: 0; }
+        .mask-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding: 10px 12px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            border-radius: 10px;
+        }
+        .mask-help {
+            font-size: 12px;
+            color: #4b5563;
+            font-weight: 600;
+        }
+        .mask-buttons {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .mask-action {
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            color: #1f2937;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 10px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .mask-action:hover {
+            background: #eef2ff;
+            border-color: #a5b4fc;
+            color: #3730a3;
+        }
+        .mask-counter {
+            font-size: 12px;
+            color: #4f46e5;
+            font-weight: 800;
+            background: #eef2ff;
+            border-radius: 999px;
+            padding: 4px 10px;
+        }
+        .morph-mask {
+            display: inline-block;
+            min-width: 1.4em;
+            border: 1px dashed #94a3b8;
+            background: #e2e8f0;
+            color: #334155;
+            border-radius: 6px;
+            padding: 0 4px;
+            margin: 0 1px;
+            font-weight: 700;
+            line-height: 1.6;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.15s ease;
+        }
+        .morph-mask:hover {
+            background: #cbd5e1;
+        }
+        .morph-mask.revealed {
+            border-style: solid;
+            border-color: #f59e0b;
+            background: #fef3c7;
+            color: #92400e;
+        }
     </style>
     </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
@@ -417,6 +488,168 @@
                 `;
             }
         }
+
+        function splitStemTail(token) {
+            const tailLength = token.length >= 4 ? 2 : 1;
+            const stem = token.slice(0, -tailLength);
+            const tail = token.slice(-tailLength);
+            if (!stem) return null;
+            return { stem, tail };
+        }
+
+        function setMaskState(maskButton, reveal) {
+            const placeholder = maskButton.dataset.placeholder || '_';
+            const stem = maskButton.dataset.stem || '';
+            maskButton.textContent = reveal ? stem : placeholder;
+            maskButton.classList.toggle('revealed', reveal);
+            maskButton.setAttribute('aria-pressed', reveal ? 'true' : 'false');
+        }
+
+        function updateMaskCounter(scriptBlock) {
+            const counter = scriptBlock.querySelector('.mask-counter');
+            if (!counter) return;
+            const total = scriptBlock.querySelectorAll('.morph-mask').length;
+            const shown = scriptBlock.querySelectorAll('.morph-mask.revealed').length;
+            counter.textContent = `공개 ${shown}/${total}`;
+        }
+
+        function collectCandidatesByLine(lineElement) {
+            const walker = document.createTreeWalker(lineElement, NodeFilter.SHOW_TEXT);
+            const candidates = [];
+            const tokenRegex = /[\uAC00-\uD7A3]{2,}/g;
+
+            while (walker.nextNode()) {
+                const node = walker.currentNode;
+                const parent = node.parentElement;
+                if (!parent) continue;
+                if (parent.closest('.mask-toolbar')) continue;
+                if (parent.closest('.morph-mask')) continue;
+                if (parent.tagName === 'STRONG') continue;
+                if (['SCRIPT', 'STYLE', 'BUTTON'].includes(parent.tagName)) continue;
+
+                const text = node.nodeValue;
+                if (!/[\uAC00-\uD7A3]/.test(text)) continue;
+
+                tokenRegex.lastIndex = 0;
+                let match;
+                while ((match = tokenRegex.exec(text)) !== null) {
+                    candidates.push({
+                        node,
+                        start: match.index,
+                        end: match.index + match[0].length,
+                        token: match[0]
+                    });
+                }
+            }
+
+            return candidates;
+        }
+
+        function pickMaskTargets(candidates) {
+            const count = candidates.length;
+            if (count === 0) return [];
+
+            let targetCount = 1;
+            if (count >= 5) targetCount = 3;
+            else if (count >= 2) targetCount = 2;
+
+            const indices = [];
+            if (targetCount === 1) {
+                indices.push(Math.floor(count / 2));
+            } else if (targetCount === 2) {
+                indices.push(0, count - 1);
+            } else {
+                indices.push(0, Math.floor((count - 1) / 2), count - 1);
+            }
+
+            const unique = [...new Set(indices)].filter((index) => index >= 0 && index < count);
+            return unique.map((index) => candidates[index]);
+        }
+
+        function applyMasksToLine(selectedCandidates) {
+            const nodeMap = new Map();
+            selectedCandidates.forEach((candidate) => {
+                if (!nodeMap.has(candidate.node)) {
+                    nodeMap.set(candidate.node, []);
+                }
+                nodeMap.get(candidate.node).push(candidate);
+            });
+
+            nodeMap.forEach((items, node) => {
+                let replaced = node.nodeValue;
+                items.sort((a, b) => b.start - a.start).forEach((item) => {
+                    const split = splitStemTail(item.token);
+                    if (!split) return;
+                    const placeholder = '□'.repeat(Math.max(1, split.stem.length));
+                    const masked = `<button type="button" class="morph-mask" data-stem="${split.stem}" data-placeholder="${placeholder}" aria-pressed="false">${placeholder}</button>${split.tail}`;
+                    replaced = `${replaced.slice(0, item.start)}${masked}${replaced.slice(item.end)}`;
+                });
+
+                if (replaced !== node.nodeValue) {
+                    const fragment = document.createElement('span');
+                    fragment.innerHTML = replaced;
+                    node.parentNode.replaceChild(fragment, node);
+                }
+            });
+        }
+
+        function maskByUtterance(scriptBlock) {
+            const lines = scriptBlock.querySelectorAll('p');
+            lines.forEach((line) => {
+                const candidates = collectCandidatesByLine(line);
+                const selected = pickMaskTargets(candidates);
+                applyMasksToLine(selected);
+            });
+        }
+
+        function addMaskToolbar(scriptBlock) {
+            const toolbar = document.createElement('div');
+            toolbar.className = 'mask-toolbar';
+            toolbar.innerHTML = `
+                <div class="mask-help">한 발화에 2-3개 명사/용언만 가립니다. 조사/어미는 보입니다.</div>
+                <div class="mask-buttons">
+                    <button type="button" class="mask-action" data-mask-action="hide">전체 가리기</button>
+                    <button type="button" class="mask-action" data-mask-action="show">전체 드러내기</button>
+                    <span class="mask-counter">공개 0/0</span>
+                </div>
+            `;
+            scriptBlock.prepend(toolbar);
+
+            toolbar.addEventListener('click', (event) => {
+                const actionButton = event.target.closest('.mask-action');
+                if (!actionButton) return;
+                const reveal = actionButton.dataset.maskAction === 'show';
+                scriptBlock.querySelectorAll('.morph-mask').forEach((maskButton) => {
+                    setMaskState(maskButton, reveal);
+                });
+                updateMaskCounter(scriptBlock);
+            });
+        }
+
+        function initScriptMasking() {
+            const scriptBlocks = document.querySelectorAll('div[id^="script"]');
+            if (scriptBlocks.length === 0) return;
+
+            scriptBlocks.forEach((scriptBlock) => {
+                if (scriptBlock.dataset.maskReady === 'true') return;
+
+                addMaskToolbar(scriptBlock);
+                maskByUtterance(scriptBlock);
+
+                scriptBlock.addEventListener('pointerup', (event) => {
+                    const maskButton = event.target.closest('.morph-mask');
+                    if (!maskButton) return;
+                    const reveal = !maskButton.classList.contains('revealed');
+                    setMaskState(maskButton, reveal);
+                    updateMaskCounter(scriptBlock);
+                });
+
+                scriptBlock.dataset.maskReady = 'true';
+                updateMaskCounter(scriptBlock);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', initScriptMasking);
     </script>
     <script src="../shared/learning-enhancements.js"></script>
 </body>
