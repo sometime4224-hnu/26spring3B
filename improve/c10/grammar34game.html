@@ -1,0 +1,759 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>문법 3+4 인생 목표 RPG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-top: #081128;
+            --bg-mid: #111b3d;
+            --bg-bottom: #10234a;
+            --panel: rgba(9, 17, 39, 0.72);
+            --line: rgba(147, 197, 253, 0.28);
+            --text-main: #e2e8f0;
+        }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            color: var(--text-main);
+            background:
+                radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.18), transparent 28%),
+                radial-gradient(circle at 88% 16%, rgba(52, 211, 153, 0.16), transparent 30%),
+                radial-gradient(circle at 62% 90%, rgba(245, 158, 11, 0.12), transparent 38%),
+                linear-gradient(165deg, var(--bg-top), var(--bg-mid), var(--bg-bottom));
+            min-height: 100vh;
+        }
+        .global-nav {
+            width: 100%;
+            background: rgba(8, 17, 40, 0.78);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.24);
+            height: 58px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 14px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-sizing: border-box;
+        }
+        .global-nav a {
+            color: #93c5fd;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .global-nav .divider { color: #64748b; }
+        .game-shell { max-width: 900px; margin: 16px auto 24px; padding: 12px; }
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            box-shadow: 0 28px 60px -25px rgba(0, 0, 0, 0.65);
+        }
+        .mode-btn.active {
+            border-color: rgba(125, 211, 252, 0.78);
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25) inset;
+            background: rgba(30, 64, 175, 0.26);
+        }
+        .choice-btn {
+            width: 100%;
+            text-align: left;
+            border-radius: 14px;
+            padding: 12px 14px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            background: rgba(15, 23, 42, 0.65);
+            color: #e2e8f0;
+            font-weight: 600;
+            transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+        }
+        .choice-btn:hover:not([disabled]) {
+            transform: translateY(-2px);
+            border-color: rgba(56, 189, 248, 0.7);
+            background: rgba(30, 41, 59, 0.85);
+        }
+        .choice-btn.correct {
+            border-color: rgba(52, 211, 153, 0.9);
+            background: rgba(6, 78, 59, 0.5);
+        }
+        .choice-btn.wrong {
+            border-color: rgba(248, 113, 113, 0.9);
+            background: rgba(127, 29, 29, 0.45);
+        }
+        .progress-track {
+            width: 100%; height: 12px; border-radius: 999px;
+            background: rgba(30, 41, 59, 0.8); overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%; width: 0%;
+            background: linear-gradient(90deg, #34d399, #38bdf8, #f59e0b);
+            transition: width 0.3s ease;
+        }
+        .fade-in { animation: fadein 0.24s ease; }
+        .bounce { animation: pop 0.28s ease; }
+        @keyframes fadein {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pop {
+            0% { transform: scale(0.97); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <nav class="global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+
+    <main class="game-shell">
+        <section class="panel p-5 sm:p-7">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-wider text-cyan-300">Grammar Quest</p>
+                    <h1 class="text-2xl sm:text-3xl font-black text-slate-100 mt-1">문법 3+4 인생 목표 RPG</h1>
+                    <p class="text-sm text-slate-300 mt-2">계획을 말하고, 현실을 점검하면서 목표를 완성하세요.</p>
+                </div>
+                <div class="text-xs text-slate-300 bg-slate-900/45 border border-slate-600/40 rounded-xl px-3 py-2">
+                    <p>문법 3: <b class="text-emerald-300">V-(으)ㄹ 생각/계획/예정이다</b></p>
+                    <p class="mt-1">문법 4: <b class="text-amber-300">V-(으)려면 멀었다</b></p>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel p-5 sm:p-6 mt-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <button id="mode-story" type="button" class="mode-btn active text-left rounded-xl border border-slate-500/60 bg-slate-800/60 p-4 transition">
+                    <p class="text-xs font-bold text-emerald-300">STORY MODE</p>
+                    <p class="text-lg font-black mt-1">인생 목표 모드</p>
+                    <p class="text-sm text-slate-300 mt-1">5개 미션을 차례로 클리어</p>
+                </button>
+                <button id="mode-speed" type="button" class="mode-btn text-left rounded-xl border border-slate-500/60 bg-slate-800/60 p-4 transition">
+                    <p class="text-xs font-bold text-amber-300">SPEED MODE</p>
+                    <p class="text-lg font-black mt-1">60초 챌린지</p>
+                    <p class="text-sm text-slate-300 mt-1">제한 시간 내 최대 점수 도전</p>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4 text-sm">
+                <div class="rounded-xl border border-emerald-400/35 bg-emerald-950/35 p-3">
+                    <p class="text-xs text-emerald-300 font-bold">계획 포인트</p>
+                    <p id="plan-score" class="text-2xl font-black mt-1">0</p>
+                </div>
+                <div class="rounded-xl border border-amber-400/35 bg-amber-950/35 p-3">
+                    <p class="text-xs text-amber-300 font-bold">현실 포인트</p>
+                    <p id="reality-score" class="text-2xl font-black mt-1">0</p>
+                </div>
+                <div class="rounded-xl border border-sky-400/35 bg-sky-950/30 p-3">
+                    <p class="text-xs text-sky-300 font-bold">남은 기회</p>
+                    <p id="life-text" class="text-2xl font-black mt-1">♥♥♥</p>
+                </div>
+                <div class="rounded-xl border border-violet-400/35 bg-violet-950/30 p-3">
+                    <p class="text-xs text-violet-300 font-bold">타이머/기록</p>
+                    <p id="timer-text" class="text-2xl font-black mt-1">--</p>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <div class="flex items-center justify-between text-xs mb-1">
+                    <p id="progress-label" class="text-slate-300 font-semibold">진행률 0%</p>
+                    <p id="stage-label" class="text-cyan-300 font-bold">준비</p>
+                </div>
+                <div class="progress-track">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel p-5 sm:p-6 mt-4" id="game-card">
+            <div id="welcome-screen" class="fade-in">
+                <h2 class="text-xl font-black">게임 시작 준비 완료</h2>
+                <p class="text-slate-300 mt-2 text-sm leading-relaxed">
+                    스토리 모드는 문법 3과 문법 4를 한 미션 안에서 함께 연습합니다.
+                    스피드 모드는 60초 동안 빠르게 정답을 고르며 최고 점수에 도전합니다.
+                </p>
+                <div class="mt-4 text-sm text-slate-300 space-y-1">
+                    <p><span class="text-emerald-300 font-bold">문법 3:</span> 미래 계획/예정 표현</p>
+                    <p><span class="text-amber-300 font-bold">문법 4:</span> 아직 시간이 많이 남은 상태 표현</p>
+                    <p><span class="text-cyan-300 font-bold">보너스:</span> ㄹ 받침 함정 문항 포함</p>
+                </div>
+                <button id="start-btn" type="button" class="mt-5 rounded-xl px-5 py-3 text-sm font-extrabold bg-cyan-500 text-slate-950 hover:bg-cyan-400 transition">
+                    <i class="fa-solid fa-play mr-1"></i> 시작하기
+                </button>
+            </div>
+
+            <div id="question-screen" class="hidden fade-in">
+                <div class="text-xs font-bold tracking-wide text-cyan-300" id="question-type">MISSION</div>
+                <h2 id="question-title" class="text-xl sm:text-2xl font-black mt-1">미션 제목</h2>
+                <p id="question-goal" class="text-sm text-slate-300 mt-2">목표 설명</p>
+
+                <div class="rounded-2xl border border-slate-600/50 bg-slate-900/55 p-4 mt-4">
+                    <p class="text-xs font-bold text-slate-400" id="prompt-grammar">문법 포인트</p>
+                    <p class="text-lg sm:text-xl font-bold mt-2 leading-relaxed" id="question-text">문항이 여기에 표시됩니다.</p>
+                </div>
+
+                <div id="choice-list" class="grid grid-cols-1 gap-2 mt-4"></div>
+
+                <div id="feedback-box" class="hidden mt-4 rounded-xl border p-3 text-sm"></div>
+
+                <div class="mt-4 flex items-center gap-2">
+                    <button id="next-btn" type="button" class="hidden rounded-lg px-4 py-2 text-sm font-bold bg-slate-100 text-slate-900 hover:bg-white transition">다음</button>
+                    <button id="reset-btn" type="button" class="rounded-lg px-4 py-2 text-sm font-bold bg-slate-700 text-slate-100 hover:bg-slate-600 transition">처음부터</button>
+                </div>
+            </div>
+
+            <div id="result-screen" class="hidden fade-in">
+                <h2 id="result-title" class="text-2xl font-black">결과</h2>
+                <p id="result-summary" class="text-sm text-slate-300 mt-2"></p>
+                <div id="result-details" class="mt-4 text-sm text-slate-200 space-y-1"></div>
+                <button id="restart-btn" type="button" class="mt-5 rounded-xl px-5 py-3 text-sm font-extrabold bg-cyan-500 text-slate-950 hover:bg-cyan-400 transition">다시 도전하기</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const storyMissions = [
+            {
+                title: "미션 1: 유학 준비",
+                goal: "목표: 내년에 한국으로 유학 가기",
+                plan: {
+                    grammar: "문법 3 | V-(으)ㄹ 계획/예정이다",
+                    question: "내년에 한국으로 ____.",
+                    options: ["유학할 계획이에요", "유학했어요", "유학하고 싶었어요", "유학하자마자 가요"],
+                    answer: 0,
+                    explain: "미래 계획은 'V-(으)ㄹ 계획이다'로 표현해요."
+                },
+                reality: {
+                    grammar: "문법 4 | V-(으)려면 멀었다",
+                    question: "원하는 대학에 합격하____ 아직 멀었어요.",
+                    options: ["려면", "고 싶어요", "니까", "자마자"],
+                    answer: 0,
+                    explain: "목표 달성까지 시간이 많이 남으면 'V-(으)려면 멀었다'를 사용해요."
+                }
+            },
+            {
+                title: "미션 2: 취업 도전",
+                goal: "목표: 졸업 후 첫 회사 취업하기",
+                plan: {
+                    grammar: "문법 3 | V-(으)ㄹ 생각/계획이다",
+                    question: "졸업 후 IT 회사에 ____.",
+                    options: ["취직할 생각이에요", "취직했어요", "취직할까 했어요", "취직하는 중이에요"],
+                    answer: 0,
+                    explain: "개인 의도는 'V-(으)ㄹ 생각이다'가 자연스러워요."
+                },
+                reality: {
+                    grammar: "문법 4 | V-(으)려면 멀었다",
+                    question: "대기업에 취직하____ 아직 멀었어요.",
+                    options: ["려면", "면", "고", "던"],
+                    answer: 0,
+                    explain: "조건 목표에 아직 도달하지 못한 상황을 말할 때 사용해요."
+                }
+            },
+            {
+                title: "미션 3: 요리 채널 오픈",
+                goal: "목표: 한국 음식 유튜브 채널 만들기",
+                plan: {
+                    grammar: "문법 3 | ㄹ 받침 주의",
+                    question: "한국 음식을 ____.",
+                    options: ["만들 계획이에요", "만들을 계획이에요", "만든 계획이에요", "만들고 계획이에요"],
+                    answer: 0,
+                    explain: "'만들다'는 어간이 ㄹ로 끝나서 '만들 계획'이 맞아요."
+                },
+                reality: {
+                    grammar: "문법 4 | V-(으)려면 멀었다",
+                    question: "시청자를 많이 모으____ 아직 멀었어요.",
+                    options: ["려면", "면", "고", "았으면"],
+                    answer: 0,
+                    explain: "아직 시간이 필요한 목표는 '-려면 멀었다' 패턴으로 답해요."
+                }
+            },
+            {
+                title: "미션 4: 내 집 마련",
+                goal: "목표: 5년 안에 집 사기",
+                plan: {
+                    grammar: "문법 3 | V-(으)ㄹ 예정이다",
+                    question: "올해부터 매달 돈을 저축할 ____.",
+                    options: ["예정이에요", "생각했어요", "준비했어요", "중이에요"],
+                    answer: 0,
+                    explain: "예상되는 일정/계획은 'V-(으)ㄹ 예정이다'를 써요."
+                },
+                reality: {
+                    grammar: "문법 4 | ㄹ 받침 함정",
+                    question: "집을 사려면 돈을 많이 ____ 아직 멀었어요.",
+                    options: ["벌려면", "벌으려면", "번려면", "벌면"],
+                    answer: 0,
+                    explain: "'벌다'는 ㄹ 받침이므로 '벌려면'이 맞아요."
+                }
+            },
+            {
+                title: "미션 5: 한국어 마스터",
+                goal: "목표: 원어민처럼 한국어 말하기",
+                plan: {
+                    grammar: "문법 3 | V-(으)ㄹ 생각이다",
+                    question: "매일 한국 뉴스 듣기를 ____.",
+                    options: ["할 생각이에요", "했어요", "하는 중이었어요", "하자마자예요"],
+                    answer: 0,
+                    explain: "앞으로 계속할 의도는 'V-(으)ㄹ 생각이다'가 맞아요."
+                },
+                reality: {
+                    grammar: "문법 4 | V-(으)려면 멀었다",
+                    question: "원어민처럼 말하____ 아직 멀었어요.",
+                    options: ["려면", "자마자", "고", "던"],
+                    answer: 0,
+                    explain: "도달 목표가 멀 때 쓰는 핵심 표현입니다."
+                }
+            }
+        ];
+
+        const speedBank = [
+            {
+                type: "plan",
+                grammar: "문법 3",
+                title: "속도전",
+                goal: "알맞은 계획 문장을 고르세요.",
+                question: "주말에 친구를 ____.",
+                options: ["만날 생각이에요", "만났어요", "만날래요", "만나고 있었어요"],
+                answer: 0,
+                explain: "가까운 미래 의도는 'V-(으)ㄹ 생각이다'."
+            },
+            {
+                type: "plan",
+                grammar: "문법 3",
+                title: "속도전",
+                goal: "알맞은 계획 문장을 고르세요.",
+                question: "다음 달에 한국어 시험을 ____.",
+                options: ["볼 예정이에요", "봤어요", "보고 있어요", "보자마자예요"],
+                answer: 0,
+                explain: "예정된 일정은 'V-(으)ㄹ 예정이다'."
+            },
+            {
+                type: "plan",
+                grammar: "문법 3",
+                title: "속도전",
+                goal: "알맞은 계획 문장을 고르세요.",
+                question: "퇴근 후 운동을 ____.",
+                options: ["할 계획이에요", "해요", "했어요", "할 거였어요"],
+                answer: 0,
+                explain: "계획은 'V-(으)ㄹ 계획이다'."
+            },
+            {
+                type: "plan",
+                grammar: "문법 3",
+                title: "속도전",
+                goal: "ㄹ 받침 활용 주의!",
+                question: "한국 음식을 ____.",
+                options: ["만들 계획이에요", "만들을 계획이에요", "만든 계획이에요", "만들고 계획이에요"],
+                answer: 0,
+                explain: "ㄹ 받침 뒤에는 '-을'이 아닌 형태를 주의해요."
+            },
+            {
+                type: "plan",
+                grammar: "문법 3",
+                title: "속도전",
+                goal: "알맞은 계획 문장을 고르세요.",
+                question: "내년에는 대학원에 ____.",
+                options: ["진학할 계획이에요", "진학했어요", "진학 중이에요", "진학하더라고요"],
+                answer: 0,
+                explain: "장기 계획 표현 문제입니다."
+            },
+            {
+                type: "reality",
+                grammar: "문법 4",
+                title: "속도전",
+                goal: "아직 시간이 멀 때 쓰는 표현",
+                question: "마라톤을 완주하____ 아직 멀었어요.",
+                options: ["려면", "면", "고", "던"],
+                answer: 0,
+                explain: "'완주하려면 아직 멀었어요'가 자연스러워요."
+            },
+            {
+                type: "reality",
+                grammar: "문법 4",
+                title: "속도전",
+                goal: "아직 시간이 멀 때 쓰는 표현",
+                question: "독립하____ 아직 멀었어요.",
+                options: ["려면", "고", "면", "던"],
+                answer: 0,
+                explain: "미완 목표 표현은 '-려면 멀었다'."
+            },
+            {
+                type: "reality",
+                grammar: "문법 4",
+                title: "속도전",
+                goal: "ㄹ 받침 활용 주의!",
+                question: "집을 사려면 돈을 많이 ____ 아직 멀었어요.",
+                options: ["벌려면", "벌으려면", "벌면", "번려면"],
+                answer: 0,
+                explain: "'벌다' + '-려면' => '벌려면'."
+            },
+            {
+                type: "reality",
+                grammar: "문법 4",
+                title: "속도전",
+                goal: "아직 시간이 멀 때 쓰는 표현",
+                question: "원어민처럼 말하____ 아직 멀었어요.",
+                options: ["려면", "자마자", "던", "는 중"],
+                answer: 0,
+                explain: "목표까지 갈 길이 멀다는 표현입니다."
+            },
+            {
+                type: "reality",
+                grammar: "문법 4",
+                title: "속도전",
+                goal: "아직 시간이 멀 때 쓰는 표현",
+                question: "완전히 회복하____ 아직 멀었어요.",
+                options: ["려면", "고", "던", "는데"],
+                answer: 0,
+                explain: "'회복하려면 아직 멀었어요'가 맞아요."
+            }
+        ];
+
+        const el = {
+            modeStory: document.getElementById("mode-story"),
+            modeSpeed: document.getElementById("mode-speed"),
+            startBtn: document.getElementById("start-btn"),
+            resetBtn: document.getElementById("reset-btn"),
+            restartBtn: document.getElementById("restart-btn"),
+            nextBtn: document.getElementById("next-btn"),
+            welcome: document.getElementById("welcome-screen"),
+            questionScreen: document.getElementById("question-screen"),
+            resultScreen: document.getElementById("result-screen"),
+            questionType: document.getElementById("question-type"),
+            questionTitle: document.getElementById("question-title"),
+            questionGoal: document.getElementById("question-goal"),
+            promptGrammar: document.getElementById("prompt-grammar"),
+            questionText: document.getElementById("question-text"),
+            choiceList: document.getElementById("choice-list"),
+            feedback: document.getElementById("feedback-box"),
+            stageLabel: document.getElementById("stage-label"),
+            progressLabel: document.getElementById("progress-label"),
+            progressFill: document.getElementById("progress-fill"),
+            planScore: document.getElementById("plan-score"),
+            realityScore: document.getElementById("reality-score"),
+            lifeText: document.getElementById("life-text"),
+            timerText: document.getElementById("timer-text"),
+            resultTitle: document.getElementById("result-title"),
+            resultSummary: document.getElementById("result-summary"),
+            resultDetails: document.getElementById("result-details")
+        };
+
+        const state = {
+            mode: "story",
+            storyIndex: 0,
+            phase: "plan",
+            planScore: 0,
+            realityScore: 0,
+            life: 3,
+            answered: false,
+            timerLeft: 60,
+            timerId: null,
+            speedQueue: [],
+            speedIndex: 0
+        };
+
+        function shuffle(array) {
+            const next = [...array];
+            for (let i = next.length - 1; i > 0; i -= 1) {
+                const j = Math.floor(Math.random() * (i + 1));
+                const temp = next[i];
+                next[i] = next[j];
+                next[j] = temp;
+            }
+            return next;
+        }
+
+        function clearTimer() {
+            if (state.timerId) {
+                clearInterval(state.timerId);
+                state.timerId = null;
+            }
+        }
+
+        function updateHud() {
+            el.planScore.textContent = String(state.planScore);
+            el.realityScore.textContent = String(state.realityScore);
+            el.lifeText.textContent = "♥".repeat(Math.max(0, state.life)) || "0";
+            if (state.mode === "speed") {
+                el.timerText.textContent = `${state.timerLeft}s`;
+            } else {
+                const best = Number(localStorage.getItem("korean3b.g34.story.best") || "0");
+                el.timerText.textContent = `${best}점`;
+            }
+        }
+        function updateProgress(done, total) {
+            const ratio = total === 0 ? 0 : Math.round((done / total) * 100);
+            el.progressFill.style.width = `${ratio}%`;
+            el.progressLabel.textContent = `진행률 ${ratio}%`;
+        }
+
+        function hideFeedback() {
+            el.feedback.classList.add("hidden");
+            el.feedback.textContent = "";
+            el.feedback.className = "hidden mt-4 rounded-xl border p-3 text-sm";
+        }
+
+        function showFeedback(isCorrect, message) {
+            el.feedback.classList.remove("hidden");
+            el.feedback.className = "mt-4 rounded-xl border p-3 text-sm bounce";
+            if (isCorrect) {
+                el.feedback.classList.add("border-emerald-400/60", "bg-emerald-950/45", "text-emerald-100");
+                el.feedback.innerHTML = `<b>정답!</b> ${message}`;
+            } else {
+                el.feedback.classList.add("border-rose-400/60", "bg-rose-950/35", "text-rose-100");
+                el.feedback.innerHTML = `<b>아쉬워요.</b> ${message}`;
+            }
+        }
+
+        function resetCore() {
+            state.storyIndex = 0;
+            state.phase = "plan";
+            state.planScore = 0;
+            state.realityScore = 0;
+            state.life = 3;
+            state.answered = false;
+            state.timerLeft = 60;
+            state.speedQueue = [];
+            state.speedIndex = 0;
+            clearTimer();
+            updateHud();
+            updateProgress(0, 1);
+            el.stageLabel.textContent = "준비";
+            hideFeedback();
+            el.nextBtn.classList.add("hidden");
+        }
+
+        function resetToWelcome() {
+            resetCore();
+            el.questionScreen.classList.add("hidden");
+            el.resultScreen.classList.add("hidden");
+            el.welcome.classList.remove("hidden");
+            el.timerText.textContent = state.mode === "speed" ? "60s" : "기록";
+        }
+
+        function setMode(mode) {
+            state.mode = mode;
+            el.modeStory.classList.toggle("active", mode === "story");
+            el.modeSpeed.classList.toggle("active", mode === "speed");
+            resetToWelcome();
+        }
+
+        function lockChoices() {
+            const buttons = el.choiceList.querySelectorAll("button");
+            buttons.forEach((b) => { b.disabled = true; });
+        }
+
+        function paintAnswer(selected, correct) {
+            const buttons = Array.from(el.choiceList.querySelectorAll("button"));
+            buttons.forEach((b, idx) => {
+                if (idx === correct) b.classList.add("correct");
+                if (idx === selected && idx !== correct) b.classList.add("wrong");
+            });
+        }
+
+        function gainPoint(type) {
+            if (type === "plan") state.planScore += 10;
+            else state.realityScore += 10;
+        }
+
+        function showQuestion(payload) {
+            el.welcome.classList.add("hidden");
+            el.resultScreen.classList.add("hidden");
+            el.questionScreen.classList.remove("hidden");
+            el.questionType.textContent = payload.typeText;
+            el.questionTitle.textContent = payload.title;
+            el.questionGoal.textContent = payload.goal;
+            el.promptGrammar.textContent = payload.grammar;
+            el.questionText.textContent = payload.question;
+            el.choiceList.innerHTML = "";
+            hideFeedback();
+            el.nextBtn.classList.add("hidden");
+            state.answered = false;
+
+            payload.options.forEach((optionText, idx) => {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "choice-btn";
+                btn.textContent = `${idx + 1}. ${optionText}`;
+                btn.addEventListener("click", () => handleAnswer(idx, payload));
+                el.choiceList.appendChild(btn);
+            });
+        }
+
+        function finishGame(title, summary) {
+            clearTimer();
+            el.welcome.classList.add("hidden");
+            el.questionScreen.classList.add("hidden");
+            el.resultScreen.classList.remove("hidden");
+
+            const total = state.planScore + state.realityScore;
+            const storyBest = Number(localStorage.getItem("korean3b.g34.story.best") || "0");
+            const speedBest = Number(localStorage.getItem("korean3b.g34.speed.best") || "0");
+
+            el.resultTitle.textContent = title;
+            el.resultSummary.textContent = summary;
+            el.resultDetails.innerHTML = `
+                <p>총점: <b>${total}점</b></p>
+                <p>계획 포인트(문법3): <b>${state.planScore}점</b></p>
+                <p>현실 포인트(문법4): <b>${state.realityScore}점</b></p>
+                <p>스토리 최고 기록: <b>${storyBest}점</b> | 스피드 최고 기록: <b>${speedBest}점</b></p>
+            `;
+            el.stageLabel.textContent = "결과";
+        }
+
+        function currentStoryPayload() {
+            const mission = storyMissions[state.storyIndex];
+            const block = state.phase === "plan" ? mission.plan : mission.reality;
+            const type = state.phase === "plan" ? "plan" : "reality";
+            return {
+                type,
+                typeText: state.phase === "plan" ? "MISSION | 계획 선택" : "MISSION | 현실 점검",
+                title: mission.title,
+                goal: mission.goal,
+                grammar: block.grammar,
+                question: block.question,
+                options: block.options,
+                answer: block.answer,
+                explain: block.explain
+            };
+        }
+
+        function renderStoryQuestion() {
+            if (state.life <= 0) {
+                finishGame("스토리 모드 종료", "기회를 모두 사용했어요. 다시 도전해 보세요.");
+                return;
+            }
+            if (state.storyIndex >= storyMissions.length) {
+                updateProgress(storyMissions.length * 2, storyMissions.length * 2);
+                const total = state.planScore + state.realityScore;
+                const best = Number(localStorage.getItem("korean3b.g34.story.best") || "0");
+                if (total > best) localStorage.setItem("korean3b.g34.story.best", String(total));
+                finishGame("스토리 모드 클리어!", `총점 ${total}점으로 5개 미션을 모두 달성했어요.`);
+                return;
+            }
+            const done = state.storyIndex * 2 + (state.phase === "reality" ? 1 : 0);
+            updateProgress(done, storyMissions.length * 2);
+            el.stageLabel.textContent = `스토리 ${state.storyIndex + 1}/${storyMissions.length}`;
+            showQuestion(currentStoryPayload());
+        }
+
+        function renderSpeedQuestion() {
+            if (state.timerLeft <= 0) {
+                const total = state.planScore + state.realityScore;
+                const best = Number(localStorage.getItem("korean3b.g34.speed.best") || "0");
+                if (total > best) localStorage.setItem("korean3b.g34.speed.best", String(total));
+                finishGame("스피드 모드 종료", `60초 동안 총점 ${total}점을 획득했어요.`);
+                return;
+            }
+            if (state.speedQueue.length === 0) {
+                state.speedQueue = shuffle(speedBank);
+                state.speedIndex = 0;
+            }
+            const q = state.speedQueue[state.speedIndex % state.speedQueue.length];
+            state.speedIndex += 1;
+            el.stageLabel.textContent = `스피드 ${state.speedIndex}번`;
+            showQuestion({
+                type: q.type,
+                typeText: q.type === "plan" ? "SPEED | 계획 포인트" : "SPEED | 현실 포인트",
+                title: q.title,
+                goal: q.goal,
+                grammar: q.grammar,
+                question: q.question,
+                options: q.options,
+                answer: q.answer,
+                explain: q.explain
+            });
+        }
+
+        function handleAnswer(selectedIndex, payload) {
+            if (state.answered) return;
+            state.answered = true;
+            const isCorrect = selectedIndex === payload.answer;
+            lockChoices();
+            paintAnswer(selectedIndex, payload.answer);
+
+            if (isCorrect) {
+                gainPoint(payload.type);
+            } else if (state.mode === "story") {
+                state.life -= 1;
+            }
+
+            updateHud();
+            showFeedback(isCorrect, payload.explain);
+
+            if (state.mode === "speed") {
+                setTimeout(goNext, 520);
+            } else {
+                el.nextBtn.classList.remove("hidden");
+            }
+        }
+
+        function goNext() {
+            if (state.mode === "speed") {
+                renderSpeedQuestion();
+                return;
+            }
+            if (state.phase === "plan") {
+                state.phase = "reality";
+            } else {
+                state.phase = "plan";
+                state.storyIndex += 1;
+            }
+            renderStoryQuestion();
+        }
+
+        function startStory() {
+            resetCore();
+            el.stageLabel.textContent = "스토리 1/5";
+            updateProgress(0, storyMissions.length * 2);
+            renderStoryQuestion();
+        }
+
+        function startSpeed() {
+            resetCore();
+            state.timerLeft = 60;
+            state.speedQueue = shuffle(speedBank);
+            state.speedIndex = 0;
+            updateHud();
+            el.stageLabel.textContent = "스피드 시작";
+            updateProgress(0, 60);
+
+            state.timerId = setInterval(() => {
+                state.timerLeft -= 1;
+                updateHud();
+                updateProgress(60 - state.timerLeft, 60);
+                if (state.timerLeft <= 0) {
+                    clearTimer();
+                    renderSpeedQuestion();
+                }
+            }, 1000);
+
+            renderSpeedQuestion();
+        }
+
+        function startGame() {
+            if (state.mode === "story") startStory();
+            else startSpeed();
+        }
+
+        el.modeStory.addEventListener("click", () => setMode("story"));
+        el.modeSpeed.addEventListener("click", () => setMode("speed"));
+        el.startBtn.addEventListener("click", startGame);
+        el.resetBtn.addEventListener("click", resetToWelcome);
+        el.restartBtn.addEventListener("click", resetToWelcome);
+        el.nextBtn.addEventListener("click", goNext);
+
+        resetToWelcome();
+    </script>
+    <script src="../shared/learning-enhancements.js"></script>
+</body>
+</html>
