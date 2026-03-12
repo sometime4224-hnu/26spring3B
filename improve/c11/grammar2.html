@@ -1,288 +1,403 @@
 ﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>한국어 문법 연습: -(ㄴ/는)다면</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>11과 문법2 업그레이드 | -(ㄴ/는)다면</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet" />
     <style>
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-        }
-        .tab-button.active {
-            border-color: #3b82f6;
-            color: #3b82f6;
-            font-weight: 700;
-        }
-    </style>
-    <style id="c11-global-nav-style">
-        body { margin: 0; }
+        body { margin: 0; font-family: 'Noto Sans KR', sans-serif; background: linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%); }
         .c11-global-nav {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            width: 100%;
-            height: 58px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 0 16px;
-            box-sizing: border-box;
-            background: rgba(255, 255, 255, 0.92);
-            border-bottom: 1px solid #dbeafe;
-            backdrop-filter: blur(8px);
+            position: sticky; top: 0; z-index: 1000; height: 58px; width: 100%;
+            display: flex; align-items: center; gap: 12px; padding: 0 16px; box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.92); border-bottom: 1px solid #dbeafe; backdrop-filter: blur(8px);
         }
-        .c11-global-nav a {
-            color: #4f46e5;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 14px;
-            line-height: 1;
-        }
-        .c11-divider {
-            color: #cbd5e1;
-            font-weight: 700;
-            line-height: 1;
-        }
+        .c11-global-nav a { color: #4f46e5; text-decoration: none; font-weight: 700; font-size: 14px; }
+        .c11-divider { color: #cbd5e1; font-weight: 700; }
+        .safe { word-break: keep-all; overflow-wrap: break-word; }
+        .tab-btn.active { background: #dbeafe; color: #1d4ed8; border-color: #93c5fd; }
+        .vi-text { display: none; }
+        .vi-on .vi-text { display: block; }
+        .choice-btn { min-height: 52px; }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen p-4">
+<body>
     <nav class="c11-global-nav" aria-label="상단 이동">
         <a href="../index.html">메인</a>
         <span class="c11-divider">|</span>
         <a href="index.html">11과 목록</a>
     </nav>
-    <div class="w-full max-w-2xl mx-auto bg-white rounded-2xl shadow-lg p-6 md:p-10 my-8">
-        
-        <!-- Header -->
-        <header class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">한국어 문법 마스터 🚀</h1>
-            <p class="text-xl font-semibold text-blue-600 mt-2">A/V-(ㄴ/는)다면, N(이)라면</p>
-        </header>
 
-        <!-- Tabs -->
-        <div class="flex border-b-2 mb-6">
-            <button id="tab-explain-btn" class="tab-button flex-1 py-3 text-lg border-b-4 text-center transition-colors duration-300 active" onclick="showTab('explain')">🧐 문법 설명</button>
-            <button id="tab-quiz-btn" class="tab-button flex-1 py-3 text-lg border-b-4 border-transparent text-center text-gray-500 transition-colors duration-300" onclick="showTab('quiz')">✍️ 연습 문제</button>
-        </div>
-
-        <!-- Content Area -->
-        <div id="content-area">
-            <!-- Grammar Explanation Tab -->
-            <div id="tab-explain">
-                <div class="space-y-6">
-                    <div>
-                        <h2 class="text-2xl font-bold text-gray-700 mb-3">언제 사용할까요?</h2>
-                        <p class="text-lg bg-blue-50 p-4 rounded-lg leading-relaxed">
-                            '-(ㄴ/는)다면'은 <strong class="text-blue-600">실제로 일어나지 않은 일이나, 일어날 가능성이 아주 낮은 일</strong>을 상상하거나 가정할 때 사용해요. "만약 ~하면...?" 이라고 말하고 싶을 때 쓰는 표현이에요.
-                        </p>
-                    </div>
-
-                    <div>
-                        <h2 class="text-2xl font-bold text-gray-700 mb-3">어떻게 만들까요?</h2>
-                        <div class="space-y-4">
-                            <!-- Verbs -->
-                            <div class="bg-gray-50 p-4 rounded-lg">
-                                <p class="font-bold text-lg text-green-700">동사 (Verbs)</p>
-                                <ul class="list-disc list-inside mt-2 text-md space-y-2">
-                                    <li>받침 <strong class="text-red-500">있으면</strong> + <code class="bg-red-100 text-red-700 px-2 py-1 rounded">는다면</code>: 먹다 → <strong class="text-red-500">먹는다면</strong></li>
-                                    <li>받침 <strong class="text-blue-500">없으면</strong> + <code class="bg-blue-100 text-blue-700 px-2 py-1 rounded">ㄴ다면</code>: 가다 → <strong class="text-blue-500">간다면</strong></li>
-                                </ul>
-                            </div>
-                            <!-- Adjectives -->
-                            <div class="bg-gray-50 p-4 rounded-lg">
-                                <p class="font-bold text-lg text-purple-700">형용사 (Adjectives)</p>
-                                <ul class="list-disc list-inside mt-2 text-md space-y-2">
-                                    <li>받침과 상관없이 + <code class="bg-purple-100 text-purple-700 px-2 py-1 rounded">다면</code>: 예쁘다 → <strong class="text-purple-500">예쁘다면</strong>, 작다 → <strong class="text-purple-500">작다면</strong></li>
-                                </ul>
-                            </div>
-                            <!-- Nouns -->
-                            <div class="bg-gray-50 p-4 rounded-lg">
-                                <p class="font-bold text-lg text-yellow-700">명사 (Nouns)</p>
-                                <ul class="list-disc list-inside mt-2 text-md space-y-2">
-                                     <li>받침 <strong class="text-red-500">있으면</strong> + <code class="bg-red-100 text-red-700 px-2 py-1 rounded">이라면</code>: 학생 → <strong class="text-red-500">학생이라면</strong></li>
-                                    <li>받침 <strong class="text-blue-500">없으면</strong> + <code class="bg-blue-100 text-blue-700 px-2 py-1 rounded">라면</code>: 의사 → <strong class="text-blue-500">의사라면</strong></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h2 class="text-2xl font-bold text-gray-700 mb-3">예문 살펴보기</h2>
-                        <div class="space-y-3">
-                            <p class="text-lg bg-white border-l-4 border-blue-400 pl-4 py-2">만약 제가 <strong class="text-blue-600">부자라면</strong> 세계 여행을 다닐 거예요.</p>
-                            <p class="text-lg bg-white border-l-4 border-green-400 pl-4 py-2">만약 복권에 <strong class="text-green-600">당첨된다면</strong> 좋은 차를 살 거예요.</p>
-                            <p class="text-lg bg-white border-l-4 border-purple-400 pl-4 py-2">시간이 더 <strong class="text-purple-600">많다면</strong>, 한국어 공부를 더 할 텐데요.</p>
-                            <p class="text-lg bg-white border-l-4 border-red-400 pl-4 py-2">만일 한국어를 <strong class="text-red-600">배우지 않았다면</strong> 한국 회사에 취직하지 못했을 거예요.</p>
-                        </div>
-                    </div>
+    <main id="page" class="max-w-md mx-auto px-4 py-4 pb-10">
+        <section class="bg-white border border-blue-100 rounded-2xl p-5 shadow-sm">
+            <div class="flex items-start justify-between gap-2">
+                <div>
+                    <p class="text-xs font-bold text-blue-600">문법 2 업그레이드</p>
+                    <h1 class="text-2xl font-black text-slate-800 mt-1">A/V-(ㄴ/는)다면, N(이)라면</h1>
+                    <p class="text-sm text-slate-600 mt-1 safe">가정, 상상, 가능성이 낮은 조건을 말할 때</p>
+                    <p class="vi-text text-xs text-blue-700 mt-1 safe">Dùng cho giả định, tưởng tượng hoặc điều kiện khó xảy ra.</p>
                 </div>
+                <button id="viToggle" class="shrink-0 px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold text-slate-700">Tiếng Việt OFF</button>
             </div>
 
-            <!-- Quiz Tab -->
-            <div id="tab-quiz" class="hidden">
-                <div id="quiz-container" class="space-y-6">
-                    <div class="text-center">
-                        <p class="text-lg font-medium text-gray-600">총 5문제</p>
-                        <p class="text-2xl font-bold text-blue-600" id="question-number"></p>
+            <div class="grid grid-cols-2 gap-2 mt-4">
+                <button id="tabLearn" class="tab-btn active border rounded-xl py-2.5 text-sm font-bold border-blue-200" type="button">학습</button>
+                <button id="tabPractice" class="tab-btn border rounded-xl py-2.5 text-sm font-bold border-slate-200 text-slate-600" type="button">연습</button>
+            </div>
+        </section>
+
+        <section id="learnPanel" class="mt-4 space-y-3">
+            <article class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+                <h2 class="text-base font-bold text-slate-800">핵심 개념</h2>
+                <p class="text-sm text-slate-700 mt-2 safe">'-(ㄴ/는)다면'은 실제가 아닌 상황을 가정할 때 많이 씁니다.</p>
+                <p class="text-sm text-slate-700 mt-1 safe">예) 제가 면접관이라면, 그 답변을 더 듣고 싶어요.</p>
+                <p class="vi-text text-xs text-blue-700 mt-2 safe">'-(ㄴ/는)다면' thường dùng khi đặt giả định chưa chắc xảy ra.</p>
+            </article>
+
+            <article class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+                <h2 class="text-base font-bold text-slate-800">형태 규칙</h2>
+                <div class="mt-2 space-y-2 text-sm text-slate-700">
+                    <p><b>동사</b>: 받침 O → <b>는다면</b> (먹다→먹는다면), 받침 X → <b>ㄴ다면</b> (가다→간다면)</p>
+                    <p><b>형용사</b>: 받침과 상관없이 <b>다면</b> (좋다→좋다면)</p>
+                    <p><b>명사</b>: 받침 O → <b>이라면</b>, 받침 X → <b>라면</b></p>
+                </div>
+                <p class="vi-text text-xs text-blue-700 mt-2 safe">Động từ, tính từ, danh từ có quy tắc gắn khác nhau; cần chú ý 받침.</p>
+            </article>
+
+            <article class="bg-amber-50 border border-amber-200 rounded-2xl p-4 shadow-sm">
+                <h2 class="text-base font-bold text-amber-800">헷갈림 비교</h2>
+                <div class="mt-2 space-y-3">
+                    <div>
+                        <p class="text-sm font-bold text-slate-800">-(으)면 vs -다면</p>
+                        <p class="text-sm text-slate-700 safe">비가 오면 우산을 써요(일반 조건) / 비가 오지 않는다면 야외 수업을 해요(가정 강조).</p>
+                        <p class="vi-text text-xs text-blue-700 mt-1 safe">-(으)면: điều kiện thực tế, phổ biến. -다면: giả định, nhấn mạnh tính giả thiết.</p>
                     </div>
-                    <div id="question" class="text-2xl font-bold text-center text-gray-800 bg-gray-100 p-6 rounded-lg min-h-[100px] flex items-center justify-center"></div>
-                    <div id="options" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-                    <div id="feedback" class="text-center font-bold text-lg mt-4"></div>
-                    <div class="flex justify-center mt-6">
-                        <button id="next-btn" class="hidden bg-blue-600 text-white font-bold py-3 px-8 rounded-lg text-lg hover:bg-blue-700 transition-transform transform hover:scale-105" onclick="nextQuestion()">다음 문제</button>
+                    <div>
+                        <p class="text-sm font-bold text-slate-800">-다면 vs -았/었더라면</p>
+                        <p class="text-sm text-slate-700 safe">지금 가정: 시간이 많다면 / 과거 후회: 시간이 많았더라면</p>
+                        <p class="vi-text text-xs text-blue-700 mt-1 safe">-다면 cho giả định hiện tại/tương lai, -았/었더라면 cho tiếc nuối quá khứ.</p>
                     </div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-800">명사 연결</p>
+                        <p class="text-sm text-slate-700 safe">학생이라면(받침 O), 의사라면(받침 X)</p>
+                        <p class="vi-text text-xs text-blue-700 mt-1 safe">Danh từ có 받침 dùng 이라면, không có 받침 dùng 라면.</p>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <section id="practicePanel" class="mt-4 hidden">
+            <article class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+                <div class="flex items-center justify-between text-xs">
+                    <span id="progress" class="font-bold text-blue-600"></span>
+                    <span class="text-slate-500">즉시 피드백</span>
+                </div>
+                <p id="qGrammar" class="mt-2 text-[11px] font-bold text-violet-700"></p>
+                <p id="qText" class="mt-2 text-base font-bold text-slate-800 safe"></p>
+                <p id="qHintKo" class="mt-2 text-xs text-slate-600 safe"></p>
+                <p id="qHintVi" class="vi-text text-xs text-blue-700 mt-1 safe"></p>
+
+                <div id="choices" class="mt-3 space-y-2"></div>
+                <div id="shortWrap" class="mt-3 hidden">
+                    <input id="shortInput" type="text" class="w-full border border-slate-300 rounded-xl px-4 py-3 text-sm" placeholder="정답 입력" />
+                    <button id="checkShortBtn" class="mt-2 w-full bg-blue-600 text-white py-3 rounded-xl text-sm font-bold" type="button">정답 확인</button>
                 </div>
 
-                <div id="quiz-result" class="hidden text-center py-10">
-                    <h2 class="text-3xl font-bold text-gray-800 mb-4">참 잘했어요!</h2>
-                    <p class="text-xl text-gray-600 mb-2">총 <span id="total-questions"></span>문제 중</p>
-                    <p class="text-5xl font-bold text-blue-600 mb-8"><span id="score"></span>점</p>
-                    <button class="bg-gray-800 text-white font-bold py-3 px-8 rounded-lg text-lg hover:bg-gray-900 transition-transform transform hover:scale-105" onclick="restartQuiz()">다시 풀어보기</button>
-                </div>
-            </div>
-        </div>
-    </div>
+                <div id="feedbackBox" class="hidden mt-3 rounded-xl border p-3"></div>
+                <button id="nextBtn" class="hidden mt-3 w-full bg-slate-800 text-white py-3 rounded-xl text-sm font-bold" type="button">다음 문제</button>
+            </article>
+
+            <article id="resultPanel" class="hidden mt-3 bg-white border border-slate-200 rounded-2xl p-4 shadow-sm"></article>
+        </section>
+    </main>
 
     <script>
-        const quizData = [
+        const page = document.getElementById('page');
+        const viToggle = document.getElementById('viToggle');
+        const tabLearn = document.getElementById('tabLearn');
+        const tabPractice = document.getElementById('tabPractice');
+        const learnPanel = document.getElementById('learnPanel');
+        const practicePanel = document.getElementById('practicePanel');
+
+        let viOn = false;
+
+        viToggle.addEventListener('click', function () {
+            viOn = !viOn;
+            page.classList.toggle('vi-on', viOn);
+            viToggle.textContent = viOn ? 'Tiếng Việt ON' : 'Tiếng Việt OFF';
+        });
+
+        function showTab(name) {
+            const learn = name === 'learn';
+            learnPanel.classList.toggle('hidden', !learn);
+            practicePanel.classList.toggle('hidden', learn);
+            tabLearn.classList.toggle('active', learn);
+            tabPractice.classList.toggle('active', !learn);
+            tabLearn.classList.toggle('text-slate-600', !learn);
+            tabPractice.classList.toggle('text-slate-600', learn);
+            if (!learn) renderQuestion();
+        }
+
+        tabLearn.addEventListener('click', function () { showTab('learn'); });
+        tabPractice.addEventListener('click', function () { showTab('practice'); });
+
+        const quiz = [
             {
-                question: "다음 단어 뒤에 올바른 표현을 고르세요: 동사 '입다' (받침 O)",
-                options: ["입는다면", "입다면", "입은다면", "입고다면"],
-                answer: "입는다면"
+                type: 'mcq',
+                grammar: '동사 받침 O',
+                q: '동사 “먹다” 뒤에 알맞은 형태는?',
+                hintKo: '동사 + 받침 O 규칙',
+                hintVi: 'Quy tắc động từ có 받침.',
+                options: ['먹다면', '먹는다면', '먹은다면', '먹라면'],
+                answer: '먹는다면',
+                explainKo: '동사 받침 O는 -는다면을 붙입니다.',
+                explainVi: 'Động từ có 받침 dùng -는다면.'
             },
             {
-                question: "다음 단어 뒤에 올바른 표현을 고르세요: 동사 '만나다' (받침 X)",
-                options: ["만난다면", "만나는다면", "만나다면", "만나고다면"],
-                answer: "만난다면"
+                type: 'mcq',
+                grammar: '동사 받침 X',
+                q: '동사 “가다” 뒤에 알맞은 형태는?',
+                hintKo: '동사 + 받침 X 규칙',
+                hintVi: 'Quy tắc động từ không 받침.',
+                options: ['가다면', '간다면', '가는다면', '가이라면'],
+                answer: '간다면',
+                explainKo: '동사 받침 X는 ㄴ다면 형태를 씁니다.',
+                explainVi: 'Động từ không 받침 dùng dạng ㄴ다면.'
             },
             {
-                question: "다음 단어 뒤에 올바른 표현을 고르세요: 형용사 '좋다' (받침 O)",
-                options: ["좋다면", "좋는다면", "좋은다면", "좋고다면"],
-                answer: "좋다면"
+                type: 'mcq',
+                grammar: '형용사',
+                q: '형용사 “좋다”는 어떻게 연결할까요?',
+                hintKo: '형용사는 -다면',
+                hintVi: 'Tính từ dùng -다면.',
+                options: ['좋는다면', '좋다면', '좋은다면', '좋라면'],
+                answer: '좋다면',
+                explainKo: '형용사는 보통 -다면을 사용합니다.',
+                explainVi: 'Tính từ thường gắn -다면.'
             },
             {
-                question: "다음 단어 뒤에 올바른 표현을 고르세요: 명사 '학생' (받침 O)",
-                options: ["학생이라면", "학생라면", "학생은다면", "학생다면"],
-                answer: "학생이라면"
+                type: 'mcq',
+                grammar: '명사 받침 O',
+                q: '명사 “학생” 뒤에 알맞은 형태는?',
+                hintKo: '받침 O 명사',
+                hintVi: 'Danh từ có 받침.',
+                options: ['학생라면', '학생이라면', '학생다면', '학생은다면'],
+                answer: '학생이라면',
+                explainKo: '받침 있는 명사는 -이라면을 붙입니다.',
+                explainVi: 'Danh từ có 받침 dùng -이라면.'
             },
             {
-                question: "다음 단어 뒤에 올바른 표현을 고르세요: 명사 '의사' (받침 X)",
-                options: ["의사라면", "의사이라면", "의사는다면", "의사다면"],
-                answer: "의사라면"
+                type: 'mcq',
+                grammar: '명사 받침 X',
+                q: '명사 “의사” 뒤에 알맞은 형태는?',
+                hintKo: '받침 X 명사',
+                hintVi: 'Danh từ không 받침.',
+                options: ['의사이라면', '의사라면', '의사다면', '의사는다면'],
+                answer: '의사라면',
+                explainKo: '받침 없는 명사는 -라면을 씁니다.',
+                explainVi: 'Danh từ không 받침 dùng -라면.'
+            },
+            {
+                type: 'short',
+                grammar: '문장 완성',
+                q: '시간이 ____ 같이 공부해요. (많다)',
+                hintKo: '형용사 연결',
+                hintVi: 'Nối với tính từ “많다”.',
+                answers: ['많다면'],
+                explainKo: '많다는 형용사이므로 많다면이 맞습니다.',
+                explainVi: 'Vì 많다 là tính từ nên dùng 많다면.'
+            },
+            {
+                type: 'mcq',
+                grammar: '의미 구별',
+                q: '“내가 면접관이라면…”의 기능은?',
+                hintKo: '실제 사실이 아닌 가정',
+                hintVi: 'Giả định, không phải sự thật hiện tại.',
+                options: ['과거 회상', '현재 습관', '가정/상상', '명령'],
+                answer: '가정/상상',
+                explainKo: '이라면은 가정 상황을 제시할 때 자주 씁니다.',
+                explainVi: '이라면 thường dùng để nêu tình huống giả định.'
+            },
+            {
+                type: 'mcq',
+                grammar: '헷갈림 포인트',
+                q: '더 가정적인 느낌이 강한 표현은?',
+                hintKo: '둘 다 가능하지만 뉘앙스 차이',
+                hintVi: 'Cả hai đều đúng, nhưng sắc thái khác nhau.',
+                options: ['시간이 있으면', '시간이 있다면', '둘 다 동일', '둘 다 불가능'],
+                answer: '시간이 있다면',
+                explainKo: '-다면은 -(으)면보다 가정적/가설적 느낌이 더 강합니다.',
+                explainVi: '-다면 mang sắc thái giả định mạnh hơn -(으)면.'
             }
         ];
 
-        let currentQuestionIndex = 0;
-        let score = 0;
+        const progress = document.getElementById('progress');
+        const qGrammar = document.getElementById('qGrammar');
+        const qText = document.getElementById('qText');
+        const qHintKo = document.getElementById('qHintKo');
+        const qHintVi = document.getElementById('qHintVi');
+        const choices = document.getElementById('choices');
+        const shortWrap = document.getElementById('shortWrap');
+        const shortInput = document.getElementById('shortInput');
+        const checkShortBtn = document.getElementById('checkShortBtn');
+        const feedbackBox = document.getElementById('feedbackBox');
+        const nextBtn = document.getElementById('nextBtn');
+        const resultPanel = document.getElementById('resultPanel');
 
-        const questionEl = document.getElementById('question');
-        const optionsEl = document.getElementById('options');
-        const feedbackEl = document.getElementById('feedback');
-        const nextBtn = document.getElementById('next-btn');
-        const quizContainer = document.getElementById('quiz-container');
-        const quizResultEl = document.getElementById('quiz-result');
-        const questionNumberEl = document.getElementById('question-number');
+        const state = { idx: 0, answered: false, score: 0, logs: [] };
 
-        function showTab(tabName) {
-            document.getElementById('tab-explain').classList.add('hidden');
-            document.getElementById('tab-quiz').classList.add('hidden');
-            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
-
-            document.getElementById('tab-explain-btn').classList.remove('active');
-            document.getElementById('tab-quiz-btn').classList.remove('active');
-            document.getElementById(`tab-${tabName}-btn`).classList.add('active');
+        function esc(text) {
+            return String(text == null ? '' : text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
         }
 
-        function startQuiz() {
-            currentQuestionIndex = 0;
-            score = 0;
-            quizContainer.classList.remove('hidden');
-            quizResultEl.classList.add('hidden');
-            nextBtn.classList.add('hidden');
-            showQuestion();
+        function normalize(text) {
+            return String(text || '').toLowerCase().replace(/[\s.,!?~]/g, '');
         }
 
-        function showQuestion() {
-            feedbackEl.textContent = '';
-            optionsEl.innerHTML = '';
-            nextBtn.classList.add('hidden');
-
-            const currentQuestion = quizData[currentQuestionIndex];
-            questionNumberEl.textContent = `문제 ${currentQuestionIndex + 1}`;
-            questionEl.textContent = `${currentQuestion.question}`;
-            
-            currentQuestion.options.forEach(option => {
-                const button = document.createElement('button');
-                button.textContent = option;
-                button.classList.add('p-4', 'border-2', 'rounded-lg', 'text-lg', 'font-medium', 'transition-all', 'duration-200', 'hover:bg-gray-100', 'hover:border-blue-500');
-                button.onclick = () => checkAnswer(option, button);
-                optionsEl.appendChild(button);
-            });
+        function lockInputs() {
+            Array.from(choices.querySelectorAll('button')).forEach(function (btn) { btn.disabled = true; });
+            shortInput.disabled = true;
+            checkShortBtn.disabled = true;
         }
-        
-        function checkAnswer(selectedOption, button) {
-            const currentQuestion = quizData[currentQuestionIndex];
-            const buttons = optionsEl.querySelectorAll('button');
 
-            buttons.forEach(btn => {
-                btn.disabled = true; // Disable all buttons
-                if (btn.textContent === currentQuestion.answer) {
-                    btn.classList.add('bg-green-100', 'border-green-500', 'text-green-700');
-                } else {
-                     btn.classList.add('bg-gray-50', 'text-gray-400');
-                }
-            });
+        function feedbackHtml(ok, user, correct, q) {
+            return '' +
+                '<p class="text-sm font-bold ' + (ok ? 'text-emerald-700' : 'text-rose-700') + '">' + (ok ? '정답입니다.' : '오답입니다.') + ' <span class="text-xs">(' + (ok ? 'Đúng' : 'Sai') + ')</span></p>' +
+                '<p class="text-xs text-slate-700 mt-2"><b>내 답:</b> ' + esc(user || '(무응답)') + '</p>' +
+                '<p class="text-xs text-slate-700 mt-1"><b>정답:</b> ' + esc(correct) + '</p>' +
+                '<p class="text-xs text-slate-700 mt-2 safe"><b>설명(KO):</b> ' + esc(q.explainKo) + '</p>' +
+                '<p class="text-xs text-blue-700 mt-1 safe"><b>Giải thích (VI):</b> ' + esc(q.explainVi) + '</p>';
+        }
 
-            if (selectedOption === currentQuestion.answer) {
-                score++;
-                feedbackEl.textContent = '정답입니다! 🎉';
-                feedbackEl.classList.add('text-green-600');
-                feedbackEl.classList.remove('text-red-600');
-                button.classList.remove('bg-gray-50', 'text-gray-400');
-                button.classList.add('bg-green-100', 'border-green-500', 'text-green-700');
-
+        function answerQuestion(user) {
+            if (state.answered) return;
+            const q = quiz[state.idx];
+            let ok = false;
+            let correct = q.type === 'mcq' ? q.answer : q.answers[0];
+            if (q.type === 'mcq') {
+                ok = user === q.answer;
             } else {
-                feedbackEl.textContent = `아쉬워요. 정답은 "${currentQuestion.answer}"입니다.`;
-                feedbackEl.classList.add('text-red-600');
-                feedbackEl.classList.remove('text-green-600');
-                button.classList.add('bg-red-100', 'border-red-500', 'text-red-700');
+                const n = normalize(user);
+                ok = q.answers.some(function (a) { return normalize(a) === n; });
             }
 
+            state.answered = true;
+            if (ok) state.score += 1;
+            state.logs.push({ ok: ok, user: user, correct: correct, q: q.q, explainKo: q.explainKo, explainVi: q.explainVi });
+
+            feedbackBox.classList.remove('hidden');
+            feedbackBox.className = 'mt-3 rounded-xl border p-3 ' + (ok ? 'bg-emerald-50 border-emerald-200' : 'bg-rose-50 border-rose-200');
+            feedbackBox.innerHTML = feedbackHtml(ok, user, correct, q);
             nextBtn.classList.remove('hidden');
+            lockInputs();
         }
 
-        function nextQuestion() {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < quizData.length) {
-                showQuestion();
-            } else {
-                showResult();
+        function renderQuestion() {
+            if (state.idx >= quiz.length) {
+                renderResult();
+                return;
             }
+
+            const q = quiz[state.idx];
+            state.answered = false;
+            progress.textContent = (state.idx + 1) + ' / ' + quiz.length;
+            qGrammar.textContent = q.grammar;
+            qText.textContent = q.q;
+            qHintKo.textContent = '상황: ' + q.hintKo;
+            qHintVi.textContent = 'Tình huống: ' + q.hintVi;
+
+            choices.innerHTML = '';
+            feedbackBox.classList.add('hidden');
+            feedbackBox.innerHTML = '';
+            nextBtn.classList.add('hidden');
+            shortWrap.classList.add('hidden');
+            shortInput.value = '';
+            shortInput.disabled = false;
+            checkShortBtn.disabled = false;
+
+            if (q.type === 'mcq') {
+                q.options.forEach(function (opt) {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'choice-btn w-full border border-slate-300 rounded-xl px-4 py-3 text-left text-sm font-semibold text-slate-800';
+                    btn.textContent = opt;
+                    btn.addEventListener('click', function () { answerQuestion(opt); });
+                    choices.appendChild(btn);
+                });
+            } else {
+                shortWrap.classList.remove('hidden');
+            }
+
+            resultPanel.classList.add('hidden');
         }
 
-        function showResult() {
-            quizContainer.classList.add('hidden');
-            quizResultEl.classList.remove('hidden');
-            document.getElementById('score').textContent = `${(score / quizData.length) * 100}`;
-            document.getElementById('total-questions').textContent = quizData.length;
-        }
-        
-        function restartQuiz() {
-            startQuiz();
+        function renderResult() {
+            const percent = Math.round((state.score / quiz.length) * 100);
+            const wrong = state.logs.filter(function (x) { return !x.ok; });
+            let detail = '';
+
+            if (wrong.length === 0) {
+                detail = '<p class="text-sm text-emerald-700 mt-2">모든 문항을 정확히 풀었습니다.</p><p class="vi-text text-xs text-blue-700 mt-1">Bạn đã trả lời đúng toàn bộ câu hỏi.</p>';
+            } else {
+                detail = wrong.map(function (w, idx) {
+                    return '' +
+                        '<article class="rounded-xl border border-rose-200 bg-rose-50 p-3">' +
+                        '<p class="text-xs font-bold text-rose-700">오답 ' + (idx + 1) + '</p>' +
+                        '<p class="text-sm text-slate-800 mt-1 safe">' + esc(w.q) + '</p>' +
+                        '<p class="text-xs text-slate-700 mt-2"><b>내 답:</b> ' + esc(w.user || '(무응답)') + '</p>' +
+                        '<p class="text-xs text-slate-700 mt-1"><b>정답:</b> ' + esc(w.correct) + '</p>' +
+                        '<p class="text-xs text-rose-700 mt-2 safe"><b>설명(KO):</b> ' + esc(w.explainKo) + '</p>' +
+                        '<p class="text-xs text-blue-700 mt-1 safe"><b>Giải thích (VI):</b> ' + esc(w.explainVi) + '</p>' +
+                        '</article>';
+                }).join('');
+            }
+
+            resultPanel.innerHTML = '' +
+                '<div class="rounded-xl border border-blue-200 bg-blue-50 p-4 text-center">' +
+                '<p class="text-xs text-blue-700 font-bold">연습 완료</p>' +
+                '<h3 class="text-2xl font-black text-slate-800 mt-1">' + state.score + ' / ' + quiz.length + '</h3>' +
+                '<p class="text-sm text-slate-600 mt-1">정답률 ' + percent + '%</p>' +
+                '<button id="restartBtn" class="mt-3 px-4 py-2 rounded-lg bg-slate-800 text-white text-sm font-bold" type="button">다시 풀기</button>' +
+                '</div>' +
+                '<div class="mt-3 space-y-2">' + detail + '</div>';
+
+            resultPanel.classList.remove('hidden');
+            document.getElementById('restartBtn').addEventListener('click', function () {
+                state.idx = 0;
+                state.score = 0;
+                state.logs = [];
+                renderQuestion();
+            });
         }
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-             startQuiz();
+        checkShortBtn.addEventListener('click', function () {
+            const val = shortInput.value.trim();
+            if (!val) return;
+            answerQuestion(val);
         });
 
+        shortInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter' && !state.answered) {
+                event.preventDefault();
+                checkShortBtn.click();
+            }
+        });
+
+        nextBtn.addEventListener('click', function () {
+            state.idx += 1;
+            renderQuestion();
+        });
+
+        showTab('learn');
     </script>
     <script src="../shared/learning-enhancements.js"></script>
 </body>
 </html>
-
-

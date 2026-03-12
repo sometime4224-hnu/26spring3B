@@ -2,152 +2,404 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>11과 문법 통합 퀴즈</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>11과 문법 통합 퀴즈 업그레이드</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet" />
     <style>
-        body { margin: 0; font-family: 'Noto Sans KR', sans-serif; background: #0f172a; color: #e2e8f0; }
+        body { margin: 0; font-family: 'Noto Sans KR', sans-serif; background: linear-gradient(180deg, #e2e8f0 0%, #f8fafc 100%); }
         .c11-global-nav {
             position: sticky; top: 0; z-index: 1000; height: 58px; width: 100%;
             display: flex; align-items: center; gap: 12px; padding: 0 16px; box-sizing: border-box;
-            background: rgba(15, 23, 42, 0.92); border-bottom: 1px solid rgba(148, 163, 184, 0.3); backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.92); border-bottom: 1px solid #dbeafe; backdrop-filter: blur(8px);
         }
-        .c11-global-nav a { color: #a5b4fc; font-weight: 700; text-decoration: none; font-size: 14px; }
-        .c11-divider { color: #64748b; font-weight: 700; }
-        .panel { background: rgba(15, 23, 42, 0.72); border: 1px solid rgba(148, 163, 184, 0.3); }
+        .c11-global-nav a { color: #4f46e5; text-decoration: none; font-weight: 700; font-size: 14px; }
+        .c11-divider { color: #cbd5e1; font-weight: 700; }
+        .safe { word-break: keep-all; overflow-wrap: break-word; }
+        .vi-text { display: none; }
+        .vi-on .vi-text { display: block; }
+        .op { min-height: 52px; }
+        .log-btn { min-height: 56px; }
     </style>
 </head>
 <body>
-    <nav class="c11-global-nav">
+    <nav class="c11-global-nav" aria-label="상단 이동">
         <a href="../index.html">메인</a>
         <span class="c11-divider">|</span>
         <a href="index.html">11과 목록</a>
     </nav>
 
-    <main class="max-w-4xl mx-auto px-4 py-6">
-        <section class="panel rounded-2xl p-5 sm:p-7">
-            <div class="flex items-end justify-between flex-wrap gap-3">
-                <div>
-                    <h1 class="text-3xl font-black">11과 문법 통합 퀴즈</h1>
-                    <p class="text-slate-300 mt-1">문법 1, 2, 3을 한 번에 점검합니다.</p>
-                </div>
-                <div>
-                    <label for="mode" class="text-sm text-slate-300">범위 선택</label>
-                    <select id="mode" class="mt-1 bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-sm">
-                        <option value="all">전체</option>
-                        <option value="g1">문법1</option>
-                        <option value="g2">문법2</option>
-                        <option value="g3">문법3</option>
-                    </select>
-                </div>
-            </div>
-
-            <p id="progress" class="mt-5 text-sm text-slate-300"></p>
-            <p id="question" class="mt-2 text-xl font-bold"></p>
-            <div id="choices" class="mt-4 grid gap-2"></div>
-            <p id="feedback" class="mt-3 min-h-[28px] font-bold"></p>
-
-            <div class="mt-4 flex gap-2">
-                <button id="next" class="hidden px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold hover:bg-indigo-600">다음 문제</button>
-                <button id="restart" class="px-4 py-2 rounded-lg bg-slate-200 text-slate-900 font-bold hover:bg-slate-300">다시 시작</button>
-            </div>
-            <p id="result" class="hidden mt-4 text-xl font-black text-indigo-300"></p>
-        </section>
-    </main>
+    <main id="app" class="max-w-md mx-auto px-4 py-4 pb-10"></main>
 
     <script>
-        const bank = [
-            { set: 'g1', q: '"아이에게 밥을 ____"의 자연스러운 표현은?', c: ['먹였다', '먹었다', '먹을래요', '먹고 있다'], a: 0, e: '먹다의 사동은 먹이다입니다.' },
-            { set: 'g1', q: '"학생을 자리에 ____"에서 알맞은 말은?', c: ['앉혔다', '앉았다', '앉는다', '앉을래'], a: 0, e: '앉다의 사동은 앉히다입니다.' },
-            { set: 'g2', q: '"내일 비가 ____ 우산을 가져가세요."', c: ['온다면', '오다면', '오는다면', '왔다면'], a: 0, e: '오다 + ㄴ다면 → 온다면' },
-            { set: 'g2', q: '"내가 면접관____ 이런 대답은 어려워요."', c: ['이라면', '다면', '는다면', '라'], a: 0, e: '명사는 (이)라면을 사용합니다.' },
-            { set: 'g3', q: '"____ 질문해도 됩니다."', c: ['무슨 질문이든지', '무엇 질문이든지', '무슨이든지 질문', '무엇이 질문'], a: 0, e: '명사가 오므로 무슨 N(이)든지가 맞습니다.' },
-            { set: 'g3', q: '"메뉴는 ____ 괜찮아요."', c: ['무엇이든지', '무슨이든지', '무슨 메뉴든지든지', '무엇 메뉴든지'], a: 0, e: '명사가 없을 때는 무엇이든지를 씁니다.' }
+        const HKEY = 'c11.grammar.practice.history.v2';
+
+        const BANK = [
+            { id: 'g1-1', set: 'g1', type: 'mcq', area: '문법1 사동사', q: '엄마가 아이에게 밥을 ____.', hintKo: '엄마가 아이를 먹게 함', hintVi: 'Mẹ làm cho con ăn.', options: ['먹었어요', '먹였어요', '먹어요', '먹네요'], answer: '먹였어요', explainKo: '먹다의 사동은 먹이다 → 먹였어요.', explainVi: 'Dạng sai khiến của 먹다 là 먹이다 → 먹였어요.' },
+            { id: 'g1-2', set: 'g1', type: 'mcq', area: '문법1 사동사', q: '선생님이 학생을 자리에 ____.', hintKo: '학생이 앉게 했다', hintVi: 'Giáo viên khiến học sinh ngồi.', options: ['앉았어요', '앉혔어요', '앉혀졌어요', '앉겠어요'], answer: '앉혔어요', explainKo: '사동은 다른 사람에게 동작을 하게 하는 표현입니다.', explainVi: 'Sai khiến là làm cho người khác hành động.' },
+            { id: 'g1-3', set: 'g1', type: 'short', area: '문법1 사동사', q: '웃다의 사동형을 쓰세요.', hintKo: '사람들을 ___.', hintVi: '“Làm mọi người ___”.', answers: ['웃기다'], explainKo: '웃다의 사동형은 웃기다입니다.', explainVi: 'Dạng sai khiến của 웃다 là 웃기다.' },
+            { id: 'g1-4', set: 'g1', type: 'mcq', area: '문법1 사동사', q: '친구가 저를 집까지 ____.', hintKo: '태워 주는 상황', hintVi: 'Cho đi nhờ xe.', options: ['탔어요', '태웠어요', '탔다요', '타졌어요'], answer: '태웠어요', explainKo: '타다의 사동형 태우다를 활용해 태웠어요가 맞습니다.', explainVi: 'Dùng 태우다 (sai khiến của 타다) nên là 태웠어요.' },
+            { id: 'g1-5', set: 'g1', type: 'mcq', area: '문법1 사동사', q: '“아이가 옷을 입어요”와 다른 의미의 문장은?', hintKo: '사동 의미 선택', hintVi: 'Chọn câu mang nghĩa sai khiến.', options: ['아이가 옷을 입어요.', '엄마가 아이에게 옷을 입혀요.', '아이가 옷을 입는 중이에요.', '아이가 옷을 자주 입어요.'], answer: '엄마가 아이에게 옷을 입혀요.', explainKo: '입혀요는 다른 사람에게 입게 하는 사동 표현입니다.', explainVi: '입혀요 diễn tả làm cho người khác mặc.' },
+
+            { id: 'g2-1', set: 'g2', type: 'mcq', area: '문법2 -(ㄴ/는)다면', q: '가다 → 가정 표현으로 맞는 것은?', hintKo: '동사 받침 X', hintVi: 'Động từ không 받침.', options: ['가다면', '간다면', '가는다면', '가이라면'], answer: '간다면', explainKo: '동사 받침 X는 ㄴ다면을 씁니다.', explainVi: 'Động từ không 받침 dùng ㄴ다면.' },
+            { id: 'g2-2', set: 'g2', type: 'mcq', area: '문법2 -(ㄴ/는)다면', q: '좋다 → 가정 표현으로 맞는 것은?', hintKo: '형용사 형태', hintVi: 'Dạng tính từ.', options: ['좋다면', '좋는다면', '좋은다면', '좋이라면'], answer: '좋다면', explainKo: '형용사는 보통 -다면을 사용합니다.', explainVi: 'Tính từ thường dùng -다면.' },
+            { id: 'g2-3', set: 'g2', type: 'mcq', area: '문법2 -(ㄴ/는)다면', q: '학생(받침 O) → 가정 연결은?', hintKo: '명사 받침 O', hintVi: 'Danh từ có 받침.', options: ['학생라면', '학생이라면', '학생다면', '학생은다면'], answer: '학생이라면', explainKo: '받침 있는 명사는 -이라면을 붙입니다.', explainVi: 'Danh từ có 받침 dùng -이라면.' },
+            { id: 'g2-4', set: 'g2', type: 'short', area: '문법2 -(ㄴ/는)다면', q: '시간이 ____ 같이 공부해요. (많다)', hintKo: '형용사 연결', hintVi: 'Nối với tính từ.', answers: ['많다면'], explainKo: '많다는 형용사이므로 많다면이 맞습니다.', explainVi: 'Vì 많다 là tính từ nên là 많다면.' },
+            { id: 'g2-5', set: 'g2', type: 'mcq', area: '문법2 -(ㄴ/는)다면', q: '가정성이 더 강한 표현은?', hintKo: '-(으)면 vs -다면', hintVi: 'So sánh sắc thái.', options: ['시간이 있으면', '시간이 있다면', '둘 다 동일', '둘 다 틀림'], answer: '시간이 있다면', explainKo: '-다면은 -(으)면보다 가정적 느낌이 강합니다.', explainVi: '-다면 mang sắc thái giả định mạnh hơn -(으)면.' },
+
+            { id: 'g3-1', set: 'g3', type: 'mcq', area: '문법3 -든지/-도', q: '배고파요. ____ 먹을래요.', hintKo: '명사 없이 “어떤 것이든”', hintVi: '“Bất cứ cái gì” không có danh từ sau.', options: ['무엇이든지', '무슨이든지', '아무도', '누구든지'], answer: '무엇이든지', explainKo: '명사가 없을 때는 무엇이든지를 씁니다.', explainVi: 'Không có danh từ phía sau thì dùng 무엇이든지.' },
+            { id: 'g3-2', set: 'g3', type: 'mcq', area: '문법3 -든지/-도', q: '저는 ____ 좋아해요. (영화)', hintKo: '명사 포함 형태', hintVi: 'Có danh từ “영화”.', options: ['무슨 영화든지', '무엇이든지 영화', '무슨이든지 영화', '아무 영화도'], answer: '무슨 영화든지', explainKo: '명사가 있으면 무슨 N(이)든지를 씁니다.', explainVi: 'Có danh từ thì dùng 무슨 N(이)든지.' },
+            { id: 'g3-3', set: 'g3', type: 'mcq', area: '문법3 -든지/-도', q: '문이 잠겨서 ____ 들어갈 수 없어요. (사람)', hintKo: '부정문', hintVi: 'Câu phủ định.', options: ['누구든지', '아무도', '무엇이든지', '무슨 사람든지'], answer: '아무도', explainKo: '전면 부정은 아무도/아무것도 형태가 자연스럽습니다.', explainVi: 'Phủ định hoàn toàn thường dùng 아무도/아무것도.' },
+            { id: 'g3-4', set: 'g3', type: 'short', area: '문법3 -든지/-도', q: '받침 없는 명사 “의사” + 든지 형태를 쓰세요.', hintKo: '받침 X', hintVi: 'Danh từ không 받침.', answers: ['의사든지'], explainKo: '받침이 없으므로 의사든지가 맞습니다.', explainVi: 'Không có 받침 nên dùng 의사든지.' },
+            { id: 'g3-5', set: 'g3', type: 'mcq', area: '문법3 -든지/-도', q: '받침 있는 명사 “학생” + 든지 형태는?', hintKo: '받침 O 규칙', hintVi: 'Quy tắc với 받침.', options: ['학생든지', '학생이든지', '학생도', '학생라면'], answer: '학생이든지', explainKo: '받침 있는 명사는 이든지를 붙입니다.', explainVi: 'Danh từ có 받침 dùng 이든지.' }
         ];
 
-        const state = { set: 'all', list: [], idx: 0, score: 0 };
-        const modeEl = document.getElementById('mode');
-        const progressEl = document.getElementById('progress');
-        const questionEl = document.getElementById('question');
-        const choicesEl = document.getElementById('choices');
-        const feedbackEl = document.getElementById('feedback');
-        const nextEl = document.getElementById('next');
-        const restartEl = document.getElementById('restart');
-        const resultEl = document.getElementById('result');
+        const S = { view: 'start', viOn: false, mode: 'all', name: '', list: [], idx: 0, submitted: false, fb: null, logs: [], score: 0, selectedId: '' };
 
-        function shuffle(items) {
-            const copy = [...items];
-            for (let i = copy.length - 1; i > 0; i--) {
+        function esc(text) {
+            return String(text == null ? '' : text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function norm(text) {
+            return String(text || '').toLowerCase().replace(/[\s.,!?~]/g, '');
+        }
+
+        function shuffle(arr) {
+            const c = arr.slice();
+            for (let i = c.length - 1; i > 0; i -= 1) {
                 const j = Math.floor(Math.random() * (i + 1));
-                [copy[i], copy[j]] = [copy[j], copy[i]];
+                const t = c[i]; c[i] = c[j]; c[j] = t;
             }
-            return copy;
+            return c;
         }
 
-        function start() {
-            state.set = modeEl.value;
-            const target = state.set === 'all' ? bank : bank.filter((x) => x.set === state.set);
-            state.list = shuffle(target);
-            state.idx = 0;
-            state.score = 0;
-            resultEl.classList.add('hidden');
-            draw();
+        function loadHistory() {
+            try {
+                const raw = localStorage.getItem(HKEY);
+                return raw ? JSON.parse(raw) : [];
+            } catch (e) {
+                return [];
+            }
         }
 
-        function draw() {
-            const current = state.list[state.idx];
-            progressEl.textContent = `${state.idx + 1} / ${state.list.length}`;
-            questionEl.textContent = current.q;
-            choicesEl.innerHTML = '';
-            feedbackEl.textContent = '';
-            nextEl.classList.add('hidden');
-
-            current.c.forEach((choice, i) => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'text-left px-4 py-3 rounded-lg border border-slate-600 hover:bg-slate-800';
-                btn.textContent = `${i + 1}. ${choice}`;
-                btn.addEventListener('click', () => select(i, btn));
-                choicesEl.appendChild(btn);
-            });
+        function saveHistory(item) {
+            const h = loadHistory();
+            h.unshift(item);
+            if (h.length > 60) h.length = 60;
+            localStorage.setItem(HKEY, JSON.stringify(h));
         }
 
-        function select(i, btn) {
-            const current = state.list[state.idx];
-            Array.from(choicesEl.children).forEach((node, idx) => {
-                node.disabled = true;
-                if (idx === current.a) node.classList.add('bg-emerald-900', 'border-emerald-500');
-            });
+        function current() {
+            return S.list[S.idx];
+        }
 
-            if (i === current.a) {
-                state.score += 1;
-                feedbackEl.className = 'mt-3 min-h-[28px] font-bold text-emerald-300';
-                feedbackEl.textContent = `정답! ${current.e}`;
+        function startQuiz() {
+            const nameInput = document.getElementById('nameInput');
+            const modeInput = document.getElementById('modeInput');
+            const name = nameInput ? nameInput.value.trim() : '';
+            const mode = modeInput ? modeInput.value : 'all';
+            if (!name) {
+                const warn = document.getElementById('nameWarn');
+                if (warn) warn.classList.remove('hidden');
+                return;
+            }
+
+            S.mode = mode;
+            S.name = name;
+            S.idx = 0;
+            S.submitted = false;
+            S.fb = null;
+            S.logs = [];
+            S.score = 0;
+            const picked = mode === 'all' ? BANK : BANK.filter(function (x) { return x.set === mode; });
+            S.list = shuffle(picked);
+            S.view = 'quiz';
+            render();
+        }
+
+        function submitMcq(answer) {
+            if (S.submitted) return;
+            submitAnswer(answer);
+        }
+
+        function submitShort() {
+            if (S.submitted) return;
+            const ip = document.getElementById('shortInput');
+            if (!ip) return;
+            const val = ip.value.trim();
+            if (!val) return;
+            submitAnswer(val);
+        }
+
+        function submitAnswer(user) {
+            const q = current();
+            if (!q) return;
+            let ok = false;
+            let correct = q.type === 'mcq' ? q.answer : q.answers[0];
+
+            if (q.type === 'mcq') {
+                ok = user === q.answer;
             } else {
-                btn.classList.add('bg-rose-900', 'border-rose-500');
-                feedbackEl.className = 'mt-3 min-h-[28px] font-bold text-rose-300';
-                feedbackEl.textContent = `오답. ${current.e}`;
+                const u = norm(user);
+                ok = q.answers.some(function (a) { return norm(a) === u; });
             }
 
-            if (state.idx < state.list.length - 1) {
-                nextEl.classList.remove('hidden');
+            S.submitted = true;
+            if (ok) S.score += 1;
+
+            S.fb = {
+                ok: ok,
+                user: user,
+                correct: correct,
+                explainKo: q.explainKo,
+                explainVi: q.explainVi
+            };
+
+            S.logs.push({
+                area: q.area,
+                q: q.q,
+                ok: ok,
+                user: user,
+                correct: correct,
+                explainKo: q.explainKo,
+                explainVi: q.explainVi
+            });
+
+            render();
+        }
+
+        function next() {
+            if (!S.submitted) return;
+            if (S.idx < S.list.length - 1) {
+                S.idx += 1;
+                S.submitted = false;
+                S.fb = null;
+                render();
             } else {
-                resultEl.classList.remove('hidden');
-                resultEl.textContent = `최종 점수: ${state.score} / ${state.list.length}`;
+                finish();
             }
         }
 
-        nextEl.addEventListener('click', () => {
-            state.idx += 1;
-            draw();
-        });
-        restartEl.addEventListener('click', start);
-        modeEl.addEventListener('change', start);
+        function finish() {
+            const total = S.list.length;
+            const percent = Math.round((S.score / total) * 100);
+            const rec = {
+                id: 'c11-' + Date.now(),
+                time: new Date().toLocaleString('ko-KR'),
+                name: S.name,
+                mode: S.mode,
+                score: S.score,
+                total: total,
+                percent: percent,
+                logs: S.logs
+            };
+            saveHistory(rec);
+            S.selectedId = rec.id;
+            S.view = 'result';
+            render();
+        }
 
-        start();
+        function openLog(id) {
+            S.selectedId = id;
+            S.view = 'result';
+            render();
+        }
+
+        function clearHistory() {
+            localStorage.removeItem(HKEY);
+            render();
+        }
+
+        function toggleVi() {
+            S.viOn = !S.viOn;
+            render();
+        }
+
+        function toStart() {
+            S.view = 'start';
+            render();
+        }
+
+        function getSelectedRecord() {
+            const h = loadHistory();
+            for (let i = 0; i < h.length; i += 1) {
+                if (h[i].id === S.selectedId) return h[i];
+            }
+            return null;
+        }
+
+        function renderStart() {
+            const h = loadHistory();
+            const rows = h.length ? h.map(function (x, i) {
+                return '' +
+                    '<button class="log-btn w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-left" onclick="openLog(\'' + x.id + '\')">' +
+                    '<p class="text-[11px] text-slate-500">' + (i + 1) + '회 · ' + esc(x.time) + '</p>' +
+                    '<p class="text-sm font-bold text-slate-800 safe">' + esc(x.name) + ' · ' + x.score + '/' + x.total + ' (' + x.percent + '%)</p>' +
+                    '</button>';
+            }).join('') : '<p class="text-sm text-slate-500">기록이 없습니다.</p>';
+
+            return '' +
+                '<section class="space-y-3 ' + (S.viOn ? 'vi-on' : '') + '">' +
+                '<article class="bg-white border border-blue-100 rounded-2xl p-4 shadow-sm">' +
+                '<div class="flex items-start justify-between gap-2">' +
+                '<div>' +
+                '<p class="text-xs font-bold text-blue-600">통합 업그레이드</p>' +
+                '<h1 class="text-2xl font-black text-slate-800 mt-1">11과 문법 통합 퀴즈</h1>' +
+                '<p class="text-sm text-slate-600 mt-1">문법1(사동사) + 문법2(-다면) + 문법3(-든지/-도)</p>' +
+                '<p class="vi-text text-xs text-blue-700 mt-1">Ôn tập tổng hợp 3 điểm ngữ pháp của bài 11.</p>' +
+                '</div>' +
+                '<button onclick="toggleVi()" class="px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold text-slate-700">' + (S.viOn ? 'Tiếng Việt ON' : 'Tiếng Việt OFF') + '</button>' +
+                '</div>' +
+
+                '<div class="mt-4">' +
+                '<label class="text-xs font-bold text-slate-600">이름</label>' +
+                '<input id="nameInput" type="text" maxlength="20" class="mt-1 w-full border border-slate-300 rounded-xl px-4 py-3 text-sm" placeholder="이름 입력" />' +
+                '<p id="nameWarn" class="hidden text-xs text-rose-600 mt-1">이름을 입력하세요.</p>' +
+                '</div>' +
+
+                '<div class="mt-3">' +
+                '<label class="text-xs font-bold text-slate-600">범위</label>' +
+                '<select id="modeInput" class="mt-1 w-full border border-slate-300 rounded-xl px-4 py-3 text-sm">' +
+                '<option value="all">전체 (15문항)</option>' +
+                '<option value="g1">문법1만 (5문항)</option>' +
+                '<option value="g2">문법2만 (5문항)</option>' +
+                '<option value="g3">문법3만 (5문항)</option>' +
+                '</select>' +
+                '</div>' +
+
+                '<button onclick="startQuiz()" class="mt-4 w-full bg-blue-600 text-white py-3 rounded-xl text-sm font-bold">퀴즈 시작</button>' +
+                '</article>' +
+
+                '<article class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">' +
+                '<div class="flex items-center justify-between">' +
+                '<h2 class="text-sm font-bold text-slate-800">과거 기록</h2>' +
+                '<button onclick="clearHistory()" class="text-xs px-2 py-1 rounded border border-slate-300 text-slate-600">전체 삭제</button>' +
+                '</div>' +
+                '<div class="mt-2 space-y-2">' + rows + '</div>' +
+                '</article>' +
+                '</section>';
+        }
+
+        function renderQuiz() {
+            const q = current();
+            const fb = S.fb;
+            const idx = S.idx + 1;
+            const total = S.list.length;
+
+            let body = '';
+            if (q.type === 'mcq') {
+                body = q.options.map(function (opt) {
+                    let c = 'border-slate-300 bg-white text-slate-800';
+                    if (S.submitted && fb) {
+                        if (opt === fb.correct) c = 'border-emerald-400 bg-emerald-50 text-emerald-800';
+                        else if (opt === fb.user && !fb.ok) c = 'border-rose-400 bg-rose-50 text-rose-800';
+                        else c = 'border-slate-200 bg-slate-50 text-slate-400';
+                    }
+                    return '<button class="op w-full border rounded-xl px-4 py-3 text-left text-sm font-semibold safe ' + c + '" ' + (S.submitted ? 'disabled' : '') + ' onclick="submitMcq(\'' + esc(opt) + '\')">' + esc(opt) + '</button>';
+                }).join('');
+            } else {
+                body = '' +
+                    '<input id="shortInput" type="text" class="w-full border border-slate-300 rounded-xl px-4 py-3 text-sm" ' + (S.submitted ? 'disabled' : '') + ' placeholder="정답 입력" />' +
+                    '<button class="mt-2 w-full bg-blue-600 text-white py-3 rounded-xl text-sm font-bold" ' + (S.submitted ? 'disabled' : '') + ' onclick="submitShort()">정답 확인</button>';
+            }
+
+            const feedback = S.submitted && fb ? '' +
+                '<div class="mt-3 rounded-xl border p-3 ' + (fb.ok ? 'bg-emerald-50 border-emerald-200' : 'bg-rose-50 border-rose-200') + '">' +
+                '<p class="text-sm font-bold ' + (fb.ok ? 'text-emerald-700' : 'text-rose-700') + '">' + (fb.ok ? '정답입니다.' : '오답입니다.') + ' <span class="text-xs">(' + (fb.ok ? 'Đúng' : 'Sai') + ')</span></p>' +
+                '<p class="text-xs text-slate-700 mt-2"><b>내 답:</b> ' + esc(fb.user || '(무응답)') + '</p>' +
+                '<p class="text-xs text-slate-700 mt-1"><b>정답:</b> ' + esc(fb.correct) + '</p>' +
+                '<p class="text-xs text-slate-700 mt-2 safe"><b>설명(KO):</b> ' + esc(fb.explainKo) + '</p>' +
+                '<p class="vi-text text-xs text-blue-700 mt-1 safe"><b>Giải thích (VI):</b> ' + esc(fb.explainVi) + '</p>' +
+                '</div>' : '';
+
+            return '' +
+                '<section class="space-y-3 ' + (S.viOn ? 'vi-on' : '') + '">' +
+                '<article class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">' +
+                '<div class="flex items-center justify-between text-xs">' +
+                '<span class="font-bold text-blue-600">' + idx + ' / ' + total + '</span>' +
+                '<span class="px-2 py-1 rounded-full bg-blue-100 text-blue-700 font-bold">' + esc(q.area) + '</span>' +
+                '</div>' +
+                '<p class="text-[11px] text-slate-500 mt-1">응시자: <b>' + esc(S.name) + '</b></p>' +
+                '<p class="mt-2 text-base font-bold text-slate-800 safe">' + esc(q.q) + '</p>' +
+                '<p class="mt-2 text-xs text-slate-600 safe"><b>상황:</b> ' + esc(q.hintKo) + '</p>' +
+                '<p class="vi-text text-xs text-blue-700 mt-1 safe"><b>Tình huống:</b> ' + esc(q.hintVi) + '</p>' +
+                '<div class="mt-3 space-y-2">' + body + '</div>' +
+                feedback +
+                (S.submitted ? '<button class="mt-3 w-full bg-slate-800 text-white py-3 rounded-xl text-sm font-bold" onclick="next()">다음 문제</button>' : '') +
+                '</article>' +
+                '<button onclick="toggleVi()" class="w-full border border-slate-300 bg-white py-2 rounded-xl text-xs font-bold text-slate-700">' + (S.viOn ? 'Tiếng Việt ON' : 'Tiếng Việt OFF') + '</button>' +
+                '</section>';
+        }
+
+        function renderResult() {
+            const rec = getSelectedRecord();
+            if (!rec) {
+                return '<section class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm"><p class="text-sm text-slate-700">기록을 찾을 수 없습니다.</p><button class="mt-3 w-full bg-slate-800 text-white py-2 rounded-xl text-sm font-bold" onclick="toStart()">시작 화면</button></section>';
+            }
+
+            const details = rec.logs.map(function (x, i) {
+                if (x.ok) {
+                    return '<article class="rounded-xl border border-emerald-200 bg-emerald-50 p-3">' +
+                        '<p class="text-xs font-bold text-emerald-700">' + (i + 1) + '. 정답 · ' + esc(x.area) + '</p>' +
+                        '<p class="text-sm text-slate-800 mt-1 safe">' + esc(x.q) + '</p>' +
+                        '<p class="text-xs text-slate-700 mt-1">정답: ' + esc(x.correct) + '</p>' +
+                        '</article>';
+                }
+                return '<article class="rounded-xl border border-rose-200 bg-rose-50 p-3">' +
+                    '<p class="text-xs font-bold text-rose-700">' + (i + 1) + '. 오답 · ' + esc(x.area) + '</p>' +
+                    '<p class="text-sm text-slate-800 mt-1 safe">' + esc(x.q) + '</p>' +
+                    '<p class="text-xs text-slate-700 mt-2">내 답: ' + esc(x.user || '(무응답)') + '</p>' +
+                    '<p class="text-xs text-slate-700 mt-1">정답: ' + esc(x.correct) + '</p>' +
+                    '<p class="text-xs text-rose-700 mt-2 safe">설명(KO): ' + esc(x.explainKo) + '</p>' +
+                    '<p class="vi-text text-xs text-blue-700 mt-1 safe">Giải thích (VI): ' + esc(x.explainVi) + '</p>' +
+                    '</article>';
+            }).join('');
+
+            return '' +
+                '<section class="space-y-3 ' + (S.viOn ? 'vi-on' : '') + '">' +
+                '<article class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm text-center">' +
+                '<p class="text-xs text-slate-500">응시자: <b>' + esc(rec.name) + '</b></p>' +
+                '<p class="text-xs text-slate-500 mt-1">응시: ' + esc(rec.time) + '</p>' +
+                '<h1 class="text-3xl font-black text-slate-800 mt-2">' + rec.score + ' / ' + rec.total + '</h1>' +
+                '<p class="text-sm text-slate-600 mt-1">정답률 ' + rec.percent + '%</p>' +
+                '</article>' +
+
+                '<article class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">' +
+                '<h2 class="text-sm font-bold text-slate-800">정오답 상세</h2>' +
+                '<div class="mt-2 space-y-2">' + details + '</div>' +
+                '</article>' +
+
+                '<div class="grid gap-2">' +
+                '<button onclick="toStart()" class="w-full bg-slate-800 text-white py-3 rounded-xl text-sm font-bold">시작 화면으로</button>' +
+                '<button onclick="toggleVi()" class="w-full border border-slate-300 bg-white py-2 rounded-xl text-xs font-bold text-slate-700">' + (S.viOn ? 'Tiếng Việt ON' : 'Tiếng Việt OFF') + '</button>' +
+                '</div>' +
+                '</section>';
+        }
+
+        function render() {
+            const app = document.getElementById('app');
+            if (S.view === 'start') app.innerHTML = renderStart();
+            else if (S.view === 'quiz') app.innerHTML = renderQuiz();
+            else app.innerHTML = renderResult();
+        }
+
+        window.startQuiz = startQuiz;
+        window.submitMcq = submitMcq;
+        window.submitShort = submitShort;
+        window.next = next;
+        window.openLog = openLog;
+        window.clearHistory = clearHistory;
+        window.toggleVi = toggleVi;
+        window.toStart = toStart;
+
+        render();
     </script>
     <script src="../shared/learning-enhancements.js"></script>
 </body>
