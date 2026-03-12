@@ -1,0 +1,711 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>10과 복습 퀴즈</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; margin: 0; -webkit-tap-highlight-color: transparent; }
+        .safe { word-break: keep-all; overflow-wrap: break-word; }
+        .nav {
+            position: sticky; top: 0; z-index: 20; height: 56px;
+            display: flex; align-items: center; gap: 12px; padding: 0 14px;
+            background: rgba(255,255,255,.94); backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .nav a { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #2563eb; font-size: 13px; font-weight: 800; }
+        .nav .d { color: #94a3b8; }
+        .op { min-height: 52px; }
+        .log { min-height: 56px; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen max-w-md mx-auto shadow-xl">
+    <nav class="nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="d">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
+    </nav>
+    <main id="app" class="p-4 pb-10"></main>
+
+    <script>
+        const KEY = "c10.review.quiz.history.v2";
+        const NKEY = "c10.review.quiz.name.v1";
+        const MAX = 80;
+
+        const Q = [
+            {
+                id: "v1", area: "어휘", type: "mcq",
+                prompt: "'고백하다' 의미는?",
+                promptVi: "Nghĩa của '고백하다' là gì?",
+                contextKo: "사랑하는 마음을 말로 표현하는 상황",
+                contextVi: "Tình huống bày tỏ tình cảm",
+                options: ["tỏ tình", "chào hỏi", "chia tay"],
+                answer: "tỏ tình",
+                explainKo: "'고백하다'는 사랑하는 마음을 말로 표현하는 행동이에요.",
+                explainVi: "'고백하다' là hành động bày tỏ tình cảm bằng lời nói."
+            },
+            {
+                id: "v2", area: "어휘", type: "mcq",
+                prompt: "'첫눈에 반하다'에 가까운 뜻은?",
+                promptVi: "Nghĩa gần nhất của '첫눈에 반하다' là gì?",
+                contextKo: "처음 보고 바로 호감을 느끼는 상황",
+                contextVi: "Vừa gặp đã có cảm tình",
+                options: ["yêu từ cái nhìn đầu tiên", "hợp điều kiện", "đỏ mặt"],
+                answer: "yêu từ cái nhìn đầu tiên",
+                explainKo: "처음 본 순간 바로 반하는 뜻이에요.",
+                explainVi: "Có nghĩa là thích ngay từ lần gặp đầu tiên."
+            },
+            {
+                id: "v3", area: "어휘", type: "short",
+                prompt: "'손을 잡다' 베트남어 뜻을 쓰세요.",
+                promptVi: "Viết nghĩa tiếng Việt của '손을 잡다'.",
+                contextKo: "핵심어가 맞으면 정답 처리",
+                contextVi: "Đúng từ khóa là được chấm đúng",
+                answers: ["nắm tay", "nam tay"],
+                placeholder: "정답 입력",
+                explainKo: "'손을 잡다'는 베트남어로 'nắm tay'예요.",
+                explainVi: "'손을 잡다' trong tiếng Việt là 'nắm tay'."
+            },
+            {
+                id: "v4", area: "어휘", type: "mcq",
+                prompt: "그림에 맞는 표현을 고르세요.",
+                promptVi: "Chọn biểu hiện đúng với hình ảnh.",
+                image: "../imagesource/split_text_hidden_mobile_vocab/v12_hold_hands.webp",
+                contextKo: "두 사람이 손을 맞잡는 장면",
+                contextVi: "Hai người đang nắm tay",
+                options: ["손을 잡다", "팔짱을 끼다", "소개팅하다"],
+                answer: "손을 잡다",
+                explainKo: "손을 맞잡는 장면이므로 '손을 잡다'가 맞아요.",
+                explainVi: "Vì hai người đang nắm tay nên đáp án đúng là '손을 잡다'."
+            },
+            {
+                id: "v5", area: "어휘", type: "mcq",
+                prompt: "그림에 맞는 표현을 고르세요.",
+                promptVi: "Chọn biểu hiện đúng với hình ảnh.",
+                image: "../imagesource/split_text_hidden_mobile_vocab/v14_blush.webp",
+                contextKo: "얼굴이 붉어지는 모습",
+                contextVi: "Khuôn mặt đỏ lên vì ngại",
+                options: ["얼굴이 빨개지다", "가슴이 두근거리다", "인상이 좋다"],
+                answer: "얼굴이 빨개지다",
+                explainKo: "얼굴이 붉어지는 장면이므로 '얼굴이 빨개지다'가 맞습니다.",
+                explainVi: "Cảnh mặt đỏ lên phù hợp với '얼굴이 빨개지다'."
+            },
+            {
+                id: "v6", area: "어휘", type: "mcq",
+                prompt: "그림에 맞는 표현을 고르세요.",
+                promptVi: "Chọn biểu hiện đúng với hình ảnh.",
+                image: "../imagesource/split_text_hidden_mobile_vocab/v18_love_at_first_sight.webp",
+                contextKo: "처음 보자마자 마음이 끌리는 장면",
+                contextVi: "Yêu từ cái nhìn đầu tiên",
+                options: ["첫눈에 반하다", "사귀다", "선보다"],
+                answer: "첫눈에 반하다",
+                explainKo: "처음 본 순간 반하는 의미는 '첫눈에 반하다'예요.",
+                explainVi: "Thích ngay từ lần gặp đầu là '첫눈에 반하다'."
+            },
+            {
+                id: "v7", area: "어휘", type: "mcq",
+                prompt: "그림에 맞는 표현을 고르세요.",
+                promptVi: "Chọn biểu hiện đúng với hình ảnh.",
+                image: "../imagesource/split_text_hidden_mobile_vocab/v03_sit_together.webp",
+                contextKo: "두 사람이 나란히 앉은 장면",
+                contextVi: "Hai người ngồi cạnh nhau",
+                options: ["나란히 앉다", "어깨에 기대다", "손을 잡다"],
+                answer: "나란히 앉다",
+                explainKo: "옆에 나란히 앉은 자세이므로 '나란히 앉다'가 맞아요.",
+                explainVi: "Ngồi cạnh nhau thì dùng '나란히 앉다'."
+            },
+            {
+                id: "v8", area: "어휘", type: "mcq",
+                prompt: "그림에 맞는 표현을 고르세요.",
+                promptVi: "Chọn biểu hiện đúng với hình ảnh.",
+                image: "../imagesource/split_text_hidden_mobile_vocab/v13_lean_on_shoulder.webp",
+                contextKo: "상대 어깨에 기대는 장면",
+                contextVi: "Tựa vào vai người kia",
+                options: ["어깨에 기대다", "팔짱을 끼다", "고백하다"],
+                answer: "어깨에 기대다",
+                explainKo: "어깨에 기대는 장면은 '어깨에 기대다'가 맞아요.",
+                explainVi: "Cảnh tựa vai dùng '어깨에 기대다'."
+            },
+            {
+                id: "d1", area: "문법 -던", type: "mcq",
+                prompt: "어릴 때 자주 ____ 공원이에요.",
+                promptVi: "Đây là công viên tôi hay ____ khi còn nhỏ.",
+                contextKo: "과거 반복 습관 회상",
+                contextVi: "Hồi tưởng thói quen lặp lại trong quá khứ",
+                options: ["가던", "간", "가는"],
+                answer: "가던",
+                explainKo: "과거 반복 습관을 회상하므로 '-던'이 맞아요.",
+                explainVi: "Hồi tưởng thói quen quá khứ nên dùng '-던'."
+            },
+            {
+                id: "d2", area: "문법 -던", type: "short",
+                prompt: "읽다가 만 ____ 책이에요. (읽다)",
+                promptVi: "Đây là cuốn sách tôi đọc dở. (읽다)",
+                contextKo: "미완료 과거 행동",
+                contextVi: "Hành động quá khứ chưa hoàn tất",
+                answers: ["읽던"],
+                placeholder: "정답 입력",
+                explainKo: "끝내지 못한 과거 행동이므로 '읽던'이 맞아요.",
+                explainVi: "Hành động quá khứ dang dở nên đáp án là '읽던'."
+            },
+            {
+                id: "d3", area: "문법 -던", type: "mcq",
+                prompt: "요즘 매일 ____ 뉴스예요.",
+                promptVi: "Đây là bản tin tôi xem mỗi ngày dạo này.",
+                contextKo: "현재 습관/과거 회상 구별",
+                contextVi: "Phân biệt thói quen hiện tại và hồi tưởng quá khứ",
+                options: ["보던", "보는", "봤던"],
+                answer: "보는",
+                explainKo: "'요즘 매일'은 현재 습관이라 '-는'이 맞아요.",
+                explainVi: "'Dạo này mỗi ngày' là thói quen hiện tại nên dùng '-는'."
+            },
+
+            {
+                id: "j1", area: "문법 -잖아요", type: "mcq",
+                prompt: "오늘 일찍 가요. 내일 시험 ____.",
+                promptVi: "Hôm nay về sớm nhé. Ngày mai thi ____.",
+                contextKo: "서로 이미 아는 사실 상기",
+                contextVi: "Nhắc lại thông tin cả hai đều biết",
+                options: ["있잖아요", "있거든요", "있죠"],
+                answer: "있잖아요",
+                explainKo: "공유된 사실을 상기하는 문맥이라 '-잖아요'가 맞아요.",
+                explainVi: "Nhắc lại thông tin chung đã biết thì dùng '-잖아요'."
+            },
+            {
+                id: "j2", area: "문법 -잖아요", type: "mcq",
+                prompt: "오늘은 못 가요. 일이 많____.",
+                promptVi: "Hôm nay tôi không đi được. Vì công việc nhiều ____.",
+                contextKo: "상대가 모를 수 있는 새 이유 설명",
+                contextVi: "Giải thích lý do mới cho người nghe",
+                options: ["잖아요", "거든요", "죠"],
+                answer: "거든요",
+                explainKo: "새 이유를 제시할 때는 '-거든요'가 더 자연스러워요.",
+                explainVi: "Đưa lý do mới thì '-거든요' tự nhiên hơn.",
+                nonTargetKo: "학습범위 보충: 이 문맥은 '-잖아요'보다 '-거든요'가 더 정확합니다.",
+                nonTargetVi: "Bổ sung: Ngữ cảnh này phù hợp với '-거든요' hơn '-잖아요'."
+            },
+            {
+                id: "j3", area: "문법 -잖아요", type: "mcq",
+                prompt: "우리 내일 9시에 만나기로 했___?",
+                promptVi: "Ngày mai mình hẹn 9 giờ ___?",
+                contextKo: "상대 동의 확인 질문",
+                contextVi: "Câu hỏi xác nhận sự đồng ý",
+                options: ["잖아요", "거든요", "죠"],
+                answer: "죠",
+                explainKo: "확인 질문에는 보통 '-죠?' 형태를 써요.",
+                explainVi: "Câu hỏi xác nhận thường dùng '-죠?'.",
+                nonTargetKo: "보충: '-죠'는 보통 물음표와 함께 '-죠?' 형태로 사용합니다.",
+                nonTargetVi: "Bổ sung: '-죠' thường đi cùng dấu hỏi thành '-죠?'."
+            },
+
+            {
+                id: "p1", area: "문법 -(으)ㄹ 생각/계획/예정", type: "mcq",
+                prompt: "다음 달에 새 매장을 ____ (회사 공지 완료)",
+                promptVi: "Tháng sau sẽ mở chi nhánh mới ____ (đã thông báo chính thức)",
+                contextKo: "공식적으로 정해진 일정",
+                contextVi: "Lịch trình đã được công bố",
+                options: ["열 예정입니다", "열 생각입니다", "열려고 해요"],
+                answer: "열 예정입니다",
+                explainKo: "공식 일정은 '-(으)ㄹ 예정이다'가 가장 자연스러워요.",
+                explainVi: "Lịch chính thức thường dùng '-(으)ㄹ 예정이다'."
+            },
+            {
+                id: "p2", area: "문법 -(으)ㄹ 생각/계획/예정", type: "short",
+                prompt: "방학 때 제주도에 ____ (가다)",
+                promptVi: "Kỳ nghỉ tôi định ____ Jeju (가다)",
+                contextKo: "개인 의향 표현",
+                contextVi: "Biểu thị ý định cá nhân",
+                answers: ["갈 생각이에요", "갈 생각입니다"],
+                placeholder: "정답 입력",
+                explainKo: "의향을 말할 때 '갈 생각이에요'가 자연스러워요.",
+                explainVi: "Nói ý định cá nhân thì '갈 생각이에요' tự nhiên."
+            },
+            {
+                id: "p3", area: "문법 -(으)ㄹ 생각/계획/예정", type: "mcq",
+                prompt: "지금 막 문을 나가려는 상황이면?",
+                promptVi: "Nếu ngay bây giờ sắp bước ra cửa thì dùng gì?",
+                contextKo: "즉시 의도/직전 행동",
+                contextVi: "Ý định ngay lúc nói",
+                options: ["나갈 예정이에요", "나가려고 해요", "나갈 계획이에요"],
+                answer: "나가려고 해요",
+                explainKo: "바로 직전 의도는 '-(으)려고 하다'가 더 자연스러워요.",
+                explainVi: "Ý định ngay lúc này thường dùng '-(으)려고 하다'."
+            },
+
+            {
+                id: "m1", area: "문법 -(으)려면 멀었다", type: "mcq",
+                prompt: "숙제를 다 끝내려면 아직 ____.",
+                promptVi: "Để làm xong hết bài tập thì vẫn ____.",
+                contextKo: "목표 달성까지 아직 멂",
+                contextVi: "Còn xa mới đạt mục tiêu",
+                options: ["멀었어요", "예정이에요", "생각이에요"],
+                answer: "멀었어요",
+                explainKo: "조건이 부족해 아직 멀 때 '-(으)려면 멀었다'를 써요.",
+                explainVi: "Khi chưa đủ điều kiện thì dùng '-(으)려면 멀었다'."
+            },
+            {
+                id: "m2", area: "문법 -(으)려면 멀었다", type: "mcq",
+                prompt: "받침 있는 동사 뒤 형태로 맞는 것은?",
+                promptVi: "Dạng đúng sau động từ có 받침 là?",
+                contextKo: "형태 규칙 확인",
+                contextVi: "Kiểm tra quy tắc biến đổi",
+                options: ["먹으려면", "먹려면", "먹을려면"],
+                answer: "먹으려면",
+                explainKo: "받침이 있으면 '으려면'을 붙여요.",
+                explainVi: "Có 받침 thì gắn '으려면'."
+            },
+            {
+                id: "m3", area: "문법 -(으)려면 멀었다", type: "short",
+                prompt: "원어민처럼 말(하다) ____ 아직 멀었어요.",
+                promptVi: "Để nói như người bản ngữ thì ____ vẫn còn xa.",
+                contextKo: "하다 축약 형태 확인",
+                contextVi: "Kiểm tra dạng rút gọn của 하다",
+                answers: ["하려면"],
+                placeholder: "정답 입력",
+                explainKo: "'하다'는 줄어서 '하려면'이 돼요.",
+                explainVi: "'하다' rút gọn thành '하려면'."
+            }
+        ];
+
+        const S = { view: "start", selectedId: null, name: "", qs: [], i: 0, submitted: false, fb: null, answers: [], startedAt: 0 };
+
+        function esc(v) {
+            return String(v == null ? "" : v)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/\"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        function norm(v) { return String(v || "").replace(/\s+/g, "").trim().toLowerCase(); }
+        function shuffle(arr) {
+            const c = [...arr];
+            for (let i = c.length - 1; i > 0; i -= 1) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [c[i], c[j]] = [c[j], c[i]];
+            }
+            return c;
+        }
+
+        function loadHistory() {
+            try { const raw = localStorage.getItem(KEY); return raw ? JSON.parse(raw) : []; }
+            catch (e) { return []; }
+        }
+
+        function saveHistory(h) {
+            try { localStorage.setItem(KEY, JSON.stringify(h)); } catch (e) {}
+        }
+
+        function getLastName() {
+            try { return localStorage.getItem(NKEY) || ""; } catch (e) { return ""; }
+        }
+
+        function setLastName(n) {
+            try { localStorage.setItem(NKEY, n); } catch (e) {}
+        }
+
+        function currentQ() { return S.qs[S.i] || null; }
+
+        function fmt(iso) {
+            try {
+                const d = new Date(iso);
+                return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+            } catch (e) { return iso; }
+        }
+
+        function best(h) {
+            if (!h.length) return null;
+            return h.reduce((b, c) => {
+                if (c.percent > b.percent) return c;
+                if (c.percent === b.percent && c.score > b.score) return c;
+                return b;
+            }, h[0]);
+        }
+
+        function startQuiz() {
+            const ip = document.getElementById("name");
+            const name = (ip ? ip.value : "").trim();
+            if (!name) {
+                const warn = document.getElementById("nameWarn");
+                if (warn) warn.classList.remove("hidden");
+                if (ip) ip.focus();
+                return;
+            }
+
+            setLastName(name);
+            S.name = name;
+            S.qs = shuffle(Q);
+            S.i = 0;
+            S.submitted = false;
+            S.fb = null;
+            S.answers = [];
+            S.startedAt = Date.now();
+            S.view = "quiz";
+            S.selectedId = null;
+            render();
+            focusShort();
+        }
+
+        function openLog(id) { S.view = "result"; S.selectedId = id; render(); }
+        function toStart() { S.view = "start"; S.selectedId = null; render(); }
+        function byId(id) { return loadHistory().find((x) => x.id === id) || null; }
+
+        function evalQ(q, user) {
+            if (q.type === "mcq") return q.answer === user;
+            const u = norm(user);
+            return (q.answers || []).some((a) => norm(a) === u);
+        }
+
+        function submitMcq(i) {
+            const q = currentQ();
+            if (!q || q.type !== "mcq" || S.submitted) return;
+            submitAnswer(q.options[i]);
+        }
+
+        function submitShort() {
+            const q = currentQ();
+            if (!q || q.type !== "short" || S.submitted) return;
+            const ip = document.getElementById("short");
+            if (!ip) return;
+            const v = ip.value.trim();
+            if (!v) return;
+            submitAnswer(v);
+        }
+
+        function submitAnswer(user) {
+            const q = currentQ();
+            if (!q || S.submitted) return;
+
+            const ok = evalQ(q, user);
+            const rec = {
+                id: q.id,
+                area: q.area,
+                prompt: q.prompt,
+                promptVi: q.promptVi || "",
+                contextKo: q.contextKo || "",
+                contextVi: q.contextVi || "",
+                user: String(user || ""),
+                correct: q.type === "mcq" ? q.answer : (q.answers ? q.answers[0] : ""),
+                ok,
+                explainKo: q.explainKo || "",
+                explainVi: q.explainVi || "",
+                nonTargetKo: q.nonTargetKo || "",
+                nonTargetVi: q.nonTargetVi || ""
+            };
+
+            S.answers.push(rec);
+            S.fb = rec;
+            S.submitted = true;
+            render();
+        }
+
+        function nextQ() {
+            if (!S.submitted) return;
+            if (S.i < S.qs.length - 1) {
+                S.i += 1;
+                S.submitted = false;
+                S.fb = null;
+                render();
+                focusShort();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            const total = S.answers.length;
+            const score = S.answers.filter((x) => x.ok).length;
+            const percent = total ? Math.round((score / total) * 100) : 0;
+            const dur = Math.max(1, Math.round((Date.now() - S.startedAt) / 1000));
+
+            const at = {
+                id: `rq-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+                time: new Date().toISOString(),
+                name: S.name,
+                score,
+                total,
+                percent,
+                duration: dur,
+                answers: S.answers
+            };
+
+            const h = loadHistory();
+            h.unshift(at);
+            if (h.length > MAX) h.length = MAX;
+            saveHistory(h);
+
+            S.selectedId = at.id;
+            S.view = "result";
+            render();
+        }
+
+        function focusShort() {
+            const q = currentQ();
+            if (!q || q.type !== "short" || S.submitted) return;
+            const ip = document.getElementById("short");
+            if (ip) ip.focus();
+        }
+
+        function clearLogs() {
+            if (!confirm("응시 기록을 모두 삭제할까요?")) return;
+            saveHistory([]);
+            render();
+        }
+
+        function saveJson() {
+            const at = byId(S.selectedId);
+            if (!at) return;
+            const blob = new Blob([JSON.stringify(at, null, 2)], { type: "application/json;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const dt = fmt(at.time).replace(/[: ]/g, "-");
+            const nm = (at.name || "student").replace(/[^a-zA-Z0-9가-힣_-]/g, "_");
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `c10-review-${nm}-${dt}.json`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        async function captureResult() {
+            const t = document.getElementById("cap");
+            if (!t) return;
+
+            const b = document.getElementById("capBtn");
+            if (b) { b.disabled = true; b.textContent = "캡처 중..."; }
+
+            try {
+                const c = await html2canvas(t, { scale: 2, backgroundColor: "#f8fafc", useCORS: true });
+                const url = c.toDataURL("image/png");
+                const at = byId(S.selectedId);
+                const dt = at ? fmt(at.time).replace(/[: ]/g, "-") : Date.now();
+                const nm = at ? (at.name || "student").replace(/[^a-zA-Z0-9가-힣_-]/g, "_") : "student";
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `c10-review-${nm}-${dt}.png`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            } catch (e) {
+                alert("캡처에 실패했습니다.");
+            } finally {
+                if (b) { b.disabled = false; b.textContent = "결과창 캡처 (PNG)"; }
+            }
+        }
+
+        function renderStart() {
+            const h = loadHistory();
+            const b = best(h);
+            const areaCnt = {};
+            Q.forEach((q) => { areaCnt[q.area] = (areaCnt[q.area] || 0) + 1; });
+
+            const rows = Object.entries(areaCnt)
+                .map(([k, v]) => `<li class="text-xs text-slate-600">${esc(k)}: <b>${v}문항</b></li>`)
+                .join("");
+
+            const logs = h.length
+                ? h.map((x, i) => `
+                    <button class="log w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-left hover:border-blue-300" onclick="openLog('${x.id}')">
+                        <p class="text-[11px] text-slate-500">${i + 1}회차 · ${fmt(x.time)}</p>
+                        <p class="text-sm font-bold text-slate-800 mt-0.5 safe">${esc(x.name)} · ${x.score}/${x.total} (${x.percent}%)</p>
+                    </button>
+                `).join("")
+                : `<p class="text-sm text-slate-500">아직 응시 기록이 없습니다.</p>`;
+
+            return `
+                <section class="space-y-4">
+                    <div class="bg-gradient-to-br from-blue-50 to-white border border-blue-100 rounded-2xl p-5 shadow-sm">
+                        <h1 class="text-xl font-black text-blue-700 safe">10과 복습 퀴즈</h1>
+                        <p class="text-sm text-slate-700 mt-2">vocabulary-upgraded-v3 + grammar1~4 기반 복습</p>
+                        <p class="text-xs text-slate-500 mt-1">이름 입력 후 시작하면 결과가 자동 저장됩니다.</p>
+
+                        <div class="mt-4">
+                            <label for="name" class="text-xs font-bold text-slate-600">응시자 이름</label>
+                            <input id="name" type="text" maxlength="20" value="${esc(getLastName())}" placeholder="이름 입력"
+                                class="mt-1 w-full border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
+                            <p id="nameWarn" class="hidden text-xs text-rose-600 mt-1">이름을 입력하세요.</p>
+                        </div>
+
+                        <div class="mt-4 grid grid-cols-2 gap-2 text-xs">
+                            <div class="bg-white border border-blue-100 rounded-lg p-2">
+                                <p class="text-slate-500">총 문항</p>
+                                <p class="font-bold text-slate-800">${Q.length}문항</p>
+                            </div>
+                            <div class="bg-white border border-blue-100 rounded-lg p-2">
+                                <p class="text-slate-500">최고 기록</p>
+                                <p class="font-bold text-slate-800 safe">${b ? `${esc(b.name)} · ${b.score}/${b.total} (${b.percent}%)` : "없음"}</p>
+                            </div>
+                        </div>
+
+                        <ul class="mt-3 space-y-1">${rows}</ul>
+
+                        <button class="mt-4 w-full bg-blue-600 text-white py-3 rounded-xl text-sm font-bold hover:bg-blue-700" onclick="startQuiz()">퀴즈 시작</button>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+                        <div class="flex items-center justify-between mb-3">
+                            <h2 class="text-sm font-bold text-slate-800">과거 응시 기록</h2>
+                            <button class="text-[11px] px-2 py-1 border border-slate-300 rounded-lg text-slate-600" onclick="clearLogs()">전체 삭제</button>
+                        </div>
+                        <div class="space-y-2">${logs}</div>
+                    </div>
+                </section>
+            `;
+        }
+        function renderQuiz() {
+            const q = currentQ();
+            if (!q) return "";
+
+            const idx = S.i + 1;
+            const tot = S.qs.length;
+            const pg = Math.round((idx / tot) * 100);
+            const fb = S.fb;
+
+            const body = q.type === "mcq"
+                ? q.options.map((o, i) => {
+                    let c = "border-slate-300 bg-white text-slate-800 hover:border-blue-400 hover:bg-blue-50";
+                    if (S.submitted && fb) {
+                        if (o === fb.correct) c = "border-emerald-400 bg-emerald-50 text-emerald-800";
+                        else if (o === fb.user && !fb.ok) c = "border-rose-400 bg-rose-50 text-rose-800";
+                        else c = "border-slate-200 bg-slate-50 text-slate-400";
+                    }
+                    return `<button class="op w-full border rounded-xl px-4 py-3 text-left text-sm font-semibold safe ${c}" ${S.submitted ? "disabled" : ""} onclick="submitMcq(${i})">${esc(o)}</button>`;
+                }).join("")
+                : `
+                    <div class="space-y-2">
+                        <input id="short" type="text" ${S.submitted ? "disabled" : ""} placeholder="${esc(q.placeholder || "정답 입력")}" onkeydown="if(event.key==='Enter'){submitShort()}"
+                            class="w-full border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 ${S.submitted ? "bg-slate-100 text-slate-500" : ""}">
+                        <button class="w-full py-3 rounded-xl text-sm font-bold ${S.submitted ? "bg-slate-300 text-slate-500" : "bg-blue-600 text-white hover:bg-blue-700"}" ${S.submitted ? "disabled" : ""} onclick="submitShort()">정답 확인</button>
+                    </div>
+                `;
+
+            const feedback = S.submitted && fb
+                ? `
+                    <div class="mt-4 rounded-xl border p-4 ${fb.ok ? "bg-emerald-50 border-emerald-200" : "bg-rose-50 border-rose-200"}">
+                        <p class="text-sm font-bold ${fb.ok ? "text-emerald-700" : "text-rose-700"}">${fb.ok ? "정답입니다." : "오답입니다."} <span class="text-xs ml-1">(${fb.ok ? "Đúng" : "Sai"})</span></p>
+                        <p class="text-xs text-slate-700 mt-2"><b>내 답:</b> ${esc(fb.user || "(무응답)")}</p>
+                        <p class="text-xs text-slate-700 mt-1"><b>정답:</b> ${esc(fb.correct)}</p>
+                        <p class="text-xs text-slate-700 mt-2 safe"><b>설명(KO):</b> ${esc(fb.explainKo)}</p>
+                        <p class="text-xs text-blue-700 mt-1 safe"><b>Giải thích (VI):</b> ${esc(fb.explainVi)}</p>
+                        ${fb.nonTargetKo ? `
+                            <div class="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3">
+                                <p class="text-xs font-bold text-amber-800">학습 범위 보충</p>
+                                <p class="text-xs text-slate-700 mt-1 safe"><b>KO:</b> ${esc(fb.nonTargetKo)}</p>
+                                <p class="text-xs text-blue-700 mt-1 safe"><b>VI:</b> ${esc(fb.nonTargetVi)}</p>
+                            </div>
+                        ` : ""}
+                    </div>
+                `
+                : "";
+
+            return `
+                <section class="space-y-4">
+                    <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-bold text-blue-600">${idx} / ${tot}</span>
+                            <span class="px-2 py-1 rounded-full bg-blue-100 text-blue-700 font-bold">${esc(q.area)}</span>
+                        </div>
+                        <p class="text-[11px] text-slate-500 mt-1">응시자: <b>${esc(S.name)}</b></p>
+                        <div class="mt-2 h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-blue-500" style="width:${pg}%"></div></div>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                        <p class="text-xs font-bold text-slate-500">문제</p>
+                        <p class="text-base font-bold text-slate-800 mt-2 leading-relaxed safe">${esc(q.prompt)}</p>
+                        ${q.image ? `<div class="mt-3 rounded-lg overflow-hidden border border-slate-200"><img src="${esc(q.image)}" alt="quiz-image" class="w-full h-44 object-cover"></div>` : ""}
+                        <div class="mt-2 rounded-lg border border-slate-200 bg-slate-50 p-3">
+                            <p class="text-[11px] text-slate-600 safe"><b>상황(KO):</b> ${esc(q.contextKo || "")}</p>
+                            <p class="text-[11px] text-blue-700 mt-1 safe"><b>Tình huống (VI):</b> ${esc(q.contextVi || "")}</p>
+                            <p class="text-[11px] text-blue-700 mt-1 safe"><b>Dịch câu hỏi:</b> ${esc(q.promptVi || "")}</p>
+                        </div>
+                        <div class="mt-4 space-y-2">${body}</div>
+                        ${feedback}
+                        ${S.submitted ? `<button class="mt-3 w-full bg-blue-600 text-white py-3 rounded-xl font-bold text-sm hover:bg-blue-700" onclick="nextQ()">다음 문제</button>` : ""}
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderResult() {
+            const at = byId(S.selectedId);
+            if (!at) {
+                return `<section class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm"><p class="text-sm text-slate-700">기록을 찾을 수 없습니다.</p><button class="mt-3 w-full bg-blue-600 text-white py-2.5 rounded-xl text-sm font-bold" onclick="toStart()">시작 화면</button></section>`;
+            }
+
+            const cards = at.answers.map((x, i) => {
+                if (x.ok) {
+                    return `
+                        <article class="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+                            <p class="text-xs text-emerald-700 font-bold">${i + 1}. ${esc(x.area)} · 정답</p>
+                            <p class="text-sm text-slate-800 mt-1 safe">${esc(x.prompt)}</p>
+                            <p class="text-xs text-slate-700 mt-2"><b>정답:</b> ${esc(x.correct)}</p>
+                            <p class="text-xs text-slate-700 mt-1 safe"><b>설명(KO):</b> ${esc(x.explainKo)}</p>
+                            <p class="text-xs text-blue-700 mt-1 safe"><b>Giải thích (VI):</b> ${esc(x.explainVi)}</p>
+                            ${x.nonTargetKo ? `<div class="mt-2 rounded-lg border border-amber-200 bg-amber-50 p-2"><p class="text-xs font-bold text-amber-800">학습 범위 보충</p><p class="text-xs text-slate-700 mt-1 safe"><b>KO:</b> ${esc(x.nonTargetKo)}</p><p class="text-xs text-blue-700 mt-1 safe"><b>VI:</b> ${esc(x.nonTargetVi)}</p></div>` : ""}
+                        </article>
+                    `;
+                }
+                return `
+                    <article class="bg-rose-50 border border-rose-200 rounded-xl p-3">
+                        <p class="text-xs text-rose-700 font-bold">${i + 1}. ${esc(x.area)} · 오답</p>
+                        <p class="text-sm text-slate-800 mt-1 safe">${esc(x.prompt)}</p>
+                        <p class="text-xs text-slate-700 mt-2"><b>내 답:</b> ${esc(x.user || "(무응답)")}</p>
+                        <p class="text-xs text-slate-700 mt-1"><b>정답:</b> ${esc(x.correct)}</p>
+                        <p class="text-xs text-rose-700 mt-2 safe"><b>설명(KO):</b> ${esc(x.explainKo)}</p>
+                        <p class="text-xs text-blue-700 mt-1 safe"><b>Giải thích (VI):</b> ${esc(x.explainVi)}</p>
+                        ${x.nonTargetKo ? `<div class="mt-2 rounded-lg border border-amber-200 bg-amber-50 p-2"><p class="text-xs font-bold text-amber-800">학습 범위 보충</p><p class="text-xs text-slate-700 mt-1 safe"><b>KO:</b> ${esc(x.nonTargetKo)}</p><p class="text-xs text-blue-700 mt-1 safe"><b>VI:</b> ${esc(x.nonTargetVi)}</p></div>` : ""}
+                    </article>
+                `;
+            }).join("");
+
+            return `
+                <section class="space-y-4">
+                    <div id="cap" class="space-y-4">
+                        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm text-center">
+                            <p class="text-xs text-slate-500">응시자: <b>${esc(at.name)}</b></p>
+                            <p class="text-xs text-slate-500 mt-1">응시 시각: ${fmt(at.time)}</p>
+                            <h1 class="text-2xl font-black text-slate-800 mt-2">${at.score} / ${at.total}</h1>
+                            <p class="text-sm text-slate-600 mt-1">정답률 ${at.percent}% · 소요 ${at.duration}초</p>
+                            <p class="text-xs text-emerald-700 mt-2">결과가 자동 저장되었습니다.</p>
+                        </div>
+                        <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+                            <h2 class="text-sm font-bold text-slate-800 mb-3">정오답 피드백</h2>
+                            <div class="space-y-2">${cards}</div>
+                        </div>
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+                        <div class="grid gap-2">
+                            <button id="capBtn" class="w-full bg-blue-600 text-white py-2.5 rounded-xl text-sm font-bold hover:bg-blue-700" onclick="captureResult()">결과창 캡처 (PNG)</button>
+                            <button class="w-full border border-blue-300 bg-blue-50 text-blue-700 py-2.5 rounded-xl text-sm font-bold" onclick="saveJson()">결과 저장 (JSON)</button>
+                            <button class="w-full border border-slate-300 text-slate-700 py-2.5 rounded-xl text-sm font-bold" onclick="toStart()">시작 화면으로</button>
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+
+        function render() {
+            const app = document.getElementById("app");
+            if (S.view === "start") app.innerHTML = renderStart();
+            else if (S.view === "quiz") app.innerHTML = renderQuiz();
+            else app.innerHTML = renderResult();
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            try {
+                render();
+            } catch (e) {
+                const app = document.getElementById("app");
+                app.innerHTML = `<div class="bg-white border border-rose-200 rounded-xl p-4 text-sm text-rose-700"><b>오류가 발생했습니다.</b><p class="mt-2 safe">${esc(String(e && e.message ? e.message : e))}</p></div>`;
+            }
+        });
+    </script>
+    <script src="../shared/learning-enhancements.js"></script>
+</body>
+</html>
