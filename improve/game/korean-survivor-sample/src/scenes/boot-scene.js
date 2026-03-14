@@ -171,6 +171,20 @@
         g.strokeEllipse(w / 2, h / 2 + 8, 118, 58);
       });
 
+      this.createWeaponTexture("blast-shell", 52, 52, (g, w, h) => {
+        const c = w / 2;
+        g.fillStyle(0xffffff, 0.96);
+        g.fillCircle(c, c, 12);
+        g.fillStyle(0xffffff, 0.24);
+        g.fillCircle(c, c, 20);
+        g.fillTriangle(c, 4, c - 7, 18, c + 7, 18);
+        g.fillTriangle(w - 4, c, w - 18, c - 7, w - 18, c + 7);
+        g.fillTriangle(c, h - 4, c - 7, h - 18, c + 7, h - 18);
+        g.fillTriangle(4, c, 18, c - 7, 18, c + 7);
+        g.lineStyle(3, 0xffffff, 0.34);
+        g.strokeCircle(c, c, 18);
+      });
+
       this.createRingTexture("weapon-blast-wave", 150, 0xffffff, 0.1, 0.84, 6);
     }
 

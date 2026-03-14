@@ -21,8 +21,8 @@
         remainingHp: 0,
         stageReached: 1,
         stagesCleared: 0,
-        totalStages: 3,
-        currentStageLabel: "1단계 감정",
+        totalStages: 5,
+        currentStageLabel: "1단계",
         stageThemeTrail: [],
         pickupSummary: [],
         logSaved: false,
@@ -83,7 +83,7 @@
       }).setOrigin(0.5);
 
       this.add.text(360, 432, this.summary.cleared
-        ? `${this.summary.totalStages || 3}개 스테이지 완전 클리어`
+        ? `${this.summary.totalStages || 5}개 스테이지 완전 클리어`
         : `${this.summary.stageReached || 1}단계 도달 · ${this.summary.stagesCleared || 0}개 클리어`, {
         fontFamily: font,
         fontSize: "20px",
@@ -104,8 +104,8 @@
         {
           label: "스테이지",
           value: this.summary.cleared
-            ? `${this.summary.totalStages || 3}/${this.summary.totalStages || 3}`
-            : `${this.summary.stageReached || 1}/${this.summary.totalStages || 3}`,
+            ? `${this.summary.totalStages || 5}/${this.summary.totalStages || 5}`
+            : `${this.summary.stageReached || 1}/${this.summary.totalStages || 5}`,
         },
         { label: "준 데미지", value: `${this.summary.damageDealt}` },
         { label: "받은 데미지", value: `${this.summary.damageTaken}` },

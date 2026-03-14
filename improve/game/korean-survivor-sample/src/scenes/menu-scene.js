@@ -28,7 +28,7 @@
         color: "#f7fbff",
       });
 
-      this.add.text(54, 224, "감정 -> 건강 -> 인생\n30초 강습, 90초 보스", {
+      this.add.text(54, 224, "11개 테마 풀 중 무작위 5개\n30초 강습, 90초 보스", {
         fontFamily: font,
         fontSize: "36px",
         fontStyle: "800",
@@ -36,14 +36,14 @@
         lineSpacing: 10,
       });
 
-      this.add.text(56, 338, "Khong co quiz. Vuot qua tung stage, ha boss, nhan thuong va tien toi tran chien cuoi.", {
+      this.add.text(56, 338, "Moi lan choi se chon ngau nhien 5 chu de. Ha boss tung stage, nhan thuong va tien toi tran chien cuoi.", {
         fontFamily: font,
         fontSize: "22px",
         color: "#9ab0c0",
         wordWrap: { width: 610 },
       });
 
-      this.add.text(56, 410, "일반형, 탱커형, 무리 속도형에 돌진형, 원거리형, 고함형, 증식형 역할이 섞여 나옵니다.", {
+      this.add.text(56, 410, "감정, 건강, 인생에 더해 연애, 업무, 운동, 모임, 도시와 시골, 문제와 해결, 악기와 여가, 소문과 오해가 무작위로 섞여 나옵니다.", {
         fontFamily: font,
         fontSize: "21px",
         color: "#b3c6d5",
@@ -115,7 +115,7 @@
           color: "#fff8f0",
         }).setOrigin(0, 0.5);
 
-        this.add.text(176, y + 18, `${(log.stagesCleared || 0)}/${log.totalStages || 3}단계 · ${log.survivedSeconds}초 · ${this.formatLogDate(log.clearedAt)}`, {
+        this.add.text(176, y + 18, `${(log.stagesCleared || 0)}/${log.totalStages || 5}단계 · ${log.survivedSeconds}초 · ${this.formatLogDate(log.clearedAt)}`, {
           fontFamily: font,
           fontSize: "18px",
           color: "#a9bfd0",
@@ -185,7 +185,7 @@
       }).setOrigin(0.5).setDepth(52));
 
       const detailRows = [
-        { label: "스테이지", value: `${log.stagesCleared || 0}/${log.totalStages || 3}` },
+        { label: "스테이지", value: `${log.stagesCleared || 0}/${log.totalStages || 5}` },
         { label: "준 데미지", value: `${log.damageDealt}` },
         { label: "받은 데미지", value: `${log.damageTaken}` },
         { label: "생존 시간", value: `${log.survivedSeconds}초` },

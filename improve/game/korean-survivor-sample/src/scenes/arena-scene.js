@@ -12,7 +12,8 @@
       this.vocabData = gameData.vocabData;
       this.roundSeconds = 90;
       this.timeRemaining = this.roundSeconds;
-      this.stageCount = Math.max(1, (this.vocabData.stages || []).length || 1);
+      this.runStages = this.buildStageRun();
+      this.stageCount = Math.max(1, this.runStages.length || 1);
       this.currentStageIndex = 0;
       this.currentStageData = null;
       this.stagesCleared = 0;
@@ -79,7 +80,6 @@
       this.shieldWeaponLevel = 0;
       this.shieldAngle = 0;
       this.mistLevel = 0;
-      this.pierceLevel = 0;
       this.linkLevel = 0;
       this.splitLevel = 0;
       this.amplifyLevel = 0;
@@ -87,6 +87,13 @@
       this.siphonLevel = 0;
       this.trackingLevel = 0;
       this.blastLevel = 0;
+      this.legendaryLevels = {
+        giant: 0,
+        tempest: 0,
+        comet: 0,
+        harvest: 0,
+        supernova: 0,
+      };
       this.fireOrbs = [];
       this.shieldOrbs = [];
       this.mistZones = [];
@@ -117,6 +124,16 @@
       this.awakeningRing = this.add.circle(360, 860, 56, 0xffd166, 0.06).setStrokeStyle(5, 0xfff0b5, 0.72).setVisible(false).setDepth(6);
       this.magnetField = this.add.circle(360, 860, 74, 0x89ecff, 0.05).setStrokeStyle(4, 0xcff8ff, 0.68).setVisible(false).setDepth(6);
       this.magnetLinks = this.add.graphics().setDepth(3);
+      this.giantHalo = this.add.circle(360, 860, 66, 0xffd9a0, 0.06).setStrokeStyle(4, 0xffe7bc, 0.52).setVisible(false).setDepth(3);
+      this.tempestRing = this.add.image(360, 860, "weapon-blast-wave").setTint(0x9fdcff).setAlpha(0).setDepth(3);
+      this.harvestRing = this.add.image(360, 860, "weapon-blast-wave").setTint(0xa9f2bc).setAlpha(0).setDepth(3);
+      this.supernovaRing = this.add.image(360, 860, "weapon-blast-wave").setTint(0xffb6a3).setAlpha(0).setDepth(3);
+      this.cometOrbitals = Array.from({ length: 3 }, () => (
+        this.add.image(360, 860, "bullet").setTint(0xd8c9ff).setAlpha(0).setDepth(5)
+      ));
+      this.harvestOrbitals = Array.from({ length: 3 }, () => (
+        this.add.image(360, 860, "pickup-icon-score").setAlpha(0).setDepth(5)
+      ));
       this.touchRing = this.add.circle(0, 0, this.joystickRadius, 0xffffff, 0.08).setStrokeStyle(3, 0xffffff, 0.18).setVisible(false).setDepth(30);
       this.touchDot = this.add.circle(0, 0, 22, 0xffffff, 0.22).setStrokeStyle(2, 0xffffff, 0.22).setVisible(false).setDepth(31);
 
@@ -136,6 +153,7 @@
       this.refreshSpearTimer();
       this.refreshChainTimer();
       this.refreshMistTimer();
+      this.refreshBlastTimer();
       this.applyStageData(0, { skipSpawns: false, silent: false });
     }
 
@@ -159,7 +177,7 @@
         color: "#f8fcff",
       }).setDepth(21);
 
-      this.stageText = this.add.text(284, 62, "1단계 감정", {
+      this.stageText = this.add.text(284, 62, "1단계", {
         fontFamily: this.font,
         fontSize: "16px",
         fontStyle: "800",
@@ -241,8 +259,28 @@
       return `#${(colorValue || 0xffffff).toString(16).padStart(6, "0")}`;
     }
 
+    buildStageRun() {
+      const stages = (this.vocabData.stages || []).slice();
+
+      if (!stages.length) {
+        return [];
+      }
+
+      Phaser.Utils.Array.Shuffle(stages);
+
+      const runCount = Math.max(1, Math.min(this.vocabData.runStageCount || 5, stages.length));
+
+      return stages
+        .slice(0, runCount)
+        .sort((left, right) => (left.difficultyTier || 1) - (right.difficultyTier || 1));
+    }
+
+    getStagePool() {
+      return this.runStages && this.runStages.length ? this.runStages : (this.vocabData.stages || []);
+    }
+
     getStageData(index) {
-      const stages = this.vocabData.stages || [];
+      const stages = this.getStagePool();
 
       if (!stages.length) {
         return null;
@@ -606,6 +644,7 @@
 
       rewards.forEach((reward, index) => {
         const position = positions[index];
+        const currentLevel = this.getLegendaryLevel(reward.key);
         const card = this.add.image(position.x, position.y, "upgrade-card").setDisplaySize(178, 248).setDepth(41);
         card.setInteractive({ useHandCursor: true });
 
@@ -640,6 +679,13 @@
           wordWrap: { width: 140, useAdvancedWrap: true },
         }).setOrigin(0.5).setDepth(42);
 
+        const stackText = this.add.text(position.x, position.y + 112, `현재 Lv ${currentLevel}`, {
+          fontFamily: this.font,
+          fontSize: "14px",
+          fontStyle: "800",
+          color: currentLevel > 0 ? "#ffe7b5" : "#8ba1b2",
+        }).setOrigin(0.5).setDepth(42);
+
         card.on("pointerover", () => {
           card.setTint(0xffefdc);
         });
@@ -649,7 +695,7 @@
         });
 
         card.on("pointerdown", () => this.applyLegendaryReward(reward, overlayItems, hasNextStage ? nextStageIndex : null));
-        overlayItems.push(card, title, viTitle, desc, viDesc);
+        overlayItems.push(card, title, viTitle, desc, viDesc, stackText);
       });
 
       this.stageTransitionOverlay = overlayItems;
@@ -661,42 +707,54 @@
         return;
       }
 
+      const legendaryStack = this.getLegendaryLevel(reward.key) + 1;
       let needsTimerRefresh = false;
       let needsLightningRefresh = false;
       let needsWaveRefresh = false;
       let needsSpearRefresh = false;
       let needsChainRefresh = false;
+      let needsBlastRefresh = false;
+
+      this.legendaryLevels[reward.key] = legendaryStack;
 
       if (reward.key === "giant") {
-        this.maxHp += 45;
-        this.hp = Math.min(this.maxHp, this.hp + 45);
-        this.healBonus += 8;
-        this.shieldUntil = Math.max(this.shieldUntil, this.time.now) + 5000;
+        const hpBoost = 42 + legendaryStack * 12;
+        this.maxHp += hpBoost;
+        this.hp = Math.min(this.maxHp, this.hp + 30 + legendaryStack * 16);
+        this.healBonus += 5 + legendaryStack;
+        this.shieldUntil = Math.max(this.shieldUntil, this.time.now) + 3200 + legendaryStack * 1300;
       } else if (reward.key === "tempest") {
-        this.attackCooldown = Math.max(140, this.attackCooldown - 52);
-        this.waveLevel += 1;
-        this.lightningLevel += 1;
+        this.attackCooldown = Math.max(120, this.attackCooldown - (30 + legendaryStack * 6));
+        this.waveLevel = Math.max(1, this.waveLevel + 1);
+        this.lightningLevel = Math.max(1, this.lightningLevel + 1);
+        this.attackRange += 18 + legendaryStack * 6;
         needsTimerRefresh = true;
         needsLightningRefresh = true;
         needsWaveRefresh = true;
       } else if (reward.key === "comet") {
-        this.spearLevel += 1;
-        this.chainLevel += 1;
+        this.spearLevel = Math.max(1, this.spearLevel + 1);
+        this.chainLevel = Math.max(1, this.chainLevel + 1);
         this.trackingLevel += 1;
-        this.attackRange += 80;
+        this.attackRange += 70 + legendaryStack * 10;
         needsSpearRefresh = true;
         needsChainRefresh = true;
       } else if (reward.key === "harvest") {
-        this.pickupLuck += 0.22;
+        this.pickupLuck += 0.16 + legendaryStack * 0.04;
         this.siphonLevel += 1;
-        this.score += 500;
-        this.experience += 18;
-        this.gainAwakeningCharge(24);
+        this.score += 260 + legendaryStack * 220;
+        this.experience += 14 + legendaryStack * 10;
+        this.hp = Math.min(this.maxHp, this.hp + 6 + legendaryStack * 4);
+        this.gainAwakeningCharge(18 + legendaryStack * 12);
       } else if (reward.key === "supernova") {
-        this.attackDamage += 2;
         this.blastLevel += 1;
-        this.pierceLevel += 1;
-        this.splitLevel += 1;
+        this.attackDamage += 1 + Math.floor(legendaryStack / 2);
+        this.attackRange += 24 + legendaryStack * 8;
+        needsBlastRefresh = true;
+
+        if (legendaryStack >= 2) {
+          this.attackCooldown = Math.max(120, this.attackCooldown - 10);
+          needsTimerRefresh = true;
+        }
       }
 
       if (needsTimerRefresh) {
@@ -719,10 +777,15 @@
         this.refreshChainTimer();
       }
 
+      if (needsBlastRefresh) {
+        this.refreshBlastTimer();
+      }
+
       overlayItems.forEach((item) => item.destroy());
       this.stageTransitionOverlay = null;
-      this.showFeedback(`${reward.label} 획득`, this.colorToHex(reward.accentColor));
-      this.showFloatingText(360, 268, reward.label, this.colorToHex(reward.accentColor), "36px");
+      this.showFeedback(`${reward.label} Lv ${legendaryStack}`, this.colorToHex(reward.accentColor));
+      this.showFloatingText(360, 268, `${reward.label} Lv ${legendaryStack}`, this.colorToHex(reward.accentColor), "36px");
+      this.playLegendaryRewardPulse(reward.accentColor, legendaryStack);
       this.refreshHud();
 
       if (typeof nextStageIndex === "number" && nextStageIndex < this.stageCount) {
@@ -1078,6 +1141,9 @@
       boss.damage = Math.max(8, Math.round(definition.damage * (stage.bossDamageMultiplier || 1)));
       boss.nextShotAt = this.time.now + Phaser.Math.Between(1200, 2100);
       boss.projectileKeys = definition.projectileKeys || [];
+      boss.bossPatternKeys = this.buildStageBossPatternLoadout(boss);
+      boss.bossPatternIndex = 0;
+      boss.dashUntil = 0;
       boss.baseScale = 1;
       boss.body.setSize(
         Math.floor((definition.displayWidth || 224) * 0.72),
@@ -1097,6 +1163,7 @@
 
       this.showFeedback(`스테이지 보스 등장: ${definition.word}`, "#ffb7a1");
       this.wordBurst(boss.x, boss.y, 0xffb7a1);
+      this.showFloatingText(boss.x, boss.y - 88, `${boss.bossPatternKeys.length}식 패턴`, "#ffd8c0", "18px");
     }
 
     startFinalBossPhase() {
@@ -1466,8 +1533,34 @@
       });
     }
 
+    refreshBlastTimer() {
+      if (this.blastTimer) {
+        this.blastTimer.remove(false);
+        this.blastTimer = null;
+      }
+
+      if (this.getBlastPowerLevel() <= 0) {
+        return;
+      }
+
+      const powerLevel = this.getBlastPowerLevel();
+      const supernovaLevel = this.getLegendaryLevel("supernova");
+      const delay = Math.max(1150, 3280 - powerLevel * 190 - supernovaLevel * 110);
+
+      this.blastTimer = this.time.addEvent({
+        delay: delay,
+        callback: this.castBlastWeapon,
+        callbackScope: this,
+        loop: true,
+      });
+    }
+
     getUpgradeLevel(key) {
       return this.upgradeLevels && this.upgradeLevels[key] ? this.upgradeLevels[key] : 0;
+    }
+
+    getLegendaryLevel(key) {
+      return this.legendaryLevels && this.legendaryLevels[key] ? this.legendaryLevels[key] : 0;
     }
 
     isUpgradeAvailable(upgrade) {
@@ -1521,6 +1614,33 @@
       return Math.min(0.34, 0.08 + this.trackingLevel * 0.05);
     }
 
+    getSplitShotCount() {
+      return 1 + Math.min(3, this.splitLevel);
+    }
+
+    getSplitDamageMultiplier() {
+      const penalties = [1, 0.7, 0.55, 0.45];
+      return penalties[Math.min(this.splitLevel, penalties.length - 1)];
+    }
+
+    getBlastPowerLevel() {
+      return this.blastLevel + this.getLegendaryLevel("supernova") * 2;
+    }
+
+    getHarvestAttractRadius() {
+      const harvestLevel = this.getLegendaryLevel("harvest");
+
+      if (harvestLevel <= 0) {
+        return 0;
+      }
+
+      return 86 + harvestLevel * 48;
+    }
+
+    getPlayerBaseScale() {
+      return 1 + this.getLegendaryLevel("giant") * 0.05;
+    }
+
     buildSpreadAngles(baseAngle, count, step) {
       const total = Math.max(1, count || 1);
 
@@ -1572,7 +1692,10 @@
       projectile.speed = settings.speed || 560;
       projectile.remainingPierce = settings.remainingPierce || 0;
       projectile.chainJumps = settings.chainJumps || 0;
-      projectile.blastDamage = settings.blastDamage || 0;
+      projectile.impactDamage = settings.impactDamage || 0;
+      projectile.impactRadius = settings.impactRadius || 0;
+      projectile.impactColor = settings.impactColor || 0xffd48b;
+      projectile.impactLabel = settings.impactLabel || "";
       projectile.homingStrength = settings.homingStrength || 0;
       projectile.hitTargets = new Set();
 
@@ -1602,6 +1725,7 @@
         return;
       }
 
+      const cometLevel = this.getLegendaryLevel("comet");
       const target = this.findNearestEnemyFromPoint(this.player.x, this.player.y, this.attackRange + 180);
 
       if (!target) {
@@ -1609,10 +1733,14 @@
       }
 
       const baseAngle = Phaser.Math.Angle.Between(this.player.x, this.player.y, target.x, target.y);
-      const count = 1 + Math.floor((this.spearLevel - 1) / 2) + Math.min(2, this.splitLevel);
-      const damage = Math.max(2, Math.round((3 + this.spearLevel * 1.6) * this.getWeaponAmplifyMultiplier()));
-      const pierce = 1 + Math.floor(this.spearLevel / 2) + this.pierceLevel;
-      const chainJumps = this.linkLevel > 0 ? 1 + Math.floor(this.linkLevel / 2) : 0;
+      const count = 1 + Math.floor((this.spearLevel - 1) / 2) + Math.floor(cometLevel / 2);
+      const damage = Math.max(2, Math.round(
+        (3 + this.spearLevel * 1.6 + cometLevel * 0.9) * this.getWeaponAmplifyMultiplier()
+      ));
+      const pierce = 1 + Math.floor(this.spearLevel / 2) + Math.floor(cometLevel / 2);
+      const chainJumps = this.linkLevel > 0
+        ? 1 + Math.floor(this.linkLevel / 2) + Math.floor(cometLevel / 2)
+        : Math.floor(cometLevel / 2);
       const angles = this.buildSpreadAngles(baseAngle, count, 0.14);
 
       angles.forEach((angle) => {
@@ -1631,7 +1759,6 @@
           bodyHeight: 12,
           remainingPierce: pierce,
           chainJumps: chainJumps,
-          blastDamage: this.blastLevel > 0 ? 1 + this.blastLevel : 0,
           homingStrength: this.getTrackingStrength(),
           tintColor: 0xffdf9c,
         });
@@ -1643,6 +1770,7 @@
         return;
       }
 
+      const cometLevel = this.getLegendaryLevel("comet");
       const startTarget = this.findNearestEnemyFromPoint(this.player.x, this.player.y, this.attackRange + 220);
 
       if (!startTarget) {
@@ -1650,8 +1778,10 @@
       }
 
       const hitIds = new Set();
-      const maxHits = 2 + this.chainLevel + this.linkLevel;
-      const chainDamage = Math.max(2, Math.round((2 + this.chainLevel * 1.3) * this.getWeaponAmplifyMultiplier()));
+      const maxHits = 2 + this.chainLevel + this.linkLevel + Math.floor(cometLevel / 2);
+      const chainDamage = Math.max(2, Math.round(
+        (2 + this.chainLevel * 1.3 + cometLevel * 0.75) * this.getWeaponAmplifyMultiplier()
+      ));
       const chainTargets = [];
       let current = startTarget;
       let currentX = this.player.x;
@@ -1692,13 +1822,57 @@
             }
           });
 
-          if (this.blastLevel > 0) {
-            this.triggerWeaponBlast(step.enemy.x, step.enemy.y, 56 + this.blastLevel * 6, 1 + this.blastLevel, step.enemy);
-          }
-
           if (step.enemy.hp <= 0) {
             this.defeatEnemy(step.enemy);
           }
+        });
+      });
+    }
+
+    castBlastWeapon() {
+      if (this.roundEnded || this.isLevelUp || this.getBlastPowerLevel() <= 0) {
+        return;
+      }
+
+      const powerLevel = this.getBlastPowerLevel();
+      const supernovaLevel = this.getLegendaryLevel("supernova");
+      const target = this.findNearestEnemyFromPoint(this.player.x, this.player.y, this.attackRange + 260 + powerLevel * 12);
+
+      if (!target) {
+        return;
+      }
+
+      const baseAngle = Phaser.Math.Angle.Between(this.player.x, this.player.y, target.x, target.y);
+      const shotCount = 1 + Math.floor((powerLevel - 1) / 4);
+      const directDamage = Math.max(3, Math.round(
+        (3.6 + powerLevel * 1.4 + supernovaLevel) * this.getWeaponAmplifyMultiplier()
+      ));
+      const blastDamage = Math.max(directDamage + 2, Math.round(
+        (7 + powerLevel * 2.6 + supernovaLevel * 1.8) * this.getWeaponAmplifyMultiplier()
+      ));
+      const blastRadius = 74 + powerLevel * 14 + supernovaLevel * 10;
+      const angles = this.buildSpreadAngles(baseAngle, shotCount, 0.16);
+
+      angles.forEach((angle) => {
+        this.spawnPlayerBullet({
+          x: this.player.x,
+          y: this.player.y - 12,
+          texture: "blast-shell",
+          weaponType: "blast",
+          angle: angle,
+          speed: 320 + powerLevel * 12,
+          damage: directDamage,
+          lifespan: 1450 + powerLevel * 40,
+          displayWidth: 34 + powerLevel * 3,
+          displayHeight: 34 + powerLevel * 3,
+          bodyCircleRadius: 12,
+          bodyCircleOffsetX: 14,
+          bodyCircleOffsetY: 14,
+          impactDamage: blastDamage,
+          impactRadius: blastRadius,
+          impactColor: supernovaLevel > 0 ? 0xffa07c : 0xffd48b,
+          impactLabel: "폭발",
+          tintColor: supernovaLevel > 0 ? 0xffb08a : 0xffd48b,
         });
       });
     }
@@ -1764,10 +1938,6 @@
             }
           });
 
-          if (this.blastLevel > 0) {
-            this.triggerWeaponBlast(step.enemy.x, step.enemy.y, 48 + this.blastLevel * 5, 1 + this.blastLevel, step.enemy);
-          }
-
           if (step.enemy.hp <= 0) {
             this.defeatEnemy(step.enemy);
           }
@@ -1828,25 +1998,56 @@
       this.mistZones.push(zone);
     }
 
-    triggerWeaponBlast(x, y, radius, damage, sourceEnemy) {
-      if (this.blastLevel <= 0 || this.roundEnded) {
+    detonateBlastShell(bullet, sourceEnemy) {
+      if (!bullet || !bullet.active) {
         return;
       }
 
+      this.triggerWeaponBlast(
+        bullet.x,
+        bullet.y,
+        bullet.impactRadius || 92,
+        bullet.impactDamage || 0,
+        sourceEnemy,
+        {
+          color: bullet.impactColor,
+          label: bullet.impactLabel,
+          heavy: true,
+        }
+      );
+      bullet.destroy();
+    }
+
+    triggerWeaponBlast(x, y, radius, damage, sourceEnemy, options) {
+      if (this.roundEnded || radius <= 0 || damage <= 0) {
+        return;
+      }
+
+      const settings = options || {};
+      const blastColor = settings.color || 0xffd48b;
       const baseScale = Math.max(0.3, radius / 150);
       const blast = this.add.image(x, y, "weapon-blast-wave")
-        .setTint(0xffd48b)
-        .setAlpha(0.46)
+        .setTint(blastColor)
+        .setAlpha(settings.heavy ? 0.62 : 0.46)
         .setScale(baseScale)
         .setDepth(6);
 
       this.tweens.add({
         targets: blast,
         alpha: 0,
-        scale: baseScale * 1.28,
-        duration: 180,
+        scale: baseScale * (settings.heavy ? 1.52 : 1.28),
+        duration: settings.heavy ? 230 : 180,
         onComplete: () => blast.destroy(),
       });
+
+      if (settings.label) {
+        this.showFloatingText(x, y - Math.max(26, radius * 0.28), settings.label, this.colorToHex(blastColor), "22px");
+      }
+
+      if (settings.heavy) {
+        this.wordBurst(x, y, blastColor);
+        this.cameras.main.shake(80, 0.0024);
+      }
 
       this.enemies.children.iterate((enemy) => {
         if (!enemy || !enemy.active || enemy === sourceEnemy) {
@@ -1923,10 +2124,12 @@
       }
 
       const angle = Phaser.Math.Angle.Between(this.player.x, this.player.y, target.x, target.y);
-      const count = 1 + Math.min(2, this.splitLevel);
-      const bulletDamage = Math.max(1, Math.round(this.getActiveAttackDamage() * this.getWeaponAmplifyMultiplier()));
+      const count = this.getSplitShotCount();
+      const bulletDamage = Math.max(1, Math.round(
+        this.getActiveAttackDamage() * this.getWeaponAmplifyMultiplier() * this.getSplitDamageMultiplier()
+      ));
       const chainJumps = this.linkLevel > 0 ? 1 + Math.floor(this.linkLevel / 2) : 0;
-      const angles = this.buildSpreadAngles(angle, count, 0.16);
+      const angles = this.buildSpreadAngles(angle, count, 0.16 + this.splitLevel * 0.02);
 
       angles.forEach((shotAngle) => {
         const bullet = this.spawnPlayerBullet({
@@ -1942,9 +2145,7 @@
           bodyCircleRadius: 6,
           bodyCircleOffsetX: 2,
           bodyCircleOffsetY: 2,
-          remainingPierce: this.pierceLevel,
           chainJumps: chainJumps,
-          blastDamage: this.blastLevel > 0 ? 1 + this.blastLevel : 0,
           homingStrength: this.getTrackingStrength(),
           tintColor: 0xfff0c4,
         });
@@ -1954,6 +2155,47 @@
 
     getNearestEnemyInRange() {
       return this.findNearestEnemyFromPoint(this.player.x, this.player.y, this.attackRange);
+    }
+
+    getStageBossPatternLimit() {
+      return Math.min(8, 4 + this.currentStageIndex);
+    }
+
+    buildStageBossPatternLoadout(enemy) {
+      const patternsByMotion = {
+        despair: ["aimed", "meteor", "spread", "cross", "dash", "sidewall", "summon", "nova"],
+        chaos: ["aimed", "nova", "spread", "sidewall", "meteor", "cross", "dash", "summon"],
+        fear: ["aimed", "spread", "meteor", "cross", "sidewall", "dash", "nova", "summon"],
+        frustration: ["aimed", "dash", "spread", "cross", "meteor", "sidewall", "summon", "nova"],
+      };
+      const fallback = ["aimed", "spread", "meteor", "dash", "cross", "sidewall", "summon", "nova"];
+      const motion = enemy && enemy.motion ? enemy.motion : "";
+      const ordered = (patternsByMotion[motion] || fallback).slice();
+
+      return ordered.slice(0, this.getStageBossPatternLimit());
+    }
+
+    getStageBossAttackConfig(patternKey) {
+      const table = this.vocabData.stageBossAttacks || {};
+      return table[patternKey] || table.aimed || { word: "압박", color: 0xffd1c7, projectileKey: "pressure", cooldown: 1800 };
+    }
+
+    getBossProjectileEntry(enemy, preferredKey) {
+      const entries = this.vocabData.bossProjectileWords || [];
+
+      if (!entries.length) {
+        return { key: "pressure", word: "압박", damage: 9, color: 0xffc1b0, texture: "enemy-bullet-pressure", scale: 1 };
+      }
+
+      if (preferredKey) {
+        const exact = entries.find((entry) => entry.key === preferredKey);
+
+        if (exact) {
+          return exact;
+        }
+      }
+
+      return this.pickRandomBossProjectile(enemy);
     }
 
     pickRandomBossProjectile(enemy) {
@@ -1974,6 +2216,29 @@
       return filtered[Phaser.Math.Between(0, filtered.length - 1)];
     }
 
+    spawnBossProjectile(x, y, angle, speed, attack, options) {
+      const settings = options || {};
+      const projectile = this.enemyProjectiles.create(x, y, attack.texture || "enemy-bullet");
+      projectile.setDepth(settings.depth || 3);
+      projectile.setTint(settings.tintColor || attack.color);
+      projectile.attackWord = settings.attackWord || attack.word;
+      projectile.damage = settings.damage || attack.damage;
+      projectile.lifespan = settings.lifespan || 3200;
+      projectile.rotationSpeed = settings.rotationSpeed != null ? settings.rotationSpeed : (attack.spin || 0);
+      projectile.setScale(settings.scale || attack.scale || 1);
+      projectile.body.setCircle(settings.bodyRadius || 10, settings.bodyOffsetX || 2, settings.bodyOffsetY || 2);
+      projectile.rotation = angle;
+      this.physics.velocityFromRotation(angle, speed, projectile.body.velocity);
+      return projectile;
+    }
+
+    getStageBossAttackDelay(enemy, patternKey) {
+      const config = this.getStageBossAttackConfig(patternKey);
+      const stageReduction = this.currentStageIndex * 120;
+      const bossReduction = Math.max(0, ((enemy && enemy.bossPatternKeys ? enemy.bossPatternKeys.length : 4) - 4) * 35);
+      return Math.max(760, (config.cooldown || 1900) - stageReduction - bossReduction);
+    }
+
     tryBossShot(enemy) {
       if (!enemy.active || enemy.enemyKind !== "boss" || this.roundEnded || this.isLevelUp) {
         return;
@@ -1985,33 +2250,282 @@
         return;
       }
 
-      const distance = Phaser.Math.Distance.Between(enemy.x, enemy.y, this.player.x, this.player.y);
+      const patternKeys = enemy.bossPatternKeys && enemy.bossPatternKeys.length
+        ? enemy.bossPatternKeys
+        : this.buildStageBossPatternLoadout(enemy);
+      const patternKey = patternKeys[(enemy.bossPatternIndex || 0) % patternKeys.length] || "aimed";
+      enemy.bossPatternIndex = (enemy.bossPatternIndex || 0) + 1;
 
-      if (distance > 620) {
-        enemy.nextShotAt = now + 260;
+      this.executeStageBossPattern(enemy, patternKey);
+      enemy.nextShotAt = now + this.getStageBossAttackDelay(enemy, patternKey);
+    }
+
+    executeStageBossPattern(enemy, patternKey) {
+      if (!enemy || !enemy.active) {
         return;
       }
 
-      const attack = this.pickRandomBossProjectile(enemy);
-      const projectile = this.enemyProjectiles.create(enemy.x, enemy.y + 10, attack.texture || "enemy-bullet");
-      projectile.setDepth(3);
-      projectile.setTint(attack.color);
-      projectile.attackWord = attack.word;
-      projectile.damage = attack.damage + Math.floor((this.roundSeconds - this.timeRemaining) / 24);
-      projectile.lifespan = 3200;
-      projectile.rotationSpeed = attack.spin || 0;
-      projectile.setScale(attack.scale || 1);
-      projectile.body.setCircle(10, 2, 2);
+      if (patternKey === "spread") {
+        this.castStageBossSpread(enemy);
+        return;
+      }
 
+      if (patternKey === "nova") {
+        this.castStageBossNova(enemy);
+        return;
+      }
+
+      if (patternKey === "meteor") {
+        this.castStageBossMeteor(enemy);
+        return;
+      }
+
+      if (patternKey === "dash") {
+        this.castStageBossDash(enemy);
+        return;
+      }
+
+      if (patternKey === "cross") {
+        this.castStageBossCross(enemy);
+        return;
+      }
+
+      if (patternKey === "sidewall") {
+        this.castStageBossSidewall(enemy);
+        return;
+      }
+
+      if (patternKey === "summon") {
+        this.castStageBossSummon(enemy);
+        return;
+      }
+
+      this.castStageBossAimed(enemy);
+    }
+
+    castStageBossAimed(enemy) {
+      const config = this.getStageBossAttackConfig("aimed");
+      const attack = this.getBossProjectileEntry(enemy, config.projectileKey);
       const angle = Phaser.Math.Angle.Between(enemy.x, enemy.y, this.player.x, this.player.y);
-      const speed = 260 + Math.min(90, (this.roundSeconds - this.timeRemaining) * 0.8);
-      this.physics.velocityFromRotation(angle, speed, projectile.body.velocity);
-      projectile.rotation = angle;
+      const speed = 270 + this.currentStageIndex * 24;
 
-      enemy.nextShotAt = now + Phaser.Math.Between(1600, 2400);
+      this.spawnBossProjectile(enemy.x, enemy.y + 10, angle, speed, attack, {
+        damage: attack.damage + Math.floor(this.getStageElapsedSeconds() / 26),
+      });
       this.showFloatingText(enemy.x, enemy.y - 64, attack.word, "#ffd1c7", "18px");
+      this.flashBossMuzzle(enemy, attack.color);
+    }
 
-      const flare = this.add.circle(enemy.x, enemy.y + 8, 18, attack.color, 0.26).setDepth(5);
+    castStageBossSpread(enemy) {
+      const config = this.getStageBossAttackConfig("spread");
+      const attack = this.getBossProjectileEntry(enemy, config.projectileKey);
+      const baseAngle = Phaser.Math.Angle.Between(enemy.x, enemy.y, this.player.x, this.player.y);
+      const bulletCount = 5 + Math.min(2, Math.floor(this.currentStageIndex / 2));
+      const spread = 0.18;
+
+      this.showFloatingText(enemy.x, enemy.y - 72, config.word, this.colorToHex(config.color), "20px");
+
+      for (let index = 0; index < bulletCount; index += 1) {
+        const offset = (index - (bulletCount - 1) / 2) * spread;
+        this.spawnBossProjectile(enemy.x, enemy.y + 10, baseAngle + offset, 250 + this.currentStageIndex * 18, attack, {
+          scale: (attack.scale || 1) * 0.94,
+          damage: attack.damage + 1,
+        });
+      }
+
+      this.flashBossMuzzle(enemy, config.color);
+    }
+
+    castStageBossNova(enemy) {
+      const config = this.getStageBossAttackConfig("nova");
+      const attack = this.getBossProjectileEntry(enemy, config.projectileKey);
+      const count = 8 + Math.min(4, this.currentStageIndex);
+
+      this.showFloatingText(enemy.x, enemy.y - 72, config.word, this.colorToHex(config.color), "20px");
+
+      for (let index = 0; index < count; index += 1) {
+        const angle = (Math.PI * 2 * index) / count + ((enemy.bossPatternIndex || 0) % 2) * 0.1;
+        this.spawnBossProjectile(enemy.x, enemy.y + 10, angle, 220 + this.currentStageIndex * 16, attack, {
+          scale: (attack.scale || 1) * 0.92,
+          damage: attack.damage,
+        });
+      }
+
+      this.flashBossMuzzle(enemy, config.color);
+    }
+
+    castStageBossMeteor(enemy) {
+      const config = this.getStageBossAttackConfig("meteor");
+      const targetCount = 3 + Math.min(2, Math.floor(this.currentStageIndex / 2));
+      const targets = [];
+
+      for (let index = 0; index < targetCount; index += 1) {
+        targets.push({
+          x: index === 0
+            ? this.player.x
+            : Phaser.Math.Clamp(this.player.x + Phaser.Math.Between(-150, 150), 90, 630),
+          y: index === 0
+            ? this.player.y
+            : Phaser.Math.Clamp(this.player.y + Phaser.Math.Between(-170, 170), 240, 1180),
+        });
+      }
+
+      this.showFloatingText(enemy.x, enemy.y - 72, config.word, this.colorToHex(config.color), "20px");
+
+      targets.forEach((target, index) => {
+        const telegraph = this.add.image(target.x, target.y, "final-warning-ring")
+          .setTint(0xffefab)
+          .setAlpha(0.28)
+          .setScale(0.34)
+          .setDepth(6);
+
+        this.tweens.add({
+          targets: telegraph,
+          scale: 0.84,
+          alpha: 0.68,
+          duration: 520,
+          delay: index * 80,
+          ease: "Sine.easeOut",
+        });
+
+        this.time.delayedCall(520 + index * 80, () => {
+          if (telegraph.active) {
+            this.tweens.killTweensOf(telegraph);
+            telegraph.destroy();
+          }
+
+          if (this.roundEnded || this.isLevelUp || !enemy.active || enemy.enemyKind !== "boss") {
+            return;
+          }
+
+          const blast = this.add.image(target.x, target.y, "final-impact-wave")
+            .setTint(0xffd67d)
+            .setAlpha(0.42)
+            .setScale(0.44)
+            .setDepth(7);
+
+          this.tweens.add({
+            targets: blast,
+            scale: 0.92,
+            alpha: 0,
+            duration: 210,
+            onComplete: () => blast.destroy(),
+          });
+
+          this.wordBurst(target.x, target.y, 0xffefab);
+
+          if (Phaser.Math.Distance.Between(this.player.x, this.player.y, target.x, target.y) <= 58) {
+            this.applyPlayerDamage(enemy.damage + 2, target.x, target.y, `${config.word} 충격`);
+          }
+        });
+      });
+    }
+
+    castStageBossDash(enemy) {
+      const config = this.getStageBossAttackConfig("dash");
+      const attack = this.getBossProjectileEntry(enemy, config.projectileKey);
+      const angle = Phaser.Math.Angle.Between(enemy.x, enemy.y, this.player.x, this.player.y);
+
+      enemy.dashUntil = this.time.now + 420 + this.currentStageIndex * 40;
+      this.physics.velocityFromRotation(angle, 400 + this.currentStageIndex * 30, enemy.body.velocity);
+      this.showFloatingText(enemy.x, enemy.y - 72, config.word, this.colorToHex(config.color), "20px");
+
+      this.time.delayedCall(430 + this.currentStageIndex * 40, () => {
+        if (!enemy.active || enemy.enemyKind !== "boss" || this.roundEnded || this.isLevelUp) {
+          return;
+        }
+
+        enemy.dashUntil = 0;
+
+        for (let index = 0; index < 7; index += 1) {
+          const shotAngle = angle - 0.56 + index * 0.18;
+          this.spawnBossProjectile(enemy.x, enemy.y + 8, shotAngle, 270 + this.currentStageIndex * 18, attack, {
+            damage: attack.damage + 1,
+          });
+        }
+
+        this.flashBossMuzzle(enemy, config.color);
+      });
+    }
+
+    castStageBossCross(enemy) {
+      const config = this.getStageBossAttackConfig("cross");
+      const attack = this.getBossProjectileEntry(enemy, config.projectileKey);
+      const angles = [0, Math.PI / 2, Math.PI, Math.PI * 1.5, Math.PI / 4, (Math.PI * 3) / 4, (Math.PI * 5) / 4, (Math.PI * 7) / 4];
+
+      this.showFloatingText(enemy.x, enemy.y - 72, config.word, this.colorToHex(config.color), "20px");
+      angles.forEach((angle) => {
+        this.spawnBossProjectile(enemy.x, enemy.y + 10, angle, 238 + this.currentStageIndex * 16, attack, {
+          scale: (attack.scale || 1) * 0.96,
+        });
+      });
+
+      this.flashBossMuzzle(enemy, config.color);
+    }
+
+    castStageBossSidewall(enemy) {
+      const config = this.getStageBossAttackConfig("sidewall");
+      const attack = this.getBossProjectileEntry(enemy, config.projectileKey);
+      const rows = 3 + Math.min(2, Math.floor(this.currentStageIndex / 2));
+      const startY = Phaser.Math.Clamp(this.player.y - 120, 260, 980);
+
+      this.showFloatingText(enemy.x, enemy.y - 72, config.word, this.colorToHex(config.color), "20px");
+
+      for (let index = 0; index < rows; index += 1) {
+        const y = Phaser.Math.Clamp(startY + index * 70, 250, 1140);
+        const leftAngle = Phaser.Math.Angle.Between(32, y, this.player.x, this.player.y);
+        const rightAngle = Phaser.Math.Angle.Between(688, y, this.player.x, this.player.y);
+
+        this.spawnBossProjectile(32, y, leftAngle, 260 + this.currentStageIndex * 18, attack, {
+          scale: (attack.scale || 1) * 0.9,
+          damage: attack.damage,
+        });
+        this.spawnBossProjectile(688, y, rightAngle, 260 + this.currentStageIndex * 18, attack, {
+          scale: (attack.scale || 1) * 0.9,
+          damage: attack.damage,
+        });
+      }
+
+      this.flashBossMuzzle(enemy, config.color);
+    }
+
+    castStageBossSummon(enemy) {
+      const config = this.getStageBossAttackConfig("summon");
+      const attack = this.getBossProjectileEntry(enemy, config.projectileKey);
+      const activeNegativeCount = this.countActiveNegativeEnemies();
+      const summonCount = activeNegativeCount >= 16 ? 1 : Math.min(3, 2 + Math.floor(this.currentStageIndex / 2));
+
+      this.showFloatingText(enemy.x, enemy.y - 72, config.word, this.colorToHex(config.color), "20px");
+
+      for (let index = 0; index < summonCount; index += 1) {
+        this.createNegativeEnemy(
+          "swarm",
+          Phaser.Math.Clamp(enemy.x + Phaser.Math.Between(-76, 76), 44, 676),
+          Phaser.Math.Clamp(enemy.y + Phaser.Math.Between(34, 92), 240, 1180),
+          {
+            forceRoleKey: index % 2 === 0 ? "rush" : "chaser",
+            isSummoned: true,
+            hpMultiplier: 0.78 + this.currentStageIndex * 0.04,
+            speedMultiplier: 1.08 + this.currentStageIndex * 0.04,
+            damageMultiplier: 0.84 + this.currentStageIndex * 0.04,
+            scoreMultiplier: 0.86,
+          }
+        );
+      }
+
+      const baseAngle = Phaser.Math.Angle.Between(enemy.x, enemy.y, this.player.x, this.player.y);
+      for (let index = -1; index <= 1; index += 1) {
+        this.spawnBossProjectile(enemy.x, enemy.y + 8, baseAngle + index * 0.18, 250 + this.currentStageIndex * 14, attack, {
+          scale: (attack.scale || 1) * 0.92,
+          damage: attack.damage,
+        });
+      }
+
+      this.flashBossMuzzle(enemy, config.color);
+    }
+
+    flashBossMuzzle(enemy, color) {
+      const flare = this.add.circle(enemy.x, enemy.y + 8, 18, color, 0.26).setDepth(5);
       this.tweens.add({
         targets: flare,
         scale: 1.5,
@@ -2029,6 +2543,18 @@
       }
 
       return damage;
+    }
+
+    countActiveNegativeEnemies() {
+      let count = 0;
+
+      this.enemies.children.iterate((enemy) => {
+        if (enemy && enemy.active && enemy.enemyKind === "negative") {
+          count += 1;
+        }
+      });
+
+      return count;
     }
 
     tryEnemyRoleAction(enemy) {
@@ -2196,6 +2722,106 @@
       });
     }
 
+    playLegendaryRewardPulse(colorValue, stack) {
+      const pulse = this.add.image(this.player.x, this.player.y, "weapon-blast-wave")
+        .setTint(colorValue || 0xffffff)
+        .setAlpha(0.56)
+        .setScale(0.42)
+        .setDepth(8);
+
+      this.tweens.add({
+        targets: pulse,
+        alpha: 0,
+        scale: 1.4 + stack * 0.22,
+        duration: 380,
+        ease: "Cubic.out",
+        onComplete: () => pulse.destroy(),
+      });
+      this.wordBurst(this.player.x, this.player.y, colorValue || 0xffffff);
+    }
+
+    updateLegendaryVisuals() {
+      const time = this.time.now;
+      const giantLevel = this.getLegendaryLevel("giant");
+      const tempestLevel = this.getLegendaryLevel("tempest");
+      const cometLevel = this.getLegendaryLevel("comet");
+      const harvestLevel = this.getLegendaryLevel("harvest");
+      const supernovaLevel = this.getLegendaryLevel("supernova");
+
+      this.giantHalo.setVisible(giantLevel > 0);
+
+      if (giantLevel > 0) {
+        this.giantHalo.setPosition(this.player.x, this.player.y);
+        this.giantHalo.setScale(1 + giantLevel * 0.16 + Math.abs(Math.sin(time * 0.006)) * 0.06);
+        this.giantHalo.setAlpha(0.18 + giantLevel * 0.04);
+      }
+
+      this.tempestRing.setPosition(this.player.x, this.player.y);
+      this.tempestRing.setScale(0.82 + tempestLevel * 0.16 + Math.abs(Math.sin(time * 0.01)) * 0.08);
+      this.tempestRing.setAlpha(tempestLevel > 0 ? 0.16 + tempestLevel * 0.05 : 0);
+
+      this.harvestRing.setPosition(this.player.x, this.player.y);
+      this.harvestRing.setScale(0.74 + harvestLevel * 0.14 + Math.abs(Math.sin(time * 0.012)) * 0.05);
+      this.harvestRing.setAlpha(harvestLevel > 0 ? 0.14 + harvestLevel * 0.05 : 0);
+
+      this.supernovaRing.setPosition(this.player.x, this.player.y);
+      this.supernovaRing.setScale(0.88 + supernovaLevel * 0.18 + Math.abs(Math.sin(time * 0.016)) * 0.1);
+      this.supernovaRing.setAlpha(supernovaLevel > 0 ? 0.18 + supernovaLevel * 0.06 : 0);
+
+      this.cometOrbitals.forEach((orb, index) => {
+        if (cometLevel <= 0) {
+          orb.setAlpha(0);
+          return;
+        }
+
+        const angle = time * 0.0048 + index * (Math.PI * 2 / this.cometOrbitals.length);
+        const radius = 36 + cometLevel * 12;
+        orb.setPosition(
+          this.player.x + Math.cos(angle) * radius,
+          this.player.y + Math.sin(angle) * radius
+        );
+        orb.setScale(0.7 + cometLevel * 0.08);
+        orb.setAlpha(0.5 + Math.abs(Math.sin(time * 0.012 + index)) * 0.25);
+      });
+
+      this.harvestOrbitals.forEach((orb, index) => {
+        if (harvestLevel <= 0) {
+          orb.setAlpha(0);
+          return;
+        }
+
+        const angle = -time * 0.0036 + index * (Math.PI * 2 / this.harvestOrbitals.length);
+        const radius = 34 + harvestLevel * 11;
+        orb.setPosition(
+          this.player.x + Math.cos(angle) * radius,
+          this.player.y + Math.sin(angle) * radius
+        );
+        orb.setScale(0.88 + harvestLevel * 0.05);
+        orb.setAlpha(0.52 + Math.abs(Math.sin(time * 0.01 + index)) * 0.24);
+      });
+    }
+
+    applyHarvestPickupAura() {
+      const radius = this.getHarvestAttractRadius();
+
+      if (radius <= 0 || this.roundEnded || this.isLevelUp) {
+        return;
+      }
+
+      this.pickups.children.iterate((pickup) => {
+        if (!pickup || !pickup.active || pickup.isMagnetized) {
+          return;
+        }
+
+        const distance = Phaser.Math.Distance.Between(this.player.x, this.player.y, pickup.x, pickup.y);
+
+        if (distance <= radius) {
+          this.isMagnetCollecting = true;
+          this.magnetizePickup(pickup);
+        }
+      });
+    }
+
     announceAwakening() {
       this.awakeningBanner.setText("각성 폭주");
       this.awakeningBanner.setAlpha(0);
@@ -2283,7 +2909,7 @@
 
     createRunSummary(cleared, defeatedBy) {
       const stageReached = this.getReachedStageNumber();
-      const stageThemeTrail = (this.vocabData.stages || [])
+      const stageThemeTrail = this.getStagePool()
         .slice(0, stageReached)
         .map((stage) => stage.label);
 
@@ -2373,14 +2999,14 @@
         bullet.chainJumps = 0;
       }
 
-      if ((bullet.blastDamage || 0) > 0) {
-        this.triggerWeaponBlast(
-          enemy.x,
-          enemy.y,
-          52 + this.blastLevel * 6 + (bullet.weaponType === "spear" ? 10 : 0),
-          bullet.blastDamage,
-          enemy
-        );
+      if ((bullet.impactDamage || 0) > 0) {
+        this.detonateBlastShell(bullet, enemy);
+
+        if (enemy.hp <= 0) {
+          this.defeatEnemy(enemy);
+        }
+
+        return;
       }
 
       if (enemy.hp <= 0) {
@@ -2456,10 +3082,6 @@
         }
       });
 
-      if (this.blastLevel > 0 && this.fireLevel >= 3) {
-        this.triggerWeaponBlast(enemy.x, enemy.y, 46 + this.blastLevel * 5, 1 + this.blastLevel, enemy);
-      }
-
       if (enemy.hp <= 0) {
         this.defeatEnemy(enemy);
       }
@@ -2490,10 +3112,6 @@
           enemy.setAlpha(1);
         }
       });
-
-      if (this.blastLevel > 0 && this.shieldWeaponLevel >= 3) {
-        this.triggerWeaponBlast(enemy.x, enemy.y, 50 + this.blastLevel * 5, 1 + this.blastLevel, enemy);
-      }
 
       if (enemy.hp <= 0) {
         this.defeatEnemy(enemy);
@@ -3164,6 +3782,7 @@
       let needsChainRefresh = false;
       let needsMistRefresh = false;
       let needsShieldRefresh = false;
+      let needsBlastRefresh = false;
 
       this.upgradeLevels[upgrade.key] = this.getUpgradeLevel(upgrade.key) + 1;
 
@@ -3203,8 +3822,6 @@
       } else if (upgrade.key === "mist") {
         this.mistLevel += 1;
         needsMistRefresh = true;
-      } else if (upgrade.key === "pierce") {
-        this.pierceLevel = this.getUpgradeLevel("pierce");
       } else if (upgrade.key === "link") {
         this.linkLevel = this.getUpgradeLevel("link");
       } else if (upgrade.key === "split") {
@@ -3220,6 +3837,7 @@
         this.trackingLevel = this.getUpgradeLevel("tracking");
       } else if (upgrade.key === "blast") {
         this.blastLevel = this.getUpgradeLevel("blast");
+        needsBlastRefresh = true;
       }
 
       overlayItems.forEach((item) => item.destroy());
@@ -3253,6 +3871,10 @@
 
       if (needsShieldRefresh) {
         this.syncShieldWeapon();
+      }
+
+      if (needsBlastRefresh) {
+        this.refreshBlastTimer();
       }
 
       this.showFeedback(`${upgrade.label} 강화`, "#ffd4aa");
@@ -3300,6 +3922,10 @@
         this.mistTimer.paused = paused;
       }
 
+      if (this.blastTimer) {
+        this.blastTimer.paused = paused;
+      }
+
       if (this.finalBossAttackTimer) {
         this.finalBossAttackTimer.paused = paused;
       }
@@ -3337,10 +3963,6 @@
           this.recordDamageDealt(enemy, damage);
           enemy.hp -= damage;
           this.drawLightning(enemy.x, enemy.y);
-
-          if (this.blastLevel > 0) {
-            this.triggerWeaponBlast(enemy.x, enemy.y, 52 + this.blastLevel * 6, 1 + this.blastLevel, enemy);
-          }
 
           if (enemy.hp <= 0) {
             this.defeatEnemy(enemy);
@@ -3702,6 +4324,7 @@
         this.updateFireOrbs(delta);
         this.updateShieldOrbs(delta);
         this.updateLabels();
+        this.updateLegendaryVisuals();
         return;
       }
 
@@ -3738,6 +4361,7 @@
       this.updateFireOrbs(delta);
       this.updateShieldOrbs(delta);
       this.updateMistZones();
+      this.applyHarvestPickupAura();
       this.updateMagnetPulls(delta);
       this.updateLabels();
 
@@ -3774,15 +4398,19 @@
         this.awakeningRing.setAlpha(0);
       }
 
+      this.updateLegendaryVisuals();
+
+      const basePlayerScale = this.getPlayerBaseScale();
+
       if (this.isTransformActive()) {
         const morphPulse = 1.1 + Math.abs(Math.sin(this.time.now * 0.016)) * 0.14;
-        this.player.setScale(morphPulse);
+        this.player.setScale(basePlayerScale * morphPulse);
         this.player.setTint(0xffd6fb);
       } else if (this.time.now >= this.playerInvulnerableUntil) {
-        this.player.setScale(1);
+        this.player.setScale(basePlayerScale);
         this.player.clearTint();
       } else {
-        this.player.setScale(1);
+        this.player.setScale(basePlayerScale);
       }
 
       if (this.time.now > this.feedbackUntil) {
@@ -3835,7 +4463,11 @@
         }
 
         if (bullet.lifespan <= 0 || bullet.x < -40 || bullet.x > 760 || bullet.y < -40 || bullet.y > 1320) {
-          bullet.destroy();
+          if (bullet.weaponType === "blast" && (bullet.impactDamage || 0) > 0) {
+            this.detonateBlastShell(bullet);
+          } else {
+            bullet.destroy();
+          }
         }
       });
 
@@ -3879,6 +4511,11 @@
         }
 
         if (enemy.enemyKind === "finalBoss" && (enemy.dashUntil || 0) > this.time.now) {
+          this.updateBossVisual(enemy);
+          return;
+        }
+
+        if (enemy.enemyKind === "boss" && (enemy.dashUntil || 0) > this.time.now) {
           this.updateBossVisual(enemy);
           return;
         }
