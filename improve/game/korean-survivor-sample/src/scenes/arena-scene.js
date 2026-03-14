@@ -51,6 +51,11 @@
       this.feedbackUntil = 0;
       this.transformUntil = 0;
       this.isMagnetCollecting = false;
+      this.joystickActive = false;
+      this.joystickOriginX = 0;
+      this.joystickOriginY = 0;
+      this.joystickRadius = 72;
+      this.joystickDeadZone = 12;
 
       this.attackDamage = 1;
       this.basePlayerSpeed = 248;
@@ -106,8 +111,8 @@
       this.awakeningRing = this.add.circle(360, 860, 56, 0xffd166, 0.06).setStrokeStyle(5, 0xfff0b5, 0.72).setVisible(false).setDepth(6);
       this.magnetField = this.add.circle(360, 860, 74, 0x89ecff, 0.05).setStrokeStyle(4, 0xcff8ff, 0.68).setVisible(false).setDepth(6);
       this.magnetLinks = this.add.graphics().setDepth(3);
-      this.touchRing = this.add.circle(0, 0, 34, 0xffffff, 0.06).setStrokeStyle(2, 0xffffff, 0.12).setVisible(false).setDepth(30);
-      this.touchDot = this.add.circle(0, 0, 10, 0xffffff, 0.2).setVisible(false).setDepth(31);
+      this.touchRing = this.add.circle(0, 0, this.joystickRadius, 0xffffff, 0.08).setStrokeStyle(3, 0xffffff, 0.18).setVisible(false).setDepth(30);
+      this.touchDot = this.add.circle(0, 0, 22, 0xffffff, 0.22).setStrokeStyle(2, 0xffffff, 0.22).setVisible(false).setDepth(31);
 
       this.createHud();
 
@@ -3210,6 +3215,54 @@
       return speed;
     }
 
+    resetTouchJoystick() {
+      this.joystickActive = false;
+      this.touchRing.setVisible(false);
+      this.touchDot.setVisible(false);
+    }
+
+    beginTouchJoystick(worldPoint) {
+      this.joystickActive = true;
+      this.joystickOriginX = worldPoint.x;
+      this.joystickOriginY = worldPoint.y;
+      this.touchRing.setPosition(worldPoint.x, worldPoint.y).setVisible(true);
+      this.touchDot.setPosition(worldPoint.x, worldPoint.y).setVisible(true);
+    }
+
+    updateTouchJoystick(worldPoint) {
+      if (!this.joystickActive) {
+        this.beginTouchJoystick(worldPoint);
+      }
+
+      const dx = worldPoint.x - this.joystickOriginX;
+      const dy = worldPoint.y - this.joystickOriginY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      const clampedDistance = Math.min(distance, this.joystickRadius);
+      const angle = distance > 0 ? Math.atan2(dy, dx) : 0;
+      const knobX = this.joystickOriginX + Math.cos(angle) * clampedDistance;
+      const knobY = this.joystickOriginY + Math.sin(angle) * clampedDistance;
+      const moveSpeed = this.getMovementSpeed();
+
+      this.touchRing.setPosition(this.joystickOriginX, this.joystickOriginY).setVisible(true);
+      this.touchDot.setPosition(knobX, knobY).setVisible(true);
+
+      if (distance <= this.joystickDeadZone) {
+        this.player.body.setVelocity(0, 0);
+        return;
+      }
+
+      const intensity = Phaser.Math.Clamp(
+        (clampedDistance - this.joystickDeadZone) / Math.max(1, this.joystickRadius - this.joystickDeadZone),
+        0,
+        1
+      );
+
+      this.player.body.setVelocity(
+        Math.cos(angle) * moveSpeed * intensity,
+        Math.sin(angle) * moveSpeed * intensity
+      );
+    }
+
     refreshHud() {
       const stage = this.getCurrentStageData();
       const nextStage = this.getStageData(this.currentStageIndex + 1);
@@ -3284,8 +3337,7 @@
 
       if (this.isLevelUp) {
         this.player.body.setVelocity(0, 0);
-        this.touchRing.setVisible(false);
-        this.touchDot.setVisible(false);
+        this.resetTouchJoystick();
         this.magnetLinks.clear();
         this.magnetField.setVisible(false);
         this.updateFireOrbs(delta);
@@ -3295,22 +3347,9 @@
       }
 
       if (pointer.isDown) {
-        this.touchRing.setPosition(worldPoint.x, worldPoint.y).setVisible(true);
-        this.touchDot.setPosition(worldPoint.x, worldPoint.y).setVisible(true);
-
-        const dx = worldPoint.x - this.player.x;
-        const dy = worldPoint.y - this.player.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        const moveSpeed = this.getMovementSpeed();
-
-        if (distance > 10) {
-          this.player.body.setVelocity((dx / distance) * moveSpeed, (dy / distance) * moveSpeed);
-        } else {
-          this.player.body.setVelocity(0, 0);
-        }
+        this.updateTouchJoystick(worldPoint);
       } else {
-        this.touchRing.setVisible(false);
-        this.touchDot.setVisible(false);
+        this.resetTouchJoystick();
         this.player.body.setVelocity(0, 0);
       }
 
