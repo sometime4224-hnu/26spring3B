@@ -1109,6 +1109,45 @@
       this.startFinalBossRushPhase();
     }
 
+    createBossRushTestActionButton(config) {
+      const x = config.x;
+      const y = config.y;
+      const width = config.width;
+      const height = config.height;
+      const activeFill = config.activeFill || 0xffc985;
+      const idleFill = config.idleFill || 0xffffff;
+      const activeAlpha = config.activeAlpha == null ? 0.24 : config.activeAlpha;
+      const strokeColor = config.strokeColor || 0xffe0b5;
+      const depth = config.depth || 72;
+      const textColor = config.textColor || "#fffaf1";
+      const fontSize = config.fontSize || "26px";
+      const bg = this.add.rectangle(x, y, width, height, activeFill, activeAlpha)
+        .setDepth(depth)
+        .setStrokeStyle(2, strokeColor, 0.38)
+        .setInteractive({ useHandCursor: true });
+      const label = this.add.text(x, y, config.label, {
+        fontFamily: this.font,
+        fontSize: fontSize,
+        fontStyle: "800",
+        color: textColor,
+      }).setOrigin(0.5).setDepth(depth + 1);
+
+      bg.on("pointerover", () => {
+        bg.setFillStyle(activeFill, Math.min(0.34, activeAlpha + 0.08));
+      });
+      bg.on("pointerout", () => {
+        bg.setFillStyle(activeFill, activeAlpha);
+      });
+      bg.on("pointerdown", () => {
+        bg.setFillStyle(idleFill, 0.2);
+        if (config.onClick) {
+          config.onClick();
+        }
+      });
+
+      return [bg, label];
+    }
+
     renderBossRushTestPrep() {
       this.destroyBossRushTestOverlay();
 
@@ -1156,7 +1195,7 @@
         color: legendaryLeft > 0 ? "#ffd7a8" : "#ffe0b5",
       }).setOrigin(0.5).setDepth(72));
 
-      const presetButton = ui.createButton(this, {
+      overlay.push(...this.createBossRushTestActionButton({
         x: 196,
         y: 322,
         width: 180,
@@ -1167,11 +1206,9 @@
           this.bossRushTestDraft = this.createBossRushTestDraft(true);
           this.renderBossRushTestPrep();
         },
-      });
-      presetButton.setDepth(72);
-      overlay.push(presetButton);
+      }));
 
-      const resetButton = ui.createButton(this, {
+      overlay.push(...this.createBossRushTestActionButton({
         x: 524,
         y: 322,
         width: 180,
@@ -1182,9 +1219,7 @@
           this.bossRushTestDraft = this.createBossRushTestDraft(false);
           this.renderBossRushTestPrep();
         },
-      });
-      resetButton.setDepth(72);
-      overlay.push(resetButton);
+      }));
 
       pages.forEach((page, index) => {
         const active = page.key === currentPage.key;
@@ -1270,7 +1305,7 @@
         color: "#9eb3c0",
       }).setOrigin(0.5).setDepth(72));
 
-      const startButton = ui.createButton(this, {
+      overlay.push(...this.createBossRushTestActionButton({
         x: 360,
         y: 1144,
         width: 440,
@@ -1278,21 +1313,21 @@
         label: "테스트 시작",
         fontSize: "30px",
         onClick: () => this.startBossRushTestBattle(),
-      });
-      startButton.setDepth(72);
-      overlay.push(startButton);
+      }));
 
-      const cancelButton = ui.createButton(this, {
+      overlay.push(...this.createBossRushTestActionButton({
         x: 360,
         y: 1226,
         width: 300,
         height: 64,
         label: "메뉴로",
         fontSize: "24px",
+        activeFill: 0xffffff,
+        activeAlpha: 0.12,
+        idleFill: 0xffffff,
+        strokeColor: 0xffffff,
         onClick: () => this.scene.start("MenuScene"),
-      });
-      cancelButton.setDepth(72);
-      overlay.push(cancelButton);
+      }));
 
       this.pinUiItems(overlay);
       this.bossRushTestOverlay = overlay;
@@ -5795,6 +5830,8 @@
       let needsMistRefresh = false;
       let needsShieldRefresh = false;
       let needsBlastRefresh = false;
+      let needsBladeRefresh = false;
+      let needsDiscRefresh = false;
 
       this.upgradeLevels[upgrade.key] = this.getUpgradeLevel(upgrade.key) + 1;
 
