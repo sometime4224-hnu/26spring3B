@@ -28,7 +28,7 @@
         color: "#f7fbff",
       });
 
-      this.add.text(54, 224, "5개 스테이지 생존 후 보스러시와 최종 보스에 도전하세요.", {
+      this.add.text(54, 224, "5개 스테이지를 돌파하세요. 각 스테이지는 60초, 강습은 20초마다 오고 4스테이지부터는 15초마다 밀려옵니다.", {
         fontFamily: font,
         fontSize: "32px",
         fontStyle: "800",

@@ -16,7 +16,7 @@
 
       this.font = gameData.fontFamily;
       this.vocabData = gameData.vocabData;
-      this.roundSeconds = 90;
+      this.roundSeconds = 60;
       this.timeRemaining = this.roundSeconds;
       this.runStages = this.buildStageRun();
       this.stageCount = Math.max(1, this.runStages.length || 1);
@@ -230,7 +230,7 @@
         color: "#ffcb92",
       }).setDepth(21);
 
-      this.timeText = this.add.text(502, 28, "90s", {
+      this.timeText = this.add.text(502, 28, `${this.roundSeconds}s`, {
         fontFamily: this.font,
         fontSize: "28px",
         fontStyle: "800",
@@ -469,6 +469,26 @@
       return `#${(colorValue || 0xffffff).toString(16).padStart(6, "0")}`;
     }
 
+    playSoftScreenPulse(colorValue, alpha, duration) {
+      const pulse = this.add.rectangle(
+        this.scale.width * 0.5,
+        this.scale.height * 0.5,
+        this.scale.width,
+        this.scale.height,
+        colorValue || 0xffffff,
+        0
+      ).setDepth(57).setScrollFactor(0);
+
+      this.tweens.add({
+        targets: pulse,
+        alpha: { from: 0, to: Phaser.Math.Clamp(alpha == null ? 0.06 : alpha, 0, 0.12) },
+        duration: Math.max(90, Math.round((duration || 160) * 0.45)),
+        yoyo: true,
+        ease: "Sine.out",
+        onComplete: () => pulse.destroy(),
+      });
+    }
+
     applyStageBackdropTheme() {
       const ui = window.KoreanSurvivorGame.ui;
       const stage = this.getCurrentStageData();
@@ -611,7 +631,7 @@
       this.showFeedback(`${definition.word} 합류`, this.colorToHex(ally.accentColor));
       this.showFloatingText(this.player.x, this.player.y - 96, `${definition.word} +${healAmount}`, this.colorToHex(ally.accentColor), "26px");
       this.wordBurst(spawnX, spawnY, definition.color);
-      this.cameras.main.flash(120, 180, 255, 225, false);
+      this.playSoftScreenPulse(0xb9eadc, 0.045, 120);
       this.refreshHud();
     }
 
@@ -1479,8 +1499,8 @@
     }
 
     getStrongWaveMoments() {
-      const stage = this.getCurrentStageData();
-      return stage && stage.strongWaveMoments ? stage.strongWaveMoments : [30, 60];
+      const stageNumber = this.getReachedStageNumber();
+      return stageNumber >= 4 ? [15, 30, 45] : [20, 40];
     }
 
     getStageElapsedSeconds() {
@@ -2009,26 +2029,26 @@
       dim.alpha = 0;
       warningText.alpha = 0;
       subText.alpha = 0;
-      this.cameras.main.flash(120, 255, 124, 124, false);
+      this.playSoftScreenPulse(0xd98383, 0.05, 180);
 
       this.tweens.add({
         targets: dim,
-        alpha: { from: 0, to: 0.3 },
-        duration: 140,
+        alpha: { from: 0, to: 0.16 },
+        duration: 180,
         yoyo: true,
-        repeat: 5,
+        repeat: 2,
         ease: "Sine.inOut",
       });
       this.tweens.add({
         targets: [warningText, subText],
-        alpha: { from: 0.12, to: 1 },
-        duration: 140,
+        alpha: { from: 0.2, to: 0.88 },
+        duration: 180,
         yoyo: true,
-        repeat: 5,
+        repeat: 2,
         ease: "Sine.inOut",
       });
 
-      this.time.delayedCall(980, () => {
+      this.time.delayedCall(760, () => {
         dim.destroy();
         warningText.destroy();
         subText.destroy();
@@ -2066,7 +2086,7 @@
       this.showFeedback(`슈퍼 웨이브 ${waveNumber}`, "#ffd2bb");
       this.showFloatingText(this.player.x, this.player.y - 348, `위험 ${waveNumber}`, "#ffe3cf", "34px");
       this.wordBurst(this.player.x, this.player.y - 308, 0xffd3ba);
-      this.cameras.main.flash(90, 255, 170, 138, false);
+      this.playSoftScreenPulse(0xf0b08e, 0.045, 120);
 
       const totalPacks = 2 + waveNumber;
       for (let index = 0; index < totalPacks; index += 1) {
@@ -2614,7 +2634,7 @@
       this.showFeedback(`최종 보스 등장: ${this.vocabData.finalBoss.word}`, "#ffb3ad");
       this.showFloatingText(this.player.x, this.player.y - 364, this.vocabData.finalBoss.word, "#ffd0c4", "44px");
       this.wordBurst(this.player.x, this.player.y - 300, 0xffb8ad);
-      this.cameras.main.flash(220, 255, 142, 124, false);
+      this.playSoftScreenPulse(0xe6a89a, 0.06, 220);
 
       this.spawnFinalBoss();
       this.refreshHud();
@@ -4628,7 +4648,7 @@
     playLegendaryRewardPulse(colorValue, stack) {
       const pulse = this.add.image(this.player.x, this.player.y, "weapon-blast-wave")
         .setTint(colorValue || 0xffffff)
-        .setAlpha(0.56)
+        .setAlpha(0.28)
         .setScale(0.42)
         .setDepth(8);
 
@@ -4868,9 +4888,9 @@
       this.showFeedback(`${message} -${damage}`, "#ffc2ba");
       this.showFloatingText(this.player.x, this.player.y - 54, `-${damage}`, "#ffb3ac", "30px");
       this.wordBurst(sourceX, sourceY, 0xffb5ab);
-      this.player.setTint(0xff9d96);
-      this.cameras.main.shake(120, 0.004);
-      this.cameras.main.flash(90, 255, 120, 108, false);
+      this.player.setTint(0xe39b97);
+      this.cameras.main.shake(90, 0.0025);
+      this.playSoftScreenPulse(0xc96d66, 0.045, 110);
 
       this.time.delayedCall(150, () => {
         if (this.player.active) {
@@ -5468,7 +5488,7 @@
       this.showFeedback(`${sourceWord || "변신"} 발동!`, "#ffd2fb");
       this.showFloatingText(this.player.x, this.player.y - 84, sourceWord || "변신", "#ffe3ff", "26px");
       this.wordBurst(this.player.x, this.player.y, 0xffbff3);
-      this.cameras.main.flash(120, 255, 190, 246, false);
+      this.playSoftScreenPulse(0xd9b7e6, 0.05, 140);
       this.refreshAttackTimer();
       this.refreshHud();
     }
@@ -5590,7 +5610,7 @@
 
       this.showFloatingText(this.player.x, this.player.y - 84, word, "#e7feff", "26px");
       this.wordBurst(this.player.x, this.player.y, 0xa4f2ff);
-      this.cameras.main.flash(110, 196, 244, 255, false);
+      this.playSoftScreenPulse(0xa9dcea, 0.045, 130);
       this.refreshHud();
     }
 
@@ -5614,7 +5634,7 @@
       this.showFloatingText(this.player.x, this.player.y - 84, "각성!", "#ffe8a0", "30px");
       this.announceAwakening();
       this.wordBurst(this.player.x, this.player.y, 0xffdd8f);
-      this.cameras.main.flash(160, 255, 228, 140, false);
+      this.playSoftScreenPulse(0xe7cf7d, 0.055, 180);
       this.refreshAttackTimer();
       this.refreshHud();
     }
@@ -6360,7 +6380,7 @@
         phaseMessage = `${nextWaveMoment}초 강습까지 ${secondsUntilWave}초`;
         phaseColor = secondsUntilWave <= 5 ? "#ffd9b0" : "#9fb4c6";
       } else if (!this.stageBossSequenceStarted) {
-        phaseMessage = "90초 생존 후 스테이지 보스";
+        phaseMessage = `${this.roundSeconds}초 생존 후 스테이지 보스`;
         phaseColor = "#c1d0db";
       }
 
