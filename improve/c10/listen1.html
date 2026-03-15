@@ -3,31 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>한국어 10과 듣기 학습</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
-        body { font-family: 'Noto Sans KR', sans-serif; }
-        .hidden-script { display: none; }
-        .page { display: none; animation: fadeIn 0.3s ease-in-out; }
-        .page.active { display: block; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
-
-    <!-- Tailwind & Fonts Injected -->
+    <title>10과 듣기 학습 업그레이드</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared/listening-workbook.css?v=20260315-quizlang4">
     <style>
-        body { font-family: 'Noto Sans KR', sans-serif !important; }
+        body { margin: 0; font-family: 'Noto Sans KR', sans-serif; background: linear-gradient(180deg, #fff8f1 0%, #fffdf9 42%, #f8fafc 100%); }
         .injected-global-nav {
             width: 100%;
             background-color: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(8px);
-            border-bottom: 1px solid #e0e7ff;
+            border-bottom: 1px solid #fde6ce;
             height: 60px;
             display: flex;
             align-items: center;
@@ -42,615 +29,463 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            color: #4f46e5;
+            color: #c2410c;
             text-decoration: none;
             font-weight: 700;
             font-size: 14px;
             transition: color 0.2s;
         }
-        .injected-global-nav a:hover {
-            color: #3730a3;
-        }
-        .injected-global-nav .divider {
-            color: #cbd5e1;
-        }
-        /* Ensure body has no top margin/padding resetting the nav */
-        body { margin: 0; }
-        .mask-toolbar {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 12px;
-            padding: 10px 12px;
-            border: 1px solid #e5e7eb;
-            background: #f9fafb;
-            border-radius: 10px;
-        }
-        .mask-help {
-            font-size: 12px;
-            color: #4b5563;
-            font-weight: 600;
-        }
-        .mask-buttons {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .mask-action {
-            border: 1px solid #cbd5e1;
-            background: #ffffff;
-            color: #1f2937;
-            font-size: 12px;
-            font-weight: 700;
-            padding: 6px 10px;
-            border-radius: 999px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .mask-action:hover {
-            background: #eef2ff;
-            border-color: #a5b4fc;
-            color: #3730a3;
-        }
-        .mask-counter {
-            font-size: 12px;
-            color: #4f46e5;
-            font-weight: 800;
-            background: #eef2ff;
-            border-radius: 999px;
-            padding: 4px 10px;
-        }
-        .morph-mask {
-            display: inline-block;
-            min-width: 1.4em;
-            border: 1px dashed #94a3b8;
-            background: #e2e8f0;
-            color: #334155;
-            border-radius: 6px;
-            padding: 0 4px;
-            margin: 0 1px;
-            font-weight: 700;
-            line-height: 1.6;
-            cursor: pointer;
-            user-select: none;
-            transition: all 0.15s ease;
-        }
-        .morph-mask:hover {
-            background: #cbd5e1;
-        }
-        .morph-mask.revealed {
-            border-style: solid;
-            border-color: #f59e0b;
-            background: #fef3c7;
-            color: #92400e;
-        }
+        .injected-global-nav a:hover { color: #9a3412; }
+        .injected-global-nav .divider { color: #cbd5e1; }
     </style>
-    </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+</head>
+<body>
     <nav id="injected-global-nav" class="injected-global-nav">
         <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
         <span class="divider">|</span>
         <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
     </nav>
-    
 
-    <!-- Navigation Bar -->
-    <nav class="bg-indigo-700 text-white shadow-md">
-        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
-            <h1 class="text-xl font-bold cursor-pointer" onclick="showPage('home')">한국어 10과 듣기</h1>
-            <button onclick="showPage('home')" class="text-sm bg-indigo-600 hover:bg-indigo-500 px-3 py-1 rounded transition">
-                메인으로
-            </button>
-        </div>
-    </nav>
-
-    <div class="max-w-3xl mx-auto p-4 md:p-6 w-full flex-grow">
-        
-        <!-- HOME PAGE -->
-        <div id="page-home" class="page active">
-            <header class="text-center mb-10 mt-8">
-                <h2 class="text-3xl font-bold text-gray-800 mb-3">학습 단원을 선택하세요</h2>
-                <p class="text-gray-600">듣기 파일을 잘 듣고 연습 문제를 풀어보세요.</p>
-            </header>
-
-            <div class="grid md:grid-cols-2 gap-6">
-                <!-- Card 1 -->
-                <div onclick="showPage('listening1')" class="bg-white rounded-xl shadow-md hover:shadow-xl transition cursor-pointer overflow-hidden group border border-gray-100">
-                    <div class="h-32 bg-indigo-100 flex items-center justify-center group-hover:bg-indigo-200 transition">
-                        <span class="text-4xl">🎧</span>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="bg-indigo-600 text-white text-xs font-bold px-2 py-0.5 rounded">Track 09</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-2">듣기 1: 인터뷰</h3>
-                        <p class="text-gray-500 text-sm">올해의 선수상을 받은 박민호 선수의 인터뷰 내용을 듣고 문제를 풀어봅니다.</p>
-                        <div class="mt-4 text-indigo-600 font-semibold group-hover:translate-x-1 transition-transform inline-block">
-                            학습 시작하기 &rarr;
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div onclick="showPage('listening2')" class="bg-white rounded-xl shadow-md hover:shadow-xl transition cursor-pointer overflow-hidden group border border-gray-100">
-                    <div class="h-32 bg-pink-100 flex items-center justify-center group-hover:bg-pink-200 transition">
-                        <span class="text-4xl">💌</span>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="bg-pink-600 text-white text-xs font-bold px-2 py-0.5 rounded">Track 10</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-2">듣기 2: 사랑 이야기</h3>
-                        <p class="text-gray-500 text-sm">청취자의 사연을 듣고 국제 결혼 커플의 이야기를 이해해 봅니다.</p>
-                        <div class="mt-4 text-pink-600 font-semibold group-hover:translate-x-1 transition-transform inline-block">
-                            학습 시작하기 &rarr;
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- LISTENING 1 PAGE -->
-        <div id="page-listening1" class="page bg-white rounded-xl shadow-lg p-6">
-            <div class="flex items-center justify-between mb-6 border-b pb-4">
-                <div>
-                    <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2 py-1 rounded">Track 09</span>
-                    <h2 class="text-2xl font-bold text-gray-800 mt-1">듣기 1: 인터뷰</h2>
-                </div>
-            </div>
-
-            <!-- Audio Player -->
-            <div class="bg-indigo-50 p-4 rounded-lg mb-6 flex flex-col items-center">
-                <div class="text-indigo-800 font-medium mb-2 w-full text-left">오디오 재생</div>
-                <audio controls class="w-full">
-                    <source src="Trk_09.mp3" type="audio/mpeg">
-                    브라우저가 오디오 태그를 지원하지 않습니다.
-                </audio>
-            </div>
-
-            <!-- Script Toggle -->
-            <div class="mb-8 border rounded-lg overflow-hidden">
-                <button onclick="toggleScript('script1')" class="w-full flex justify-between items-center p-4 bg-gray-50 hover:bg-gray-100 transition text-left font-medium text-gray-700">
-                    <span>📝 대본 보기 / 닫기</span>
-                    <svg id="icon-script1" class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </button>
-                <div id="script1" class="hidden-script p-5 bg-white text-sm leading-7 text-gray-700 border-t">
-                    <p class="mb-2"><strong class="text-indigo-600">여:</strong> 안녕하세요? 박민호 씨. ‘올해의 선수상’을 받으신 것을 축하드립니다.</p>
-                    <p class="mb-2"><strong class="text-indigo-600">남:</strong> 감사합니다. 야구를 사랑하시고 항상 응원해 주시는 팬 여러분의 덕분입니다.</p>
-                    <p class="mb-2"><strong class="text-indigo-600">여:</strong> 그런데 박민호 씨, 좋은 소식이 들리던데요. 곧 결혼하신다고요?</p>
-                    <p class="mb-2"><strong class="text-indigo-600">남:</strong> 네, 내년 1월에 결혼식을 할 예정입니다.</p>
-                    <p class="mb-2"><strong class="text-indigo-600">여:</strong> 박민호 선수는 여성 팬들에게 인기가 많으신데 신부는 어떤 분일까요? 요즘 운동선수들이 배우나 가수하고 많이 결혼하시잖아요. 혹시 저희들도 아는 분인가요?</p>
-                    <p class="mb-2"><strong class="text-indigo-600">남:</strong> 아닙니다. 저와 결혼할 사람은 그냥 보통 여자예요. 조용하고 마음씨가 착한 사람입니다.</p>
-                    <p class="mb-2"><strong class="text-indigo-600">여:</strong> 그렇군요. 언제 그렇게 비밀 연애를 하셨어요?</p>
-                    <p class="mb-2"><strong class="text-indigo-600">남:</strong> 하하, 제가 운동하느라 바빠서 연애는 못했고요. 저희는 선봐서 만났어요. 제가 허리를 다쳤을 때 치료를 해 주시던 의사 선생님의 조카입니다. 알고 보니 초등학교 후배여서 빨리 친해질 수 있었습니다.</p>
-                    <p class="mb-2"><strong class="text-indigo-600">여:</strong> 아, 네. 그런데 그분의 어디가 마음에 드셔서 결혼을 결심하셨나요?</p>
-                    <p class="mb-2"><strong class="text-indigo-600">남:</strong> 그 사람의 오빠도 운동선수라서 운동하는 사람의 생활을 잘 이해해 주는 점이 좋았어요. 전 외모나 조건보다 성격이 더 중요하다고 생각하는데 저와 성격이 잘 맞는 사람입니다.</p>
-                </div>
-            </div>
-
-            <!-- Quiz 1 -->
-            <div class="space-y-6 mb-8">
-                <h3 class="text-lg font-bold border-l-4 border-indigo-500 pl-3">연습 문제</h3>
-                
-                <div class="quiz-item p-4 border rounded-lg hover:shadow-sm transition-shadow bg-white" id="q1-container">
-                    <p class="font-semibold mb-3">1. 남자는 어떤 상을 받았습니까?</p>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q1" value="1" class="mr-2"> ① 인기상</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q1" value="2" class="mr-2"> ② 올해의 선수상</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q1" value="3" class="mr-2"> ③ 최우수 신인상</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q1" value="4" class="mr-2"> ④ 배우상</label>
-                </div>
-
-                <div class="quiz-item p-4 border rounded-lg hover:shadow-sm transition-shadow bg-white" id="q2-container">
-                    <p class="font-semibold mb-3">2. 남자가 결혼할 사람은 누구입니까?</p>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q2" value="1" class="mr-2"> ① 유명한 배우</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q2" value="2" class="mr-2"> ② 인기가 많은 가수</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q2" value="3" class="mr-2"> ③ 남자를 치료해 준 의사</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q2" value="4" class="mr-2"> ④ 의사 선생님의 조카</label>
-                </div>
-
-                <div class="quiz-item p-4 border rounded-lg hover:shadow-sm transition-shadow bg-white" id="q3-container">
-                    <p class="font-semibold mb-3">3. 두 사람은 어떻게 만났습니까?</p>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q3" value="1" class="mr-2"> ① 선을 봐서 만났다.</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q3" value="2" class="mr-2"> ① 운동하다가 만났다.</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q3" value="3" class="mr-2"> ③ 병원에서 우연히 만났다.</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q3" value="4" class="mr-2"> ④ 결혼식장에서 만났다.</label>
-                </div>
-
-                <div class="quiz-item p-4 border rounded-lg hover:shadow-sm transition-shadow bg-white" id="q4-container">
-                    <p class="font-semibold mb-3">4. 남자가 결혼을 결심한 이유는 무엇입니까?</p>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q4" value="1" class="mr-2"> ① 여자의 외모가 아주 아름다워서</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q4" value="2" class="mr-2"> ① 여자의 조건이 아주 좋아서</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q4" value="3" class="mr-2"> ③ 여자가 남자의 생활을 잘 이해해 줘서</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q4" value="4" class="mr-2"> ④ 여자의 오빠와 친한 친구 사이라서</label>
-                </div>
-            </div>
-
-            <!-- Submit Section -->
-            <div class="text-center mt-8 pb-4 border-t pt-6">
-                <button onclick="checkAnswers(1)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-10 rounded-full shadow-lg transform transition hover:scale-105 active:scale-95">
-                    정답 확인하기
-                </button>
-                <div id="result1" class="mt-4 text-lg font-bold hidden"></div>
-            </div>
-            
-            <div class="text-center mt-4">
-                 <button onclick="showPage('home')" class="text-gray-500 hover:text-indigo-600 underline text-sm">목록으로 돌아가기</button>
-            </div>
-        </div>
-
-        <!-- LISTENING 2 PAGE -->
-        <div id="page-listening2" class="page bg-white rounded-xl shadow-lg p-6">
-             <div class="flex items-center justify-between mb-6 border-b pb-4">
-                <div>
-                    <span class="bg-pink-100 text-pink-800 text-xs font-bold px-2 py-1 rounded">Track 10</span>
-                    <h2 class="text-2xl font-bold text-gray-800 mt-1">듣기 2: 사랑 이야기</h2>
-                </div>
-            </div>
-
-            <!-- Audio Player -->
-            <div class="bg-pink-50 p-4 rounded-lg mb-6 flex flex-col items-center">
-                <div class="text-pink-800 font-medium mb-2 w-full text-left">오디오 재생</div>
-                <audio controls class="w-full">
-                    <source src="Trk_10.mp3" type="audio/mpeg">
-                    브라우저가 오디오 태그를 지원하지 않습니다.
-                </audio>
-            </div>
-
-            <!-- Script Toggle -->
-            <div class="mb-8 border rounded-lg overflow-hidden">
-                <button onclick="toggleScript('script2')" class="w-full flex justify-between items-center p-4 bg-gray-50 hover:bg-gray-100 transition text-left font-medium text-gray-700">
-                    <span>📝 대본 보기 / 닫기</span>
-                    <svg id="icon-script2" class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </button>
-                <div id="script2" class="hidden-script p-5 bg-white text-sm leading-7 text-gray-700 border-t">
-                    <p class="mb-2"><strong class="text-pink-600">멘트:</strong> 다음은 여러분의 사랑 이야기를 읽어 드리는 시간입니다. 오늘은 서초동에 사시는 이준서 님의 사연을 읽어 드리겠습니다.</p>
-                    <p class="mb-2">저는 요리를 배우기 위해서 일본으로 유학을 갔는데 요리학교에서 그녀를 만났습니다. 저보다 3살이 많은 그녀는 일본어를 잘 못하던 저를 항상 누나처럼 친절하게 도와주었습니다. 저는 그녀가 좋았지만 졸업하자마자 한국으로 돌아올 생각이었기 때문에 고백하지 않았습니다.</p>
-                    <p class="mb-2">그런데 귀국하기 전날 밤, 저는 교통사고를 당했습니다. 눈을 떠 보니 병원이었고 침대 옆에 그녀가 울면서 서 있었습니다. 그리고 세 달 동안이나 저를 잘 간호해 주었습니다.</p>
-                    <p class="mb-2">병원에서 퇴원하던 날 저는 그녀에게 청혼했습니다. 그런데 양쪽 부모님이 우리의 결혼을 반대하셨습니다. 그녀의 부모님은 딸이 한국으로 시집가는 것을 반대하셨고 제 부모님은 연상의 외국 여자가 며느리로 들어오는 것을 싫어하셨습니다. 하지만 변하지 않는 우리의 사랑을 보시고 마침내 결혼을 허락해 주셨습니다. 저희는 세상에서 제일 맛있는 빵집을 만들 계획입니다. 그 꿈을 이루려면 아직 멀었지만 아무리 힘들어도 포기하지 않을 겁니다. 저희를 응원해 주세요.</p>
-                    <p class="mb-2">네, 두 분의 결혼을 축하합니다. 노래 한 곡 들려 드립니다. ‘우리 서로 사랑하잖아.’</p>
-                </div>
-            </div>
-
-            <!-- Quiz 2 -->
-            <div class="space-y-6 mb-8">
-                 <h3 class="text-lg font-bold border-l-4 border-pink-500 pl-3">연습 문제</h3>
-
-                <div class="quiz-item p-4 border rounded-lg hover:shadow-sm transition-shadow bg-white" id="q5-container">
-                    <p class="font-semibold mb-3">5. 남자가 일본에 간 이유는 무엇입니까?</p>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q5" value="1" class="mr-2"> ① 일본어를 공부하기 위해서</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q5" value="2" class="mr-2"> ② 요리를 배우기 위해서</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q5" value="3" class="mr-2"> ③ 일본 회사에 취직하기 위해서</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q5" value="4" class="mr-2"> ④ 일본 여행을 하기 위해서</label>
-                </div>
-
-                <div class="quiz-item p-4 border rounded-lg hover:shadow-sm transition-shadow bg-white" id="q6-container">
-                    <p class="font-semibold mb-3">6. 처음에 남자가 여자에게 고백하지 않은 이유는 무엇입니까?</p>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q6" value="1" class="mr-2"> ① 여자가 나이가 더 많아서</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q6" value="2" class="mr-2"> ② 여자가 남자를 싫어해서</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q6" value="3" class="mr-2"> ③ 곧 한국으로 돌아와야 해서</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q6" value="4" class="mr-2"> ④ 여자의 부모님이 반대해서</label>
-                </div>
-
-                <div class="quiz-item p-4 border rounded-lg hover:shadow-sm transition-shadow bg-white" id="q7-container">
-                    <p class="font-semibold mb-3">7. 남자가 여자에게 청혼을 한 시점은 언제입니까?</p>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q7" value="1" class="mr-2"> ① 요리 학교를 졸업할 때</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q7" value="2" class="mr-2"> ② 병원에서 퇴원하던 날</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q7" value="3" class="mr-2"> ③ 한국에 돌아오기 전날 밤</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q7" value="4" class="mr-2"> ④ 빵집을 개업한 날</label>
-                </div>
-
-                <div class="quiz-item p-4 border rounded-lg hover:shadow-sm transition-shadow bg-white" id="q8-container">
-                    <p class="font-semibold mb-3">8. 이 커플의 앞으로의 계획은 무엇입니까?</p>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q8" value="1" class="mr-2"> ① 일본에서 계속 사는 것</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q8" value="2" class="mr-2"> ② 맛있는 빵집을 여는 것</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q8" value="3" class="mr-2"> ③ 요리 학교 선생님이 되는 것</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-1 rounded"><input type="radio" name="q8" value="4" class="mr-2"> ④ 세계 여행을 떠나는 것</label>
-                </div>
-            </div>
-
-             <!-- Submit Section -->
-            <div class="text-center mt-8 pb-4 border-t pt-6">
-                <button onclick="checkAnswers(2)" class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-10 rounded-full shadow-lg transform transition hover:scale-105 active:scale-95">
-                    정답 확인하기
-                </button>
-                <div id="result2" class="mt-4 text-lg font-bold hidden"></div>
-            </div>
-             <div class="text-center mt-4">
-                 <button onclick="showPage('home')" class="text-gray-500 hover:text-indigo-600 underline text-sm">목록으로 돌아가기</button>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Footer -->
-    <footer class="mt-auto py-6 bg-gray-100 text-center text-gray-500 text-xs">
-        <p>한국어 듣기 학습 - 10과</p>
-    </footer>
+    <div id="listening-workbook-app"></div>
 
     <script>
-        // Page Navigation
-        function showPage(pageId) {
-            // Hide all pages
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            // Show selected page
-            document.getElementById('page-' + pageId).classList.add('active');
-            
-            // Stop audio when leaving page
-            document.querySelectorAll('audio').forEach(audio => {
-                audio.pause();
-                audio.currentTime = 0;
-            });
-            
-            // Scroll to top
-            window.scrollTo(0, 0);
-        }
-
-        // Script Toggle
-        function toggleScript(id) {
-            const script = document.getElementById(id);
-            const icon = document.getElementById('icon-' + id);
-            
-            if (script.style.display === "block") {
-                script.style.display = "none";
-                icon.style.transform = "rotate(0deg)";
-            } else {
-                script.style.display = "block";
-                icon.style.transform = "rotate(180deg)";
-            }
-        }
-
-        // Check Answers
-        const answers = {
-            q1: "2", // 올해의 선수상
-            q2: "4", // 의사 선생님의 조카
-            q3: "1", // 선을 봐서
-            q4: "3", // 생활을 잘 이해해 줘서
-            q5: "2", // 요리를 배우기 위해서
-            q6: "3", // 곧 한국으로 돌아와야 해서
-            q7: "2", // 퇴원하던 날
-            q8: "2"  // 맛있는 빵집을 여는 것
+        window.LISTENING_WORKBOOK_CONFIG = {
+            kicker: "Chapter 10 Listening Lab",
+            title: "10과 듣기 학습",
+            titleVi: "Luyện nghe bài 10",
+            description: "두 개의 본문을 듣기 전 예측, 단계적 자막, 문장 반복, 딕토글로스, 노트 필기, 쉐도잉까지 한 흐름으로 다시 설계했습니다. 베트남어 지원은 마지막 단계에서만 열리도록 조정했습니다.",
+            descriptionVi: "Trang này sắp xếp lại hai bài nghe theo một dòng học liền mạch: dự đoán trước khi nghe, phụ đề theo từng bước, lặp lại câu, dictogloss, ghi chú và shadowing. Khi cần, em có thể đổi riêng phần hướng dẫn sang tiếng Việt bằng nút ở trên.",
+            instructionLanguage: {
+                enabled: true,
+                default: "ko"
+            },
+            theme: {
+                accent: "#c2410c",
+                accentDark: "#9a3412",
+                soft: "#ffedd5",
+                surface: "rgba(255,255,255,0.92)",
+                pageBackground: "linear-gradient(180deg, #fff8f1 0%, #fffdf9 42%, #f8fafc 100%)"
+            },
+            lessons: [
+                {
+                    id: "track09",
+                    label: "Track 09",
+                    title: "듣기 1: 인터뷰",
+                    titleVi: "Nghe 1: Phỏng vấn",
+                    summary: "시상식 직후 야구 선수의 인터뷰를 듣고, 결혼 관련 정보를 파악하는 과제입니다.",
+                    summaryVi: "Em sẽ nghe cuộc phỏng vấn một cầu thủ bóng chày ngay sau lễ trao giải và nắm thông tin liên quan đến việc kết hôn.",
+                    activityImage: {
+                        src: "listen1pic-lite.jpg",
+                        alt: "시상식장에서 기자와 인터뷰하는 야구 선수 모습",
+                        altVi: "Hình cầu thủ bóng chày đang trả lời phỏng vấn tại lễ trao giải",
+                        caption: "활동 참고 그림: 수상 직후 기자와 인터뷰하는 장면입니다.",
+                        captionVi: "Hình tham khảo hoạt động: cảnh cầu thủ bóng chày trả lời phỏng vấn ngay sau lễ trao giải."
+                    },
+                    audioSrc: "Trk_09.mp3",
+                    scene: {
+                        emoji: "🎤",
+                        title: "상황 그림: 시상식 인터뷰",
+                        titleVi: "Tranh tình huống: phỏng vấn sau lễ trao giải",
+                        caption: "기자가 상을 받은 선수에게 축하 인사와 개인적인 근황을 묻는 장면입니다.",
+                        captionVi: "Đây là cảnh phóng viên chúc mừng cầu thủ vừa nhận giải và hỏi thêm về tình hình cá nhân của anh ấy.",
+                        tags: ["시상식 직후", "인터뷰 부스", "결혼 발표", "팬 관심"]
+                    },
+                    preListening: {
+                        vocab: [
+                            { ko: "올해의 선수상", vi: "giải cầu thủ của năm", hint: "시상식에서 받은 상 이름" },
+                            { ko: "비밀 연애", vi: "hẹn hò bí mật", hint: "주변에 알리지 않고 사귀는 것" },
+                            { ko: "선보다", vi: "xem mắt, gặp qua mai mối", hint: "소개로 결혼 상대를 만나다" },
+                            { ko: "마음씨가 착하다", vi: "tốt bụng", hint: "성품이 따뜻하고 친절하다" },
+                            { ko: "결심하다", vi: "quyết định", hint: "마음을 정해 행동하다" }
+                        ],
+                        relationshipOptions: [
+                            { value: "reporter-athlete", label: "기자와 운동선수" },
+                            { value: "doctor-patient", label: "의사와 환자" },
+                            { value: "친구", label: "친한 친구" }
+                        ],
+                        relationshipAnswer: "reporter-athlete",
+                        genreOptions: [
+                            { value: "interview", label: "인터뷰 / 인물 소개" },
+                            { value: "lecture", label: "강의 / 설명" },
+                            { value: "argument", label: "논쟁 / 토론" }
+                        ],
+                        genreAnswer: "interview",
+                        predictionNote: "축하 인사 뒤에 결혼, 연애, 상대의 특징 같은 개인 정보가 이어지는 인터뷰입니다.",
+                        predictionNoteVi: "Sau lời chúc mừng, cuộc phỏng vấn tiếp tục với những thông tin cá nhân như chuyện kết hôn, hẹn hò và đặc điểm của người bạn đời.",
+                        backgroundPrompt: "이 인터뷰에서 기자가 추가로 물을 것 같은 질문을 1개 적어 보세요.",
+                        backgroundPromptVi: "Hãy viết 1 câu hỏi mà em nghĩ phóng viên có thể hỏi thêm trong cuộc phỏng vấn này."
+                    },
+                    transcript: [
+                        {
+                            speaker: "여",
+                            text: "안녕하세요? 박민호 씨. ‘올해의 선수상’을 받으신 것을 축하드립니다.",
+                            vi: "Xin chào anh Park Minho. Xin chúc mừng anh đã nhận giải Cầu thủ của năm.",
+                            keywords: ["박민호", "선수상", "축하"]
+                        },
+                        {
+                            speaker: "남",
+                            text: "감사합니다. 야구를 사랑하시고 항상 응원해 주시는 팬 여러분의 덕분입니다.",
+                            vi: "Cảm ơn. Tất cả là nhờ những người hâm mộ luôn yêu bóng chày và cổ vũ cho tôi.",
+                            keywords: ["감사", "팬", "응원"]
+                        },
+                        {
+                            speaker: "여",
+                            text: "그런데 박민호 씨, 좋은 소식이 들리던데요. 곧 결혼하신다고요?",
+                            vi: "Nhưng mà anh Park Minho, tôi nghe có tin vui. Anh sắp kết hôn phải không?",
+                            keywords: ["좋은 소식", "들리던데요", "결혼"],
+                            highlights: [
+                                { term: "그런데", type: "담화 전환" },
+                                { term: "들리던데요", type: "전언 / 반응" },
+                                { term: "결혼하신다고요", type: "확인 질문" }
+                            ]
+                        },
+                        {
+                            speaker: "남",
+                            text: "네, 내년 1월에 결혼식을 할 예정입니다.",
+                            vi: "Vâng, tôi dự định sẽ tổ chức đám cưới vào tháng 1 năm sau.",
+                            keywords: ["내년", "1월", "결혼식"]
+                        },
+                        {
+                            speaker: "여",
+                            text: "박민호 선수는 여성 팬들에게 인기가 많으신데 신부는 어떤 분일까요? 요즘 운동선수들이 배우나 가수하고 많이 결혼하시잖아요. 혹시 저희들도 아는 분인가요?",
+                            vi: "Cầu thủ Park Minho rất được fan nữ yêu mến, cô dâu là người như thế nào nhỉ? Dạo này vận động viên hay kết hôn với diễn viên hoặc ca sĩ mà. Có phải là người chúng tôi cũng biết không?",
+                            keywords: ["여성 팬", "신부", "배우", "가수"],
+                            highlights: [
+                                { term: "인기가 많으신데", type: "배경 제시" },
+                                { term: "결혼하시잖아요", type: "공유 정보 환기" },
+                                { term: "혹시", type: "완곡한 질문" }
+                            ]
+                        },
+                        {
+                            speaker: "남",
+                            text: "아닙니다. 저와 결혼할 사람은 그냥 보통 여자예요. 조용하고 마음씨가 착한 사람입니다.",
+                            vi: "Không đâu. Người sẽ kết hôn với tôi chỉ là một cô gái bình thường thôi. Cô ấy hiền và tốt bụng.",
+                            keywords: ["그냥", "보통 여자", "마음씨"],
+                            highlights: [
+                                { term: "그냥", type: "완곡화" }
+                            ]
+                        },
+                        {
+                            speaker: "여",
+                            text: "그렇군요. 언제 그렇게 비밀 연애를 하셨어요?",
+                            vi: "Ra vậy. Anh hẹn hò bí mật từ bao giờ thế?",
+                            keywords: ["그렇군요", "비밀 연애", "언제"]
+                        },
+                        {
+                            speaker: "남",
+                            text: "하하, 제가 운동하느라 바빠서 연애는 못했고요. 저희는 선봐서 만났어요. 제가 허리를 다쳤을 때 치료를 해 주시던 의사 선생님의 조카입니다. 알고 보니 초등학교 후배여서 빨리 친해질 수 있었습니다.",
+                            vi: "Ha ha, vì bận tập luyện nên tôi không có thời gian hẹn hò đâu. Chúng tôi gặp nhau qua xem mắt. Cô ấy là cháu của bác sĩ đã điều trị cho tôi khi tôi bị thương ở lưng. Sau khi biết ra, tôi mới thấy cô ấy là đàn em ở trường tiểu học nên chúng tôi nhanh thân nhau hơn.",
+                            keywords: ["하하", "선봐서", "의사 선생님", "조카", "후배"],
+                            highlights: [
+                                { term: "하하", type: "웃음 / 머뭇거림" },
+                                { term: "못했고요", type: "회화체 연결" }
+                            ]
+                        },
+                        {
+                            speaker: "여",
+                            text: "아, 네. 그런데 그분의 어디가 마음에 드셔서 결혼을 결심하셨나요?",
+                            vi: "À, vâng. Vậy điều gì ở cô ấy khiến anh quyết định kết hôn?",
+                            keywords: ["마음", "결심", "이유"],
+                            highlights: [
+                                { term: "그런데", type: "화제 전환" }
+                            ]
+                        },
+                        {
+                            speaker: "남",
+                            text: "그 사람의 오빠도 운동선수라서 운동하는 사람의 생활을 잘 이해해 주는 점이 좋았어요. 전 외모나 조건보다 성격이 더 중요하다고 생각하는데 저와 성격이 잘 맞는 사람입니다.",
+                            vi: "Anh trai của cô ấy cũng là vận động viên nên cô ấy hiểu rất rõ cuộc sống của người làm thể thao. Tôi nghĩ tính cách quan trọng hơn ngoại hình hay điều kiện, và cô ấy là người rất hợp tính với tôi.",
+                            keywords: ["운동선수", "생활 이해", "성격", "잘 맞다"],
+                            highlights: [
+                                { term: "생각하는데", type: "배경 설명" }
+                            ]
+                        }
+                    ],
+                    dictogloss: {
+                        prompt: "2~3회 듣고 아래 핵심어만 보고 인터뷰 내용을 다시 구성해 보세요.",
+                        promptVi: "Sau khi nghe 2~3 lần, hãy chỉ nhìn các từ khóa dưới đây rồi tái cấu trúc lại nội dung cuộc phỏng vấn.",
+                        keywords: ["선수상", "결혼", "보통 여자", "선봐서", "의사 선생님의 조카", "성격이 잘 맞다"],
+                        modelSummary: "박민호 선수는 올해의 선수상을 받은 뒤 인터뷰에서 내년 1월 결혼 계획을 밝힌다. 예비 신부는 연예인이 아니라 조용하고 착한 평범한 사람이며, 의사 선생님의 조카로 선을 봐서 만났다. 그는 외모나 조건보다 서로의 성격이 잘 맞고 운동선수의 생활을 이해해 주는 점이 좋아 결혼을 결심했다.",
+                        placeholder: "인터뷰 내용을 3~5문장으로 재구성해 보세요.",
+                        placeholderVi: "Hãy viết lại nội dung phỏng vấn trong 3~5 câu."
+                    },
+                    notePrompts: {
+                        keywords: "상, 결혼 시기, 만난 방법, 결혼 이유",
+                        details: "기자의 질문 흐름과 선수의 답을 순서대로 적기",
+                        questions: "왜 '연예인이 아니다'라는 정보가 중요했을까?",
+                        cue: "축하 -> 결혼 -> 신부 정체 -> 만남 -> 결혼 이유",
+                        notes: "답변의 근거 표현과 인터뷰어의 추측을 적어 보세요.",
+                        summary: "이 인터뷰를 한 문장으로 요약해 보세요."
+                    },
+                    notePromptsVi: {
+                        keywords: "Giải thưởng, thời điểm kết hôn, cách quen nhau, lý do kết hôn",
+                        details: "Ghi lại theo đúng mạch câu hỏi của phóng viên và câu trả lời của vận động viên",
+                        questions: "Vì sao thông tin 'không phải người nổi tiếng' lại quan trọng?",
+                        cue: "Chúc mừng -> Kết hôn -> Danh tính cô dâu -> Cách gặp nhau -> Lý do kết hôn",
+                        notes: "Ghi lại cách diễn đạt làm căn cứ và cả phần suy đoán của người phỏng vấn.",
+                        summary: "Hãy tóm tắt cuộc phỏng vấn này bằng một câu."
+                    },
+                    clarificationPrompt: "인터뷰 내용 중 신부의 정체나 결혼 이유를 다시 확인해야 한다고 가정하고 표현을 골라 보세요.",
+                    clarificationPromptVi: "Hãy luyện chọn cách nói để hỏi lại nếu em cần xác nhận danh tính cô dâu hoặc lý do kết hôn trong cuộc phỏng vấn.",
+                    clarifyScenario: "예: '즉, 의사 선생님의 조카라는 말씀이세요?'처럼 다시 확인하는 문장을 만들어 보세요.",
+                    clarifyScenarioVi: "Ví dụ: hãy tạo một câu xác nhận lại như 'Ý anh là cô ấy là cháu của bác sĩ, đúng không ạ?'.",
+                    oralFeatures: [
+                        { term: "들리던데요", type: "전언형 종결", typeVi: "Kết thúc câu kiểu thuật lại", note: "직접 본 사실이 아니라 들은 정보를 조심스럽게 꺼낼 때 쓰는 회화체 표현입니다.", noteVi: "Đây là cách nói khẩu ngữ dùng khi đưa ra một thông tin mình nghe được chứ không trực tiếp chứng kiến." },
+                        { term: "결혼하시잖아요", type: "-잖아요", typeVi: "-잖아요", note: "화자와 청자가 이미 공유한다고 생각하는 정보를 다시 꺼내며 공감을 유도합니다.", noteVi: "Cách nói này gợi lại thông tin mà người nói cho rằng cả hai đều đã biết để kéo sự đồng tình của người nghe." },
+                        { term: "그냥", type: "완곡화", typeVi: "Nói giảm, làm mềm", note: "상대를 낮추지 않으면서 기대를 낮추는 말투로, 정보의 강도를 부드럽게 조절합니다.", noteVi: "Nó làm cho lời nói nhẹ hơn, hạ mức kỳ vọng mà không khiến đối phương bị coi thường." },
+                        { term: "하하", type: "머뭇거림 / 웃음", typeVi: "Ngập ngừng / cười nhẹ", note: "답을 바로 하기 전 긴장을 풀거나 분위기를 부드럽게 만드는 구어적 장치입니다.", noteVi: "Đây là dấu hiệu khẩu ngữ giúp người nói bớt căng thẳng hoặc làm dịu không khí trước khi trả lời." }
+                    ],
+                    quizTitle: "내용 이해 점검",
+                    quizTitleVi: "Kiểm tra hiểu nội dung",
+                    questions: [
+                        {
+                            prompt: "남자는 어떤 상을 받았습니까?",
+                            promptVi: "Người nam đã nhận giải thưởng nào?",
+                            answer: "2",
+                            explanation: "첫 문장에서 '올해의 선수상'을 받았다고 축하합니다.",
+                            explanationVi: "Ngay ở câu đầu, người dẫn chương trình chúc mừng anh ấy đã nhận 'Giải Cầu thủ của năm'.",
+                            options: [
+                                { value: "1", label: "① 인기상", labelVi: "① Giải được yêu thích" },
+                                { value: "2", label: "② 올해의 선수상", labelVi: "② Giải Cầu thủ của năm" },
+                                { value: "3", label: "③ 최우수 신인상", labelVi: "③ Giải tân binh xuất sắc nhất" },
+                                { value: "4", label: "④ 배우상", labelVi: "④ Giải diễn viên" }
+                            ]
+                        },
+                        {
+                            prompt: "남자가 결혼할 사람은 누구입니까?",
+                            promptVi: "Người mà anh ấy sẽ kết hôn là ai?",
+                            answer: "4",
+                            explanation: "남자는 예비 신부가 의사 선생님의 조카라고 설명합니다.",
+                            explanationVi: "Người nam giải thích rằng cô dâu tương lai là cháu của bác sĩ đã điều trị cho anh ấy.",
+                            options: [
+                                { value: "1", label: "① 유명한 배우", labelVi: "① Một nữ diễn viên nổi tiếng" },
+                                { value: "2", label: "② 인기가 많은 가수", labelVi: "② Một ca sĩ nổi tiếng" },
+                                { value: "3", label: "③ 남자를 치료해 준 의사", labelVi: "③ Bác sĩ đã điều trị cho anh ấy" },
+                                { value: "4", label: "④ 의사 선생님의 조카", labelVi: "④ Cháu của bác sĩ" }
+                            ]
+                        },
+                        {
+                            prompt: "두 사람은 어떻게 만났습니까?",
+                            promptVi: "Hai người đã gặp nhau như thế nào?",
+                            answer: "1",
+                            explanation: "'저희는 선봐서 만났어요.'라고 직접 말합니다.",
+                            explanationVi: "Người nam nói trực tiếp: 'Chúng tôi gặp nhau qua xem mắt.'",
+                            options: [
+                                { value: "1", label: "① 선을 봐서 만났다.", labelVi: "① Gặp nhau qua xem mắt." },
+                                { value: "2", label: "② 운동하다가 만났다.", labelVi: "② Gặp nhau khi đang tập luyện." },
+                                { value: "3", label: "③ 병원에서 우연히 만났다.", labelVi: "③ Tình cờ gặp ở bệnh viện." },
+                                { value: "4", label: "④ 결혼식장에서 만났다.", labelVi: "④ Gặp nhau ở lễ cưới." }
+                            ]
+                        },
+                        {
+                            prompt: "남자가 결혼을 결심한 이유는 무엇입니까?",
+                            promptVi: "Vì sao người nam quyết định kết hôn?",
+                            answer: "3",
+                            explanation: "운동선수의 생활을 잘 이해해 주고 성격이 잘 맞는 점을 이유로 말합니다.",
+                            explanationVi: "Anh ấy nói lý do là cô ấy hiểu cuộc sống của vận động viên và hai người rất hợp tính.",
+                            options: [
+                                { value: "1", label: "① 여자의 외모가 아주 아름다워서", labelVi: "① Vì cô ấy rất xinh đẹp" },
+                                { value: "2", label: "② 여자의 조건이 아주 좋아서", labelVi: "② Vì điều kiện của cô ấy rất tốt" },
+                                { value: "3", label: "③ 여자가 남자의 생활을 잘 이해해 줘서", labelVi: "③ Vì cô ấy hiểu rõ cuộc sống của anh ấy" },
+                                { value: "4", label: "④ 여자의 오빠와 친한 친구 사이라서", labelVi: "④ Vì anh ấy thân với anh trai của cô ấy" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    id: "track10",
+                    label: "Track 10",
+                    title: "듣기 2: 사랑 이야기",
+                    titleVi: "Nghe 2: Câu chuyện tình yêu",
+                    summary: "라디오 사연 형식의 이야기를 듣고, 만남의 계기와 결혼 과정, 앞으로의 계획을 파악하는 활동입니다.",
+                    summaryVi: "Em sẽ nghe một câu chuyện tình yêu theo kiểu thư gửi đài phát thanh và nắm được cơ duyên gặp gỡ, quá trình đi đến hôn nhân cùng kế hoạch tương lai.",
+                    activityImage: {
+                        src: "listen2pic-lite.jpg",
+                        alt: "보이는 라디오 스튜디오에서 사연을 읽는 진행자 모습",
+                        altVi: "Hình người dẫn chương trình đang đọc lá thư tại phòng thu radio có ghi hình",
+                        caption: "활동 참고 그림: 보는 라디오 스튜디오에서 사연을 읽는 장면입니다.",
+                        captionVi: "Hình tham khảo hoạt động: cảnh người dẫn chương trình đang đọc thư tại phòng thu radio có ghi hình."
+                    },
+                    audioSrc: "Trk_10.mp3",
+                    scene: {
+                        emoji: "💌",
+                        title: "상황 그림: 라디오 사연",
+                        titleVi: "Tranh tình huống: thư gửi chương trình radio",
+                        caption: "청취자가 자신의 사랑 이야기를 라디오 프로그램에 보내고, 진행자가 읽어 주는 장면입니다.",
+                        captionVi: "Đây là cảnh một thính giả gửi câu chuyện tình yêu của mình cho chương trình radio và người dẫn chương trình đọc lại.",
+                        tags: ["사랑 이야기", "유학 시절", "교통사고", "결혼 허락"]
+                    },
+                    preListening: {
+                        vocab: [
+                            { ko: "유학을 가다", vi: "đi du học", hint: "외국에서 공부하러 가다" },
+                            { ko: "귀국하다", vi: "về nước", hint: "외국에서 자기 나라로 돌아오다" },
+                            { ko: "청혼하다", vi: "cầu hôn", hint: "결혼을 제안하다" },
+                            { ko: "반대하다", vi: "phản đối", hint: "찬성하지 않다" },
+                            { ko: "포기하지 않다", vi: "không bỏ cuộc", hint: "끝까지 계속하다" }
+                        ],
+                        relationshipOptions: [
+                            { value: "host-story", label: "진행자와 청취자 사연" },
+                            { value: "teacher-student", label: "선생님과 학생" },
+                            { value: "friends-chat", label: "친구들의 수다" }
+                        ],
+                        relationshipAnswer: "host-story",
+                        genreOptions: [
+                            { value: "radio-story", label: "라디오 사연 / 경험담" },
+                            { value: "news", label: "뉴스 보도" },
+                            { value: "instruction", label: "안내 방송" }
+                        ],
+                        genreAnswer: "radio-story",
+                        predictionNote: "한 사람의 과거 경험을 시간 순서대로 들려주는 서사형 담화입니다.",
+                        predictionNoteVi: "Đây là một đoạn kể chuyện theo trình tự thời gian, trong đó một người thuật lại trải nghiệm trong quá khứ của mình.",
+                        backgroundPrompt: "사랑 이야기에서 갈등이 생긴다면 어떤 이유일지 먼저 써 보세요.",
+                        backgroundPromptVi: "Nếu trong câu chuyện tình yêu này có mâu thuẫn, em nghĩ nguyên nhân sẽ là gì? Hãy viết trước."
+                    },
+                    transcript: [
+                        {
+                            speaker: "멘트",
+                            text: "다음은 여러분의 사랑 이야기를 읽어 드리는 시간입니다. 오늘은 서초동에 사시는 이준서 님의 사연을 읽어 드리겠습니다.",
+                            vi: "Sau đây là mục đọc chuyện tình yêu của quý vị. Hôm nay chúng tôi xin đọc câu chuyện của anh Lee Junseo sống ở Seocho-dong.",
+                            keywords: ["사랑 이야기", "이준서", "사연"]
+                        },
+                        {
+                            speaker: "사연",
+                            text: "저는 요리를 배우기 위해서 일본으로 유학을 갔는데 요리학교에서 그녀를 만났습니다. 저보다 3살이 많은 그녀는 일본어를 잘 못하던 저를 항상 누나처럼 친절하게 도와주었습니다. 저는 그녀가 좋았지만 졸업하자마자 한국으로 돌아올 생각이었기 때문에 고백하지 않았습니다.",
+                            vi: "Tôi đã du học Nhật Bản để học nấu ăn và gặp cô ấy ở trường dạy nấu ăn. Cô ấy hơn tôi 3 tuổi và luôn tận tình giúp đỡ tôi như một người chị khi tôi chưa giỏi tiếng Nhật. Tôi có cảm tình với cô ấy nhưng vì định sẽ quay về Hàn Quốc ngay sau khi tốt nghiệp nên đã không tỏ tình.",
+                            keywords: ["요리", "일본 유학", "3살", "고백하지 않다"]
+                        },
+                        {
+                            speaker: "사연",
+                            text: "그런데 귀국하기 전날 밤, 저는 교통사고를 당했습니다. 눈을 떠 보니 병원이었고 침대 옆에 그녀가 울면서 서 있었습니다. 그리고 세 달 동안이나 저를 잘 간호해 주었습니다.",
+                            vi: "Thế nhưng vào đêm trước ngày về nước, tôi bị tai nạn giao thông. Khi tỉnh lại thì tôi đang ở bệnh viện, và cô ấy đứng bên giường vừa khóc. Sau đó cô ấy đã chăm sóc tôi rất chu đáo suốt ba tháng.",
+                            keywords: ["귀국 전날", "교통사고", "병원", "간호"],
+                            highlights: [
+                                { term: "그런데", type: "사건 전환" },
+                                { term: "눈을 떠 보니", type: "구어적 장면 전환" }
+                            ]
+                        },
+                        {
+                            speaker: "사연",
+                            text: "병원에서 퇴원하던 날 저는 그녀에게 청혼했습니다. 그런데 양쪽 부모님이 우리의 결혼을 반대하셨습니다. 그녀의 부모님은 딸이 한국으로 시집가는 것을 반대하셨고 제 부모님은 연상의 외국 여자가 며느리로 들어오는 것을 싫어하셨습니다. 하지만 변하지 않는 우리의 사랑을 보시고 마침내 결혼을 허락해 주셨습니다.",
+                            vi: "Vào ngày ra viện, tôi đã cầu hôn cô ấy. Nhưng bố mẹ hai bên đều phản đối đám cưới của chúng tôi. Bố mẹ cô ấy không đồng ý việc con gái lấy chồng Hàn Quốc, còn bố mẹ tôi thì không muốn cô dâu là phụ nữ nước ngoài lớn tuổi hơn tôi. Tuy nhiên sau khi thấy tình yêu không đổi của chúng tôi, cuối cùng họ đã cho phép kết hôn.",
+                            keywords: ["퇴원", "청혼", "반대", "허락"],
+                            highlights: [
+                                { term: "그런데", type: "갈등 제시" },
+                                { term: "하지만", type: "대조 연결" }
+                            ]
+                        },
+                        {
+                            speaker: "사연",
+                            text: "저희는 세상에서 제일 맛있는 빵집을 만들 계획입니다. 그 꿈을 이루려면 아직 멀었지만 아무리 힘들어도 포기하지 않을 겁니다. 저희를 응원해 주세요.",
+                            vi: "Chúng tôi dự định sẽ mở tiệm bánh ngon nhất thế gian. Để thực hiện ước mơ ấy vẫn còn xa, nhưng dù khó khăn đến đâu chúng tôi cũng sẽ không bỏ cuộc. Xin hãy cổ vũ cho chúng tôi.",
+                            keywords: ["빵집", "계획", "아무리 힘들어도", "포기하지 않다"],
+                            highlights: [
+                                { term: "아무리 힘들어도", type: "강조 / 양보" }
+                            ]
+                        },
+                        {
+                            speaker: "멘트",
+                            text: "네, 두 분의 결혼을 축하합니다. 노래 한 곡 들려 드립니다. ‘우리 서로 사랑하잖아.’",
+                            vi: "Vâng, xin chúc mừng đám cưới của hai bạn. Sau đây xin gửi tặng một bài hát: 'Chúng ta yêu nhau mà.'",
+                            keywords: ["결혼 축하", "노래", "사랑하잖아"],
+                            highlights: [
+                                { term: "사랑하잖아", type: "-잖아 친근체" }
+                            ]
+                        }
+                    ],
+                    dictogloss: {
+                        prompt: "사연의 시간 순서를 유지하면서 핵심어만 보고 다시 써 보세요.",
+                        promptVi: "Hãy chỉ nhìn các từ khóa và viết lại câu chuyện theo đúng trình tự thời gian của sự việc.",
+                        keywords: ["일본 유학", "3살 많은 그녀", "교통사고", "세 달 간호", "청혼", "빵집"],
+                        modelSummary: "이준서 씨는 일본에서 요리를 배우다가 자신보다 세 살 많은 여성을 만났다. 처음에는 한국으로 돌아올 생각이라 고백하지 않았지만 귀국 전날 교통사고를 당한 뒤 그녀의 간호를 받으면서 마음을 확인했다. 퇴원하던 날 청혼했고 양가의 반대를 넘어서 결혼 허락을 받았으며, 앞으로는 함께 맛있는 빵집을 만들 계획이다.",
+                        placeholder: "시간 순서를 살려 4~6문장으로 다시 써 보세요.",
+                        placeholderVi: "Hãy viết lại trong 4~6 câu, giữ rõ trình tự thời gian."
+                    },
+                    notePrompts: {
+                        keywords: "유학, 사고, 간호, 반대, 허락, 계획",
+                        details: "사건이 바뀌는 지점마다 이유와 결과를 적기",
+                        questions: "양가 부모님이 왜 반대했는지 다시 확인하고 싶은 점",
+                        cue: "만남 -> 사고 -> 간호 -> 청혼 -> 반대 -> 미래 계획",
+                        notes: "라디오 사연의 핵심 사건과 감정 변화를 같이 정리하세요.",
+                        summary: "이 사랑 이야기를 2문장으로 압축해 보세요."
+                    },
+                    notePromptsVi: {
+                        keywords: "Du học, tai nạn, chăm sóc, phản đối, cho phép, kế hoạch",
+                        details: "Ở mỗi điểm câu chuyện chuyển sang sự việc mới, hãy ghi lý do và kết quả",
+                        questions: "Điểm nào về việc bố mẹ hai bên phản đối mà em muốn nghe lại để xác nhận?",
+                        cue: "Gặp gỡ -> Tai nạn -> Chăm sóc -> Cầu hôn -> Phản đối -> Kế hoạch tương lai",
+                        notes: "Hãy sắp xếp cùng lúc sự kiện chính và sự thay đổi cảm xúc trong câu chuyện radio.",
+                        summary: "Hãy nén câu chuyện tình yêu này thành 2 câu."
+                    },
+                    clarificationPrompt: "긴 사연에서 결혼을 허락받은 이유나 앞으로의 계획을 다시 확인하는 문장을 연습해 보세요.",
+                    clarificationPromptVi: "Hãy luyện các câu hỏi lại để xác nhận vì sao hai người được cho phép kết hôn và kế hoạch trong tương lai là gì.",
+                    clarifyScenario: "예: '핵심은 두 분이 결국 허락을 받았다는 거죠?'처럼 요약해 확인해 보세요.",
+                    clarifyScenarioVi: "Ví dụ: hãy tóm lại để xác nhận như 'Ý chính là cuối cùng hai người cũng đã được chấp nhận, đúng không ạ?'.",
+                    oralFeatures: [
+                        { term: "그런데", type: "담화 전환", typeVi: "Chuyển mạch lời nói", note: "이야기 흐름에서 새로운 사건이나 갈등을 열 때 자주 쓰는 연결 표현입니다.", noteVi: "Đây là cách nối câu rất hay dùng khi mở ra một sự việc mới hoặc một mâu thuẫn trong câu chuyện." },
+                        { term: "눈을 떠 보니", type: "장면 전환", typeVi: "Chuyển cảnh", note: "상황이 급격히 바뀐 장면을 구어적으로 생생하게 들려줍니다.", noteVi: "Cách diễn đạt này làm cho cảnh chuyển đổi đột ngột trở nên rất sống động trong khẩu ngữ." },
+                        { term: "하지만", type: "대조 표지", typeVi: "Dấu hiệu đối lập", note: "갈등과 해결을 대비시키며 서사의 긴장감을 높입니다.", noteVi: "Nó đặt mâu thuẫn và cách giải quyết cạnh nhau để làm câu chuyện căng hơn và rõ nghĩa hơn." },
+                        { term: "사랑하잖아", type: "-잖아 친근체", typeVi: "-잖아 kiểu thân mật", note: "친밀한 관계에서 공감과 확신을 강하게 전달하는 구어 종결형입니다.", noteVi: "Đây là kiểu kết câu khẩu ngữ thân mật, truyền cảm giác đồng tình và chắc chắn rất mạnh.", extension: "본문에는 '그런데'가 나오지만 실제 회화에서는 '근데'처럼 더 짧아지기도 합니다.", extensionVi: "Trong bài dùng '그런데', nhưng trong hội thoại thật người ta cũng hay rút ngắn thành '근데'." }
+                    ],
+                    quizTitle: "내용 이해 점검",
+                    quizTitleVi: "Kiểm tra hiểu nội dung",
+                    questions: [
+                        {
+                            prompt: "남자가 일본에 간 이유는 무엇입니까?",
+                            promptVi: "Vì sao người nam đến Nhật Bản?",
+                            answer: "2",
+                            explanation: "이준서 씨는 요리를 배우기 위해 일본으로 유학을 갔다고 말합니다.",
+                            explanationVi: "Lee Junseo nói rằng anh ấy sang Nhật du học để học nấu ăn.",
+                            options: [
+                                { value: "1", label: "① 일본어를 공부하기 위해서", labelVi: "① Để học tiếng Nhật" },
+                                { value: "2", label: "② 요리를 배우기 위해서", labelVi: "② Để học nấu ăn" },
+                                { value: "3", label: "③ 일본 회사에 취직하기 위해서", labelVi: "③ Để xin việc ở công ty Nhật" },
+                                { value: "4", label: "④ 일본 여행을 하기 위해서", labelVi: "④ Để đi du lịch Nhật Bản" }
+                            ]
+                        },
+                        {
+                            prompt: "처음에 남자가 여자에게 고백하지 않은 이유는 무엇입니까?",
+                            promptVi: "Lúc đầu vì sao người nam không tỏ tình với cô gái?",
+                            answer: "3",
+                            explanation: "졸업하자마자 한국으로 돌아올 생각이었기 때문에 고백하지 않았습니다.",
+                            explanationVi: "Vì anh ấy định về Hàn Quốc ngay sau khi tốt nghiệp nên đã không tỏ tình.",
+                            options: [
+                                { value: "1", label: "① 여자가 나이가 더 많아서", labelVi: "① Vì cô ấy lớn tuổi hơn" },
+                                { value: "2", label: "② 여자가 남자를 싫어해서", labelVi: "② Vì cô ấy không thích anh ấy" },
+                                { value: "3", label: "③ 곧 한국으로 돌아와야 해서", labelVi: "③ Vì anh ấy sắp phải về Hàn Quốc" },
+                                { value: "4", label: "④ 여자의 부모님이 반대해서", labelVi: "④ Vì bố mẹ cô ấy phản đối" }
+                            ]
+                        },
+                        {
+                            prompt: "남자가 여자에게 청혼을 한 시점은 언제입니까?",
+                            promptVi: "Người nam đã cầu hôn cô gái vào lúc nào?",
+                            answer: "2",
+                            explanation: "병원에서 퇴원하던 날 그녀에게 청혼했다고 말합니다.",
+                            explanationVi: "Anh ấy nói rằng mình đã cầu hôn cô ấy vào ngày xuất viện.",
+                            options: [
+                                { value: "1", label: "① 요리 학교를 졸업할 때", labelVi: "① Khi tốt nghiệp trường dạy nấu ăn" },
+                                { value: "2", label: "② 병원에서 퇴원하던 날", labelVi: "② Vào ngày ra viện" },
+                                { value: "3", label: "③ 한국에 돌아오기 전날 밤", labelVi: "③ Đêm trước ngày về Hàn Quốc" },
+                                { value: "4", label: "④ 빵집을 개업한 날", labelVi: "④ Vào ngày khai trương tiệm bánh" }
+                            ]
+                        },
+                        {
+                            prompt: "이 커플의 앞으로의 계획은 무엇입니까?",
+                            promptVi: "Kế hoạch tương lai của cặp đôi này là gì?",
+                            answer: "2",
+                            explanation: "두 사람은 세상에서 제일 맛있는 빵집을 만들 계획이라고 합니다.",
+                            explanationVi: "Hai người nói rằng họ có kế hoạch mở tiệm bánh ngon nhất thế giới.",
+                            options: [
+                                { value: "1", label: "① 일본에서 계속 사는 것", labelVi: "① Tiếp tục sống ở Nhật Bản" },
+                                { value: "2", label: "② 맛있는 빵집을 여는 것", labelVi: "② Mở một tiệm bánh ngon" },
+                                { value: "3", label: "③ 요리 학교 선생님이 되는 것", labelVi: "③ Trở thành giáo viên dạy nấu ăn" },
+                                { value: "4", label: "④ 세계 여행을 떠나는 것", labelVi: "④ Đi du lịch vòng quanh thế giới" }
+                            ]
+                        }
+                    ]
+                }
+            ]
         };
-
-        function checkAnswers(section) {
-            let startQ, endQ, resultId;
-            
-            if (section === 1) {
-                startQ = 1;
-                endQ = 4;
-                resultId = 'result1';
-            } else {
-                startQ = 5;
-                endQ = 8;
-                resultId = 'result2';
-            }
-
-            let score = 0;
-            let total = endQ - startQ + 1;
-            let allAnswered = true;
-
-            for (let i = startQ; i <= endQ; i++) {
-                const qName = 'q' + i;
-                const radios = document.getElementsByName(qName);
-                let selected = null;
-                
-                // Reset styles
-                radios.forEach(radio => {
-                    radio.parentElement.classList.remove('text-green-600', 'font-bold', 'text-red-500');
-                    if (radio.checked) selected = radio.value;
-                });
-
-                const questionDiv = document.getElementById(qName + '-container');
-                questionDiv.classList.remove('bg-green-50', 'bg-red-50', 'border-green-200', 'border-red-200');
-
-                if (selected) {
-                    if (selected === answers[qName]) {
-                        score++;
-                        questionDiv.classList.add('bg-green-50', 'border-green-200');
-                        // Highlight correct
-                        radios.forEach(radio => {
-                            if(radio.value === answers[qName]) radio.parentElement.classList.add('text-green-600', 'font-bold');
-                        });
-                    } else {
-                        questionDiv.classList.add('bg-red-50', 'border-red-200');
-                        // Highlight wrong and correct
-                         radios.forEach(radio => {
-                            if(radio.value === selected) radio.parentElement.classList.add('text-red-500');
-                            if(radio.value === answers[qName]) radio.parentElement.classList.add('text-green-600', 'font-bold');
-                        });
-                    }
-                } else {
-                    allAnswered = false;
-                }
-            }
-
-            const resultDiv = document.getElementById(resultId);
-            resultDiv.classList.remove('hidden');
-            
-            if (!allAnswered) {
-                resultDiv.innerHTML = `<span class="text-red-600 bg-red-100 px-3 py-1 rounded-full text-sm">❗ 모든 문제를 풀어주세요.</span>`;
-            } else {
-                const percentage = Math.round((score / total) * 100);
-                let message = "";
-                if(percentage === 100) message = "🎉 완벽해요! 참 잘했어요.";
-                else if(percentage >= 70) message = "👏 잘했어요! 조금만 더 노력해 보세요.";
-                else message = "💪 다시 한 번 들어보세요.";
-
-                resultDiv.innerHTML = `
-                    <div class="flex flex-col items-center">
-                        <div class="text-3xl font-bold text-indigo-600 mb-1">${score} / ${total}</div>
-                        <div class="text-sm text-gray-500">${message}</div>
-                    </div>
-                `;
-            }
-        }
-
-        function splitStemTail(token) {
-            const tailLength = token.length >= 4 ? 2 : 1;
-            const stem = token.slice(0, -tailLength);
-            const tail = token.slice(-tailLength);
-            if (!stem) return null;
-            return { stem, tail };
-        }
-
-        function setMaskState(maskButton, reveal) {
-            const placeholder = maskButton.dataset.placeholder || '_';
-            const stem = maskButton.dataset.stem || '';
-            maskButton.textContent = reveal ? stem : placeholder;
-            maskButton.classList.toggle('revealed', reveal);
-            maskButton.setAttribute('aria-pressed', reveal ? 'true' : 'false');
-        }
-
-        function updateMaskCounter(scriptBlock) {
-            const counter = scriptBlock.querySelector('.mask-counter');
-            if (!counter) return;
-            const total = scriptBlock.querySelectorAll('.morph-mask').length;
-            const shown = scriptBlock.querySelectorAll('.morph-mask.revealed').length;
-            counter.textContent = `공개 ${shown}/${total}`;
-        }
-
-        function collectCandidatesByLine(lineElement) {
-            const walker = document.createTreeWalker(lineElement, NodeFilter.SHOW_TEXT);
-            const candidates = [];
-            const tokenRegex = /[\uAC00-\uD7A3]{2,}/g;
-
-            while (walker.nextNode()) {
-                const node = walker.currentNode;
-                const parent = node.parentElement;
-                if (!parent) continue;
-                if (parent.closest('.mask-toolbar')) continue;
-                if (parent.closest('.morph-mask')) continue;
-                if (parent.tagName === 'STRONG') continue;
-                if (['SCRIPT', 'STYLE', 'BUTTON'].includes(parent.tagName)) continue;
-
-                const text = node.nodeValue;
-                if (!/[\uAC00-\uD7A3]/.test(text)) continue;
-
-                tokenRegex.lastIndex = 0;
-                let match;
-                while ((match = tokenRegex.exec(text)) !== null) {
-                    candidates.push({
-                        node,
-                        start: match.index,
-                        end: match.index + match[0].length,
-                        token: match[0]
-                    });
-                }
-            }
-
-            return candidates;
-        }
-
-        function pickMaskTargets(candidates) {
-            const count = candidates.length;
-            if (count === 0) return [];
-
-            let targetCount = 1;
-            if (count >= 5) targetCount = 3;
-            else if (count >= 2) targetCount = 2;
-
-            const indices = [];
-            if (targetCount === 1) {
-                indices.push(Math.floor(count / 2));
-            } else if (targetCount === 2) {
-                indices.push(0, count - 1);
-            } else {
-                indices.push(0, Math.floor((count - 1) / 2), count - 1);
-            }
-
-            const unique = [...new Set(indices)].filter((index) => index >= 0 && index < count);
-            return unique.map((index) => candidates[index]);
-        }
-
-        function applyMasksToLine(selectedCandidates) {
-            const nodeMap = new Map();
-            selectedCandidates.forEach((candidate) => {
-                if (!nodeMap.has(candidate.node)) {
-                    nodeMap.set(candidate.node, []);
-                }
-                nodeMap.get(candidate.node).push(candidate);
-            });
-
-            nodeMap.forEach((items, node) => {
-                let replaced = node.nodeValue;
-                items.sort((a, b) => b.start - a.start).forEach((item) => {
-                    const split = splitStemTail(item.token);
-                    if (!split) return;
-                    const placeholder = '□'.repeat(Math.max(1, split.stem.length));
-                    const masked = `<button type="button" class="morph-mask" data-stem="${split.stem}" data-placeholder="${placeholder}" aria-pressed="false">${placeholder}</button>${split.tail}`;
-                    replaced = `${replaced.slice(0, item.start)}${masked}${replaced.slice(item.end)}`;
-                });
-
-                if (replaced !== node.nodeValue) {
-                    const fragment = document.createElement('span');
-                    fragment.innerHTML = replaced;
-                    node.parentNode.replaceChild(fragment, node);
-                }
-            });
-        }
-
-        function maskByUtterance(scriptBlock) {
-            const lines = scriptBlock.querySelectorAll('p');
-            lines.forEach((line) => {
-                const candidates = collectCandidatesByLine(line);
-                const selected = pickMaskTargets(candidates);
-                applyMasksToLine(selected);
-            });
-        }
-
-        function addMaskToolbar(scriptBlock) {
-            const toolbar = document.createElement('div');
-            toolbar.className = 'mask-toolbar';
-            toolbar.innerHTML = `
-                <div class="mask-help">한 발화에 2-3개 명사/용언만 가립니다. 조사/어미는 보입니다.</div>
-                <div class="mask-buttons">
-                    <button type="button" class="mask-action" data-mask-action="hide">전체 가리기</button>
-                    <button type="button" class="mask-action" data-mask-action="show">전체 드러내기</button>
-                    <span class="mask-counter">공개 0/0</span>
-                </div>
-            `;
-            scriptBlock.prepend(toolbar);
-
-            toolbar.addEventListener('click', (event) => {
-                const actionButton = event.target.closest('.mask-action');
-                if (!actionButton) return;
-                const reveal = actionButton.dataset.maskAction === 'show';
-                scriptBlock.querySelectorAll('.morph-mask').forEach((maskButton) => {
-                    setMaskState(maskButton, reveal);
-                });
-                updateMaskCounter(scriptBlock);
-            });
-        }
-
-        function initScriptMasking() {
-            const scriptBlocks = document.querySelectorAll('div[id^="script"]');
-            if (scriptBlocks.length === 0) return;
-
-            scriptBlocks.forEach((scriptBlock) => {
-                if (scriptBlock.dataset.maskReady === 'true') return;
-
-                addMaskToolbar(scriptBlock);
-                maskByUtterance(scriptBlock);
-
-                scriptBlock.addEventListener('pointerup', (event) => {
-                    const maskButton = event.target.closest('.morph-mask');
-                    if (!maskButton) return;
-                    const reveal = !maskButton.classList.contains('revealed');
-                    setMaskState(maskButton, reveal);
-                    updateMaskCounter(scriptBlock);
-                });
-
-                scriptBlock.dataset.maskReady = 'true';
-                updateMaskCounter(scriptBlock);
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', initScriptMasking);
     </script>
-    <script src="../shared/learning-enhancements.js"></script>
+    <script src="../shared/listening-workbook.js?v=20260315-quizlang4"></script>
+    <script src="../shared/learning-enhancements.js?v=20260315-quizlang3"></script>
 </body>
 </html>
