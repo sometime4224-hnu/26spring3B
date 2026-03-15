@@ -118,7 +118,7 @@
       split: {
         label: "분열형",
         spawnWeight: 10,
-        hpMultiplier: 1.3,
+        hpMultiplier: 3.9,
         speedMultiplier: 0.92,
         damageMultiplier: 0.96,
         scoreMultiplier: 1.34,
@@ -139,7 +139,7 @@
       corrosion: {
         label: "침식형",
         spawnWeight: 6,
-        hpMultiplier: 1.9,
+        hpMultiplier: 38,
         speedMultiplier: 0.62,
         damageMultiplier: 0.95,
         scoreMultiplier: 1.46,

@@ -2797,13 +2797,22 @@
     }
 
     spawnNegativeEntry(archetypeKey, x, y, options) {
-      const settings = options || {};
+      const settings = { ...(options || {}) };
+      let spawnX = x;
+      let spawnY = y;
 
-      if (this.shouldTelegraphArchetype(archetypeKey, settings)) {
-        return this.spawnTelegraphedNegativeEnemy(archetypeKey, x, y, settings);
+      if (archetypeKey === "corrosion") {
+        const preparedSpawn = this.getPreparedCorrosionSpawnPoint(x, y, settings);
+        spawnX = preparedSpawn.x;
+        spawnY = preparedSpawn.y;
+        settings.spawnSide = preparedSpawn.side;
       }
 
-      return this.createNegativeEnemy(archetypeKey, x, y, settings);
+      if (this.shouldTelegraphArchetype(archetypeKey, settings)) {
+        return this.spawnTelegraphedNegativeEnemy(archetypeKey, spawnX, spawnY, settings);
+      }
+
+      return this.createNegativeEnemy(archetypeKey, spawnX, spawnY, settings);
     }
 
     getArchetypeSpawnWeight(archetypeKey) {
@@ -3161,6 +3170,149 @@
       };
     }
 
+    snapValueToAnchors(value, anchors) {
+      if (!anchors || !anchors.length) {
+        return value;
+      }
+
+      let nearest = anchors[0];
+      let nearestDistance = Math.abs(value - nearest);
+
+      for (let index = 1; index < anchors.length; index += 1) {
+        const distance = Math.abs(value - anchors[index]);
+
+        if (distance < nearestDistance) {
+          nearest = anchors[index];
+          nearestDistance = distance;
+        }
+      }
+
+      return nearest;
+    }
+
+    detectNegativeSpawnSide(x, y, margin) {
+      const bounds = this.getCombatBounds(margin == null ? 40 : margin);
+      const distances = [
+        { side: 0, distance: Math.abs(x - bounds.left) },
+        { side: 1, distance: Math.abs(x - bounds.right) },
+        { side: 2, distance: Math.abs(y - bounds.top) },
+        { side: 3, distance: Math.abs(y - bounds.bottom) },
+      ];
+
+      distances.sort((left, right) => left.distance - right.distance);
+      return distances[0].side;
+    }
+
+    getCorrosionLaneAnchors(side) {
+      const safeBounds = this.getCombatSafeBounds(120, 262, 132);
+      const laneRatios = [0.2, 0.4, 0.62, 0.82];
+
+      if (side === 0 || side === 1) {
+        return laneRatios.map((ratio) => Phaser.Math.Linear(safeBounds.top, safeBounds.bottom, ratio));
+      }
+
+      return laneRatios.map((ratio) => Phaser.Math.Linear(safeBounds.left, safeBounds.right, ratio));
+    }
+
+    getPreparedCorrosionSpawnPoint(x, y, options) {
+      const settings = options || {};
+      const side = settings.spawnSide == null ? this.detectNegativeSpawnSide(x, y, 40) : settings.spawnSide;
+      const spawnBounds = this.getCombatBounds(40);
+      const safeBounds = this.getCombatSafeBounds(120, 262, 132);
+      const anchors = this.getCorrosionLaneAnchors(side);
+
+      if (side === 0) {
+        return {
+          x: spawnBounds.left,
+          y: Math.round(this.snapValueToAnchors(Phaser.Math.Clamp(y, safeBounds.top, safeBounds.bottom), anchors)),
+          side,
+        };
+      }
+
+      if (side === 1) {
+        return {
+          x: spawnBounds.right,
+          y: Math.round(this.snapValueToAnchors(Phaser.Math.Clamp(y, safeBounds.top, safeBounds.bottom), anchors)),
+          side,
+        };
+      }
+
+      if (side === 2) {
+        return {
+          x: Math.round(this.snapValueToAnchors(Phaser.Math.Clamp(x, safeBounds.left, safeBounds.right), anchors)),
+          y: spawnBounds.top,
+          side,
+        };
+      }
+
+      return {
+        x: Math.round(this.snapValueToAnchors(Phaser.Math.Clamp(x, safeBounds.left, safeBounds.right), anchors)),
+        y: spawnBounds.bottom,
+        side,
+      };
+    }
+
+    getCorrosionTraverseTarget(side, x, y) {
+      const exitBounds = this.getCombatBounds(92);
+      const safeBounds = this.getCombatSafeBounds(120, 262, 132);
+
+      if (side === 0) {
+        return { x: exitBounds.right, y: Phaser.Math.Clamp(y, safeBounds.top, safeBounds.bottom) };
+      }
+
+      if (side === 1) {
+        return { x: exitBounds.left, y: Phaser.Math.Clamp(y, safeBounds.top, safeBounds.bottom) };
+      }
+
+      if (side === 2) {
+        return { x: Phaser.Math.Clamp(x, safeBounds.left, safeBounds.right), y: exitBounds.bottom };
+      }
+
+      return { x: Phaser.Math.Clamp(x, safeBounds.left, safeBounds.right), y: exitBounds.top };
+    }
+
+    getLoopWrappedVector(originX, originY, targetX, targetY) {
+      const dx = this.getLoopWrappedDelta(originX, targetX, this.mapLoopWidth);
+      const dy = this.getLoopWrappedDelta(originY, targetY, this.mapLoopHeight);
+      return {
+        dx,
+        dy,
+        distance: Math.sqrt((dx * dx) + (dy * dy)),
+        angle: Math.atan2(dy, dx),
+      };
+    }
+
+    setupCorrosionEnemyRoute(enemy, options) {
+      if (!enemy || enemy.enemyType !== "corrosion") {
+        return;
+      }
+
+      const settings = options || {};
+      const spawnPoint = this.getPreparedCorrosionSpawnPoint(enemy.x, enemy.y, settings);
+      const traverseTarget = this.getCorrosionTraverseTarget(spawnPoint.side, spawnPoint.x, spawnPoint.y);
+
+      enemy.setPosition(spawnPoint.x, spawnPoint.y);
+      enemy.corrosionSpawnSide = spawnPoint.side;
+      enemy.corrosionTargetX = traverseTarget.x;
+      enemy.corrosionTargetY = traverseTarget.y;
+      enemy.corrosionExitDistance = 30;
+    }
+
+    hasCorrosionReachedExit(enemy) {
+      if (!enemy || enemy.enemyType !== "corrosion") {
+        return false;
+      }
+
+      const vector = this.getLoopWrappedVector(
+        enemy.x,
+        enemy.y,
+        enemy.corrosionTargetX == null ? enemy.x : enemy.corrosionTargetX,
+        enemy.corrosionTargetY == null ? enemy.y : enemy.corrosionTargetY
+      );
+
+      return vector.distance <= (enemy.corrosionExitDistance || 30);
+    }
+
     createNegativeEnemy(archetypeKey, x, y, options) {
       const settings = options || {};
 
@@ -3218,6 +3370,10 @@
       enemy.entryShieldDamageMultiplier = this.getEntryShieldDamageMultiplier(settings);
       enemy.entryShieldReleasePadding = settings.entryShieldReleasePadding == null ? 108 : settings.entryShieldReleasePadding;
 
+      if (archetypeKey === "corrosion") {
+        this.setupCorrosionEnemyRoute(enemy, settings);
+      }
+
       enemy.labelOffsetY = this.getEnemyLabelOffsetY(enemy);
       enemy.label = this.createEnemyWordLabel(enemy.x, enemy.y + enemy.labelOffsetY, definition.word, archetype.fontSize, {
         kind: "negative",
@@ -3239,7 +3395,7 @@
     buildSplitShardWords(word, shardCount) {
       const syllables = Array.from(String(word || "").replace(/\s+/g, ""));
       const picks = [];
-      const fallback = ["ㄱ", "ㄴ", "ㅁ", "ㅅ", "ㅇ", "ㅎ"];
+      const fallback = ["ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ", "ㅇ", "ㅈ", "ㅎ"];
       const keyIndexes = shardCount >= 3
         ? [0, Math.floor((syllables.length - 1) / 2), syllables.length - 1]
         : [0, syllables.length - 1];
@@ -3265,6 +3421,33 @@
       return picks.slice(0, shardCount);
     }
 
+    getSplitShardCount() {
+      const shardRanges = [
+        [4, 5],
+        [5, 6],
+        [5, 7],
+        [6, 8],
+        [7, 8],
+      ];
+      const range = shardRanges[Math.min(this.currentStageIndex, shardRanges.length - 1)] || shardRanges[0];
+      return Phaser.Math.Between(range[0], range[1]);
+    }
+
+    getFastestNegativeArchetypeSpeedMultiplier() {
+      return Object.values(this.vocabData.negativeArchetypes || {}).reduce(
+        (maxSpeed, archetype) => Math.max(maxSpeed, archetype && archetype.speedMultiplier ? archetype.speedMultiplier : 1),
+        1
+      );
+    }
+
+    getSplitShardSpeed(parentEnemy) {
+      const parentArchetype = ((this.vocabData.negativeArchetypes || {})[parentEnemy.enemyType]) || {};
+      const parentMultiplier = parentArchetype.speedMultiplier || 1;
+      const fastestMultiplier = this.getFastestNegativeArchetypeSpeedMultiplier();
+      const normalizedParentSpeed = (parentEnemy.speed || 78) / parentMultiplier;
+      return Math.max(96, Math.round(normalizedParentSpeed * fastestMultiplier));
+    }
+
     createSplitShardEnemy(x, y, word, parentEnemy) {
       const shard = this.enemies.create(x, y, "enemy-split-shard");
 
@@ -3280,7 +3463,7 @@
       shard.strongWaveNumber = 0;
       shard.hp = Math.max(1, Math.round((parentEnemy.maxHp || parentEnemy.hp || 8) * Phaser.Math.FloatBetween(0.2, 0.25)));
       shard.maxHp = shard.hp;
-      shard.speed = Math.max(96, Math.round((parentEnemy.speed || 78) * Phaser.Math.FloatBetween(1.3, 1.4)));
+      shard.speed = this.getSplitShardSpeed(parentEnemy);
       shard.scoreValue = Math.max(4, Math.round((parentEnemy.scoreValue || 12) * 0.34));
       shard.experienceValue = 2;
       shard.awakeningChargeValue = 6;
@@ -3302,13 +3485,13 @@
         return;
       }
 
-      const shardCount = this.countActiveNegativeEnemies() >= 34 ? 2 : Phaser.Math.Between(2, 3);
+      const shardCount = this.getSplitShardCount();
       const shardWords = this.buildSplitShardWords(enemy.word, shardCount);
       const safeBounds = this.getCombatSafeBounds(56, 246, 126);
 
       for (let index = 0; index < shardCount; index += 1) {
         const angle = (-Math.PI / 2) + ((Math.PI * 2) * index) / shardCount + Phaser.Math.FloatBetween(-0.18, 0.18);
-        const distance = Phaser.Math.Between(32, 48);
+        const distance = Phaser.Math.Between(shardCount >= 7 ? 46 : 38, shardCount >= 7 ? 62 : 54);
         const x = Phaser.Math.Clamp(enemy.x + Math.cos(angle) * distance, safeBounds.left, safeBounds.right);
         const y = Phaser.Math.Clamp(enemy.y + Math.sin(angle) * distance, safeBounds.top, safeBounds.bottom);
         this.createSplitShardEnemy(x, y, shardWords[index], enemy);
@@ -7782,7 +7965,14 @@
           this.tryEnemyRoleAction(enemy);
         }
 
-        const angle = Phaser.Math.Angle.Between(enemy.x, enemy.y, this.player.x, this.player.y);
+        if (enemy.enemyType === "corrosion" && this.hasCorrosionReachedExit(enemy)) {
+          this.destroyEnemy(enemy);
+          return;
+        }
+
+        const angle = enemy.enemyType === "corrosion"
+          ? this.getLoopWrappedVector(enemy.x, enemy.y, enemy.corrosionTargetX, enemy.corrosionTargetY).angle
+          : Phaser.Math.Angle.Between(enemy.x, enemy.y, this.player.x, this.player.y);
         let moveSpeed = enemy.enemyKind === "finalBoss" ? enemy.speed * 0.72 : enemy.speed;
 
         if ((enemy.mistSlowUntil || 0) > this.time.now) {
