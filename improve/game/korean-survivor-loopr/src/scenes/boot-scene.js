@@ -113,6 +113,22 @@
         g.strokePath();
       });
 
+      this.createEnemyTexture("enemy-corrosion-mite", 56, 56, (g) => {
+        g.fillStyle(0xffffff, 0.96);
+        g.fillEllipse(28, 30, 28, 24);
+        g.fillStyle(0xffffff, 0.22);
+        g.fillEllipse(24, 24, 12, 8);
+        g.lineStyle(4, 0xffffff, 0.28);
+        g.beginPath();
+        g.moveTo(18, 22);
+        g.lineTo(28, 12);
+        g.lineTo(38, 22);
+        g.lineTo(34, 38);
+        g.lineTo(22, 42);
+        g.lineTo(16, 30);
+        g.strokePath();
+      });
+
       this.createEnemyTexture("enemy-swarm", 144, 60, (g) => {
         g.fillStyle(0xffffff, 0.98);
         g.fillPoints([

@@ -3385,6 +3385,7 @@
 
       if (archetypeKey === "corrosion") {
         enemy.corrosionNextPoolAt = this.time.now + Phaser.Math.Between(1600, 2400);
+        enemy.corrosionNextMiteAt = this.time.now + Phaser.Math.Between(720, 1040);
       }
 
       this.setupEnemyRole(enemy, this.pickNegativeRole(archetypeKey, settings));
@@ -3448,6 +3449,21 @@
       return Math.max(96, Math.round(normalizedParentSpeed * fastestMultiplier));
     }
 
+    pickCorrosionMiteWord(sourceWord) {
+      const syllables = Array.from(String(sourceWord || "").replace(/\s+/g, ""));
+      const fallback = ["때", "막", "점", "찌", "먼", "끼", "잔", "틈"];
+      const pool = syllables.length ? syllables : fallback;
+      return pool[Phaser.Math.Between(0, pool.length - 1)] || fallback[0];
+    }
+
+    getCorrosionMiteSpeed(parentEnemy) {
+      const corrosionArchetype = ((this.vocabData.negativeArchetypes || {}).corrosion) || {};
+      const corrosionMultiplier = corrosionArchetype.speedMultiplier || 1;
+      const fastestMultiplier = this.getFastestNegativeArchetypeSpeedMultiplier();
+      const normalizedParentSpeed = (parentEnemy.speed || 72) / corrosionMultiplier;
+      return Math.max(148, Math.round(normalizedParentSpeed * fastestMultiplier * 1.18));
+    }
+
     createSplitShardEnemy(x, y, word, parentEnemy) {
       const shard = this.enemies.create(x, y, "enemy-split-shard");
 
@@ -3478,6 +3494,39 @@
       });
       this.setupEnemyRole(shard, "chaser");
       return shard;
+    }
+
+    createCorrosionMiteEnemy(x, y, word, parentEnemy) {
+      const mite = this.enemies.create(x, y, "enemy-corrosion-mite");
+
+      mite.setDisplaySize(34, 34);
+      mite.setTint(0xc6ffd6);
+      mite.setDepth(2);
+      mite.enemyId = (this.enemyIdCounter += 1);
+      mite.enemyKind = "negative";
+      mite.enemyType = "corrosionMite";
+      mite.word = word;
+      mite.corrosionOwnerId = parentEnemy.enemyId || 0;
+      mite.isSummoned = true;
+      mite.dropDisabled = true;
+      mite.strongWaveNumber = 0;
+      mite.hp = this.currentStageIndex >= 3 ? 2 : 1;
+      mite.maxHp = mite.hp;
+      mite.speed = this.getCorrosionMiteSpeed(parentEnemy);
+      mite.scoreValue = Math.max(1, 1 + Math.floor(this.currentStageIndex / 2));
+      mite.experienceValue = 0;
+      mite.awakeningChargeValue = 2;
+      mite.damage = Math.max(3, Math.round((parentEnemy.damage || 10) * 0.42));
+      mite.body.setSize(20, 20);
+      mite.labelOffsetY = 0;
+      mite.label = this.createEnemyWordLabel(mite.x, mite.y, word, "18px", {
+        kind: "negative",
+        color: "#f4fff7",
+        fontStyle: "900",
+        maxWidth: 24,
+      });
+      this.setupEnemyRole(mite, "chaser");
+      return mite;
     }
 
     spawnSplitShards(enemy) {
@@ -5525,6 +5574,24 @@
       return count;
     }
 
+    countActiveCorrosionMitesByOwner(ownerId) {
+      let count = 0;
+
+      this.enemies.children.iterate((enemy) => {
+        if (
+          enemy &&
+          enemy.active &&
+          enemy.enemyKind === "negative" &&
+          enemy.enemyType === "corrosionMite" &&
+          enemy.corrosionOwnerId === ownerId
+        ) {
+          count += 1;
+        }
+      });
+
+      return count;
+    }
+
     countPendingNegativeWarningsByType(enemyType) {
       return this.pendingEnemyWarnings.filter(
         (warning) => warning && warning.enemyKind === "negative" && warning.enemyType === enemyType
@@ -5549,6 +5616,16 @@
       });
 
       return count;
+    }
+
+    getMaxCorrosionMiteCount() {
+      const values = [10, 12, 14, 16, 18];
+      return values[Math.min(this.currentStageIndex, values.length - 1)] || values[0];
+    }
+
+    getMaxCorrosionMitesPerOwner() {
+      const values = [3, 4, 5, 5, 6];
+      return values[Math.min(this.currentStageIndex, values.length - 1)] || values[0];
     }
 
     destroyCorrosionPool(pool, fastFade) {
@@ -5686,6 +5763,40 @@
           rimColor: 0xc8ffd5,
         });
       });
+    }
+
+    tryCorrosionMinionSpawn(enemy) {
+      if (!enemy || !enemy.active || enemy.enemyType !== "corrosion" || this.roundEnded || this.isLevelUp) {
+        return;
+      }
+
+      if ((enemy.corrosionNextMiteAt || 0) > this.time.now) {
+        return;
+      }
+
+      const totalActive = this.countActiveNegativeEnemiesByType("corrosionMite");
+      const ownerActive = this.countActiveCorrosionMitesByOwner(enemy.enemyId);
+      const remainingGlobal = this.getMaxCorrosionMiteCount() - totalActive;
+      const remainingOwner = this.getMaxCorrosionMitesPerOwner() - ownerActive;
+
+      if (remainingGlobal <= 0 || remainingOwner <= 0) {
+        enemy.corrosionNextMiteAt = this.time.now + 260;
+        return;
+      }
+
+      const desiredBurst = this.currentStageIndex >= 3 ? Phaser.Math.Between(1, 2) : 1;
+      const spawnCount = Math.min(desiredBurst, remainingGlobal, remainingOwner);
+      const safeBounds = this.getCombatSafeBounds(48, 242, 122);
+
+      for (let index = 0; index < spawnCount; index += 1) {
+        const angle = Phaser.Math.FloatBetween(0, Math.PI * 2);
+        const distance = Phaser.Math.Between(18, 34);
+        const x = Phaser.Math.Clamp(enemy.x + Math.cos(angle) * distance, safeBounds.left, safeBounds.right);
+        const y = Phaser.Math.Clamp(enemy.y + Math.sin(angle) * distance, safeBounds.top, safeBounds.bottom);
+        this.createCorrosionMiteEnemy(x, y, this.pickCorrosionMiteWord(enemy.word), enemy);
+      }
+
+      enemy.corrosionNextMiteAt = this.time.now + Math.max(320, Phaser.Math.Between(760, 980) - this.currentStageIndex * 70);
     }
 
     updateCorrosionPools() {
@@ -7962,6 +8073,7 @@
 
         if (enemy.enemyKind === "negative" && !entryShieldActive) {
           this.tryCorrosionPoolDrop(enemy);
+          this.tryCorrosionMinionSpawn(enemy);
           this.tryEnemyRoleAction(enemy);
         }
 
