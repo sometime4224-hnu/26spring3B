@@ -10,6 +10,11 @@
     color: var(--lw-ink);
 }
 
+.lw-lesson,
+.lw-section {
+    scroll-margin-top: 92px;
+}
+
 .lw-hero {
     position: relative;
     overflow: hidden;
@@ -184,6 +189,132 @@
     font-size: 13px;
     font-weight: 800;
     box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+}
+
+.lw-quick-dock {
+    position: fixed;
+    top: 76px;
+    right: 16px;
+    width: min(320px, calc(100vw - 24px));
+    z-index: 950000;
+    padding: 12px;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.12);
+    backdrop-filter: blur(12px);
+}
+
+.lw-quick-dock__bar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.lw-quick-dock__summary {
+    min-width: 0;
+    display: grid;
+    gap: 2px;
+}
+
+.lw-quick-dock__eyebrow {
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--lw-accent-dark);
+}
+
+.lw-quick-dock__summary strong {
+    font-size: 13px;
+    font-weight: 900;
+    color: #0f172a;
+}
+
+.lw-quick-dock__summary span {
+    font-size: 12px;
+    line-height: 1.45;
+    color: #64748b;
+}
+
+.lw-quick-dock__actions,
+.lw-quick-dock__meta,
+.lw-quick-dock__nav,
+.lw-quick-dock__lessons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.lw-quick-dock__actions {
+    justify-content: flex-end;
+}
+
+.lw-quick-dock__button {
+    appearance: none;
+    border: 1px solid rgba(148, 163, 184, 0.24);
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 8px 12px;
+    background: #fff;
+    color: #334155;
+    transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.lw-quick-dock__button:hover,
+.lw-quick-dock__nav a:hover,
+.lw-quick-dock__lesson-link:hover {
+    transform: translateY(-1px);
+}
+
+.lw-quick-dock__button.is-primary {
+    background: var(--lw-accent);
+    border-color: var(--lw-accent);
+    color: #fff;
+}
+
+.lw-quick-dock__button.is-ghost {
+    background: rgba(248, 250, 252, 0.92);
+}
+
+.lw-quick-dock__panel {
+    display: grid;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.lw-quick-dock__nav a,
+.lw-quick-dock__lesson-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 999px;
+    padding: 8px 11px;
+    background: rgba(248, 250, 252, 0.94);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    color: #334155;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 800;
+    transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.lw-quick-dock__lesson-link.is-active {
+    background: var(--lw-accent);
+    border-color: var(--lw-accent);
+    color: #fff;
+}
+
+.lw-quick-dock.is-collapsed {
+    width: auto;
+    max-width: calc(100vw - 24px);
+}
+
+.lw-quick-dock.is-collapsed .lw-quick-dock__panel {
+    display: none;
 }
 
 .lw-lesson {
@@ -849,6 +980,12 @@
 }
 
 @media (max-width: 960px) {
+    .lw-quick-dock {
+        top: 72px;
+        right: 12px;
+        width: min(300px, calc(100vw - 20px));
+    }
+
     .lw-hero-grid,
     .lw-grid-2,
     .lw-note-grid,
@@ -860,6 +997,22 @@
 @media (max-width: 640px) {
     .lw-shell {
         padding: 18px 12px 88px;
+    }
+
+    .lw-quick-dock {
+        top: 68px;
+        left: 8px;
+        right: 8px;
+        width: auto;
+    }
+
+    .lw-quick-dock__bar,
+    .lw-quick-dock__actions {
+        align-items: flex-start;
+    }
+
+    .lw-quick-dock__actions {
+        justify-content: flex-start;
     }
 
     .lw-hero,

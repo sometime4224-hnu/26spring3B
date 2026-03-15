@@ -73,6 +73,17 @@
             noAudioSupport: "원음 파일이 없어서 브라우저 한국어 음성으로 전체 대화와 문장 연습을 제공합니다.",
             playDialogue: "전체 대화 TTS 듣기",
             stopAudio: "음성 멈추기",
+            quickDockTitle: "빠른 듣기",
+            quickDockPlay: "재생",
+            quickDockStop: "멈춤",
+            quickDockOpen: "펼치기",
+            quickDockClose: "접기",
+            quickDockTop: "상단",
+            quickDockAudio: "듣기",
+            quickDockQuiz: "문제",
+            quickDockAudioSource: "원음",
+            quickDockTtsSource: "대화 TTS",
+            quickDockNavAria: "빠른 이동",
             subtitleHelp: "자막은 1회 청취 후 핵심어, 2회 후 전체 대본, 3회 후 한국어+베트남어가 열립니다.",
             listenCount(count) {
                 return `현재 청취 횟수: ${count}회`;
@@ -201,6 +212,17 @@
             noAudioSupport: "Không có file âm thanh gốc nên trình duyệt sẽ đọc toàn bộ hội thoại và từng câu bằng giọng Hàn.",
             playDialogue: "Nghe toàn bộ hội thoại TTS",
             stopAudio: "Dừng âm thanh",
+            quickDockTitle: "Nghe nhanh",
+            quickDockPlay: "Phát",
+            quickDockStop: "Dừng",
+            quickDockOpen: "Mở",
+            quickDockClose: "Thu gọn",
+            quickDockTop: "Lên đầu",
+            quickDockAudio: "Nghe",
+            quickDockQuiz: "Câu hỏi",
+            quickDockAudioSource: "File gốc",
+            quickDockTtsSource: "Hội thoại TTS",
+            quickDockNavAria: "Đi nhanh",
             subtitleHelp: "Sau 1 lần nghe sẽ mở từ khóa, sau 2 lần sẽ mở toàn văn, sau 3 lần sẽ mở tiếng Hàn + tiếng Việt.",
             listenCount(count) {
                 return `Số lần nghe hiện tại: ${count}`;
@@ -347,13 +369,20 @@
     let pageConfig = null;
     let koreanVoice = null;
     let instructionLanguage = "ko";
+    let quickDockLessonId = null;
+    let quickDockCollapsed = false;
     let hasInitialized = false;
+    let scrollSyncFrameId = null;
 
     const speechApi = "speechSynthesis" in window ? window.speechSynthesis : null;
     const speechState = {
         token: 0,
         timeouts: [],
         activeLessonId: null
+    };
+    const playbackState = {
+        kind: null,
+        lessonId: null
     };
 
     function escapeHtml(value) {
@@ -373,8 +402,20 @@
         return `${STORAGE_PREFIX}:${pageKey()}:${lessonId}:${field}`;
     }
 
+    function pageStorageKey(field) {
+        return `${STORAGE_PREFIX}:${pageKey()}:page:${field}`;
+    }
+
     function instructionStorageKey() {
-        return `${STORAGE_PREFIX}:${pageKey()}:page:instruction-language`;
+        return pageStorageKey("instruction-language");
+    }
+
+    function quickDockLessonStorageKey() {
+        return pageStorageKey("quick-dock-lesson");
+    }
+
+    function quickDockCollapsedStorageKey() {
+        return pageStorageKey("quick-dock-collapsed");
     }
 
     function readStorage(key, fallback) {
@@ -475,6 +516,27 @@
 
     function getQuizText(language) {
         return QUIZ_UI_TEXT[language === "vi" ? "vi" : "ko"];
+    }
+
+    function getDefaultQuickDockLessonId(config = pageConfig) {
+        return config && Array.isArray(config.lessons) && config.lessons.length ? config.lessons[0].id : "";
+    }
+
+    function readQuickDockLesson(config = pageConfig) {
+        const fallback = getDefaultQuickDockLessonId(config);
+        const saved = readStorage(quickDockLessonStorageKey(), fallback);
+        if (!config || !Array.isArray(config.lessons)) return fallback;
+        return config.lessons.some((lesson) => lesson.id === saved) ? saved : fallback;
+    }
+
+    function readQuickDockCollapsed() {
+        const fallback = Boolean(window.matchMedia && window.matchMedia("(max-width: 720px)").matches);
+        return Boolean(readStorage(quickDockCollapsedStorageKey(), fallback));
+    }
+
+    function getQuickDockLesson(config = pageConfig) {
+        if (!config || !Array.isArray(config.lessons) || !config.lessons.length) return null;
+        return lessonMap.get(quickDockLessonId) || config.lessons[0] || null;
     }
 
     function getQuestionPrompt(question, language) {
@@ -603,6 +665,49 @@
         `;
     }
 
+    function buildQuickDock(config) {
+        const uiText = getInstructionText();
+        const lesson = getQuickDockLesson(config);
+        if (!lesson) return "";
+        const state = getState(lesson.id);
+        const sourceLabel = lesson.audioSrc ? uiText.quickDockAudioSource : uiText.quickDockTtsSource;
+
+        return `
+            <aside class="lw-quick-dock${quickDockCollapsed ? " is-collapsed" : ""}">
+                <div class="lw-quick-dock__bar">
+                    <div class="lw-quick-dock__summary">
+                        <div class="lw-quick-dock__eyebrow">${escapeHtml(uiText.quickDockTitle)}</div>
+                        <strong>${escapeHtml(lesson.label || getLocalizedField(lesson, "title", "듣기"))}</strong>
+                        <span>${escapeHtml(getLocalizedField(lesson, "title", lesson.title || ""))}</span>
+                    </div>
+                    <div class="lw-quick-dock__actions">
+                        <button type="button" class="lw-quick-dock__button is-primary" data-action="quick-play">${escapeHtml(uiText.quickDockPlay)}</button>
+                        <button type="button" class="lw-quick-dock__button" data-action="quick-stop">${escapeHtml(uiText.quickDockStop)}</button>
+                        <button type="button" class="lw-quick-dock__button is-ghost" data-action="toggle-quick-dock">${escapeHtml(quickDockCollapsed ? uiText.quickDockOpen : uiText.quickDockClose)}</button>
+                    </div>
+                </div>
+                <div class="lw-quick-dock__panel">
+                    <div class="lw-quick-dock__meta">
+                        <span class="lw-mini-chip">${escapeHtml(sourceLabel)}</span>
+                        <span class="lw-mini-chip">${escapeHtml(uiText.listenBadge(state.listens))}</span>
+                    </div>
+                    <nav class="lw-quick-dock__nav" aria-label="${escapeHtml(uiText.quickDockNavAria)}">
+                        <a href="#lw-top">${escapeHtml(uiText.quickDockTop)}</a>
+                        <a href="#audio-section-${escapeHtml(lesson.id)}">${escapeHtml(uiText.quickDockAudio)}</a>
+                        <a href="#quiz-section-${escapeHtml(lesson.id)}">${escapeHtml(uiText.quickDockQuiz)}</a>
+                    </nav>
+                    <div class="lw-quick-dock__lessons">
+                        ${config.lessons.map((entry, index) => `
+                            <a href="#lesson-${escapeHtml(entry.id)}" class="lw-quick-dock__lesson-link${entry.id === lesson.id ? " is-active" : ""}" data-action="set-quick-lesson" data-lesson-id="${escapeHtml(entry.id)}">
+                                ${escapeHtml(entry.label || `듣기 ${index + 1}`)}
+                            </a>
+                        `).join("")}
+                    </div>
+                </div>
+            </aside>
+        `;
+    }
+
     function buildScene(scene) {
         return `
             <div class="lw-scene">
@@ -706,7 +811,7 @@
             `;
 
         return `
-            <section class="lw-section">
+            <section class="lw-section" id="audio-section-${escapeHtml(lesson.id)}">
                 <h3>${escapeHtml(uiText.audioTitle)}</h3>
                 <p class="lw-section-copy">${escapeHtml(uiText.audioCopy)}</p>
                 ${playerMarkup}
@@ -891,7 +996,7 @@
         const language = getQuizLanguage(state);
         const uiText = getQuizText(language);
         return `
-            <section class="lw-section">
+            <section class="lw-section" id="quiz-section-${escapeHtml(lesson.id)}">
                 <h3 id="quiz-title-${escapeHtml(lesson.id)}">${escapeHtml(getLessonQuizTitle(lesson, language))}</h3>
                 <div class="lw-summary-block" style="margin-bottom: 12px;">
                     <strong id="quiz-guide-title-${escapeHtml(lesson.id)}">${escapeHtml(uiText.guideTitle)}</strong>
@@ -1179,6 +1284,7 @@
         if (cornellPanel) cornellPanel.classList.toggle("is-active", state.noteTab === "cornell");
 
         updateQuizUI(lessonId);
+        updateQuickDockUI();
     }
 
     function registerListen(lessonId, amount = 1) {
@@ -1265,12 +1371,89 @@
         setStatus(`listen-status-${lessonId}`, state.loop ? uiText.loopOnStatus : uiText.loopOffStatus, "info");
     }
 
+    function updateQuickDockUI() {
+        const mount = document.getElementById("lw-quick-dock-mount");
+        if (!mount || !pageConfig) return;
+        mount.innerHTML = buildQuickDock(pageConfig);
+    }
+
+    function setQuickDockLesson(lessonId, options = {}) {
+        if (!lessonId || !lessonMap.has(lessonId)) return;
+        if (quickDockLessonId === lessonId && !options.force) return;
+        quickDockLessonId = lessonId;
+        if (options.save !== false) {
+            writeStorage(quickDockLessonStorageKey(), lessonId);
+        }
+        updateQuickDockUI();
+    }
+
+    function setQuickDockCollapsed(collapsed, options = {}) {
+        quickDockCollapsed = Boolean(collapsed);
+        if (options.save !== false) {
+            writeStorage(quickDockCollapsedStorageKey(), quickDockCollapsed);
+        }
+        updateQuickDockUI();
+    }
+
+    function getViewportLessonId() {
+        if (!pageConfig || !Array.isArray(pageConfig.lessons) || !pageConfig.lessons.length) return null;
+
+        let bestId = pageConfig.lessons[0].id;
+        let bestScore = Number.POSITIVE_INFINITY;
+        const viewportHeight = window.innerHeight || 0;
+
+        pageConfig.lessons.forEach((lesson) => {
+            const section = document.getElementById(`lesson-${lesson.id}`);
+            if (!section) return;
+            const rect = section.getBoundingClientRect();
+            const isNearViewport = rect.bottom > 120 && rect.top < viewportHeight * 0.72;
+            const score = Math.abs(rect.top - 106) + (isNearViewport ? 0 : 5000);
+            if (score < bestScore) {
+                bestScore = score;
+                bestId = lesson.id;
+            }
+        });
+
+        return bestId;
+    }
+
+    function syncQuickDockToViewport() {
+        if (!pageConfig || !Array.isArray(pageConfig.lessons) || !pageConfig.lessons.length) return;
+        const lessonId = getViewportLessonId();
+        if (lessonId && lessonId !== quickDockLessonId) {
+            setQuickDockLesson(lessonId, { save: false });
+        }
+    }
+
+    function scheduleQuickDockViewportSync() {
+        if (scrollSyncFrameId) return;
+        scrollSyncFrameId = window.requestAnimationFrame(() => {
+            scrollSyncFrameId = null;
+            syncQuickDockToViewport();
+        });
+    }
+
+    function setPlaybackState(kind, lessonId) {
+        playbackState.kind = kind || null;
+        playbackState.lessonId = lessonId || null;
+        if (lessonId) setQuickDockLesson(lessonId, { save: false });
+    }
+
+    function clearPlaybackState(kind, lessonId) {
+        if (kind && playbackState.kind !== kind) return;
+        if (lessonId && playbackState.lessonId !== lessonId) return;
+        playbackState.kind = null;
+        playbackState.lessonId = null;
+        updateQuickDockUI();
+    }
+
     function cancelSpeech() {
         speechState.token += 1;
         speechState.timeouts.forEach((timeoutId) => window.clearTimeout(timeoutId));
         speechState.timeouts = [];
         if (speechApi) speechApi.cancel();
         clearSpeakingState();
+        clearPlaybackState("speech");
     }
 
     function clearSpeakingState() {
@@ -1330,6 +1513,41 @@
         document.querySelectorAll("audio").forEach((audio) => {
             audio.pause();
         });
+        clearPlaybackState("audio");
+    }
+
+    async function playQuickLesson() {
+        const lesson = getQuickDockLesson();
+        if (!lesson) return;
+        setQuickDockLesson(lesson.id);
+
+        if (lesson.audioSrc) {
+            const audio = document.getElementById(`audio-${lesson.id}`);
+            const state = getState(lesson.id);
+            if (!audio) return;
+            cancelSpeech();
+            pauseAllAudio();
+            audio.playbackRate = state.speed;
+            audio.loop = state.loop;
+            try {
+                await audio.play();
+            } catch (error) {
+                setStatus(`listen-status-${lesson.id}`, getInstructionText().audioUnsupported, "warn");
+            }
+            return;
+        }
+
+        await playDialogue(lesson.id);
+    }
+
+    function stopQuickLesson() {
+        const lesson = getQuickDockLesson();
+        const targetLessonId = playbackState.lessonId || (lesson && lesson.id);
+        pauseAllAudio();
+        cancelSpeech();
+        if (targetLessonId) {
+            setStatus(`listen-status-${targetLessonId}`, getInstructionText().speechStopped, "info");
+        }
     }
 
     async function playLine(lessonId, lineIndex, mode) {
@@ -1347,6 +1565,7 @@
 
         const token = speechState.token;
         const line = lesson.transcript[lineIndex];
+        setPlaybackState("speech", lessonId);
         setSpeakingLine(lessonId, lineIndex);
 
         if (mode === "once") {
@@ -1373,6 +1592,7 @@
         clearSpeakingState();
         registerListen(lessonId, 1);
         setStatus(`line-status-${lessonId}`, uiText.lineFinished(lineIndex + 1), "success");
+        clearPlaybackState("speech", lessonId);
     }
 
     async function playDialogue(lessonId) {
@@ -1390,6 +1610,7 @@
 
         const token = speechState.token;
         speechState.activeLessonId = lessonId;
+        setPlaybackState("speech", lessonId);
         setStatus(`listen-status-${lessonId}`, uiText.dialoguePlaying, "info");
 
         for (let index = 0; index < lesson.transcript.length; index += 1) {
@@ -1404,6 +1625,7 @@
         clearSpeakingState();
         registerListen(lessonId, 1);
         setStatus(`listen-status-${lessonId}`, uiText.dialogueFinished, "success");
+        clearPlaybackState("speech", lessonId);
     }
 
     function speakExpression(lessonId, expression) {
@@ -1624,10 +1846,17 @@
             if (!audio) return;
             audio.addEventListener("play", () => {
                 cancelSpeech();
+                setPlaybackState("audio", lessonId);
                 setStatus(`listen-status-${lessonId}`, getInstructionText().audioPlaying, "info");
+            });
+            audio.addEventListener("pause", () => {
+                if (!audio.ended) {
+                    clearPlaybackState("audio", lessonId);
+                }
             });
             audio.addEventListener("ended", () => {
                 registerListen(lessonId, 1);
+                clearPlaybackState("audio", lessonId);
             });
         });
     }
@@ -1657,7 +1886,8 @@
         });
 
         root.innerHTML = `
-            <main class="lw-shell">
+            <main class="lw-shell" id="lw-top">
+                <div id="lw-quick-dock-mount">${buildQuickDock(config)}</div>
                 ${buildHero(config)}
                 ${buildAnchorList(config)}
                 ${config.lessons.map((lesson, index) => buildLesson(lesson, index)).join("")}
@@ -1671,6 +1901,7 @@
         config.lessons.forEach((lesson) => updateLessonUI(lesson.id));
         restoreRuntimeState(runtimeSnapshot);
         config.lessons.forEach((lesson) => updateQuizUI(lesson.id));
+        syncQuickDockToViewport();
     }
 
     function setInstructionLanguage(language) {
@@ -1687,10 +1918,18 @@
         const action = button.dataset.action;
         const lessonId = button.dataset.lessonId;
 
+        if (lessonId && lessonMap.has(lessonId) && action !== "toggle-model-summary") {
+            setQuickDockLesson(lessonId, { save: false });
+        }
+
         if (action === "toggle-vocab") return void toggleVocab(lessonId, Number(button.dataset.vocabIndex));
         if (action === "check-prediction") return void checkPrediction(lessonId);
         if (action === "set-stage") return void setStage(lessonId, Number(button.dataset.stage));
         if (action === "set-speed") return void setSpeed(lessonId, Number(button.dataset.speed));
+        if (action === "quick-play") return void playQuickLesson();
+        if (action === "quick-stop") return void stopQuickLesson();
+        if (action === "toggle-quick-dock") return void setQuickDockCollapsed(!quickDockCollapsed);
+        if (action === "set-quick-lesson") return void setQuickDockLesson(lessonId);
         if (action === "toggle-loop") return void toggleLoop(lessonId);
         if (action === "play-line") return void playLine(lessonId, Number(button.dataset.lineIndex), "once");
         if (action === "repeat-line") return void playLine(lessonId, Number(button.dataset.lineIndex), "repeat");
@@ -1724,9 +1963,12 @@
         if (!pageConfig || !Array.isArray(pageConfig.lessons) || !pageConfig.lessons.length) return;
         hasInitialized = true;
         instructionLanguage = readInstructionLanguage(pageConfig);
+        quickDockLessonId = readQuickDockLesson(pageConfig);
+        quickDockCollapsed = readQuickDockCollapsed();
         renderApp(pageConfig);
         initSpeechVoice();
         document.addEventListener("click", handleClick);
+        window.addEventListener("scroll", scheduleQuickDockViewportSync, { passive: true });
     }
 
     if (document.readyState === "loading") {

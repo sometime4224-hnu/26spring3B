@@ -7,13 +7,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared/listening-workbook.css?v=20260315-quizlang8">
     <style>
-        body { font-family: 'Noto Sans KR', sans-serif !important; margin: 0; }
+        body { margin: 0; font-family: 'Noto Sans KR', sans-serif; background: linear-gradient(180deg, #f4fbf4 0%, #fbfefa 42%, #f8fafc 100%); }
         .injected-global-nav {
             width: 100%;
             background-color: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(8px);
-            border-bottom: 1px solid #e0e7ff;
+            border-bottom: 1px solid #ddefdf;
             height: 60px;
             display: flex;
             align-items: center;
@@ -28,415 +29,278 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            color: #4f46e5;
+            color: #15803d;
             text-decoration: none;
             font-weight: 700;
             font-size: 14px;
             transition: color 0.2s;
         }
-        .injected-global-nav a:hover { color: #3730a3; }
+        .injected-global-nav a:hover { color: #166534; }
         .injected-global-nav .divider { color: #cbd5e1; }
-
-        .hidden-script { display: none; }
-        .mask-toolbar {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 12px;
-            padding: 10px 12px;
-            border: 1px solid #e5e7eb;
-            background: #f9fafb;
-            border-radius: 10px;
-        }
-        .mask-help {
-            font-size: 12px;
-            color: #4b5563;
-            font-weight: 600;
-        }
-        .mask-buttons {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .mask-action {
-            border: 1px solid #cbd5e1;
-            background: #ffffff;
-            color: #1f2937;
-            font-size: 12px;
-            font-weight: 700;
-            padding: 6px 10px;
-            border-radius: 999px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .mask-action:hover {
-            background: #eef2ff;
-            border-color: #a5b4fc;
-            color: #3730a3;
-        }
-        .mask-counter {
-            font-size: 12px;
-            color: #4f46e5;
-            font-weight: 800;
-            background: #eef2ff;
-            border-radius: 999px;
-            padding: 4px 10px;
-        }
-        .morph-mask {
-            display: inline-block;
-            min-width: 1.4em;
-            border: 1px dashed #94a3b8;
-            background: #e2e8f0;
-            color: #334155;
-            border-radius: 6px;
-            padding: 0 4px;
-            margin: 0 1px;
-            font-weight: 700;
-            line-height: 1.6;
-            cursor: pointer;
-            user-select: none;
-            transition: all 0.15s ease;
-        }
-        .morph-mask:hover { background: #cbd5e1; }
-        .morph-mask.revealed {
-            border-style: solid;
-            border-color: #f59e0b;
-            background: #fef3c7;
-            color: #92400e;
-        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen">
+<body>
     <nav id="injected-global-nav" class="injected-global-nav">
         <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
         <span class="divider">|</span>
         <a href="index.html"><i class="fa-solid fa-folder-open"></i> 단원 홈</a>
     </nav>
 
-    <main class="max-w-4xl mx-auto px-4 py-6">
-        <section class="bg-white rounded-2xl shadow-md border border-slate-100 p-6 mb-6">
-            <div class="flex items-center justify-between gap-3 border-b pb-4 mb-5">
-                <div>
-                    <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2 py-1 rounded">듣기 3</span>
-                    <h1 class="text-2xl font-bold mt-2">대화 듣기 학습</h1>
-                </div>
-            </div>
-
-            <div class="border rounded-xl overflow-hidden">
-                <button onclick="toggleScript('script3')" class="w-full flex items-center justify-between p-4 bg-slate-50 hover:bg-slate-100 transition text-left font-bold text-slate-700">
-                    <span>📝 지문 보기 / 닫기</span>
-                    <svg id="icon-script3" class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </button>
-                <div id="script3" class="hidden-script p-5 bg-white text-[15px] leading-8 text-slate-700 border-t">
-                    <p class="mb-2"><strong class="text-indigo-600">혜엔:</strong> 유진 씨는 스티븐 씨하고 어떻게 처음 만났어요?</p>
-                    <p class="mb-2"><strong class="text-indigo-600">유진:</strong> 스티븐이 도서관에서 내가 마시던 커피를 쏟았어요.</p>
-                    <p class="mb-2"><strong class="text-indigo-600">혜엔:</strong> 아, 그래서요?</p>
-                    <p class="mb-2"><strong class="text-indigo-600">유진:</strong> 미안하다면서 대신 저녁을 사 주겠다고 하던데요.</p>
-                    <p class="mb-2"><strong class="text-indigo-600">유진:</strong> 그런데 사실은 나한테 첫눈에 반해서 일부러 그런 거래요.</p>
-                    <p class="mb-2"><strong class="text-indigo-600">혜엔:</strong> 유진 씨도 스티븐 씨가 마음에 들었어요?</p>
-                    <p class="mb-2"><strong class="text-indigo-600">유진:</strong> 처음에는 매력 있어 보였어요. 스티븐이 씩씩하고 활발하잖아요.</p>
-                    <p class="mb-2"><strong class="text-indigo-600">유진:</strong> 하지만 사귀어 보니까 성격이 안 맞아서 맨날 싸워요.</p>
-                    <p class="mb-2"><strong class="text-indigo-600">혜엔:</strong> 전 두 사람이 손을 잡고 가는 모습을 보면 참 부러워요.</p>
-                    <p class="mb-2"><strong class="text-indigo-600">혜엔:</strong> 데이트는 주로 어디서 해요?</p>
-                    <p class="mb-2"><strong class="text-indigo-600">유진:</strong> 한강공원에서 자전거도 타고 극장에도 자주 가요.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="bg-white rounded-2xl shadow-md border border-slate-100 p-6">
-            <h2 class="text-xl font-bold border-l-4 border-indigo-500 pl-3 mb-5">연습 퀴즈</h2>
-
-            <div class="space-y-5">
-                <div class="quiz-item p-4 border rounded-lg bg-white" id="q1-container">
-                    <p class="font-semibold mb-3">1. 유진 씨와 스티븐 씨가 처음 만난 장소는 어디예요?</p>
-                    <label class="block mb-2 cursor-pointer hover:bg-slate-50 p-1 rounded"><input type="radio" name="q1" value="1" class="mr-2">카페</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-slate-50 p-1 rounded"><input type="radio" name="q1" value="2" class="mr-2">도서관</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-slate-50 p-1 rounded"><input type="radio" name="q1" value="3" class="mr-2">한강공원</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-slate-50 p-1 rounded"><input type="radio" name="q1" value="4" class="mr-2">극장</label>
-                </div>
-
-                <div class="quiz-item p-4 border rounded-lg bg-white" id="q2-container">
-                    <p class="font-semibold mb-3">2. 스티븐 씨가 일부러 커피를 쏟았다는 이유는 무엇이에요?</p>
-                    <label class="block mb-2 cursor-pointer hover:bg-slate-50 p-1 rounded"><input type="radio" name="q2" value="1" class="mr-2">유진 씨에게 화가 나서</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-slate-50 p-1 rounded"><input type="radio" name="q2" value="2" class="mr-2">친구와 장난치다가</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-slate-50 p-1 rounded"><input type="radio" name="q2" value="3" class="mr-2">첫눈에 반해서</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-slate-50 p-1 rounded"><input type="radio" name="q2" value="4" class="mr-2">커피가 너무 뜨거워서</label>
-                </div>
-
-                <div class="quiz-item p-4 border rounded-lg bg-white" id="q3-container">
-                    <p class="font-semibold mb-3">3. 유진 씨가 사귀어 보니 힘들었던 이유는 무엇이에요?</p>
-                    <label class="block mb-2 cursor-pointer hover:bg-slate-50 p-1 rounded"><input type="radio" name="q3" value="1" class="mr-2">취미가 달라서</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-slate-50 p-1 rounded"><input type="radio" name="q3" value="2" class="mr-2">성격이 안 맞아서</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-slate-50 p-1 rounded"><input type="radio" name="q3" value="3" class="mr-2">만날 시간이 없어서</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-slate-50 p-1 rounded"><input type="radio" name="q3" value="4" class="mr-2">멀리 살아서</label>
-                </div>
-
-                <div class="quiz-item p-4 border rounded-lg bg-white" id="q4-container">
-                    <p class="font-semibold mb-3">4. 혜엔 씨가 부럽다고 한 모습은 무엇이에요?</p>
-                    <label class="block mb-2 cursor-pointer hover:bg-slate-50 p-1 rounded"><input type="radio" name="q4" value="1" class="mr-2">같이 자전거 타는 모습</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-slate-50 p-1 rounded"><input type="radio" name="q4" value="2" class="mr-2">같이 영화 보는 모습</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-slate-50 p-1 rounded"><input type="radio" name="q4" value="3" class="mr-2">손을 잡고 가는 모습</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-slate-50 p-1 rounded"><input type="radio" name="q4" value="4" class="mr-2">저녁을 같이 먹는 모습</label>
-                </div>
-
-                <div class="quiz-item p-4 border rounded-lg bg-white" id="q5-container">
-                    <p class="font-semibold mb-3">5. 두 사람이 자주 하는 데이트는 무엇이에요?</p>
-                    <label class="block mb-2 cursor-pointer hover:bg-slate-50 p-1 rounded"><input type="radio" name="q5" value="1" class="mr-2">한강공원에서 자전거 타기, 극장 가기</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-slate-50 p-1 rounded"><input type="radio" name="q5" value="2" class="mr-2">도서관에서 공부하기, 카페 가기</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-slate-50 p-1 rounded"><input type="radio" name="q5" value="3" class="mr-2">등산하기, 캠핑 가기</label>
-                    <label class="block mb-2 cursor-pointer hover:bg-slate-50 p-1 rounded"><input type="radio" name="q5" value="4" class="mr-2">헬스장 가기, 수영하기</label>
-                </div>
-            </div>
-
-            <div class="text-center mt-8 pb-2 border-t pt-6">
-                <button onclick="checkAnswers()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-10 rounded-full shadow-lg transform transition hover:scale-105 active:scale-95">
-                    정답 확인하기
-                </button>
-                <div id="result" class="mt-4 text-lg font-bold hidden"></div>
-            </div>
-        </section>
-    </main>
+    <div id="listening-workbook-app"></div>
 
     <script>
-        function toggleScript(id) {
-            const script = document.getElementById(id);
-            const icon = document.getElementById('icon-' + id);
-
-            if (script.style.display === 'block') {
-                script.style.display = 'none';
-                icon.style.transform = 'rotate(0deg)';
-            } else {
-                script.style.display = 'block';
-                icon.style.transform = 'rotate(180deg)';
-            }
-        }
-
-        const answers = {
-            q1: '2',
-            q2: '3',
-            q3: '2',
-            q4: '3',
-            q5: '1'
+        window.LISTENING_WORKBOOK_CONFIG = {
+            kicker: "Dialogue Practice",
+            title: "듣기 3 대화 학습",
+            titleVi: "Nghe 3: Luyện hội thoại",
+            description: "원음 파일이 없는 대신 브라우저 한국어 음성으로 전체 대화, 문장 반복, 쉐도잉을 실행하도록 설계했습니다. 특히 회화체 종결형과 담화표지에 집중할 수 있게 했습니다.",
+            descriptionVi: "Vì không có file gốc, trang này dùng giọng tiếng Hàn của trình duyệt để cho em luyện toàn bộ hội thoại, lặp lại từng câu và shadowing. Phần hướng dẫn cũng giúp em chú ý nhiều hơn đến kiểu kết câu khẩu ngữ và các dấu hiệu chuyển mạch hội thoại.",
+            instructionLanguage: {
+                enabled: true,
+                default: "ko"
+            },
+            theme: {
+                accent: "#15803d",
+                accentDark: "#166534",
+                soft: "#dcfce7",
+                surface: "rgba(255,255,255,0.94)",
+                pageBackground: "linear-gradient(180deg, #f4fbf4 0%, #fbfefa 42%, #f8fafc 100%)"
+            },
+            lessons: [
+                {
+                    id: "dialogue-steven",
+                    label: "Dialogue 03",
+                    title: "대화 듣기: 처음 만남과 데이트",
+                    titleVi: "Nghe hội thoại: Lần gặp đầu và chuyện hẹn hò",
+                    summary: "친구가 연애 이야기를 묻고 답하는 대화를 듣고, 관계의 분위기와 구어 표현의 뉘앙스를 파악하는 과제입니다.",
+                    summaryVi: "Em sẽ nghe cuộc trò chuyện giữa bạn bè về chuyện yêu đương để nắm được bầu không khí trong mối quan hệ và sắc thái của các cách nói khẩu ngữ.",
+                    scene: {
+                        emoji: "☕",
+                        title: "상황 그림: 친구끼리 연애 이야기",
+                        titleVi: "Tranh tình huống: bạn bè nói về chuyện yêu đương",
+                        caption: "친한 친구가 연인의 첫 만남과 데이트를 묻고, 자연스러운 회화체로 답하는 장면입니다.",
+                        captionVi: "Đây là cảnh một người bạn thân hỏi về lần gặp đầu và chuyện hẹn hò, còn người kia trả lời bằng giọng hội thoại tự nhiên.",
+                        tags: ["도서관", "커피를 쏟다", "첫눈에 반하다", "데이트 장소"]
+                    },
+                    preListening: {
+                        vocab: [
+                            { ko: "첫눈에 반하다", vi: "trúng tiếng sét ái tình", hint: "처음 보자마자 좋아하다" },
+                            { ko: "마음에 들다", vi: "vừa ý, có cảm tình", hint: "좋게 느껴지다" },
+                            { ko: "활발하다", vi: "năng động", hint: "기운차고 적극적이다" },
+                            { ko: "성격이 안 맞다", vi: "không hợp tính", hint: "함께 지낼 때 자주 부딪치다" },
+                            { ko: "부럽다", vi: "ghen tị theo nghĩa tích cực", hint: "좋아 보여서 나도 갖고 싶다" }
+                        ],
+                        relationshipOptions: [
+                            { value: "friends", label: "친한 친구끼리의 대화" },
+                            { value: "host-listener", label: "진행자와 청취자" },
+                            { value: "teacher-student", label: "선생님과 학생" }
+                        ],
+                        relationshipAnswer: "friends",
+                        genreOptions: [
+                            { value: "casual-dialogue", label: "친구 사이의 일상 대화" },
+                            { value: "formal-interview", label: "격식 있는 인터뷰" },
+                            { value: "news-report", label: "사건 보도" }
+                        ],
+                        genreAnswer: "casual-dialogue",
+                        predictionNote: "질문-대답이 짧게 오가고, -잖아요, 거래요처럼 회화체 종결형이 많이 보이는 사적 대화입니다.",
+                        predictionNoteVi: "Đây là cuộc trò chuyện riêng tư với các lượt hỏi - đáp ngắn, trong đó xuất hiện nhiều kiểu kết câu mang tính hội thoại như -잖아요 hay 거래요.",
+                        backgroundPrompt: "친구가 연애 이야기를 물을 때 자주 나올 법한 질문을 하나 적어 보세요.",
+                        backgroundPromptVi: "Khi bạn bè hỏi về chuyện yêu đương, theo em câu hỏi nào sẽ thường xuất hiện? Hãy viết ra một câu."
+                    },
+                    transcript: [
+                        {
+                            speaker: "혜엔",
+                            text: "유진 씨는 스티븐 씨하고 어떻게 처음 만났어요?",
+                            vi: "Yujin gặp Steven lần đầu như thế nào?",
+                            keywords: ["유진", "스티븐", "처음 만나다"]
+                        },
+                        {
+                            speaker: "유진",
+                            text: "스티븐이 도서관에서 내가 마시던 커피를 쏟았어요.",
+                            vi: "Steven đã làm đổ ly cà phê mà tôi đang uống ở thư viện.",
+                            keywords: ["도서관", "커피", "쏟다"]
+                        },
+                        {
+                            speaker: "혜엔",
+                            text: "아, 그래서요?",
+                            vi: "À, rồi sao nữa?",
+                            keywords: ["아", "그래서", "다음 이야기"],
+                            highlights: [
+                                { term: "아", type: "반응 감탄사" }
+                            ]
+                        },
+                        {
+                            speaker: "유진",
+                            text: "미안하다면서 대신 저녁을 사 주겠다고 하던데요.",
+                            vi: "Anh ấy nói xin lỗi và bảo sẽ mời tôi bữa tối để bù lại.",
+                            keywords: ["미안하다", "저녁", "하던데요"],
+                            highlights: [
+                                { term: "하던데요", type: "전언 / 회상" }
+                            ]
+                        },
+                        {
+                            speaker: "유진",
+                            text: "그런데 사실은 나한테 첫눈에 반해서 일부러 그런 거래요.",
+                            vi: "Nhưng thật ra anh ấy nói là vì phải lòng tôi ngay từ cái nhìn đầu tiên nên cố tình làm vậy.",
+                            keywords: ["그런데", "첫눈에 반하다", "일부러", "거래요"],
+                            highlights: [
+                                { term: "그런데", type: "담화 전환" },
+                                { term: "거래요", type: "전언형 종결" }
+                            ]
+                        },
+                        {
+                            speaker: "혜엔",
+                            text: "유진 씨도 스티븐 씨가 마음에 들었어요?",
+                            vi: "Còn Yujin cũng có cảm tình với Steven à?",
+                            keywords: ["마음에 들다", "질문"]
+                        },
+                        {
+                            speaker: "유진",
+                            text: "처음에는 매력 있어 보였어요. 스티븐이 씩씩하고 활발하잖아요.",
+                            vi: "Lúc đầu thì anh ấy có vẻ rất cuốn hút. Steven mạnh mẽ và năng động mà.",
+                            keywords: ["매력", "씩씩하다", "활발하다", "잖아요"],
+                            highlights: [
+                                { term: "활발하잖아요", type: "-잖아요" }
+                            ]
+                        },
+                        {
+                            speaker: "유진",
+                            text: "하지만 사귀어 보니까 성격이 안 맞아서 맨날 싸워요.",
+                            vi: "Nhưng sau khi hẹn hò rồi thì thấy tính cách không hợp, nên lúc nào cũng cãi nhau.",
+                            keywords: ["하지만", "성격이 안 맞다", "맨날", "싸우다"],
+                            highlights: [
+                                { term: "하지만", type: "대조 연결" },
+                                { term: "맨날", type: "구어 어휘" }
+                            ]
+                        },
+                        {
+                            speaker: "혜엔",
+                            text: "전 두 사람이 손을 잡고 가는 모습을 보면 참 부러워요.",
+                            vi: "Mỗi khi thấy hai người nắm tay đi cùng nhau, tôi ngưỡng mộ lắm.",
+                            keywords: ["손을 잡다", "부럽다"]
+                        },
+                        {
+                            speaker: "혜엔",
+                            text: "데이트는 주로 어디서 해요?",
+                            vi: "Thường thì hai người hẹn hò ở đâu?",
+                            keywords: ["데이트", "어디서"]
+                        },
+                        {
+                            speaker: "유진",
+                            text: "한강공원에서 자전거도 타고 극장에도 자주 가요.",
+                            vi: "Chúng tôi thường đạp xe ở công viên sông Hàn và cũng hay đi rạp phim.",
+                            keywords: ["한강공원", "자전거", "극장"]
+                        }
+                    ],
+                    dictogloss: {
+                        prompt: "대화를 두세 번 들은 뒤, 관계의 변화와 데이트 정보를 중심으로 재구성해 보세요.",
+                        promptVi: "Sau khi nghe hội thoại hai hoặc ba lần, hãy tái cấu trúc lại nội dung với trọng tâm là sự thay đổi trong mối quan hệ và thông tin về chuyện hẹn hò.",
+                        keywords: ["도서관", "커피를 쏟다", "첫눈에 반하다", "활발하잖아요", "성격이 안 맞다", "한강공원"],
+                        modelSummary: "유진은 도서관에서 스티븐이 커피를 쏟는 바람에 처음 만났다. 그는 일부러 그런 것이라고 말할 만큼 유진에게 첫눈에 반했지만, 실제로 사귀어 보니 성격이 잘 맞지 않아 자주 싸운다. 그래도 두 사람은 한강공원에서 자전거를 타고 극장에 가며 데이트를 한다.",
+                        placeholder: "처음 만남, 감정, 현재 관계를 중심으로 3~5문장으로 써 보세요.",
+                        placeholderVi: "Hãy viết lại trong 3~5 câu, tập trung vào lần gặp đầu, cảm xúc và quan hệ hiện tại."
+                    },
+                    notePrompts: {
+                        keywords: "첫 만남, 이유, 성격, 데이트 장소",
+                        details: "질문과 대답의 짝을 맞추며 적어 보세요.",
+                        questions: "어떤 구어 표현이 친한 친구 사이 느낌을 만들었는지 적어 보세요.",
+                        cue: "만남 -> 진짜 이유 -> 호감 -> 갈등 -> 데이트",
+                        notes: "질문-답변 구조와 구어 종결형을 함께 적어 보세요.",
+                        summary: "이 대화를 친구에게 설명하듯 2문장으로 요약해 보세요."
+                    },
+                    notePromptsVi: {
+                        keywords: "Lần gặp đầu, lý do, tính cách, nơi hẹn hò",
+                        details: "Hãy ghi theo cặp câu hỏi và câu trả lời tương ứng.",
+                        questions: "Cách nói khẩu ngữ nào làm cho cuộc trò chuyện mang cảm giác như giữa những người bạn thân?",
+                        cue: "Gặp nhau -> Lý do thật sự -> Thiện cảm -> Mâu thuẫn -> Hẹn hò",
+                        notes: "Hãy ghi cùng lúc cấu trúc hỏi - đáp và các kiểu kết câu khẩu ngữ.",
+                        summary: "Hãy tóm tắt hội thoại này trong 2 câu như thể em đang kể lại cho một người bạn."
+                    },
+                    clarificationPrompt: "친구 대화에서 잘 안 들린 내용을 다시 묻는 상황을 연습해 보세요.",
+                    clarificationPromptVi: "Hãy luyện tình huống hỏi lại khi trong cuộc trò chuyện giữa bạn bè có chỗ em nghe chưa rõ.",
+                    clarifyScenario: "예: '즉, 일부러 커피를 쏟았다는 말씀이에요?'처럼 확인 질문을 만들어 보세요.",
+                    clarifyScenarioVi: "Ví dụ: hãy tạo một câu hỏi xác nhận như 'Ý là anh ấy cố tình làm đổ cà phê, đúng không ạ?'.",
+                    oralFeatures: [
+                        { term: "하던데요", type: "전언 / 회상", typeVi: "Thuật lại / hồi tưởng", note: "자신이 들은 내용을 떠올리며 조심스럽게 전달하는 구어 표현입니다.", noteVi: "Đây là cách nói khẩu ngữ dùng khi nhớ lại điều mình đã nghe và truyền đạt lại một cách dè dặt." },
+                        { term: "거래요", type: "전언형 종결", typeVi: "Kết câu kiểu thuật lại", note: "다른 사람이 한 말을 다시 전할 때 회화에서 매우 자주 쓰입니다.", noteVi: "Kiểu kết câu này xuất hiện rất nhiều trong hội thoại khi kể lại lời người khác." },
+                        { term: "활발하잖아요", type: "-잖아요", typeVi: "-잖아요", note: "상대도 알 것 같은 근거를 끌어오며 공감을 유도합니다.", noteVi: "Nó kéo ra một căn cứ mà người nghe dường như cũng biết để tạo cảm giác đồng tình." },
+                        { term: "맨날", type: "구어 어휘", typeVi: "Từ vựng khẩu ngữ", note: "'매일'보다 훨씬 일상적이고 말맛이 강한 회화 표현입니다.", noteVi: "So với '매일', đây là cách nói đời thường hơn nhiều và mang rõ chất hội thoại." },
+                        { term: "근데 / 그러니까 / -거든요", type: "확장 회화 표지", typeVi: "Dấu hiệu mở rộng hội thoại", note: "이 대화의 '그런데', '거래요', '-잖아요'와 함께 자주 묶여 들리는 회화 연결 장치입니다.", noteVi: "Đây là những thiết bị nối ý trong hội thoại thường đi cùng với '그런데', '거래요' và '-잖아요' trong đoạn này.", extension: "실제 발화에서는 '그런데 -> 근데'처럼 줄어들거나, 이유 설명에 '-거든요', 정리할 때 '그러니까'가 붙으며 축약 발음이 함께 들리기도 합니다.", extensionVi: "Trong phát âm thật, '그런데' có thể rút thành '근데'; khi giải thích lý do có thể thêm '-거든요', còn khi chốt ý có thể thêm '그러니까', kèm theo cách phát âm rút gọn." }
+                    ],
+                    quizTitle: "대화 이해 점검",
+                    quizTitleVi: "Kiểm tra hiểu hội thoại",
+                    questions: [
+                        {
+                            prompt: "유진 씨와 스티븐 씨가 처음 만난 장소는 어디예요?",
+                            promptVi: "Yujin và Steven gặp nhau lần đầu ở đâu?",
+                            answer: "2",
+                            explanation: "유진은 도서관에서 커피를 쏟으면서 처음 만났다고 말합니다.",
+                            explanationVi: "Yujin nói rằng hai người gặp nhau lần đầu khi Steven làm đổ cà phê ở thư viện.",
+                            options: [
+                                { value: "1", label: "① 카페", labelVi: "① Quán cà phê" },
+                                { value: "2", label: "② 도서관", labelVi: "② Thư viện" },
+                                { value: "3", label: "③ 한강공원", labelVi: "③ Công viên sông Hàn" },
+                                { value: "4", label: "④ 극장", labelVi: "④ Rạp phim" }
+                            ]
+                        },
+                        {
+                            prompt: "스티븐 씨가 일부러 커피를 쏟았다는 이유는 무엇이에요?",
+                            promptVi: "Vì sao Steven cố tình làm đổ cà phê?",
+                            answer: "3",
+                            explanation: "유진은 스티븐이 자신에게 첫눈에 반해서 일부러 그런 거래요라고 말합니다.",
+                            explanationVi: "Yujin nói rằng Steven làm vậy vì đã yêu cô ấy từ cái nhìn đầu tiên.",
+                            options: [
+                                { value: "1", label: "① 유진 씨에게 화가 나서", labelVi: "① Vì giận Yujin" },
+                                { value: "2", label: "② 친구와 장난치다가", labelVi: "② Vì đang đùa với bạn" },
+                                { value: "3", label: "③ 첫눈에 반해서", labelVi: "③ Vì yêu từ cái nhìn đầu tiên" },
+                                { value: "4", label: "④ 커피가 너무 뜨거워서", labelVi: "④ Vì cà phê quá nóng" }
+                            ]
+                        },
+                        {
+                            prompt: "유진 씨가 사귀어 보니 힘들었던 이유는 무엇이에요?",
+                            promptVi: "Sau khi hẹn hò, vì sao Yujin thấy mệt mỏi?",
+                            answer: "2",
+                            explanation: "유진은 성격이 안 맞아서 맨날 싸운다고 합니다.",
+                            explanationVi: "Yujin nói rằng hai người không hợp tính nên lúc nào cũng cãi nhau.",
+                            options: [
+                                { value: "1", label: "① 취미가 달라서", labelVi: "① Vì sở thích khác nhau" },
+                                { value: "2", label: "② 성격이 안 맞아서", labelVi: "② Vì tính cách không hợp" },
+                                { value: "3", label: "③ 만날 시간이 없어서", labelVi: "③ Vì không có thời gian gặp nhau" },
+                                { value: "4", label: "④ 멀리 살아서", labelVi: "④ Vì sống xa nhau" }
+                            ]
+                        },
+                        {
+                            prompt: "혜엔 씨가 부럽다고 한 모습은 무엇이에요?",
+                            promptVi: "Cảnh nào khiến Hyein thấy ngưỡng mộ?",
+                            answer: "3",
+                            explanation: "혜엔은 두 사람이 손을 잡고 가는 모습을 보면 참 부럽다고 말합니다.",
+                            explanationVi: "Hyein nói rằng cô ấy thấy rất ngưỡng mộ khi nhìn hai người nắm tay đi cùng nhau.",
+                            options: [
+                                { value: "1", label: "① 같이 자전거 타는 모습", labelVi: "① Cùng nhau đạp xe" },
+                                { value: "2", label: "② 같이 영화 보는 모습", labelVi: "② Cùng nhau xem phim" },
+                                { value: "3", label: "③ 손을 잡고 가는 모습", labelVi: "③ Cùng nắm tay đi" },
+                                { value: "4", label: "④ 저녁을 같이 먹는 모습", labelVi: "④ Cùng ăn tối" }
+                            ]
+                        },
+                        {
+                            prompt: "두 사람이 자주 하는 데이트는 무엇이에요?",
+                            promptVi: "Hai người thường hẹn hò như thế nào?",
+                            answer: "1",
+                            explanation: "한강공원에서 자전거를 타고 극장에 자주 간다고 합니다.",
+                            explanationVi: "Họ thường đạp xe ở công viên sông Hàn và hay đi rạp phim.",
+                            options: [
+                                { value: "1", label: "① 한강공원에서 자전거 타기, 극장 가기", labelVi: "① Đạp xe ở công viên sông Hàn, đi rạp phim" },
+                                { value: "2", label: "② 도서관에서 공부하기, 카페 가기", labelVi: "② Học ở thư viện, đi quán cà phê" },
+                                { value: "3", label: "③ 등산하기, 캠핑 가기", labelVi: "③ Leo núi, đi cắm trại" },
+                                { value: "4", label: "④ 헬스장 가기, 수영하기", labelVi: "④ Đi phòng gym, đi bơi" }
+                            ]
+                        }
+                    ]
+                }
+            ]
         };
-
-        function checkAnswers() {
-            let score = 0;
-            let allAnswered = true;
-
-            for (let i = 1; i <= 5; i++) {
-                const qName = 'q' + i;
-                const radios = document.getElementsByName(qName);
-                let selected = null;
-
-                radios.forEach((radio) => {
-                    radio.parentElement.classList.remove('text-green-600', 'font-bold', 'text-red-500');
-                    if (radio.checked) selected = radio.value;
-                });
-
-                const questionDiv = document.getElementById(qName + '-container');
-                questionDiv.classList.remove('bg-green-50', 'bg-red-50', 'border-green-200', 'border-red-200');
-
-                if (selected) {
-                    if (selected === answers[qName]) {
-                        score++;
-                        questionDiv.classList.add('bg-green-50', 'border-green-200');
-                        radios.forEach((radio) => {
-                            if (radio.value === answers[qName]) radio.parentElement.classList.add('text-green-600', 'font-bold');
-                        });
-                    } else {
-                        questionDiv.classList.add('bg-red-50', 'border-red-200');
-                        radios.forEach((radio) => {
-                            if (radio.value === selected) radio.parentElement.classList.add('text-red-500');
-                            if (radio.value === answers[qName]) radio.parentElement.classList.add('text-green-600', 'font-bold');
-                        });
-                    }
-                } else {
-                    allAnswered = false;
-                }
-            }
-
-            const resultDiv = document.getElementById('result');
-            resultDiv.classList.remove('hidden');
-
-            if (!allAnswered) {
-                resultDiv.innerHTML = '<span class="text-red-600 bg-red-100 px-3 py-1 rounded-full text-sm">모든 문제를 먼저 풀어주세요.</span>';
-                return;
-            }
-
-            const percentage = Math.round((score / 5) * 100);
-            let message = '';
-            if (percentage === 100) message = '완벽해요! 내용 이해가 아주 좋아요.';
-            else if (percentage >= 80) message = '아주 잘했어요! 한두 문제만 더 확인해 봐요.';
-            else if (percentage >= 60) message = '좋아요. 지문을 한 번 더 보면 더 좋아져요.';
-            else message = '대화를 다시 읽고 한 번 더 도전해 보세요.';
-
-            resultDiv.innerHTML = `
-                <div class="flex flex-col items-center">
-                    <div class="text-3xl font-bold text-indigo-600 mb-1">${score} / 5</div>
-                    <div class="text-sm text-slate-500">${message}</div>
-                </div>
-            `;
-        }
-
-        function splitStemTail(token) {
-            const tailLength = token.length >= 4 ? 2 : 1;
-            const stem = token.slice(0, -tailLength);
-            const tail = token.slice(-tailLength);
-            if (!stem) return null;
-            return { stem, tail };
-        }
-
-        function setMaskState(maskButton, reveal) {
-            const placeholder = maskButton.dataset.placeholder || '_';
-            const stem = maskButton.dataset.stem || '';
-            maskButton.textContent = reveal ? stem : placeholder;
-            maskButton.classList.toggle('revealed', reveal);
-            maskButton.setAttribute('aria-pressed', reveal ? 'true' : 'false');
-        }
-
-        function updateMaskCounter(scriptBlock) {
-            const counter = scriptBlock.querySelector('.mask-counter');
-            if (!counter) return;
-            const total = scriptBlock.querySelectorAll('.morph-mask').length;
-            const shown = scriptBlock.querySelectorAll('.morph-mask.revealed').length;
-            counter.textContent = `공개 ${shown}/${total}`;
-        }
-
-        function collectCandidatesByLine(lineElement) {
-            const walker = document.createTreeWalker(lineElement, NodeFilter.SHOW_TEXT);
-            const candidates = [];
-            const tokenRegex = /[\uAC00-\uD7A3]{2,}/g;
-
-            while (walker.nextNode()) {
-                const node = walker.currentNode;
-                const parent = node.parentElement;
-                if (!parent) continue;
-                if (parent.closest('.mask-toolbar')) continue;
-                if (parent.closest('.morph-mask')) continue;
-                if (parent.tagName === 'STRONG') continue;
-                if (['SCRIPT', 'STYLE', 'BUTTON'].includes(parent.tagName)) continue;
-
-                const text = node.nodeValue;
-                if (!/[\uAC00-\uD7A3]/.test(text)) continue;
-
-                tokenRegex.lastIndex = 0;
-                let match;
-                while ((match = tokenRegex.exec(text)) !== null) {
-                    candidates.push({
-                        node,
-                        start: match.index,
-                        end: match.index + match[0].length,
-                        token: match[0]
-                    });
-                }
-            }
-
-            return candidates;
-        }
-
-        function pickMaskTargets(candidates) {
-            const count = candidates.length;
-            if (count === 0) return [];
-
-            let targetCount = 1;
-            if (count >= 5) targetCount = 3;
-            else if (count >= 2) targetCount = 2;
-
-            const indices = [];
-            if (targetCount === 1) {
-                indices.push(Math.floor(count / 2));
-            } else if (targetCount === 2) {
-                indices.push(0, count - 1);
-            } else {
-                indices.push(0, Math.floor((count - 1) / 2), count - 1);
-            }
-
-            const unique = [...new Set(indices)].filter((index) => index >= 0 && index < count);
-            return unique.map((index) => candidates[index]);
-        }
-
-        function applyMasksToLine(selectedCandidates) {
-            const nodeMap = new Map();
-            selectedCandidates.forEach((candidate) => {
-                if (!nodeMap.has(candidate.node)) nodeMap.set(candidate.node, []);
-                nodeMap.get(candidate.node).push(candidate);
-            });
-
-            nodeMap.forEach((items, node) => {
-                let replaced = node.nodeValue;
-                items.sort((a, b) => b.start - a.start).forEach((item) => {
-                    const split = splitStemTail(item.token);
-                    if (!split) return;
-                    const placeholder = '□'.repeat(Math.max(1, split.stem.length));
-                    const masked = `<button type="button" class="morph-mask" data-stem="${split.stem}" data-placeholder="${placeholder}" aria-pressed="false">${placeholder}</button>${split.tail}`;
-                    replaced = `${replaced.slice(0, item.start)}${masked}${replaced.slice(item.end)}`;
-                });
-
-                if (replaced !== node.nodeValue) {
-                    const fragment = document.createElement('span');
-                    fragment.innerHTML = replaced;
-                    node.parentNode.replaceChild(fragment, node);
-                }
-            });
-        }
-
-        function maskByUtterance(scriptBlock) {
-            const lines = scriptBlock.querySelectorAll('p');
-            lines.forEach((line) => {
-                const candidates = collectCandidatesByLine(line);
-                const selected = pickMaskTargets(candidates);
-                applyMasksToLine(selected);
-            });
-        }
-
-        function addMaskToolbar(scriptBlock) {
-            const toolbar = document.createElement('div');
-            toolbar.className = 'mask-toolbar';
-            toolbar.innerHTML = `
-                <div class="mask-help">한 발화에 2-3개 명사/용언만 가립니다. 조사/어미는 보입니다.</div>
-                <div class="mask-buttons">
-                    <button type="button" class="mask-action" data-mask-action="hide">전체 가리기</button>
-                    <button type="button" class="mask-action" data-mask-action="show">전체 드러내기</button>
-                    <span class="mask-counter">공개 0/0</span>
-                </div>
-            `;
-            scriptBlock.prepend(toolbar);
-
-            toolbar.addEventListener('click', (event) => {
-                const actionButton = event.target.closest('.mask-action');
-                if (!actionButton) return;
-                const reveal = actionButton.dataset.maskAction === 'show';
-                scriptBlock.querySelectorAll('.morph-mask').forEach((maskButton) => {
-                    setMaskState(maskButton, reveal);
-                });
-                updateMaskCounter(scriptBlock);
-            });
-        }
-
-        function initScriptMasking() {
-            const scriptBlock = document.getElementById('script3');
-            if (!scriptBlock || scriptBlock.dataset.maskReady === 'true') return;
-
-            addMaskToolbar(scriptBlock);
-            maskByUtterance(scriptBlock);
-
-            scriptBlock.addEventListener('pointerup', (event) => {
-                const maskButton = event.target.closest('.morph-mask');
-                if (!maskButton) return;
-                const reveal = !maskButton.classList.contains('revealed');
-                setMaskState(maskButton, reveal);
-                updateMaskCounter(scriptBlock);
-            });
-
-            scriptBlock.dataset.maskReady = 'true';
-            updateMaskCounter(scriptBlock);
-        }
-
-        document.addEventListener('DOMContentLoaded', initScriptMasking);
     </script>
-    <script src="../shared/learning-enhancements.js"></script>
+    <script src="../shared/listening-workbook.js?v=20260315-quizlang8"></script>
+    <script src="../shared/learning-enhancements.js?v=20260315-quizlang8"></script>
 </body>
 </html>
