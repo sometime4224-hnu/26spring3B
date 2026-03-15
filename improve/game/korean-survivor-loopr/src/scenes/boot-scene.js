@@ -88,6 +88,31 @@
         g.strokePath();
       });
 
+      this.createEnemyTexture("enemy-corrosion", 228, 108, (g) => {
+        g.fillStyle(0xffffff, 0.92);
+        g.fillEllipse(114, 54, 202, 72);
+        g.fillStyle(0xffffff, 0.18);
+        g.fillEllipse(98, 42, 98, 24);
+        g.fillEllipse(154, 64, 84, 20);
+        g.lineStyle(5, 0xffffff, 0.26);
+        g.beginPath();
+        g.moveTo(28, 58);
+        g.lineTo(56, 34);
+        g.lineTo(92, 48);
+        g.lineTo(124, 28);
+        g.lineTo(162, 52);
+        g.lineTo(194, 38);
+        g.strokePath();
+        g.lineStyle(4, 0xffffff, 0.18);
+        g.beginPath();
+        g.moveTo(52, 76);
+        g.lineTo(86, 60);
+        g.lineTo(116, 72);
+        g.lineTo(154, 58);
+        g.lineTo(182, 72);
+        g.strokePath();
+      });
+
       this.createEnemyTexture("enemy-swarm", 144, 60, (g) => {
         g.fillStyle(0xffffff, 0.98);
         g.fillPoints([
@@ -107,6 +132,57 @@
         g.beginPath();
         g.moveTo(28, 30);
         g.lineTo(114, 30);
+        g.strokePath();
+      });
+
+      this.createEnemyTexture("enemy-split", 112, 112, (g) => {
+        g.fillStyle(0xffffff, 0.95);
+        g.fillRoundedRect(12, 12, 88, 88, 18);
+        g.fillStyle(0xffffff, 0.2);
+        g.fillRoundedRect(24, 24, 26, 18, 8);
+        g.lineStyle(5, 0xffffff, 0.28);
+        g.strokeRoundedRect(16, 16, 80, 80, 16);
+        g.lineStyle(4, 0xffffff, 0.22);
+        g.beginPath();
+        g.moveTo(34, 22);
+        g.lineTo(48, 42);
+        g.lineTo(40, 58);
+        g.lineTo(62, 76);
+        g.lineTo(56, 92);
+        g.moveTo(78, 24);
+        g.lineTo(64, 46);
+        g.lineTo(78, 62);
+        g.lineTo(70, 88);
+        g.strokePath();
+      });
+
+      this.createEnemyTexture("enemy-split-shard", 74, 74, (g) => {
+        g.fillStyle(0xffffff, 0.97);
+        g.fillPoints([
+          { x: 14, y: 18 },
+          { x: 38, y: 10 },
+          { x: 60, y: 18 },
+          { x: 64, y: 42 },
+          { x: 50, y: 62 },
+          { x: 22, y: 60 },
+          { x: 10, y: 40 },
+        ], true);
+        g.fillStyle(0xffffff, 0.24);
+        g.fillPoints([
+          { x: 28, y: 24 },
+          { x: 42, y: 20 },
+          { x: 52, y: 34 },
+          { x: 38, y: 48 },
+          { x: 24, y: 40 },
+        ], true);
+        g.lineStyle(4, 0xffffff, 0.3);
+        g.beginPath();
+        g.moveTo(24, 18);
+        g.lineTo(42, 34);
+        g.lineTo(28, 52);
+        g.moveTo(50, 18);
+        g.lineTo(42, 34);
+        g.lineTo(56, 50);
         g.strokePath();
       });
     }

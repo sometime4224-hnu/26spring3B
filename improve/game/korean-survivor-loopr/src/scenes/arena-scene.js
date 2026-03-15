@@ -36,7 +36,7 @@
       this.score = 0;
       this.level = 1;
       this.experience = 0;
-      this.nextLevelExperience = 42;
+      this.nextLevelExperience = this.getNextLevelRequirement(this.level);
       this.hp = 100;
       this.maxHp = 100;
       this.negativeClears = 0;
@@ -115,6 +115,11 @@
       this.fireOrbs = [];
       this.shieldOrbs = [];
       this.mistZones = [];
+      this.pendingEnemyWarnings = [];
+      this.corrosionPools = [];
+      this.corrosionSlowUntil = 0;
+      this.corrosionSlowFactor = 1;
+      this.nextCorrosionPlayerTickAt = 0;
       this.enemyIdCounter = 0;
       this.upgradeLevels = {};
       this.strongWaveTimer = null;
@@ -457,10 +462,23 @@
       this.bullets.children.iterate((bullet) => this.normalizeObjectToPlayer(bullet));
       this.enemyProjectiles.children.iterate((projectile) => this.normalizeObjectToPlayer(projectile));
       this.pickups.children.iterate((pickup) => this.normalizeObjectToPlayer(pickup));
+      this.pendingEnemyWarnings.forEach((warning) => {
+        if (!warning || !warning.objects) {
+          return;
+        }
+
+        warning.objects.forEach((object) => this.normalizeObjectToPlayer(object));
+      });
 
       this.mistZones.forEach((zone) => {
         if (zone && zone.sprite && zone.sprite.active) {
           this.normalizeObjectToPlayer(zone.sprite);
+        }
+      });
+
+      this.corrosionPools.forEach((pool) => {
+        if (pool && pool.container && pool.container.active) {
+          this.normalizeObjectToPlayer(pool.container);
         }
       });
     }
@@ -982,11 +1000,14 @@
       this.transformUntil = 0;
       this.isMagnetCollecting = false;
       this.stageWaveTriggered = {};
+      this.stageWaveSpawnFinished = {};
+      this.stageWaveRewarded = {};
       this.stageBossSequenceStarted = true;
       this.stageBossSpawned = false;
       this.pendingStageBoss = false;
       this.currentStageBoss = null;
       this.pendingStageIndex = null;
+      this.pendingBonusLevelCheck = false;
       this.stagesCleared = this.stageCount;
       this.timeRemaining = 0;
       this.shieldUntil = 0;
@@ -1409,6 +1430,8 @@
       this.currentStageData = stage;
       this.timeRemaining = this.roundSeconds;
       this.stageWaveTriggered = {};
+      this.stageWaveSpawnFinished = {};
+      this.stageWaveRewarded = {};
       this.stageBossSequenceStarted = false;
       this.stageBossSpawned = false;
       this.pendingStageBoss = false;
@@ -1538,6 +1561,8 @@
       }
 
       this.stageWaveTriggered[waveNumber] = true;
+      this.stageWaveSpawnFinished[waveNumber] = false;
+      this.stageWaveRewarded[waveNumber] = false;
       this.showFeedback(`${this.getCurrentStageTitle()} 강습 ${waveNumber}`, "#ffd9b5");
       this.showFloatingText(this.player.x, this.player.y - 364, `강습 ${waveNumber}`, "#ffe5c2", "34px");
 
@@ -1560,6 +1585,8 @@
       spawnBurst();
 
       if (totalPacks <= 1) {
+        this.stageWaveSpawnFinished[waveNumber] = true;
+        this.checkStrongWaveCompletion(waveNumber);
         return;
       }
 
@@ -1571,6 +1598,8 @@
           if (spawnedPacks >= totalPacks && this.strongWaveTimer) {
             this.strongWaveTimer.remove(false);
             this.strongWaveTimer = null;
+            this.stageWaveSpawnFinished[waveNumber] = true;
+            this.checkStrongWaveCompletion(waveNumber);
           }
         },
         callbackScope: this,
@@ -1591,12 +1620,15 @@
       const supportCount = 2 + waveNumber + this.currentStageIndex;
       const eliteSpawn = this.offsetNegativeSpawnPoint(origin, 0, supportCount + 1);
 
-      this.createNegativeEnemy(eliteArchetype, eliteSpawn.x, eliteSpawn.y, {
+      this.spawnNegativeEntry(eliteArchetype, eliteSpawn.x, eliteSpawn.y, {
         forceRoleKey: eliteRole,
+        forceTelegraph: true,
+        isElite: true,
         hpMultiplier: 1.8 + waveNumber * 0.16 + this.currentStageIndex * 0.12,
         speedMultiplier: 1.04 + waveNumber * 0.04,
         damageMultiplier: 1.16 + this.currentStageIndex * 0.08,
         scoreMultiplier: 1.9,
+        strongWaveNumber: waveNumber,
       });
 
       for (let index = 0; index < supportCount; index += 1) {
@@ -1604,17 +1636,23 @@
         const roll = Phaser.Math.Between(0, 100);
         let archetypeKey = "swarm";
 
-        if (waveNumber >= 2 && roll > 58) {
+        if (this.currentStageIndex >= 3 && roll > 90 && this.canSpawnNegativeArchetype("corrosion")) {
+          archetypeKey = "corrosion";
+        } else if (this.currentStageIndex >= 2 && roll > 72) {
+          archetypeKey = "split";
+        } else if (waveNumber >= 2 && roll > 58) {
           archetypeKey = "tank";
         } else if (roll > 38) {
           archetypeKey = "normal";
         }
 
-        this.createNegativeEnemy(archetypeKey, supportSpawn.x, supportSpawn.y, {
+        this.spawnNegativeEntry(archetypeKey, supportSpawn.x, supportSpawn.y, {
+          forceRoleKey: archetypeKey === "swarm" && index % 3 === 0 ? "rush" : undefined,
           hpMultiplier: 1.08 + waveNumber * 0.08,
           speedMultiplier: 1.04 + waveNumber * 0.04,
           damageMultiplier: 1.08 + this.currentStageIndex * 0.06,
           scoreMultiplier: 1.24,
+          strongWaveNumber: waveNumber,
         });
       }
     }
@@ -1677,7 +1715,7 @@
         }
       });
 
-      return !foundEnemy;
+      return !foundEnemy && !this.hasPendingNegativeWarning();
     }
 
     clearCombatField() {
@@ -1693,6 +1731,11 @@
         }
       });
 
+      for (let index = this.pendingEnemyWarnings.length - 1; index >= 0; index -= 1) {
+        this.destroyEnemyWarning(this.pendingEnemyWarnings[index], true);
+      }
+      this.pendingEnemyWarnings = [];
+
       this.bullets.clear(true, true);
       this.enemyProjectiles.clear(true, true);
       this.magnetLinks.clear();
@@ -1705,6 +1748,15 @@
         }
       });
       this.mistZones = [];
+      this.corrosionPools.forEach((pool) => {
+        if (pool && pool.container && pool.container.active) {
+          pool.container.destroy();
+        }
+      });
+      this.corrosionPools = [];
+      this.corrosionSlowUntil = 0;
+      this.corrosionSlowFactor = 1;
+      this.nextCorrosionPlayerTickAt = 0;
       this.destroyBeamSweep();
     }
 
@@ -1963,8 +2015,8 @@
       this.isLevelUp = false;
       this.pauseAction(false);
       this.applyStageData(nextStageIndex, { skipSpawns: false, silent: false });
-
-      if (this.experience >= this.nextLevelExperience) {
+      this.flushPendingLevelCheck(240);
+      if (!this.pendingBonusLevelCheck && this.experience >= this.nextLevelExperience) {
         this.time.delayedCall(240, () => this.checkLevelUp());
       }
     }
@@ -2107,21 +2159,25 @@
       const supportCount = 4 + waveNumber + Math.floor(packIndex / 2);
       const eliteSpawn = this.offsetNegativeSpawnPoint(origin, 0, supportCount + 1);
 
-      this.createNegativeEnemy(eliteArchetype, eliteSpawn.x, eliteSpawn.y, {
+      this.spawnNegativeEntry(eliteArchetype, eliteSpawn.x, eliteSpawn.y, {
         forceRoleKey: eliteRole,
+        forceTelegraph: true,
+        isElite: true,
         hpMultiplier: 3.5 + waveNumber * 0.7 + packIndex * 0.12,
         speedMultiplier: 1.12 + waveNumber * 0.05,
         damageMultiplier: 1.28 + waveNumber * 0.08,
         scoreMultiplier: 1.42 + waveNumber * 0.14,
       });
 
-      const supportArchetypes = ["normal", "swarm", "tank", "normal"];
+      const supportArchetypes = this.currentStageIndex >= 4
+        ? ["normal", "swarm", "tank", "split", "corrosion", "normal"]
+        : ["normal", "swarm", "tank", "split", "normal"];
       for (let index = 0; index < supportCount; index += 1) {
         const spawn = this.offsetNegativeSpawnPoint(origin, index + 1, supportCount + 1);
         const archetypeKey = supportArchetypes[(waveNumber + packIndex + index) % supportArchetypes.length];
         const forceRoleKey = index % 5 === 0 ? "shooter" : (index % 3 === 0 ? "rush" : null);
 
-        this.createNegativeEnemy(archetypeKey, spawn.x, spawn.y, {
+        this.spawnNegativeEntry(archetypeKey, spawn.x, spawn.y, {
           forceRoleKey: forceRoleKey || undefined,
           hpMultiplier: 1.9 + waveNumber * 0.24 + packIndex * 0.08,
           speedMultiplier: 1.08 + waveNumber * 0.04,
@@ -2221,13 +2277,12 @@
           Math.max(48, Math.floor((definition.displayWidth || 224) * 0.52)),
           Math.max(44, Math.floor((definition.displayHeight || 88) * 0.74))
         );
-        boss.label = this.add.text(point.x, point.y + 1, definition.word, {
-          fontFamily: this.font,
-          fontSize: "28px",
-          fontStyle: "800",
+        boss.labelOffsetY = this.getEnemyLabelOffsetY(boss);
+        boss.label = this.createEnemyWordLabel(point.x, point.y + boss.labelOffsetY, definition.word, "28px", {
+          kind: "boss",
           color: "#fff6f2",
-          align: "center",
-        }).setOrigin(0.5).setDepth(4);
+          fontStyle: "800",
+        });
         this.attachEnemyHealthBar(boss, definition.hpBarWidth || 150, definition.hpBarOffsetY || 58);
         this.setupBossRushGimmick(boss);
         this.finalBossRushBossesRemaining += 1;
@@ -2254,6 +2309,11 @@
       }
 
       this.clearCombatField();
+      this.grantBonusExperience(this.getFinalBossArrivalBonusExperience(), {
+        label: "최종 결전 준비",
+        color: "#ffd7b8",
+        deferLevelCheck: true,
+      });
       this.showFeedback("강력한 적 출현", "#ffb29d");
       this.playCenterWarning("경고", "최종 보스 접근", "#ffb29d", () => {
         if (!this.roundEnded && !this.finalBossPhase) {
@@ -2268,7 +2328,14 @@
     }
 
     pickNegativeArchetype() {
-      const entries = Object.entries(this.vocabData.negativeArchetypes || {});
+      const entries = Object.entries(this.vocabData.negativeArchetypes || {}).filter(([key]) => (
+        this.getArchetypeSpawnWeight(key) > 0 && this.canSpawnNegativeArchetype(key)
+      ));
+
+      if (!entries.length) {
+        return "normal";
+      }
+
       let total = 0;
 
       entries.forEach(([key]) => {
@@ -2289,6 +2356,456 @@
       return "normal";
     }
 
+    canSpawnNegativeArchetype(archetypeKey, options) {
+      const settings = options || {};
+
+      if (!archetypeKey) {
+        return false;
+      }
+
+      if (settings.ignoreSpawnLimits) {
+        return true;
+      }
+
+      if (archetypeKey === "corrosion") {
+        if (this.currentStageIndex <= 0) {
+          return false;
+        }
+
+        return (
+          this.countActiveNegativeEnemiesByType("corrosion") +
+          this.countPendingNegativeWarningsByType("corrosion")
+        ) < this.getMaxCorrosionEnemyCount();
+      }
+
+      return true;
+    }
+
+    getMaxCorrosionEnemyCount() {
+      if (this.currentStageIndex >= 4) {
+        return 4;
+      }
+
+      if (this.currentStageIndex >= 2) {
+        return 3;
+      }
+
+      return 2;
+    }
+
+    getMaxCorrosionPoolCount() {
+      if (this.currentStageIndex >= 4) {
+        return 4;
+      }
+
+      if (this.currentStageIndex >= 2) {
+        return 3;
+      }
+
+      return 2;
+    }
+
+    getSpawnTelegraphDuration(options) {
+      const settings = options || {};
+
+      if (settings.telegraphDuration != null) {
+        return settings.telegraphDuration;
+      }
+
+      if (settings.isElite) {
+        return this.currentStageIndex >= 4 ? 340 : 380;
+      }
+
+      return this.currentStageIndex >= 4 ? 260 : this.currentStageIndex >= 2 ? 300 : 340;
+    }
+
+    getEntryShieldDuration(options) {
+      const settings = options || {};
+
+      if (settings.entryShieldDuration != null) {
+        return settings.entryShieldDuration;
+      }
+
+      return this.currentStageIndex >= 4 ? 820 : this.currentStageIndex >= 2 ? 720 : 620;
+    }
+
+    getEntryShieldDamageMultiplier(options) {
+      const settings = options || {};
+
+      if (settings.entryShieldDamageMultiplier != null) {
+        return settings.entryShieldDamageMultiplier;
+      }
+
+      return this.currentStageIndex >= 4 ? 0.36 : this.currentStageIndex >= 2 ? 0.42 : 0.48;
+    }
+
+    shouldTelegraphArchetype(archetypeKey, options) {
+      const settings = options || {};
+
+      if (settings.skipTelegraph || settings.isSummoned || settings.isSplitShard) {
+        return false;
+      }
+
+      if (settings.forceTelegraph) {
+        return true;
+      }
+
+      if (archetypeKey === "tank" || archetypeKey === "split" || archetypeKey === "corrosion") {
+        return true;
+      }
+
+      if ((settings.isElite || settings.isFormationLead) && archetypeKey !== "swarm") {
+        return true;
+      }
+
+      return false;
+    }
+
+    getLateGameFormationChance() {
+      if (this.currentStageIndex < 2) {
+        return 0;
+      }
+
+      const stageElapsed = this.getStageElapsedSeconds();
+      const baseChance = this.currentStageIndex >= 4 ? 52 : this.currentStageIndex >= 3 ? 42 : 30;
+      const timeBonus = Math.min(16, Math.floor(stageElapsed / 18) * 4);
+      return Math.min(68, baseChance + timeBonus);
+    }
+
+    isLateGameFormationEligible(archetypeKey) {
+      return this.currentStageIndex >= 2 && archetypeKey !== "swarm" && !this.finalBossRushPhase;
+    }
+
+    buildLateGameSpawnPlan(primaryArchetype) {
+      const lead = primaryArchetype === "swarm" ? "split" : primaryArchetype;
+      const plan = [{
+        archetypeKey: lead,
+        options: {
+          isFormationLead: true,
+          hpMultiplier: lead === "normal" ? 1.08 : 1.14,
+          scoreMultiplier: 1.06,
+        },
+      }];
+
+      if (lead === "corrosion") {
+        plan.push({
+          archetypeKey: "split",
+          fallbackArchetypeKey: "normal",
+          options: {
+            hpMultiplier: 0.94,
+            speedMultiplier: 1.04,
+            scoreMultiplier: 0.94,
+          },
+        });
+      } else if (lead === "split") {
+        plan.push({
+          archetypeKey: "normal",
+          fallbackArchetypeKey: "swarm",
+          options: {
+            forceRoleKey: this.currentStageIndex >= 3 ? "shooter" : "chaser",
+            hpMultiplier: 0.92,
+            speedMultiplier: 1.04,
+            scoreMultiplier: 0.92,
+          },
+        });
+      } else if (lead === "tank") {
+        plan.push({
+          archetypeKey: "swarm",
+          options: {
+            forceRoleKey: "rush",
+            hpMultiplier: 0.9,
+            speedMultiplier: 1.08,
+            scoreMultiplier: 0.9,
+          },
+        });
+      } else {
+        plan.push({
+          archetypeKey: this.canSpawnNegativeArchetype("split") ? "split" : "swarm",
+          fallbackArchetypeKey: "swarm",
+          options: {
+            hpMultiplier: 0.94,
+            speedMultiplier: 1.04,
+            scoreMultiplier: 0.92,
+          },
+        });
+      }
+
+      if (this.currentStageIndex >= 3) {
+        let supportEntry = null;
+
+        if (lead === "corrosion") {
+          supportEntry = {
+            archetypeKey: "swarm",
+            options: {
+              forceRoleKey: "rush",
+              hpMultiplier: 0.88,
+              speedMultiplier: 1.12,
+              damageMultiplier: 0.94,
+              scoreMultiplier: 0.88,
+            },
+          };
+        } else if (lead === "tank") {
+          supportEntry = {
+            archetypeKey: "normal",
+            fallbackArchetypeKey: "swarm",
+            options: {
+              forceRoleKey: "shooter",
+              hpMultiplier: 0.92,
+              speedMultiplier: 1.06,
+              scoreMultiplier: 0.9,
+            },
+          };
+        } else {
+          supportEntry = {
+            archetypeKey: "swarm",
+            options: {
+              forceRoleKey: this.currentStageIndex >= 4 ? "rush" : "chaser",
+              hpMultiplier: 0.86,
+              speedMultiplier: 1.1,
+              scoreMultiplier: 0.88,
+            },
+          };
+        }
+
+        plan.push(supportEntry);
+      }
+
+      return plan;
+    }
+
+    buildNegativeSpawnPlan(primaryArchetype) {
+      const archetype = this.vocabData.negativeArchetypes[primaryArchetype] || this.vocabData.negativeArchetypes.normal;
+
+      if (
+        this.isLateGameFormationEligible(primaryArchetype) &&
+        Phaser.Math.Between(0, 100) < this.getLateGameFormationChance()
+      ) {
+        return this.buildLateGameSpawnPlan(primaryArchetype);
+      }
+
+      const batchSize = Phaser.Math.Between(archetype.batchMin || 1, archetype.batchMax || 1);
+
+      return Array.from({ length: batchSize }, () => ({
+        archetypeKey: primaryArchetype,
+        options: {},
+      }));
+    }
+
+    resolveNegativeSpawnEntry(entry) {
+      const candidates = [
+        entry && entry.archetypeKey,
+        entry && entry.fallbackArchetypeKey,
+        "normal",
+        "swarm",
+      ].filter((candidate, index, list) => candidate && list.indexOf(candidate) === index);
+
+      for (let index = 0; index < candidates.length; index += 1) {
+        const archetypeKey = candidates[index];
+
+        if (this.canSpawnNegativeArchetype(archetypeKey, entry && entry.options)) {
+          return archetypeKey;
+        }
+      }
+
+      return null;
+    }
+
+    createEnemyWarning(x, y, word, archetype, options) {
+      const settings = options || {};
+      const color = archetype.tintColor || 0xffd5c7;
+      const radius = Math.max(26, Math.round(Math.max(archetype.displayWidth || 120, archetype.displayHeight || 72) * 0.32));
+      const outer = this.add.circle(x, y, radius, color, 0.06)
+        .setStrokeStyle(3, 0xffffff, 0.22)
+        .setDepth(1);
+      const inner = this.add.circle(x, y, radius * 0.64, color, 0.08)
+        .setStrokeStyle(2, color, 0.3)
+        .setDepth(1);
+      const label = this.createEnemyWordLabel(x, y, word, settings.fontSize || archetype.fontSize || "20px", {
+        kind: "negative",
+        color: "#f7fff8",
+        fontStyle: "800",
+        alpha: 0.84,
+        maxWidth: archetype.labelMaxWidth || Math.max(76, Math.round((archetype.displayWidth || 120) * 0.76)),
+        lineSpacing: archetype.labelLineSpacing || 0,
+      });
+
+      label.setScale(settings.labelScale || 0.92);
+      this.tweens.add({
+        targets: outer,
+        scale: 1.26,
+        alpha: 0,
+        duration: settings.duration || 320,
+      });
+      this.tweens.add({
+        targets: inner,
+        scale: 1.12,
+        alpha: 0,
+        duration: settings.duration || 320,
+      });
+      this.tweens.add({
+        targets: label,
+        y: y - 8,
+        alpha: 0.18,
+        duration: settings.duration || 320,
+      });
+
+      return {
+        objects: [outer, inner, label],
+        timer: null,
+      };
+    }
+
+    destroyEnemyWarning(warning, cancelTimer) {
+      if (!warning) {
+        return;
+      }
+
+      const index = this.pendingEnemyWarnings.indexOf(warning);
+
+      if (index >= 0) {
+        this.pendingEnemyWarnings.splice(index, 1);
+      }
+
+      if (cancelTimer && warning.timer) {
+        warning.timer.remove(false);
+      }
+
+      warning.timer = null;
+
+      (warning.objects || []).forEach((object) => {
+        if (object && object.active) {
+          this.tweens.killTweensOf(object);
+          object.destroy();
+        }
+      });
+    }
+
+    spawnTelegraphedNegativeEnemy(archetypeKey, x, y, options) {
+      const settings = options || {};
+      const resolvedArchetypeKey = this.resolveNegativeSpawnEntry({
+        archetypeKey,
+        fallbackArchetypeKey: settings.fallbackArchetypeKey,
+        options: settings,
+      });
+
+      if (!resolvedArchetypeKey) {
+        return null;
+      }
+
+      const archetype = this.vocabData.negativeArchetypes[resolvedArchetypeKey] || this.vocabData.negativeArchetypes.normal;
+      const definition = settings.definition || this.pickNegativeDefinition(resolvedArchetypeKey);
+      const duration = this.getSpawnTelegraphDuration(settings);
+      const warning = this.createEnemyWarning(x, y, definition.word, archetype, {
+        duration,
+        labelScale: settings.isElite ? 0.98 : 0.92,
+      });
+
+      warning.enemyKind = "negative";
+      warning.enemyType = resolvedArchetypeKey;
+      warning.strongWaveNumber = settings.strongWaveNumber || 0;
+      this.pendingEnemyWarnings.push(warning);
+      warning.timer = this.time.delayedCall(duration, () => {
+        this.destroyEnemyWarning(warning, false);
+
+        if (this.roundEnded || this.isLevelUp || this.finalBossPhase || this.finalBossRushPhase || this.stageBossSequenceStarted) {
+          if (warning.strongWaveNumber && !this.roundEnded && !this.finalBossPhase && !this.finalBossRushPhase) {
+            this.checkStrongWaveCompletion(warning.strongWaveNumber);
+          }
+          return;
+        }
+
+        const enemy = this.createNegativeEnemy(resolvedArchetypeKey, x, y, {
+          ...settings,
+          definition,
+          entryShield: true,
+          entryShieldDuration: this.getEntryShieldDuration(settings),
+          entryShieldDamageMultiplier: this.getEntryShieldDamageMultiplier(settings),
+        });
+
+        if (!enemy && warning.strongWaveNumber) {
+          this.checkStrongWaveCompletion(warning.strongWaveNumber);
+        }
+      });
+
+      return warning;
+    }
+
+    hasEnemyClearedEntryZone(enemy) {
+      if (!enemy) {
+        return true;
+      }
+
+      const bounds = this.getCombatBounds(0);
+      const padding = enemy.entryShieldReleasePadding == null ? 108 : enemy.entryShieldReleasePadding;
+      return (
+        enemy.x >= bounds.left + padding &&
+        enemy.x <= bounds.right - padding &&
+        enemy.y >= bounds.top + padding &&
+        enemy.y <= bounds.bottom - padding
+      );
+    }
+
+    isEnemyEntryShieldActive(enemy) {
+      if (!enemy || !(enemy.entryShieldUntil || 0)) {
+        return false;
+      }
+
+      if (this.time.now >= enemy.entryShieldUntil || this.hasEnemyClearedEntryZone(enemy)) {
+        enemy.entryShieldUntil = 0;
+        return false;
+      }
+
+      return true;
+    }
+
+    releaseEnemyEntryShield(enemy) {
+      if (!enemy) {
+        return;
+      }
+
+      enemy.entryShieldUntil = 0;
+
+      if (enemy.entryShieldAura) {
+        this.tweens.killTweensOf(enemy.entryShieldAura);
+        enemy.entryShieldAura.destroy();
+        enemy.entryShieldAura = null;
+      }
+    }
+
+    syncEnemyEntryShield(enemy) {
+      if (!enemy || !enemy.active) {
+        return false;
+      }
+
+      if (!this.isEnemyEntryShieldActive(enemy)) {
+        this.releaseEnemyEntryShield(enemy);
+        return false;
+      }
+
+      if (!enemy.entryShieldAura) {
+        const radius = Math.max(28, Math.round(Math.max(enemy.displayWidth || 58, enemy.displayHeight || 58) * 0.4));
+        enemy.entryShieldAura = this.add.circle(enemy.x, enemy.y, radius, 0xfff4d0, 0.03)
+          .setStrokeStyle(3, 0xfff4d0, 0.28)
+          .setDepth(1);
+      }
+
+      const pulse = 1 + Math.abs(Math.sin((this.time.now + enemy.enemyId * 20) * 0.012)) * 0.1;
+      enemy.entryShieldAura.setPosition(enemy.x, enemy.y);
+      enemy.entryShieldAura.setScale(pulse);
+      enemy.entryShieldAura.setAlpha(0.18 + Math.abs(Math.sin((this.time.now + enemy.enemyId * 15) * 0.014)) * 0.12);
+      return true;
+    }
+
+    spawnNegativeEntry(archetypeKey, x, y, options) {
+      const settings = options || {};
+
+      if (this.shouldTelegraphArchetype(archetypeKey, settings)) {
+        return this.spawnTelegraphedNegativeEnemy(archetypeKey, x, y, settings);
+      }
+
+      return this.createNegativeEnemy(archetypeKey, x, y, settings);
+    }
+
     getArchetypeSpawnWeight(archetypeKey) {
       const archetype = (this.vocabData.negativeArchetypes || {})[archetypeKey] || {};
       const stage = this.getCurrentStageData();
@@ -2300,12 +2817,21 @@
       const stage = this.getCurrentStageData();
       const stageWords = stage && stage.negativeWords ? stage.negativeWords : [];
       const defs = stageWords.filter((entry) => entry.archetype === archetypeKey);
+      const specialWords = ((this.vocabData.specialNegativeWords || {})[archetypeKey] || []);
+      const pool = defs.length ? defs : specialWords;
 
-      if (!defs.length) {
-        return stageWords[0];
+      if (!pool.length) {
+        return stageWords[0] || {
+          word: "그림자",
+          archetype: "normal",
+          hp: 3,
+          speed: 80,
+          score: 18,
+          damage: 12,
+        };
       }
 
-      return defs[Phaser.Math.Between(0, defs.length - 1)];
+      return pool[Phaser.Math.Between(0, pool.length - 1)];
     }
 
     pickNegativeRole(archetypeKey, options) {
@@ -2375,6 +2901,225 @@
       }
     }
 
+    normalizeFontSize(fontSize) {
+      if (typeof fontSize === "number") {
+        return fontSize;
+      }
+
+      const parsed = parseInt(String(fontSize || "").replace("px", ""), 10);
+      return Number.isFinite(parsed) ? parsed : 20;
+    }
+
+    getAdaptiveEnemyLabelFontSize(word, baseFontSize) {
+      const baseSize = this.normalizeFontSize(baseFontSize);
+      const rawWord = String(word || "");
+      const glyphCount = Array.from(rawWord.replace(/\s+/g, "")).length;
+      const wordCount = rawWord.trim() ? rawWord.trim().split(/\s+/).length : 1;
+
+      if (glyphCount <= 2) {
+        return Math.min(baseSize + 2, 46);
+      }
+
+      if (glyphCount === 3) {
+        return Math.min(baseSize + 1, 44);
+      }
+
+      if (glyphCount === 4) {
+        return Math.max(18, baseSize);
+      }
+
+      if (glyphCount <= 6) {
+        return Math.max(16, baseSize - 2);
+      }
+
+      if (glyphCount <= 9) {
+        return Math.max(15, baseSize - 4);
+      }
+
+      return Math.max(wordCount >= 3 ? 14 : 15, baseSize - 5);
+    }
+
+    getEnemyLabelOffsetY() {
+      return 0;
+    }
+
+    getNextLevelRequirement(level) {
+      let requirement = 58;
+
+      for (let currentLevel = 1; currentLevel < level; currentLevel += 1) {
+        const nextLevel = currentLevel + 1;
+        const multiplier = nextLevel <= 8 ? 1.18 : nextLevel <= 16 ? 1.14 : 1.11;
+        requirement = Math.round(requirement * multiplier);
+      }
+
+      return requirement;
+    }
+
+    getExperiencePickupMultiplier() {
+      const multipliers = [1, 1.1, 1.2, 1.35, 1.5];
+      return multipliers[Math.min(this.currentStageIndex, multipliers.length - 1)] || 1;
+    }
+
+    getEnemyExperienceValue(enemy) {
+      if (!enemy) {
+        return 0;
+      }
+
+      if (enemy.experienceValue != null) {
+        return enemy.experienceValue;
+      }
+
+      if (enemy.enemyKind === "finalBoss") {
+        return 120;
+      }
+
+      if (enemy.enemyKind === "boss") {
+        return enemy.isBossRushMember ? 120 : 90 + this.currentStageIndex * 15;
+      }
+
+      return enemy.enemyKind === "negative" ? 6 : 0;
+    }
+
+    getStrongWaveBonusExperience() {
+      const values = [35, 45, 55, 70, 85];
+      return values[Math.min(this.currentStageIndex, values.length - 1)] || values[0];
+    }
+
+    getStageBossBonusExperience() {
+      const values = [60, 75, 90, 110, 130];
+      return values[Math.min(this.currentStageIndex, values.length - 1)] || values[0];
+    }
+
+    getBossRushClearBonusExperience() {
+      return 160;
+    }
+
+    getFinalBossArrivalBonusExperience() {
+      return 80;
+    }
+
+    grantBonusExperience(amount, options) {
+      if (!amount || amount <= 0) {
+        return;
+      }
+
+      const settings = options || {};
+      const color = settings.color || "#b8ffd2";
+      this.experience += amount;
+
+      if (!settings.silent) {
+        this.showFeedback(`${settings.label || "보너스 경험"} +${amount} XP`, color);
+        if (!settings.hideFloatingText) {
+          this.showFloatingText(this.player.x, this.player.y - 92, `+${amount} XP`, color, settings.fontSize || "22px");
+        }
+      }
+
+      if (!settings.deferHud) {
+        this.refreshHud();
+      }
+
+      if (!settings.deferLevelCheck) {
+        this.checkLevelUp();
+      } else if (this.experience >= this.nextLevelExperience) {
+        this.pendingBonusLevelCheck = true;
+      }
+    }
+
+    flushPendingLevelCheck(delay) {
+      if (!this.pendingBonusLevelCheck || this.roundEnded || this.experience < this.nextLevelExperience) {
+        if (this.experience < this.nextLevelExperience) {
+          this.pendingBonusLevelCheck = false;
+        }
+        return;
+      }
+
+      const runCheck = () => {
+        if (this.roundEnded || this.isLevelUp || this.experience < this.nextLevelExperience) {
+          return;
+        }
+
+        this.pendingBonusLevelCheck = false;
+        this.checkLevelUp();
+      };
+
+      if (delay && delay > 0) {
+        this.time.delayedCall(delay, runCheck);
+      } else {
+        runCheck();
+      }
+    }
+
+    hasActiveStrongWaveEnemy(waveNumber) {
+      let found = false;
+
+      this.enemies.children.iterate((enemy) => {
+        if (enemy && enemy.active && enemy.enemyKind === "negative" && enemy.strongWaveNumber === waveNumber) {
+          found = true;
+        }
+      });
+
+      return found || this.hasPendingNegativeWarning((warning) => warning.strongWaveNumber === waveNumber);
+    }
+
+    checkStrongWaveCompletion(waveNumber) {
+      if (!waveNumber || !this.stageWaveTriggered[waveNumber] || this.stageWaveRewarded[waveNumber] || !this.stageWaveSpawnFinished[waveNumber]) {
+        return;
+      }
+
+      if (this.hasActiveStrongWaveEnemy(waveNumber)) {
+        return;
+      }
+
+      this.stageWaveRewarded[waveNumber] = true;
+      this.grantBonusExperience(this.getStrongWaveBonusExperience(), {
+        label: `강습 ${waveNumber} 정리`,
+        color: "#b7ffd5",
+      });
+    }
+
+    createEnemyWordLabel(x, y, word, baseFontSize, options) {
+      const settings = options || {};
+      const labelKind = settings.kind || "negative";
+      const fontSize = this.getAdaptiveEnemyLabelFontSize(word, baseFontSize);
+      const strokeColor = labelKind === "finalBoss"
+        ? "#3a0f10"
+        : labelKind === "boss" || labelKind === "bossClone"
+          ? "#220b0d"
+          : "#061118";
+      const shadowColor = labelKind === "finalBoss"
+        ? "#120305"
+        : labelKind === "boss" || labelKind === "bossClone"
+          ? "#0f0406"
+          : "#02080c";
+      const paddingX = fontSize >= 30 ? 8 : 6;
+      const paddingY = fontSize >= 30 ? 4 : 3;
+      const strokeThickness = fontSize >= 40 ? 9 : fontSize >= 28 ? 7 : 6;
+      const textStyle = {
+        fontFamily: this.font,
+        fontSize: `${fontSize}px`,
+        fontStyle: settings.fontStyle || "800",
+        color: settings.color || "#fff6f2",
+        align: "center",
+      };
+
+      if (settings.maxWidth) {
+        textStyle.wordWrap = {
+          width: settings.maxWidth,
+          useAdvancedWrap: true,
+        };
+      }
+
+      const label = this.add.text(x, y, word, textStyle).setOrigin(0.5).setDepth(settings.depth || 6);
+
+      label.setPadding(paddingX, paddingY, paddingX, paddingY);
+      label.setStroke(strokeColor, strokeThickness);
+      label.setShadow(0, 2, shadowColor, fontSize >= 30 ? 10 : 8, true, true);
+      label.setAlpha(settings.alpha == null ? 1 : settings.alpha);
+      label.setLineSpacing(settings.lineSpacing == null ? 0 : settings.lineSpacing);
+
+      return label;
+    }
+
     rollNegativeSpawnPoint() {
       const margin = 40;
       const side = Phaser.Math.Between(0, 3);
@@ -2418,8 +3163,13 @@
 
     createNegativeEnemy(archetypeKey, x, y, options) {
       const settings = options || {};
+
+      if (!this.canSpawnNegativeArchetype(archetypeKey, settings)) {
+        return null;
+      }
+
       const archetype = this.vocabData.negativeArchetypes[archetypeKey] || this.vocabData.negativeArchetypes.normal;
-      const definition = this.pickNegativeDefinition(archetypeKey);
+      const definition = settings.definition || this.pickNegativeDefinition(archetypeKey);
       const stage = this.getCurrentStageData();
       const elapsed = this.roundSeconds - this.timeRemaining;
       const enemy = this.enemies.create(x, y, archetype.texture || "enemy-pill");
@@ -2435,6 +3185,7 @@
       enemy.enemyKind = "negative";
       enemy.enemyType = archetypeKey;
       enemy.word = definition.word;
+      enemy.strongWaveNumber = settings.strongWaveNumber || 0;
       enemy.hp = Math.max(1, Math.round(
         (definition.hp + Math.floor(elapsed / 24)) *
         archetype.hpMultiplier *
@@ -2462,18 +3213,108 @@
       ));
       enemy.body.setSize(archetype.bodyWidth, archetype.bodyHeight);
       enemy.isSummoned = !!settings.isSummoned;
+      enemy.dropDisabled = !!settings.dropDisabled;
+      enemy.entryShieldUntil = settings.entryShield ? this.time.now + this.getEntryShieldDuration(settings) : 0;
+      enemy.entryShieldDamageMultiplier = this.getEntryShieldDamageMultiplier(settings);
+      enemy.entryShieldReleasePadding = settings.entryShieldReleasePadding == null ? 108 : settings.entryShieldReleasePadding;
 
-      enemy.label = this.add.text(enemy.x, enemy.y + 1, definition.word, {
-        fontFamily: this.font,
-        fontSize: archetype.fontSize,
-        fontStyle: "800",
+      enemy.labelOffsetY = this.getEnemyLabelOffsetY(enemy);
+      enemy.label = this.createEnemyWordLabel(enemy.x, enemy.y + enemy.labelOffsetY, definition.word, archetype.fontSize, {
+        kind: "negative",
         color: "#fff6f2",
-        align: "center",
-      }).setOrigin(0.5).setDepth(4);
+        fontStyle: "800",
+        maxWidth: archetype.labelMaxWidth || Math.max(76, Math.round((archetype.displayWidth || 120) * 0.76)),
+        lineSpacing: archetype.labelLineSpacing || 0,
+      });
+
+      if (archetypeKey === "corrosion") {
+        enemy.corrosionNextPoolAt = this.time.now + Phaser.Math.Between(1600, 2400);
+      }
 
       this.setupEnemyRole(enemy, this.pickNegativeRole(archetypeKey, settings));
       this.attachEnemyHealthBar(enemy, archetype.hpBarWidth, archetype.hpBarOffsetY);
       return enemy;
+    }
+
+    buildSplitShardWords(word, shardCount) {
+      const syllables = Array.from(String(word || "").replace(/\s+/g, ""));
+      const picks = [];
+      const fallback = ["ㄱ", "ㄴ", "ㅁ", "ㅅ", "ㅇ", "ㅎ"];
+      const keyIndexes = shardCount >= 3
+        ? [0, Math.floor((syllables.length - 1) / 2), syllables.length - 1]
+        : [0, syllables.length - 1];
+
+      keyIndexes.forEach((index) => {
+        const syllable = syllables[index];
+
+        if (syllable && !picks.includes(syllable)) {
+          picks.push(syllable);
+        }
+      });
+
+      for (let index = 0; index < syllables.length && picks.length < shardCount; index += 1) {
+        if (!picks.includes(syllables[index])) {
+          picks.push(syllables[index]);
+        }
+      }
+
+      for (let index = 0; picks.length < shardCount; index += 1) {
+        picks.push(fallback[index % fallback.length]);
+      }
+
+      return picks.slice(0, shardCount);
+    }
+
+    createSplitShardEnemy(x, y, word, parentEnemy) {
+      const shard = this.enemies.create(x, y, "enemy-split-shard");
+
+      shard.setDisplaySize(54, 54);
+      shard.setTint(0xffd79f);
+      shard.setDepth(2);
+      shard.enemyId = (this.enemyIdCounter += 1);
+      shard.enemyKind = "negative";
+      shard.enemyType = "splitShard";
+      shard.word = word;
+      shard.isSplitShard = true;
+      shard.dropDisabled = true;
+      shard.strongWaveNumber = 0;
+      shard.hp = Math.max(1, Math.round((parentEnemy.maxHp || parentEnemy.hp || 8) * Phaser.Math.FloatBetween(0.2, 0.25)));
+      shard.maxHp = shard.hp;
+      shard.speed = Math.max(96, Math.round((parentEnemy.speed || 78) * Phaser.Math.FloatBetween(1.3, 1.4)));
+      shard.scoreValue = Math.max(4, Math.round((parentEnemy.scoreValue || 12) * 0.34));
+      shard.experienceValue = 2;
+      shard.awakeningChargeValue = 6;
+      shard.damage = Math.max(4, Math.round((parentEnemy.damage || 10) * 0.62));
+      shard.body.setSize(34, 34);
+      shard.labelOffsetY = 0;
+      shard.label = this.createEnemyWordLabel(shard.x, shard.y, word, "24px", {
+        kind: "negative",
+        color: "#fffaf2",
+        fontStyle: "900",
+        maxWidth: 44,
+      });
+      this.setupEnemyRole(shard, "chaser");
+      return shard;
+    }
+
+    spawnSplitShards(enemy) {
+      if (!enemy || !enemy.active) {
+        return;
+      }
+
+      const shardCount = this.countActiveNegativeEnemies() >= 34 ? 2 : Phaser.Math.Between(2, 3);
+      const shardWords = this.buildSplitShardWords(enemy.word, shardCount);
+      const safeBounds = this.getCombatSafeBounds(56, 246, 126);
+
+      for (let index = 0; index < shardCount; index += 1) {
+        const angle = (-Math.PI / 2) + ((Math.PI * 2) * index) / shardCount + Phaser.Math.FloatBetween(-0.18, 0.18);
+        const distance = Phaser.Math.Between(32, 48);
+        const x = Phaser.Math.Clamp(enemy.x + Math.cos(angle) * distance, safeBounds.left, safeBounds.right);
+        const y = Phaser.Math.Clamp(enemy.y + Math.sin(angle) * distance, safeBounds.top, safeBounds.bottom);
+        this.createSplitShardEnemy(x, y, shardWords[index], enemy);
+      }
+
+      this.showFloatingText(enemy.x, enemy.y - 56, "분열", "#ffe3ac", "18px");
     }
 
     spawnNegativeEnemy() {
@@ -2489,19 +3330,25 @@
 
       const archetypeKey = this.pickNegativeArchetype();
       const archetype = this.vocabData.negativeArchetypes[archetypeKey] || this.vocabData.negativeArchetypes.normal;
-      const batchSize = Phaser.Math.Between(archetype.batchMin || 1, archetype.batchMax || 1);
+      const plan = this.buildNegativeSpawnPlan(archetypeKey);
       const origin = this.rollNegativeSpawnPoint();
 
-      for (let index = 0; index < batchSize; index += 1) {
-        const spawn = this.offsetNegativeSpawnPoint(origin, index, batchSize);
-        const delay = index * (archetype.batchDelay || 0);
+      for (let index = 0; index < plan.length; index += 1) {
+        const entry = plan[index] || {};
+        const spawn = this.offsetNegativeSpawnPoint(origin, index, plan.length);
+        const entryArchetype = this.vocabData.negativeArchetypes[entry.archetypeKey] || archetype;
+        const delay = entry.delay == null ? index * (entryArchetype.batchDelay || 0) : entry.delay;
+        const spawnOptions = {
+          ...(entry.options || {}),
+          fallbackArchetypeKey: entry.fallbackArchetypeKey,
+        };
 
         if (delay <= 0) {
-          this.createNegativeEnemy(archetypeKey, spawn.x, spawn.y);
+          this.spawnNegativeEntry(entry.archetypeKey || archetypeKey, spawn.x, spawn.y, spawnOptions);
         } else {
           this.time.delayedCall(delay, () => {
             if (!this.roundEnded && !this.isLevelUp && !this.finalBossPhase && !this.finalBossRushPhase && !this.stageBossSequenceStarted) {
-              this.createNegativeEnemy(archetypeKey, spawn.x, spawn.y);
+              this.spawnNegativeEntry(entry.archetypeKey || archetypeKey, spawn.x, spawn.y, spawnOptions);
             }
           });
         }
@@ -2509,7 +3356,9 @@
 
       if (
         this.timeRemaining < 60 &&
+        plan.length === 1 &&
         archetypeKey !== "swarm" &&
+        archetype.allowExtraSpawn !== false &&
         Phaser.Math.Between(0, 100) < this.getDynamicExtraSpawnChance(stage)
       ) {
         this.time.delayedCall(120, () => {
@@ -2586,12 +3435,12 @@
         Math.floor((definition.displayHeight || 88) * 0.62),
       );
 
-      boss.label = this.add.text(boss.x, boss.y + 1, definition.word, {
-        fontFamily: this.font,
-        fontSize: "32px",
-        fontStyle: "800",
+      boss.labelOffsetY = this.getEnemyLabelOffsetY(boss);
+      boss.label = this.createEnemyWordLabel(boss.x, boss.y + boss.labelOffsetY, definition.word, "32px", {
+        kind: "boss",
         color: "#fff7f2",
-      }).setOrigin(0.5).setDepth(4);
+        fontStyle: "800",
+      });
       this.setupStageBossGimmicks(boss);
       this.attachEnemyHealthBar(boss, definition.hpBarWidth || 144, definition.hpBarOffsetY || 56);
       this.currentStageBoss = boss;
@@ -2638,6 +3487,7 @@
 
       this.spawnFinalBoss();
       this.refreshHud();
+      this.flushPendingLevelCheck(240);
     }
 
     spawnFinalBoss() {
@@ -2670,13 +3520,13 @@
       boss.baseScale = 1;
       boss.dashUntil = 0;
 
-      boss.label = this.add.text(boss.x, boss.y + 3, definition.word, {
-        fontFamily: this.font,
-        fontSize: "42px",
-        fontStyle: "900",
+      boss.labelOffsetY = this.getEnemyLabelOffsetY(boss);
+      boss.label = this.createEnemyWordLabel(boss.x, boss.y + boss.labelOffsetY, definition.word, "42px", {
+        kind: "finalBoss",
         color: "#fff5f2",
-      }).setOrigin(0.5).setDepth(4);
-      boss.label.setStroke("#5f1815", 8);
+        fontStyle: "900",
+        depth: 7,
+      });
       this.setupFinalBossGimmicks(boss);
       this.attachEnemyHealthBar(boss, definition.hpBarWidth || 206, definition.hpBarOffsetY || 90);
 
@@ -2960,12 +3810,13 @@
           Math.max(28, Math.floor(enemy.body.width * 0.7)),
           Math.max(28, Math.floor(enemy.body.height * 0.7))
         );
-        clone.label = this.add.text(clone.x, clone.y + 1, clone.word, {
-          fontFamily: this.font,
-          fontSize: "20px",
-          fontStyle: "800",
+        clone.labelOffsetY = this.getEnemyLabelOffsetY(clone);
+        clone.label = this.createEnemyWordLabel(clone.x, clone.y + clone.labelOffsetY, clone.word, "20px", {
+          kind: "bossClone",
           color: "#ecefff",
-        }).setOrigin(0.5).setDepth(4).setAlpha(0.8);
+          fontStyle: "800",
+          alpha: 0.82,
+        });
       }
     }
 
@@ -4479,6 +5330,224 @@
       return count;
     }
 
+    countActiveNegativeEnemiesByType(enemyType) {
+      let count = 0;
+
+      this.enemies.children.iterate((enemy) => {
+        if (enemy && enemy.active && enemy.enemyKind === "negative" && enemy.enemyType === enemyType) {
+          count += 1;
+        }
+      });
+
+      return count;
+    }
+
+    countPendingNegativeWarningsByType(enemyType) {
+      return this.pendingEnemyWarnings.filter(
+        (warning) => warning && warning.enemyKind === "negative" && warning.enemyType === enemyType
+      ).length;
+    }
+
+    hasPendingNegativeWarning(predicate) {
+      return this.pendingEnemyWarnings.some((warning) => (
+        warning &&
+        warning.enemyKind === "negative" &&
+        (!predicate || predicate(warning))
+      ));
+    }
+
+    countActiveCorrosionPoolsByOwner(ownerId) {
+      let count = 0;
+
+      this.corrosionPools.forEach((pool) => {
+        if (pool && pool.ownerId === ownerId && pool.container && pool.container.active) {
+          count += 1;
+        }
+      });
+
+      return count;
+    }
+
+    destroyCorrosionPool(pool, fastFade) {
+      if (!pool || !pool.container || !pool.container.active) {
+        return;
+      }
+
+      this.tweens.killTweensOf(pool.container);
+
+      if (!fastFade) {
+        pool.container.destroy();
+        return;
+      }
+
+      this.tweens.add({
+        targets: pool.container,
+        alpha: 0,
+        scale: 0.78,
+        duration: 180,
+        onComplete: () => {
+          if (pool.container && pool.container.active) {
+            pool.container.destroy();
+          }
+        },
+      });
+    }
+
+    clearCorrosionPoolsByOwner(ownerId, fastFade) {
+      if (!ownerId) {
+        return;
+      }
+
+      for (let index = this.corrosionPools.length - 1; index >= 0; index -= 1) {
+        const pool = this.corrosionPools[index];
+
+        if (!pool || pool.ownerId !== ownerId) {
+          continue;
+        }
+
+        this.corrosionPools.splice(index, 1);
+        this.destroyCorrosionPool(pool, fastFade);
+      }
+    }
+
+    createCorrosionPool(x, y, options) {
+      const settings = options || {};
+
+      while (this.corrosionPools.length >= this.getMaxCorrosionPoolCount()) {
+        const oldestPool = this.corrosionPools.shift();
+        this.destroyCorrosionPool(oldestPool, true);
+      }
+
+      const radius = settings.radius || 74;
+      const haze = this.add.circle(0, 0, radius, settings.color || 0x4e9f66, 0.18);
+      const core = this.add.circle(0, 0, radius * 0.72, 0x0b1a11, 0.24);
+      const rim = this.add.circle(0, 0, radius * 0.9).setStrokeStyle(4, settings.rimColor || 0xc7ffd2, 0.28);
+      const container = this.add.container(x, y, [haze, core, rim]).setDepth(1);
+
+      const pool = {
+        ownerId: settings.ownerId || 0,
+        container,
+        haze,
+        core,
+        rim,
+        radius,
+        damage: settings.damage || 4,
+        slowFactor: settings.slowFactor || 0.88,
+        createdAt: this.time.now,
+        expiresAt: this.time.now + (settings.duration || 3400),
+      };
+
+      this.corrosionPools.push(pool);
+      return pool;
+    }
+
+    tryCorrosionPoolDrop(enemy) {
+      if (!enemy || !enemy.active || enemy.enemyType !== "corrosion" || this.roundEnded || this.isLevelUp) {
+        return;
+      }
+
+      if ((enemy.corrosionNextPoolAt || 0) > this.time.now) {
+        return;
+      }
+
+      if (this.countActiveCorrosionPoolsByOwner(enemy.enemyId) >= 1) {
+        enemy.corrosionNextPoolAt = this.time.now + 520;
+        return;
+      }
+
+      const angle = Phaser.Math.Angle.Between(this.player.x, this.player.y, enemy.x, enemy.y);
+      const poolX = enemy.x + Math.cos(angle) * 16;
+      const poolY = enemy.y + Math.sin(angle) * 16;
+      const distance = Phaser.Math.Distance.Between(this.player.x, this.player.y, poolX, poolY);
+
+      if (distance < 120 || distance > 440) {
+        enemy.corrosionNextPoolAt = this.time.now + 420;
+        return;
+      }
+
+      const radius = 70 + Math.min(12, this.currentStageIndex * 4);
+      const duration = 3200 + Math.min(600, this.currentStageIndex * 140);
+      const damage = 4 + Math.min(2, Math.floor(this.currentStageIndex / 2));
+      const slowFactor = Math.max(0.82, 0.88 - this.currentStageIndex * 0.02);
+      const warning = this.add.circle(poolX, poolY, radius * 0.66, 0xb7ffd1, 0.06)
+        .setStrokeStyle(3, 0xd8ffe2, 0.26)
+        .setDepth(1);
+
+      this.tweens.add({
+        targets: warning,
+        scale: 1.18,
+        alpha: 0,
+        duration: 440,
+        onComplete: () => {
+          if (warning.active) {
+            warning.destroy();
+          }
+        },
+      });
+
+      enemy.corrosionNextPoolAt = this.time.now + Phaser.Math.Between(3800, 4600);
+      this.showFloatingText(enemy.x, enemy.y - 54, "침식", "#d8ffd8", "16px");
+
+      this.time.delayedCall(440, () => {
+        if (!enemy.active || this.roundEnded || this.isLevelUp) {
+          return;
+        }
+
+        this.createCorrosionPool(poolX, poolY, {
+          ownerId: enemy.enemyId,
+          radius,
+          duration,
+          damage,
+          slowFactor,
+          color: 0x4a9160,
+          rimColor: 0xc8ffd5,
+        });
+      });
+    }
+
+    updateCorrosionPools() {
+      let playerTouchDamage = 0;
+      let playerTouchSlowFactor = 1;
+
+      for (let index = this.corrosionPools.length - 1; index >= 0; index -= 1) {
+        const pool = this.corrosionPools[index];
+
+        if (!pool || !pool.container || !pool.container.active) {
+          this.corrosionPools.splice(index, 1);
+          continue;
+        }
+
+        if (this.time.now >= pool.expiresAt) {
+          this.corrosionPools.splice(index, 1);
+          this.destroyCorrosionPool(pool, true);
+          continue;
+        }
+
+        const pulse = 1 + Math.abs(Math.sin((this.time.now + index * 110) * 0.004)) * 0.06;
+        pool.container.setScale(pulse);
+        pool.haze.setAlpha(0.14 + Math.abs(Math.sin((this.time.now + index * 80) * 0.005)) * 0.08);
+        pool.core.setAlpha(0.16 + Math.abs(Math.sin((this.time.now + index * 90) * 0.004)) * 0.06);
+        pool.rim.setAlpha(0.2 + Math.abs(Math.sin((this.time.now + index * 140) * 0.005)) * 0.1);
+
+        const distanceToPlayer = Phaser.Math.Distance.Between(pool.container.x, pool.container.y, this.player.x, this.player.y);
+
+        if (distanceToPlayer <= pool.radius * 0.92) {
+          playerTouchDamage = Math.max(playerTouchDamage, pool.damage || 4);
+          playerTouchSlowFactor = Math.min(playerTouchSlowFactor, pool.slowFactor || 0.88);
+        }
+      }
+
+      if (playerTouchDamage > 0) {
+        this.corrosionSlowUntil = this.time.now + 220;
+        this.corrosionSlowFactor = playerTouchSlowFactor;
+
+        if (this.time.now >= this.nextCorrosionPlayerTickAt && this.time.now >= this.playerInvulnerableUntil) {
+          this.nextCorrosionPlayerTickAt = this.time.now + 460;
+          this.applyPlayerDamage(playerTouchDamage, this.player.x, this.player.y, "침식 지대");
+        }
+      }
+    }
+
     tryEnemyRoleAction(enemy) {
       if (!enemy || !enemy.active || enemy.enemyKind !== "negative" || this.roundEnded || this.isLevelUp) {
         return;
@@ -4778,6 +5847,10 @@
     applyDamageToEnemy(enemy, amount) {
       if (!enemy || !enemy.active || amount <= 0) {
         return { applied: false, defeated: false };
+      }
+
+      if (this.isEnemyEntryShieldActive(enemy)) {
+        amount = Math.max(1, Math.round(amount * (enemy.entryShieldDamageMultiplier || 0.42)));
       }
 
       if ((enemy.enemyKind === "boss" || enemy.enemyKind === "finalBoss") && (enemy.gimmickInvulnerableUntil || 0) > this.time.now) {
@@ -5089,11 +6162,13 @@
       const isMiniBoss = enemy.enemyKind === "boss";
       const isFinalBoss = enemy.enemyKind === "finalBoss";
       const isBoss = isMiniBoss || isFinalBoss;
+      const shouldSplit = enemy.enemyType === "split" && !enemy.isSplitShard;
 
       if (isFinalBoss) {
         this.finalBossDefeated = true;
         this.stagesCleared = Math.max(this.stagesCleared, this.stageCount);
         this.score += enemy.scoreValue || 0;
+        this.experience += this.getEnemyExperienceValue(enemy);
         this.showFeedback(`${enemy.word} 격파`, "#ffd3af");
         this.wordBurst(enemy.x, enemy.y, 0xffd7b6);
         this.destroyEnemy(enemy);
@@ -5121,21 +6196,31 @@
 
       this.negativeClears += isBoss ? 3 : 1;
       this.score += enemy.scoreValue;
-      this.experience += isBoss ? 32 : 8;
-      this.gainAwakeningCharge(isBoss ? 48 : 14);
+      this.experience += this.getEnemyExperienceValue(enemy);
+      this.gainAwakeningCharge(isBoss ? 48 : (enemy.awakeningChargeValue || 14));
 
       if (isMiniBoss) {
         this.bossDefeats += 1;
         if (!settings.skipBossFeedback) {
           this.showFeedback(`${enemy.word} 돌파`, "#ffcf9f");
         }
-      } else {
+      } else if (!enemy.dropDisabled) {
         this.spawnPickup(enemy.x, enemy.y, !!settings.forceDrop);
       }
 
       this.applySiphonOnDefeat(enemy.x, enemy.y);
       this.wordBurst(enemy.x, enemy.y, isBoss ? 0xffd0ab : 0xffb08c);
+      const defeatedWaveNumber = enemy.strongWaveNumber || 0;
+
+      if (shouldSplit) {
+        this.spawnSplitShards(enemy);
+      }
+
       this.destroyEnemy(enemy);
+
+      if (defeatedWaveNumber > 0) {
+        this.checkStrongWaveCompletion(defeatedWaveNumber);
+      }
 
       if (!settings.deferHud) {
         this.refreshHud();
@@ -5146,6 +6231,11 @@
           this.finalBossRushBossesRemaining = Math.max(0, this.finalBossRushBossesRemaining - 1);
 
           if (this.finalBossRushBossesRemaining <= 0) {
+            this.grantBonusExperience(this.getBossRushClearBonusExperience(), {
+              label: "보스러시 돌파",
+              color: "#ffdcb0",
+              deferLevelCheck: true,
+            });
             this.beginFinalBossArrivalSequence();
           }
 
@@ -5157,6 +6247,11 @@
         this.stageBossSpawned = false;
         this.pendingStageBoss = false;
         this.stagesCleared = Math.max(this.stagesCleared, this.currentStageIndex + 1);
+        this.grantBonusExperience(this.getStageBossBonusExperience(), {
+          label: `${enemy.word} 격파`,
+          color: "#ffd8aa",
+          deferLevelCheck: true,
+        });
 
         if (this.currentStageIndex + 1 < this.stageCount) {
           this.openStageTransition(this.currentStageIndex + 1, enemy.word);
@@ -5318,9 +6413,9 @@
       const pickupX = pickup.x;
       const pickupY = pickup.y;
       const isRare = !!pickup.isRare;
+      let appliedAmount = amount;
 
       this.pickupCount += 1;
-      this.addPickupStat(pickupWord, itemType, amount);
 
       if (!settings.silent) {
         this.showFeedback(`${pickupWord} 획득`, isRare ? "#ffe7a6" : "#b9ffd8");
@@ -5330,7 +6425,8 @@
       this.destroyPickup(pickup);
 
       if (itemType === "xp") {
-        this.experience += amount;
+        appliedAmount = Math.max(1, Math.round(amount * this.getExperiencePickupMultiplier()));
+        this.experience += appliedAmount;
         this.gainAwakeningCharge(4);
       } else if (itemType === "score") {
         this.score += amount;
@@ -5349,6 +6445,8 @@
       } else if (itemType === "beam") {
         this.activateBeam(pickupWord, amount);
       }
+
+      this.addPickupStat(pickupWord, itemType, appliedAmount);
 
       if (!settings.deferHud) {
         this.refreshHud();
@@ -5725,7 +6823,7 @@
       this.isLevelUp = true;
       this.level += 1;
       this.experience -= this.nextLevelExperience;
-      this.nextLevelExperience = Math.floor(this.nextLevelExperience * 1.28);
+      this.nextLevelExperience = this.getNextLevelRequirement(this.level);
       this.pauseAction(true);
 
       this.enemies.children.iterate((enemy) => {
@@ -5917,6 +7015,7 @@
 
       overlayItems.forEach((item) => item.destroy());
       this.levelUpOverlay = null;
+      this.pendingBonusLevelCheck = false;
       this.isLevelUp = false;
       this.pauseAction(false);
 
@@ -6020,6 +7119,18 @@
       if (this.finalBossAttackTimer) {
         this.finalBossAttackTimer.paused = paused;
       }
+
+      this.pendingEnemyWarnings.forEach((warning) => {
+        if (warning && warning.timer) {
+          warning.timer.paused = paused;
+        }
+
+        (warning && warning.objects ? warning.objects : []).forEach((object) => {
+          this.tweens.getTweensOf(object).forEach((tween) => {
+            tween.paused = paused;
+          });
+        });
+      });
     }
 
     castLightning() {
@@ -6226,6 +7337,8 @@
         return;
       }
 
+      this.clearCorrosionPoolsByOwner(enemy.enemyId, enemy.enemyType === "corrosion");
+
       if (enemy.label) {
         enemy.label.destroy();
       }
@@ -6240,6 +7353,10 @@
 
       if (enemy.roleAura) {
         enemy.roleAura.destroy();
+      }
+
+      if (enemy.entryShieldAura) {
+        enemy.entryShieldAura.destroy();
       }
 
       enemy.destroy();
@@ -6284,6 +7401,10 @@
 
       if (this.isTransformActive()) {
         speed += 62;
+      }
+
+      if (this.time.now < this.corrosionSlowUntil) {
+        speed *= this.corrosionSlowFactor || 0.88;
       }
 
       return speed;
@@ -6490,6 +7611,7 @@
       this.updateShieldOrbs(delta);
       this.updateBossAidAllies(delta);
       this.updateMistZones();
+      this.updateCorrosionPools();
       this.updateBeamSweep();
       this.applyHarvestPickupAura();
       this.updateMagnetPulls(delta);
@@ -6625,6 +7747,8 @@
           return;
         }
 
+        const entryShieldActive = this.syncEnemyEntryShield(enemy);
+
         if (enemy.enemyKind === "bossClone" && (enemy.expiresAt || 0) <= this.time.now) {
           this.destroyEnemy(enemy);
           return;
@@ -6653,7 +7777,8 @@
           return;
         }
 
-        if (enemy.enemyKind === "negative") {
+        if (enemy.enemyKind === "negative" && !entryShieldActive) {
+          this.tryCorrosionPoolDrop(enemy);
           this.tryEnemyRoleAction(enemy);
         }
 
@@ -6872,11 +7997,15 @@
     updateLabels() {
       this.enemies.children.iterate((enemy) => {
         if (enemy && enemy.active && enemy.label) {
-          enemy.label.setPosition(enemy.x, enemy.y + 1);
+          enemy.label.setPosition(enemy.x, enemy.y + (enemy.labelOffsetY || this.getEnemyLabelOffsetY(enemy)));
           this.updateEnemyHealthBar(enemy);
 
           if (enemy.roleAura) {
             enemy.roleAura.setPosition(enemy.x, enemy.y);
+          }
+
+          if (enemy.entryShieldAura) {
+            enemy.entryShieldAura.setPosition(enemy.x, enemy.y);
           }
         }
       });
