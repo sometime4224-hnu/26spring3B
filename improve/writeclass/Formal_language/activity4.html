@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>어휘 매칭 게임 | 격식체 연습</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Noto Sans KR',sans-serif;background:#f5f7fa;color:#2d3748;line-height:1.7}
+
+    /* ── Header ── */
+    header{background:linear-gradient(135deg,#1a4a7a,#2c5f8a);color:#fff;padding:2rem 1.5rem 1.6rem;text-align:center}
+    header h1{font-size:1.65rem;font-weight:700;letter-spacing:-.5px;margin-bottom:.3rem}
+    header p{font-size:.9rem;opacity:.88;margin-bottom:1rem}
+    .nav-links{display:flex;justify-content:flex-start;gap:.5rem;overflow-x:auto;padding-bottom:.3rem;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .nav-links::-webkit-scrollbar{display:none}
+    .nav-link{white-space:nowrap;flex-shrink:0;padding:.4rem 1rem;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);border-radius:18px;color:#fff;text-decoration:none;font-size:.8rem;transition:background .2s}
+    .nav-link:hover{background:rgba(255,255,255,.32)}
+    .nav-link.cur{background:rgba(255,255,255,.35);font-weight:700}
+
+    /* ── Main ── */
+    main{padding:1.4rem 1rem 3rem}
+
+    /* ── Set selector ── */
+    .set-tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.4rem}
+    .set-btn{padding:.5rem 1.1rem;border:2px solid #2c5f8a;background:#fff;color:#2c5f8a;border-radius:22px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:.85rem;font-weight:500;transition:all .2s}
+    .set-btn:hover{background:#e8f0f8}
+    .set-btn.active{background:#2c5f8a;color:#fff}
+
+    /* ── Score bar ── */
+    .score-bar{display:flex;align-items:center;gap:1rem;background:#fff;border-radius:10px;padding:.65rem 1.1rem;margin-bottom:1rem;box-shadow:0 2px 6px rgba(0,0,0,.06);flex-wrap:wrap}
+    .score-label{font-size:.85rem;color:#555;white-space:nowrap}
+    .score-track{flex:1;height:8px;background:#e4ecf5;border-radius:10px;overflow:hidden;min-width:80px}
+    .score-fill{height:100%;background:linear-gradient(90deg,#2c5f8a,#4a9fd4);border-radius:10px;transition:width .4s ease;width:0%}
+    .score-count{font-size:.85rem;font-weight:700;color:#2c5f8a;white-space:nowrap}
+    .btn-shuffle{padding:.3rem .8rem;border:1px solid #ccc;background:#fff;border-radius:7px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:.78rem;color:#666;transition:all .2s}
+    .btn-shuffle:hover{background:#f0f0f0}
+
+    /* ── Instruction ── */
+    .inst{background:#fff3cd;border:1px solid #ffc107;border-radius:11px;padding:.85rem 1.1rem;margin-bottom:1.2rem;font-size:.86rem;color:#7a4f00;line-height:1.7}
+
+    /* ── Match grid ── */
+    .match-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start}
+    .col-header{font-size:.78rem;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem;padding-left:.3rem}
+    .col-left .col-header{color:#1a4a7a}
+    .col-right .col-header{color:#166534}
+
+    /* ── Match card ── */
+    .match-card{
+      background:#fff;border:2px solid #e4ecf5;border-radius:11px;
+      padding:.75rem .9rem;margin-bottom:.5rem;
+      cursor:pointer;transition:all .2s;
+      font-size:.875rem;line-height:1.55;
+      min-height:58px;display:flex;align-items:center;
+      position:relative;
+      word-break:keep-all;
+    }
+    .match-card:hover:not(.matched):not(.disabled){border-color:#2c5f8a;background:#f0f6fc}
+    .match-card.selected-left{
+      border-color:#2c5f8a;background:#e8f0f8;
+      box-shadow:0 0 0 3px rgba(44,95,138,.18);
+      font-weight:500;
+    }
+    .match-card.selected-right{
+      border-color:#16a34a;background:#e8f7ee;
+      box-shadow:0 0 0 3px rgba(22,163,74,.18);
+      font-weight:500;
+    }
+    .match-card.matched{
+      border-color:#22c55e;background:#f0fdf4;
+      color:#166534;cursor:default;font-weight:500;
+    }
+    .match-card.matched::after{
+      content:'✓';position:absolute;right:.6rem;top:50%;transform:translateY(-50%);
+      font-size:.9rem;color:#22c55e;font-weight:700;
+    }
+    .match-card.wrong{
+      border-color:#ef4444;background:#fff5f5;
+      animation:shake .4s;
+    }
+    .match-card.disabled{opacity:.45;cursor:default}
+
+    @keyframes shake{
+      0%,100%{transform:translateX(0)}
+      20%{transform:translateX(-6px)}
+      40%{transform:translateX(6px)}
+      60%{transform:translateX(-4px)}
+      80%{transform:translateX(4px)}
+    }
+
+    /* ── Match flash ── */
+    .match-flash{
+      border-color:#22c55e !important;background:#dcfce7 !important;
+      animation:flashGreen .5s;
+    }
+    @keyframes flashGreen{
+      0%{background:#dcfce7}50%{background:#bbf7d0}100%{background:#f0fdf4}
+    }
+
+    /* ── Pair key (shown after all matched) ── */
+    .pair-key{background:#fff;border-radius:13px;padding:1.2rem 1.4rem;margin-top:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,.07);display:none}
+    .pair-key.visible{display:block}
+    .pair-key h3{font-size:.9rem;font-weight:700;color:#1a4a7a;margin-bottom:.8rem}
+    .pair-row{display:flex;align-items:baseline;gap:.5rem;padding:.3rem 0;border-bottom:1px solid #f0f2f5;font-size:.85rem}
+    .pair-row:last-child{border-bottom:none}
+    .pair-left{font-weight:500;color:#1a4a7a;min-width:140px;flex-shrink:0}
+    .pair-arrow{color:#94a3b8}
+    .pair-right{color:#333}
+
+    /* ── Completion ── */
+    .completion{background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;border-radius:13px;padding:1.4rem 1.5rem;text-align:center;display:none;animation:popIn .4s ease;margin-top:.8rem}
+    .completion.visible{display:block}
+    @keyframes popIn{0%{transform:scale(.95);opacity:0}60%{transform:scale(1.03)}100%{transform:scale(1);opacity:1}}
+    .completion h3{font-size:1.15rem;margin-bottom:.35rem}
+    .completion p{font-size:.875rem;opacity:.9}
+    .next-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.8rem;padding:.5rem 1.1rem;background:#fff;color:#16a34a;border-radius:9px;text-decoration:none;font-size:.875rem;font-weight:700;transition:all .2s;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif}
+    .next-btn:hover{background:#f0fdf4}
+
+    /* ── Footer ── */
+    footer{text-align:center;padding:1.8rem;font-size:.8rem;color:#aaa;border-top:1px solid #e8ecf0;margin-top:1rem}
+    footer a{color:#2c5f8a;text-decoration:none}
+
+    @media(max-width:580px){
+      .match-grid{grid-template-columns:1fr 1fr;gap:.5rem}
+      .match-card{font-size:.78rem;padding:.6rem .7rem;min-height:52px}
+      main{padding:1.2rem .9rem 2rem}
+      header h1{font-size:1.35rem}
+    }
+    @media(max-width:400px){
+      .match-card{font-size:.73rem;padding:.5rem .6rem}
+    }
+    /* ── PC mode ── */
+    body.pc-mode main{max-width:860px;margin:0 auto;padding:2rem 1.2rem 3rem}
+    body.pc-mode .nav-links{justify-content:center;overflow-x:visible;flex-wrap:wrap}
+    /* ── PC toggle button ── */
+    .pc-toggle{position:fixed;bottom:1.2rem;right:1.2rem;z-index:900;background:#1a4a7a;color:#fff;border:none;border-radius:50px;padding:.6rem 1rem;font-family:'Noto Sans KR',sans-serif;font-size:.78rem;font-weight:500;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.22);display:flex;align-items:center;gap:.4rem;transition:background .2s}
+    .pc-toggle:hover{background:#2c5f8a}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🃏 어휘 매칭 게임</h1>
+  <p>왼쪽과 오른쪽에서 짝을 이루는 카드를 찾아 클릭하세요.</p>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">✉ 실습</a>
+    <a href="reference.html" class="nav-link">📚 참고</a>
+    <a href="activity1.html" class="nav-link">🔍 오류 찾기</a>
+    <a href="activity2.html" class="nav-link">🔄 변환 연습</a>
+    <a href="activity3.html" class="nav-link">📋 순서 맞추기</a>
+    <a href="activity4.html" class="nav-link cur">🃏 어휘 게임</a>
+    <a href="activity5.html" class="nav-link">🎴 상황 카드</a>
+    <a href="activity6.html" class="nav-link">📝 자기 평가</a>
+  </div>
+</header>
+
+<main>
+
+  <div class="set-tabs">
+    <button class="set-btn active" onclick="loadSet(0,this)">📖 이메일 어휘</button>
+    <button class="set-btn" onclick="loadSet(1,this)">✍ 격식 표현</button>
+    <button class="set-btn" onclick="loadSet(2,this)">🔄 해요체 → 합쇼체</button>
+  </div>
+
+  <div class="score-bar">
+    <span class="score-label">진행률</span>
+    <div class="score-track"><div class="score-fill" id="score-fill"></div></div>
+    <span class="score-count" id="score-count">0 / 8</span>
+    <button class="btn-shuffle" onclick="reloadSet()">🔀 섞기</button>
+  </div>
+
+  <div class="inst" id="inst-text">
+    왼쪽 카드를 클릭한 뒤, 오른쪽에서 같은 뜻의 카드를 클릭하세요. 맞으면 초록색으로 바뀝니다!
+  </div>
+
+  <div class="match-grid">
+    <div class="col-left">
+      <div class="col-header" id="col-left-label">한국어</div>
+      <div id="col-left-cards"></div>
+    </div>
+    <div class="col-right">
+      <div class="col-header" id="col-right-label">뜻 / 표현</div>
+      <div id="col-right-cards"></div>
+    </div>
+  </div>
+
+  <div class="pair-key" id="pair-key">
+    <h3>📋 전체 정답 목록</h3>
+    <div id="pair-key-body"></div>
+  </div>
+
+  <div class="completion" id="completion">
+    <h3 id="comp-title">🎉 모두 맞췄습니다!</h3>
+    <p id="comp-body">모든 짝을 찾았습니다. 아래 목록으로 전체 내용을 복습하세요.</p>
+    <button class="next-btn" onclick="goNextSet()">다음 세트 →</button>
+  </div>
+
+</main>
+
+<footer>
+  어휘 매칭 게임 &nbsp;|&nbsp;
+  <a href="index.html">✉ 실습</a> &nbsp;·&nbsp;
+  <a href="reference.html">📚 참고</a> &nbsp;·&nbsp;
+  <a href="activity3.html">📋 순서 맞추기</a> &nbsp;·&nbsp;
+  <a href="activity1.html">🔍 오류 찾기</a>
+</footer>
+
+<script>
+// ─────────────────────────────────────────
+// 세트 데이터
+// ─────────────────────────────────────────
+const SETS = [
+  {
+    name: "이메일 어휘",
+    leftLabel: "한국어",
+    rightLabel: "베트남어 / 의미",
+    instText: "왼쪽의 한국어 단어와 오른쪽의 베트남어 뜻을 연결하세요.",
+    compTitle: "🎉 이메일 어휘 완료!",
+    compBody: "공적 이메일에서 자주 쓰이는 8개 어휘를 모두 익혔습니다.",
+    pairs: [
+      { left: "문의하다",      right: "hỏi thăm, tư vấn" },
+      { left: "요청하다",      right: "yêu cầu, đề nghị" },
+      { left: "부탁드리다",    right: "nhờ vả (kính trọng)" },
+      { left: "안내하다",      right: "hướng dẫn, thông báo" },
+      { left: "여쭤보다",      right: "hỏi (kính trọng)" },
+      { left: "알려 드리다",   right: "thông báo (kính trọng)" },
+      { left: "답변 (答辯)",   right: "câu trả lời, phản hồi" },
+      { left: "회신 (回信)",   right: "thư / email phản hồi" }
+    ]
+  },
+  {
+    name: "격식 표현",
+    leftLabel: "표현",
+    rightLabel: "의미 / 사용 상황",
+    instText: "왼쪽의 격식 표현과 오른쪽의 의미·사용 상황을 연결하세요.",
+    compTitle: "🎉 격식 표현 완료!",
+    compBody: "공적 이메일의 핵심 격식 표현 8개를 모두 익혔습니다.",
+    pairs: [
+      { left: "부득이",                   right: "어쩔 수 없이, 불가피하게" },
+      { left: "다름이 아니오라",           right: "이메일을 보내는 이유를 소개할 때" },
+      { left: "귀 (貴)~",                 right: "상대방의 기관·학교 앞에 붙이는 존칭" },
+      { left: "아래와 같이",              right: "다음에 나오는 내용을 소개할 때" },
+      { left: "대단히",                   right: "매우, 아주 (격식 강조 부사)" },
+      { left: "번거롭다",                 right: "귀찮고 복잡하다 (부담을 드릴 때 사용)" },
+      { left: "빠른 답변 부탁드립니다",    right: "이메일 마무리 — 답장 요청 표현" },
+      { left: "~을/를 위해",              right: "~의 목적으로 (장학금 신청을 위해)" }
+    ]
+  },
+  {
+    name: "해요체 → 합쇼체",
+    leftLabel: "해요체 (비격식)",
+    rightLabel: "합쇼체 (격식)",
+    instText: "왼쪽의 해요체 표현과 오른쪽의 올바른 합쇼체 표현을 연결하세요.",
+    compTitle: "🎉 변환 표현 완료!",
+    compBody: "해요체 ↔ 합쇼체 핵심 변환 8쌍을 모두 익혔습니다.",
+    pairs: [
+      { left: "이에요 / 예요",         right: "입니다" },
+      { left: "-아/어요",              right: "-습니다 / -ㅂ니다" },
+      { left: "-았/었어요",            right: "-았/었습니다" },
+      { left: "알려 주세요",           right: "알려 주시면 감사하겠습니다" },
+      { left: "안녕하세요",            right: "안녕하십니까?" },
+      { left: "빨리 답장해 주세요",    right: "빠른 답변 부탁드립니다" },
+      { left: "확인해 주세요",         right: "확인해 주십시오" },
+      { left: "수고하세요 (윗사람께)", right: "감사합니다 ← 윗사람께 NG!" }
+    ]
+  }
+];
+
+// ─────────────────────────────────────────
+// 게임 상태
+// ─────────────────────────────────────────
+let gState = {
+  setIdx: 0,
+  leftOrder: [],   // leftOrder[displayPos] = pairIdx
+  rightOrder: [],  // rightOrder[displayPos] = pairIdx
+  selectedLeft: null,   // pairIdx or null
+  selectedRight: null,
+  matched: new Set(),
+  blocking: false
+};
+
+// ─────────────────────────────────────────
+// 유틸: Fisher-Yates 셔플
+// ─────────────────────────────────────────
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ─────────────────────────────────────────
+// 세트 로드
+// ─────────────────────────────────────────
+function loadSet(idx, btn) {
+  if (btn) {
+    document.querySelectorAll('.set-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  gState.setIdx = idx;
+  const set = SETS[idx];
+  const n = set.pairs.length;
+  const ids = Array.from({ length: n }, (_, i) => i);
+  gState.leftOrder  = shuffle([...ids]);
+  gState.rightOrder = shuffle([...ids]);
+  gState.selectedLeft  = null;
+  gState.selectedRight = null;
+  gState.matched = new Set();
+  gState.blocking = false;
+
+  // Labels
+  document.getElementById('col-left-label').textContent  = set.leftLabel;
+  document.getElementById('col-right-label').textContent = set.rightLabel;
+  document.getElementById('inst-text').textContent       = set.instText;
+
+  // Hide completion / pair key
+  document.getElementById('completion').classList.remove('visible');
+  document.getElementById('pair-key').classList.remove('visible');
+
+  renderCards();
+  updateScore();
+}
+
+function reloadSet() { loadSet(gState.setIdx, null); }
+
+// ─────────────────────────────────────────
+// 카드 렌더
+// ─────────────────────────────────────────
+function renderCards() {
+  const set = SETS[gState.setIdx];
+  const leftDiv  = document.getElementById('col-left-cards');
+  const rightDiv = document.getElementById('col-right-cards');
+  leftDiv.innerHTML = '';
+  rightDiv.innerHTML = '';
+
+  gState.leftOrder.forEach((pairIdx, dispPos) => {
+    const card = document.createElement('div');
+    const isMatched  = gState.matched.has(pairIdx);
+    const isSel      = gState.selectedLeft === pairIdx;
+    card.className   = 'match-card'
+      + (isMatched ? ' matched disabled' : '')
+      + (isSel && !isMatched ? ' selected-left' : '');
+    card.dataset.pairIdx = pairIdx;
+    card.dataset.side    = 'left';
+    card.textContent = set.pairs[pairIdx].left;
+    if (!isMatched) card.addEventListener('click', () => onClickLeft(pairIdx));
+    leftDiv.appendChild(card);
+  });
+
+  gState.rightOrder.forEach((pairIdx, dispPos) => {
+    const card = document.createElement('div');
+    const isMatched  = gState.matched.has(pairIdx);
+    const isSel      = gState.selectedRight === pairIdx;
+    card.className   = 'match-card'
+      + (isMatched ? ' matched disabled' : '')
+      + (isSel && !isMatched ? ' selected-right' : '');
+    card.dataset.pairIdx = pairIdx;
+    card.dataset.side    = 'right';
+    card.textContent = set.pairs[pairIdx].right;
+    if (!isMatched) card.addEventListener('click', () => onClickRight(pairIdx));
+    rightDiv.appendChild(card);
+  });
+}
+
+// ─────────────────────────────────────────
+// 클릭 처리
+// ─────────────────────────────────────────
+function onClickLeft(pairIdx) {
+  if (gState.blocking || gState.matched.has(pairIdx)) return;
+  gState.selectedLeft = gState.selectedLeft === pairIdx ? null : pairIdx;
+  renderCards();
+  if (gState.selectedLeft !== null && gState.selectedRight !== null) attemptMatch();
+}
+
+function onClickRight(pairIdx) {
+  if (gState.blocking || gState.matched.has(pairIdx)) return;
+  gState.selectedRight = gState.selectedRight === pairIdx ? null : pairIdx;
+  renderCards();
+  if (gState.selectedLeft !== null && gState.selectedRight !== null) attemptMatch();
+}
+
+// ─────────────────────────────────────────
+// 매칭 시도
+// ─────────────────────────────────────────
+function attemptMatch() {
+  const L = gState.selectedLeft;
+  const R = gState.selectedRight;
+
+  if (L === R) {
+    // ✅ 정답
+    gState.matched.add(L);
+    gState.selectedLeft  = null;
+    gState.selectedRight = null;
+
+    renderCards();
+
+    // Flash animation on matched cards
+    const flashCards = document.querySelectorAll(`.match-card.matched[data-pair-idx="${L}"]`);
+    flashCards.forEach(c => {
+      c.classList.remove('matched');
+      c.classList.add('match-flash');
+      setTimeout(() => { c.classList.remove('match-flash'); c.classList.add('matched','disabled'); }, 500);
+    });
+
+    updateScore();
+
+    if (gState.matched.size === SETS[gState.setIdx].pairs.length) {
+      setTimeout(() => showCompletion(), 600);
+    }
+  } else {
+    // ❌ 오답
+    gState.blocking = true;
+    renderCards();
+
+    // Mark wrong
+    document.querySelectorAll(`.match-card.selected-left, .match-card.selected-right`).forEach(c => {
+      c.classList.add('wrong');
+    });
+
+    setTimeout(() => {
+      gState.selectedLeft  = null;
+      gState.selectedRight = null;
+      gState.blocking = false;
+      renderCards();
+    }, 700);
+  }
+}
+
+// ─────────────────────────────────────────
+// 점수 업데이트
+// ─────────────────────────────────────────
+function updateScore() {
+  const n     = SETS[gState.setIdx].pairs.length;
+  const done  = gState.matched.size;
+  const pct   = Math.round(done / n * 100);
+  document.getElementById('score-fill').style.width  = pct + '%';
+  document.getElementById('score-count').textContent = `${done} / ${n}`;
+}
+
+// ─────────────────────────────────────────
+// 완료
+// ─────────────────────────────────────────
+function showCompletion() {
+  const set = SETS[gState.setIdx];
+  document.getElementById('comp-title').textContent = set.compTitle;
+  document.getElementById('comp-body').textContent  = set.compBody;
+  document.getElementById('completion').classList.add('visible');
+
+  // Show pair key
+  const keyBody = document.getElementById('pair-key-body');
+  keyBody.innerHTML = '';
+  set.pairs.forEach(p => {
+    const row = document.createElement('div');
+    row.className = 'pair-row';
+    row.innerHTML = `<span class="pair-left">${p.left}</span><span class="pair-arrow">→</span><span class="pair-right">${p.right}</span>`;
+    keyBody.appendChild(row);
+  });
+  document.getElementById('pair-key').classList.add('visible');
+}
+
+function goNextSet() {
+  const next = (gState.setIdx + 1) % SETS.length;
+  const btns = document.querySelectorAll('.set-btn');
+  loadSet(next, btns[next]);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─────────────────────────────────────────
+// 초기 로드
+// ─────────────────────────────────────────
+loadSet(0, document.querySelector('.set-btn.active'));
+</script>
+<!-- PC toggle -->
+<button class="pc-toggle" id="pc-toggle-btn" onclick="togglePCMode()">
+  <span>🖥</span>
+  <span id="pc-toggle-label">PC 화면</span>
+</button>
+<script>
+(function(){
+  function initPCMode(){
+    if(localStorage.getItem('formalView')==='pc'){
+      document.body.classList.add('pc-mode');
+      var lbl=document.getElementById('pc-toggle-label');
+      if(lbl) lbl.textContent='모바일 화면';
+    }
+  }
+  window.togglePCMode=function(){
+    var b=document.body;
+    if(b.classList.toggle('pc-mode')){
+      localStorage.setItem('formalView','pc');
+      document.getElementById('pc-toggle-label').textContent='모바일 화면';
+    } else {
+      localStorage.setItem('formalView','mobile');
+      document.getElementById('pc-toggle-label').textContent='PC 화면';
+    }
+  };
+  initPCMode();
+})();
+</script>
+</body>
+</html>

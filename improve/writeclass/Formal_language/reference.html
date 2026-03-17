@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>격식체 글쓰기 참고 자료</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Noto Sans KR',sans-serif;background:#f5f7fa;color:#2d3748;line-height:1.7}
+
+    /* ── Header ── */
+    header{background:linear-gradient(135deg,#1a4a7a,#2c5f8a);color:#fff;padding:2rem 1.5rem 1.6rem;text-align:center}
+    header h1{font-size:1.65rem;font-weight:700;letter-spacing:-0.5px;margin-bottom:.3rem}
+    header p{font-size:.9rem;opacity:.88;margin-bottom:1rem}
+    .back-link{white-space:nowrap;flex-shrink:0;display:inline-flex;align-items:center;gap:.35rem;padding:.4rem 1rem;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);border-radius:20px;color:#fff;text-decoration:none;font-size:.82rem;transition:background .2s}
+    .back-link:hover{background:rgba(255,255,255,.3)}
+    .nav-links{display:flex;justify-content:flex-start;gap:.5rem;overflow-x:auto;padding-bottom:.3rem;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .nav-links::-webkit-scrollbar{display:none}
+
+    /* ── Sticky Nav ── */
+    .sticky-nav{position:sticky;top:0;z-index:100;background:#fff;border-bottom:2px solid #e4ecf5;padding:.7rem 1.2rem;display:flex;gap:.5rem;flex-wrap:wrap;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+    .sticky-nav a{padding:.32rem .85rem;border-radius:20px;font-size:.82rem;font-weight:500;color:#2c5f8a;text-decoration:none;background:#eef5fc;transition:all .2s;white-space:nowrap}
+    .sticky-nav a:hover{background:#2c5f8a;color:#fff}
+
+    /* ── Main ── */
+    main{padding:1.4rem 1rem 3.5rem}
+
+    /* ── Section ── */
+    section{margin-bottom:3rem}
+    .section-header{display:flex;align-items:center;gap:.65rem;margin-bottom:1.4rem;padding-bottom:.7rem;border-bottom:2px solid #d0def0}
+    .section-icon{width:36px;height:36px;border-radius:10px;background:#2c5f8a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+    .section-header h2{font-size:1.18rem;font-weight:700;color:#1a4a7a}
+
+    /* ── Cards ── */
+    .card{background:#fff;border-radius:13px;padding:1.3rem 1.4rem;margin-bottom:.9rem;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+    .card-subtitle{font-size:.82rem;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.8rem}
+
+    /* ── Word Grid ── */
+    .word-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.6rem}
+    .word-item{background:#f8fafc;border:1px solid #e4ecf5;border-radius:9px;padding:.65rem .9rem}
+    .word-ko{font-weight:700;font-size:.95rem;color:#1a4a7a;margin-bottom:.15rem}
+    .word-ex{font-size:.82rem;color:#555;line-height:1.55}
+    .word-vn{font-size:.78rem;color:#888;margin-top:.25rem;display:none}
+    .word-vn.visible{display:block}
+
+    /* ── VN toggle (global) ── */
+    .vn-toggle-row{display:flex;justify-content:flex-end;margin-bottom:.7rem}
+    .vn-global-btn{padding:.3rem .8rem;border:1px solid #aac4e0;background:#eef5fc;color:#1a4a7a;border-radius:7px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:.78rem;transition:all .2s}
+    .vn-global-btn:hover{background:#d8ebf8}
+    .vn-global-btn.on{background:#2c5f8a;color:#fff;border-color:#2c5f8a}
+
+    /* ── Expression Table ── */
+    .expr-table{width:100%;border-collapse:collapse;font-size:.88rem}
+    .expr-table th{background:#2c5f8a;color:#fff;padding:.55rem .8rem;text-align:left;font-weight:500;font-size:.82rem}
+    .expr-table th:first-child{border-radius:7px 0 0 0}
+    .expr-table th:last-child{border-radius:0 7px 0 0}
+    .expr-table td{padding:.55rem .8rem;border-bottom:1px solid #edf0f5;vertical-align:top;line-height:1.55}
+    .expr-table tr:last-child td{border-bottom:none}
+    .expr-table tr:hover td{background:#f5f8fd}
+    .expr-main{font-weight:500;color:#1a4a7a}
+    .expr-vn{font-size:.78rem;color:#888;margin-top:.2rem;display:none}
+    .expr-vn.visible{display:block}
+    .tag{display:inline-block;padding:.05rem .45rem;border-radius:10px;font-size:.72rem;font-weight:500;margin-right:.3rem;vertical-align:middle}
+    .tag-start{background:#dbeafe;color:#1d4ed8}
+    .tag-body{background:#dcfce7;color:#166534}
+    .tag-close{background:#fef9c3;color:#713f12}
+    .tag-all{background:#ede9fe;color:#5b21b6}
+
+    /* ── Grammar ── */
+    .grammar-item{margin-bottom:1.2rem;padding:1.1rem 1.3rem;background:#f8fafc;border:1px solid #e4ecf5;border-radius:11px}
+    .grammar-item:last-child{margin-bottom:0}
+    .grammar-form{font-size:1.05rem;font-weight:700;color:#1a4a7a;margin-bottom:.3rem}
+    .grammar-desc{font-size:.875rem;color:#444;margin-bottom:.5rem;line-height:1.65}
+    .grammar-ex{font-size:.875rem;background:#fff;border-left:3px solid #2c5f8a;padding:.45rem .8rem;border-radius:0 6px 6px 0;color:#333}
+    .grammar-ex span{color:#1a4a7a;font-weight:500}
+    .grammar-vn{font-size:.8rem;color:#888;margin-top:.4rem;display:none}
+    .grammar-vn.visible{display:block}
+
+    /* ── Endings Table ── */
+    .endings-table{width:100%;border-collapse:collapse;font-size:.88rem}
+    .endings-table th{background:#1a4a7a;color:#fff;padding:.55rem .8rem;text-align:center;font-weight:500;font-size:.82rem}
+    .endings-table td{padding:.5rem .8rem;border-bottom:1px solid #edf0f5;text-align:center;vertical-align:middle}
+    .endings-table tr:nth-child(even) td{background:#f8fafc}
+    .endings-table tr:last-child td{border-bottom:none}
+    .form-cell{font-weight:700;color:#1a4a7a;font-size:.95rem}
+    .example-cell{color:#444}
+    .meaning-cell{color:#666;font-size:.82rem}
+
+    /* ── Comparison Box ── */
+    .compare-box{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-top:.9rem}
+    .compare-col{padding:.9rem 1rem;border-radius:9px;font-size:.875rem;line-height:1.7}
+    .col-formal{background:#eef5fc;border:1px solid #aac4e0}
+    .col-informal{background:#fff8f3;border:1px solid #f5cba4}
+    .col-label{font-weight:700;font-size:.8rem;margin-bottom:.4rem}
+    .col-formal .col-label{color:#1a4a7a}
+    .col-informal .col-label{color:#7c3a00}
+
+    /* ── Practice Link ── */
+    .practice-cta{display:inline-flex;align-items:center;gap:.5rem;margin-top:.9rem;padding:.5rem 1.1rem;background:#2c5f8a;color:#fff;border-radius:9px;font-size:.85rem;font-weight:500;text-decoration:none;transition:background .2s}
+    .practice-cta:hover{background:#1e4a6e}
+
+    /* ── Footer ── */
+    footer{text-align:center;padding:1.8rem;font-size:.8rem;color:#aaa;border-top:1px solid #e8ecf0;margin-top:1rem}
+    footer a{color:#2c5f8a;text-decoration:none}
+
+    /* ── Responsive ── */
+    @media(max-width:640px){
+      .word-grid{grid-template-columns:1fr 1fr}
+      .compare-box{grid-template-columns:1fr}
+      .sticky-nav{gap:.3rem}
+      .sticky-nav a{font-size:.77rem;padding:.28rem .7rem}
+    }
+    @media(max-width:400px){
+      .word-grid{grid-template-columns:1fr}
+    }
+    /* ── PC mode ── */
+    body.pc-mode main{max-width:900px;margin:0 auto;padding:2.2rem 1.2rem 3.5rem}
+    body.pc-mode .nav-links{justify-content:center;overflow-x:visible;flex-wrap:wrap}
+    /* ── PC toggle button ── */
+    .pc-toggle{position:fixed;bottom:1.2rem;right:1.2rem;z-index:900;background:#1a4a7a;color:#fff;border:none;border-radius:50px;padding:.6rem 1rem;font-family:'Noto Sans KR',sans-serif;font-size:.78rem;font-weight:500;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.22);display:flex;align-items:center;gap:.4rem;transition:background .2s}
+    .pc-toggle:hover{background:#2c5f8a}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>격식체 글쓰기 참고 자료</h1>
+  <p>공적인 이메일과 요청문에서 자주 쓰이는 어휘·표현·문법</p>
+  <div class="nav-links">
+    <a href="index.html" class="back-link">✉ 실습</a>
+    <a href="reference.html" class="back-link" style="background:rgba(255,255,255,.35);font-weight:700">📚 참고</a>
+    <a href="activity1.html" class="back-link">🔍 오류 찾기</a>
+    <a href="activity2.html" class="back-link">🔄 변환 연습</a>
+    <a href="activity3.html" class="back-link">📋 순서 맞추기</a>
+    <a href="activity4.html" class="back-link">🃏 어휘 게임</a>
+    <a href="activity5.html" class="back-link">🎴 상황 카드</a>
+    <a href="activity6.html" class="back-link">📝 자기 평가</a>
+  </div>
+</header>
+
+<nav class="sticky-nav">
+  <a href="#vocab">📖 어휘</a>
+  <a href="#expressions">✍ 핵심 표현</a>
+  <a href="#grammar">📐 문법</a>
+  <a href="#endings">📋 합쇼체 문장 끝맺음</a>
+</nav>
+
+<main>
+
+  <!-- ════════════════════════════════════════
+       SECTION 1 : 어휘
+  ════════════════════════════════════════ -->
+  <section id="vocab">
+    <div class="section-header">
+      <div class="section-icon">📖</div>
+      <h2>어휘 (Từ vựng)</h2>
+    </div>
+
+    <!-- 이메일 기본 어휘 -->
+    <div class="card">
+      <div class="vn-toggle-row">
+        <button class="vn-global-btn" onclick="toggleVN(this, '.vn-v1')">🇻🇳 베트남어 ON/OFF</button>
+      </div>
+      <div class="card-subtitle">이메일 기본 어휘</div>
+      <div class="word-grid">
+        <div class="word-item"><div class="word-ko">수신 (受信)</div><div class="word-ex">이메일을 받는 사람 | 수신: 박교수님</div><div class="word-vn vn-v1">Người nhận (email)</div></div>
+        <div class="word-item"><div class="word-ko">발신 (發信)</div><div class="word-ex">이메일을 보내는 사람 | 발신: 홍길동</div><div class="word-vn vn-v1">Người gửi (email)</div></div>
+        <div class="word-item"><div class="word-ko">제목 (題目)</div><div class="word-ex">이메일의 제목</div><div class="word-vn vn-v1">Tiêu đề (email)</div></div>
+        <div class="word-item"><div class="word-ko">첨부 (添附)</div><div class="word-ex">파일을 첨부해 드립니다.</div><div class="word-vn vn-v1">Đính kèm (file)</div></div>
+        <div class="word-item"><div class="word-ko">용건 (用件)</div><div class="word-ex">연락드린 용건은 다음과 같습니다.</div><div class="word-vn vn-v1">Nội dung muốn trình bày</div></div>
+        <div class="word-item"><div class="word-ko">회신 (回信)</div><div class="word-ex">회신 부탁드립니다.</div><div class="word-vn vn-v1">Thư/email phản hồi</div></div>
+        <div class="word-item"><div class="word-ko">답변 (答辯)</div><div class="word-ex">답변 기다리겠습니다.</div><div class="word-vn vn-v1">Câu trả lời, phản hồi</div></div>
+        <div class="word-item"><div class="word-ko">문의 (問議)</div><div class="word-ex">~에 대해 문의 드립니다.</div><div class="word-vn vn-v1">Hỏi thăm, tư vấn</div></div>
+      </div>
+    </div>
+
+    <!-- 공적 상황 동사 -->
+    <div class="card">
+      <div class="vn-toggle-row">
+        <button class="vn-global-btn" onclick="toggleVN(this, '.vn-v2')">🇻🇳 베트남어 ON/OFF</button>
+      </div>
+      <div class="card-subtitle">공적 상황에서 자주 쓰는 동사</div>
+      <div class="word-grid">
+        <div class="word-item"><div class="word-ko">문의하다</div><div class="word-ex">~에 대해 문의 드립니다.</div><div class="word-vn vn-v2">hỏi thăm, tư vấn</div></div>
+        <div class="word-item"><div class="word-ko">요청하다</div><div class="word-ex">발급을 요청 드립니다.</div><div class="word-vn vn-v2">yêu cầu, đề nghị</div></div>
+        <div class="word-item"><div class="word-ko">확인하다</div><div class="word-ex">내용을 확인해 주십시오.</div><div class="word-vn vn-v2">xác nhận, kiểm tra</div></div>
+        <div class="word-item"><div class="word-ko">안내하다</div><div class="word-ex">일정을 안내해 주시면 감사하겠습니다.</div><div class="word-vn vn-v2">hướng dẫn, thông báo</div></div>
+        <div class="word-item"><div class="word-ko">말씀드리다</div><div class="word-ex">~을 말씀드리고자 합니다.</div><div class="word-vn vn-v2">thưa trình, thưa (nói với người trên)</div></div>
+        <div class="word-item"><div class="word-ko">여쭤보다</div><div class="word-ex">한 가지 여쭤봐도 될까요?</div><div class="word-vn vn-v2">hỏi (kính trọng)</div></div>
+        <div class="word-item"><div class="word-ko">알려 드리다</div><div class="word-ex">결석 사실을 알려 드립니다.</div><div class="word-vn vn-v2">thông báo, cho biết (kính)</div></div>
+        <div class="word-item"><div class="word-ko">부탁드리다</div><div class="word-ex">잘 부탁드립니다.</div><div class="word-vn vn-v2">nhờ vả, nhờ (kính trọng)</div></div>
+        <div class="word-item"><div class="word-ko">신청하다</div><div class="word-ex">증명서 발급을 신청합니다.</div><div class="word-vn vn-v2">đăng ký, xin cấp</div></div>
+        <div class="word-item"><div class="word-ko">검토하다</div><div class="word-ex">검토해 주시기 바랍니다.</div><div class="word-vn vn-v2">xem xét, xét duyệt</div></div>
+      </div>
+    </div>
+
+    <!-- 격식 표현 부사·명사 -->
+    <div class="card">
+      <div class="vn-toggle-row">
+        <button class="vn-global-btn" onclick="toggleVN(this, '.vn-v3')">🇻🇳 베트남어 ON/OFF</button>
+      </div>
+      <div class="card-subtitle">격식체에서 자주 쓰는 부사·명사</div>
+      <div class="word-grid">
+        <div class="word-item"><div class="word-ko">부득이 (不得已)</div><div class="word-ex">부득이 결석하게 되었습니다.</div><div class="word-vn vn-v3">bất đắc dĩ, vạn bất đắc dĩ</div></div>
+        <div class="word-item"><div class="word-ko">다름이 아니오라</div><div class="word-ex">다름이 아니오라 ~ 드립니다.</div><div class="word-vn vn-v3">Không vì lý do gì khác, thưa rằng...</div></div>
+        <div class="word-item"><div class="word-ko">혹시 (或是)</div><div class="word-ex">혹시 가능하시다면 ~</div><div class="word-vn vn-v3">nếu có thể, liệu có...</div></div>
+        <div class="word-item"><div class="word-ko">번거롭다</div><div class="word-ex">번거로우시겠지만 ~</div><div class="word-vn vn-v3">phiền phức, rắc rối</div></div>
+        <div class="word-item"><div class="word-ko">귀 (貴)</div><div class="word-ex">귀 대학원, 귀 기관</div><div class="word-vn vn-v3">Quý (dùng trước tên cơ quan)</div></div>
+        <div class="word-item"><div class="word-ko">아래와 같이</div><div class="word-ex">아래와 같이 신청 드립니다.</div><div class="word-vn vn-v3">như sau đây, như dưới đây</div></div>
+        <div class="word-item"><div class="word-ko">대단히</div><div class="word-ex">대단히 감사합니다. / 대단히 죄송합니다.</div><div class="word-vn vn-v3">rất, vô cùng (nhấn mạnh)</div></div>
+        <div class="word-item"><div class="word-ko">~을/를 위해</div><div class="word-ex">장학금 신청을 위해 ~</div><div class="word-vn vn-v3">để (mục đích)</div></div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ════════════════════════════════════════
+       SECTION 2 : 핵심 표현
+  ════════════════════════════════════════ -->
+  <section id="expressions">
+    <div class="section-header">
+      <div class="section-icon">✍</div>
+      <h2>핵심 표현 (Cụm từ quan trọng)</h2>
+    </div>
+
+    <div class="card">
+      <div class="vn-toggle-row">
+        <button class="vn-global-btn" onclick="toggleVN(this, '.expr-vn')">🇻🇳 베트남어 ON/OFF</button>
+      </div>
+      <table class="expr-table">
+        <thead>
+          <tr>
+            <th style="width:42%">표현</th>
+            <th style="width:20%">위치</th>
+            <th>사용 상황</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 시작 -->
+          <tr>
+            <td><div class="expr-main">안녕하십니까?</div><div class="expr-vn">Xin chào (mở đầu trang trọng)</div></td>
+            <td><span class="tag tag-start">시작</span></td>
+            <td>모든 공적 이메일의 첫인사</td>
+          </tr>
+          <tr>
+            <td><div class="expr-main">저는 ~이라고 합니다.</div><div class="expr-vn">Tôi tên là ~ / Tôi là ~</div></td>
+            <td><span class="tag tag-start">시작</span></td>
+            <td>처음 연락하는 기관·기업에 자기소개할 때</td>
+          </tr>
+          <tr>
+            <td><div class="expr-main">다름이 아니오라, ~말씀드리고자 이메일을 드립니다.</div><div class="expr-vn">Thưa, lý do tôi liên hệ là để ~</div></td>
+            <td><span class="tag tag-start">시작</span></td>
+            <td>이메일을 보내는 목적을 자연스럽게 소개할 때</td>
+          </tr>
+          <tr>
+            <td><div class="expr-main">~에 관해 문의 드리고자 합니다.</div><div class="expr-vn">Tôi muốn hỏi thăm về ~</div></td>
+            <td><span class="tag tag-start">시작</span></td>
+            <td>문의 이메일의 목적을 밝힐 때</td>
+          </tr>
+          <!-- 본문 -->
+          <tr>
+            <td><div class="expr-main">~(으)로 인해 부득이 ~하게 되었음을 알려 드립니다.</div><div class="expr-vn">Tôi xin thông báo rằng do ~, tôi đã bất đắc dĩ phải ~</div></td>
+            <td><span class="tag tag-body">본문</span></td>
+            <td>결석, 취소, 지각 등을 정중하게 알릴 때</td>
+          </tr>
+          <tr>
+            <td><div class="expr-main">혹시 가능하시다면, ~아/어 주시겠습니까?</div><div class="expr-vn">Nếu có thể, Thầy/Cô/Quý cơ quan có thể ~ không?</div></td>
+            <td><span class="tag tag-body">본문</span></td>
+            <td>부탁이나 요청을 정중하게 할 때</td>
+          </tr>
+          <tr>
+            <td><div class="expr-main">다음과 같이 몇 가지 여쭤보고자 합니다.</div><div class="expr-vn">Tôi xin phép hỏi một số điều như sau.</div></td>
+            <td><span class="tag tag-body">본문</span></td>
+            <td>여러 항목을 질문하기 전에 사용</td>
+          </tr>
+          <tr>
+            <td><div class="expr-main">첫째, ~ / 둘째, ~ / 셋째, ~</div><div class="expr-vn">Thứ nhất, ~ / Thứ hai, ~ / Thứ ba, ~</div></td>
+            <td><span class="tag tag-body">본문</span></td>
+            <td>항목을 나눌 때 번호 대신 사용하는 격식 표현</td>
+          </tr>
+          <tr>
+            <td><div class="expr-main">아래와 같이 ~을/를 신청 드립니다.</div><div class="expr-vn">Tôi xin đăng ký/yêu cầu ~ như sau.</div></td>
+            <td><span class="tag tag-body">본문</span></td>
+            <td>서류·발급·신청을 요청할 때</td>
+          </tr>
+          <tr>
+            <td><div class="expr-main">~을/를 알려 주실 수 있으시겠습니까?</div><div class="expr-vn">Quý vị có thể cho tôi biết ~ không ạ?</div></td>
+            <td><span class="tag tag-body">본문</span></td>
+            <td>정보나 안내를 요청할 때 (가장 격식 높음)</td>
+          </tr>
+          <tr>
+            <td><div class="expr-main">미리 연락을 드리지 못하여 대단히 죄송합니다.</div><div class="expr-vn">Tôi vô cùng xin lỗi vì đã không liên hệ trước.</div></td>
+            <td><span class="tag tag-body">본문</span></td>
+            <td>사후 결석·취소 등을 알릴 때 사과 표현</td>
+          </tr>
+          <!-- 마무리 -->
+          <tr>
+            <td><div class="expr-main">바쁘신 중에 불편을 드려 죄송합니다.</div><div class="expr-vn">Xin lỗi vì đã làm phiền trong lúc Thầy/Cô/Quý vị bận rộn.</div></td>
+            <td><span class="tag tag-close">마무리</span></td>
+            <td>이메일 말미의 정중한 사과 표현</td>
+          </tr>
+          <tr>
+            <td><div class="expr-main">번거로우시겠지만 잘 부탁드립니다.</div><div class="expr-vn">Tuy có gây phiền phức nhưng mong Quý vị giúp đỡ.</div></td>
+            <td><span class="tag tag-close">마무리</span></td>
+            <td>요청·발급 이메일 말미에 자주 사용</td>
+          </tr>
+          <tr>
+            <td><div class="expr-main">답변 기다리겠습니다.</div><div class="expr-vn">Tôi sẽ chờ phản hồi của Quý vị.</div></td>
+            <td><span class="tag tag-close">마무리</span></td>
+            <td>모든 공적 이메일의 마무리 표현</td>
+          </tr>
+          <tr>
+            <td><div class="expr-main">빠른 답변 부탁드립니다.</div><div class="expr-vn">Mong nhận được phản hồi sớm.</div></td>
+            <td><span class="tag tag-close">마무리</span></td>
+            <td>기관·기업 문의 시 답변 요청</td>
+          </tr>
+          <tr>
+            <td><div class="expr-main">감사합니다. / [이름] 올림 · 드림</div><div class="expr-vn">Xin cảm ơn. / Kính thư, [tên]</div></td>
+            <td><span class="tag tag-close">마무리</span></td>
+            <td>올림: 교수님께 / 드림: 기관·기업 모두 가능</td>
+          </tr>
+        </tbody>
+      </table>
+      <a href="index.html" class="practice-cta">→ 실습 페이지에서 직접 써 보기</a>
+    </div>
+
+  </section>
+
+
+  <!-- ════════════════════════════════════════
+       SECTION 3 : 문법
+  ════════════════════════════════════════ -->
+  <section id="grammar">
+    <div class="section-header">
+      <div class="section-icon">📐</div>
+      <h2>문법 포인트 (Ngữ pháp)</h2>
+    </div>
+
+    <!-- 문법 1 -->
+    <div class="card">
+      <div class="vn-toggle-row">
+        <button class="vn-global-btn" onclick="toggleVN(this, '.gvn-1')">🇻🇳 베트남어 ON/OFF</button>
+      </div>
+
+      <div class="grammar-item">
+        <div class="grammar-form">① -습니다 / -ㅂ니다 &nbsp;<span style="font-size:.82rem;font-weight:400;color:#888">(격식체 평서문 어미)</span></div>
+        <div class="grammar-desc">
+          동사·형용사 뒤에 붙여 사실이나 상태를 격식 있게 서술합니다.<br>
+          받침 O → <strong>-습니다</strong> &nbsp;&nbsp; 받침 X (또는 ㄹ 받침) → <strong>-ㅂ니다</strong>
+        </div>
+        <div class="grammar-ex">
+          먹다 → 먹<span>습니다</span> &nbsp;|&nbsp; 가다 → 가<span>ㅂ니다</span> &nbsp;|&nbsp; 학생이다 → 학생이<span>ㅂ니다</span><br>
+          예) 저는 한국어학과 2학년 홍길동<span>입니다</span>.
+        </div>
+        <div class="grammar-vn gvn-1">
+          Đây là kết thúc câu trần thuật trong thể kính ngữ cao (합쇼체).<br>
+          Gốc từ có phụ âm cuối (받침): dùng <strong>-습니다</strong><br>
+          Gốc từ không có phụ âm cuối (hoặc có ㄹ): dùng <strong>-ㅂ니다</strong>
+        </div>
+      </div>
+
+      <div class="grammar-item">
+        <div class="grammar-form">② -(으)십니까? / -습니까? &nbsp;<span style="font-size:.82rem;font-weight:400;color:#888">(격식체 의문문 어미)</span></div>
+        <div class="grammar-desc">
+          격식 있는 질문에 사용합니다. 해요체의 "-아/어요?"보다 훨씬 격식이 높습니다.
+        </div>
+        <div class="grammar-ex">
+          예) 언제 가능<span>하십니까</span>?<br>
+          예) 어떻게 됩니까? (어떻게 돼요? → 격식체)
+        </div>
+        <div class="grammar-vn gvn-1">
+          Kết thúc câu hỏi trong thể kính ngữ cao (합쇼체). Trang trọng hơn nhiều so với -아/어요?.<br>
+          Ví dụ: 언제 가능하십니까? (Khi nào có thể được ạ?)
+        </div>
+      </div>
+
+      <div class="grammar-item">
+        <div class="grammar-form">③ -아/어 주시면 감사하겠습니다</div>
+        <div class="grammar-desc">
+          "-아/어 주세요"보다 훨씬 정중한 요청 표현입니다. 공적 이메일에서 가장 자주 쓰입니다.
+        </div>
+        <div class="grammar-ex">
+          예) 수업 내용을 알려 <span>주시면 감사하겠습니다</span>.<br>
+          예) 이메일로 보내 <span>주시면 감사하겠습니다</span>.
+        </div>
+        <div class="grammar-vn gvn-1">
+          Đây là cách yêu cầu rất lịch sự, lịch sự hơn nhiều so với -아/어 주세요.<br>
+          Nghĩa: "Nếu Quý vị ~ thì tôi sẽ rất biết ơn."<br>
+          Dùng rất phổ biến trong email công vụ.
+        </div>
+      </div>
+
+      <div class="grammar-item">
+        <div class="grammar-form">④ -게 되었음을 알려 드립니다</div>
+        <div class="grammar-desc">
+          어떤 상황이 발생했음을 공식적으로 통보할 때 씁니다. 보고서나 이메일에서 자주 보입니다.<br>
+          <span style="color:#888;font-size:.82rem">동사 기본형 + 게 되었음을 알려 드립니다</span>
+        </div>
+        <div class="grammar-ex">
+          예) 갑작스러운 사정으로 결석하<span>게 되었음을 알려 드립니다</span>.<br>
+          예) 일정이 변경되<span>게 되었음을 알려 드립니다</span>.
+        </div>
+        <div class="grammar-vn gvn-1">
+          Dùng để thông báo chính thức về một sự việc đã xảy ra.<br>
+          Nghĩa: "Tôi xin thông báo rằng [sự việc] đã xảy ra."<br>
+          Ví dụ: 결석하게 되었음을 알려 드립니다 = Tôi xin thông báo rằng tôi đã vắng mặt.
+        </div>
+      </div>
+
+      <div class="grammar-item">
+        <div class="grammar-form">⑤ -(으)시겠습니까? &nbsp;<span style="font-size:.82rem;font-weight:400;color:#888">(존칭+격식 의문)</span></div>
+        <div class="grammar-desc">
+          상대방에게 가능 여부나 의사를 격식 있게 물을 때 씁니다. "-수 있으시겠습니까?"는 가장 정중한 요청 의문문입니다.
+        </div>
+        <div class="grammar-ex">
+          예) 내용을 알려 주실 수 있으<span>시겠습니까</span>?<br>
+          예) 이 메일을 확인해 주<span>시겠습니까</span>?
+        </div>
+        <div class="grammar-vn gvn-1">
+          Dùng để hỏi về khả năng hoặc ý định của người nghe một cách lịch sự nhất.<br>
+          -수 있으시겠습니까? = Quý vị có thể ~ không ạ? (Mức độ kính trọng cao nhất)
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 격식체 vs 비격식체 비교 -->
+    <div class="card">
+      <div class="card-subtitle">격식체 vs 비격식체 비교</div>
+      <p style="font-size:.875rem;color:#555;margin-bottom:.9rem">같은 내용을 격식체(합쇼체)와 비격식체(해요체)로 쓰면 어떻게 다를까요?</p>
+      <div class="compare-box">
+        <div class="compare-col col-formal">
+          <div class="col-label">✅ 격식체 (공적 이메일용)</div>
+          저는 홍길동<strong>입니다</strong>.<br>
+          결석하게 되었음을 알려 <strong>드립니다</strong>.<br>
+          알려 주실 수 있으<strong>시겠습니까?</strong><br>
+          답변 기다리<strong>겠습니다</strong>.
+        </div>
+        <div class="compare-col col-informal">
+          <div class="col-label">❌ 비격식체 (공적 이메일에 부적합)</div>
+          저는 홍길동<strong>이에요</strong>.<br>
+          결석하게 됐다고 알려 <strong>드려요</strong>.<br>
+          알려 주실 수 있으<strong>세요?</strong><br>
+          답변 기다릴<strong>게요</strong>.
+        </div>
+      </div>
+      <p style="font-size:.8rem;color:#888;margin-top:.8rem">
+        ※ 해요체(-아/어요)는 일상 대화나 비공식 SNS에 적합합니다. 교수님이나 기관에 보내는 이메일에는 반드시 합쇼체를 사용하세요.
+      </p>
+    </div>
+
+  </section>
+
+
+  <!-- ════════════════════════════════════════
+       SECTION 4 : 합쇼체 문장 끝맺음 정리
+  ════════════════════════════════════════ -->
+  <section id="endings">
+    <div class="section-header">
+      <div class="section-icon">📋</div>
+      <h2>합쇼체 문장 끝맺음 정리</h2>
+    </div>
+
+    <div class="card">
+      <div class="vn-toggle-row">
+        <button class="vn-global-btn" onclick="toggleVN(this, '.evn')">🇻🇳 베트남어 ON/OFF</button>
+      </div>
+      <table class="endings-table">
+        <thead>
+          <tr>
+            <th>종류</th>
+            <th>형태</th>
+            <th>예문</th>
+            <th>의미/용도</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>평서문</td>
+            <td class="form-cell">-습니다<br>-ㅂ니다</td>
+            <td class="example-cell">학생<strong>입니다</strong>.<br>감사합<strong>니다</strong>.</td>
+            <td class="meaning-cell">사실·상태 서술<div class="evn">Câu trần thuật (kể sự việc)</div></td>
+          </tr>
+          <tr>
+            <td>의문문</td>
+            <td class="form-cell">-습니까?<br>-ㅂ니까?</td>
+            <td class="example-cell">언제 가능하<strong>십니까?</strong><br>어떻게 됩<strong>니까?</strong></td>
+            <td class="meaning-cell">격식 질문<div class="evn">Câu hỏi (trang trọng)</div></td>
+          </tr>
+          <tr>
+            <td>명령문</td>
+            <td class="form-cell">-(으)십시오</td>
+            <td class="example-cell">확인해 주<strong>십시오</strong>.<br>보내 주<strong>십시오</strong>.</td>
+            <td class="meaning-cell">정중한 명령·지시<div class="evn">Câu mệnh lệnh lịch sự</div></td>
+          </tr>
+          <tr>
+            <td>청유문</td>
+            <td class="form-cell">-(으)십시다</td>
+            <td class="example-cell">함께 확인해 보<strong>십시다</strong>.</td>
+            <td class="meaning-cell">함께 ~하자 (제안)<div class="evn">Câu đề nghị cùng làm gì</div></td>
+          </tr>
+          <tr>
+            <td>정중 요청</td>
+            <td class="form-cell">-아/어 주시면<br>감사하겠습니다</td>
+            <td class="example-cell">알려 주시면 <strong>감사하겠습니다</strong>.</td>
+            <td class="meaning-cell">가장 정중한 요청<div class="evn">Cách yêu cầu lịch sự nhất</div></td>
+          </tr>
+          <tr>
+            <td>가능 요청</td>
+            <td class="form-cell">-(으)실 수<br>있으시겠습니까?</td>
+            <td class="example-cell">알려 주실 수 있으<strong>시겠습니까?</strong></td>
+            <td class="meaning-cell">가능 여부를 공손히 물음<div class="evn">Hỏi khả năng một cách lịch sự</div></td>
+          </tr>
+          <tr>
+            <td>의향 표현</td>
+            <td class="form-cell">-겠습니다</td>
+            <td class="example-cell">기다리<strong>겠습니다</strong>.<br>확인해 보<strong>겠습니다</strong>.</td>
+            <td class="meaning-cell">의지·예정 표현<div class="evn">Diễn đạt ý định, kế hoạch</div></td>
+          </tr>
+          <tr>
+            <td>통보</td>
+            <td class="form-cell">-게 되었음을<br>알려 드립니다</td>
+            <td class="example-cell">결석하<strong>게 되었음을 알려 드립니다</strong>.</td>
+            <td class="meaning-cell">공식 통보<div class="evn">Thông báo chính thức</div></td>
+          </tr>
+        </tbody>
+      </table>
+      <a href="index.html" class="practice-cta">→ 실습 페이지에서 직접 써 보기</a>
+    </div>
+
+  </section>
+
+</main>
+
+<footer>
+  격식체 글쓰기 참고 자료 &nbsp;|&nbsp;
+  <a href="index.html">✉ 실습</a> &nbsp;·&nbsp;
+  <a href="activity1.html">🔍 오류 찾기</a> &nbsp;·&nbsp;
+  <a href="activity2.html">🔄 변환 연습</a> &nbsp;·&nbsp;
+  <a href="activity3.html">📋 순서 맞추기</a> &nbsp;·&nbsp;
+  <a href="activity4.html">🃏 어휘 게임</a>
+</footer>
+
+<!-- PC toggle -->
+<button class="pc-toggle" id="pc-toggle-btn" onclick="togglePCMode()">
+  <span>🖥</span>
+  <span id="pc-toggle-label">PC 화면</span>
+</button>
+<script>
+(function(){
+  function initPCMode(){
+    if(localStorage.getItem('formalView')==='pc'){
+      document.body.classList.add('pc-mode');
+      var lbl=document.getElementById('pc-toggle-label');
+      if(lbl) lbl.textContent='모바일 화면';
+    }
+  }
+  window.togglePCMode=function(){
+    var b=document.body;
+    if(b.classList.toggle('pc-mode')){
+      localStorage.setItem('formalView','pc');
+      document.getElementById('pc-toggle-label').textContent='모바일 화면';
+    } else {
+      localStorage.setItem('formalView','mobile');
+      document.getElementById('pc-toggle-label').textContent='PC 화면';
+    }
+  };
+  initPCMode();
+})();
+</script>
+<script>
+  // ── 섹션별 베트남어 토글 ──
+  function toggleVN(btn, selector) {
+    const card = btn.closest('.card');
+    const items = card.querySelectorAll(selector);
+    const on = btn.classList.toggle('on');
+    items.forEach(el => el.classList.toggle('visible', on));
+    btn.textContent = on ? '🇻🇳 베트남어 ON ✓' : '🇻🇳 베트남어 ON/OFF';
+  }
+</script>
+</body>
+</html>

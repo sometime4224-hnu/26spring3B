@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>공적인 글쓰기 연습 | 격식체</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Noto Sans KR',sans-serif;background:#f5f7fa;color:#2d3748;line-height:1.7}
+
+    /* ── Header ── */
+    header{background:linear-gradient(135deg,#1a4a7a,#2c5f8a);color:#fff;padding:2.2rem 1.5rem 1.8rem;text-align:center}
+    header h1{font-size:1.75rem;font-weight:700;letter-spacing:-0.5px;margin-bottom:.35rem}
+    header .subtitle{font-size:.92rem;opacity:.88;margin-bottom:1.1rem}
+    .nav-links{display:flex;justify-content:flex-start;gap:.5rem;overflow-x:auto;padding-bottom:.3rem;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-top:.2rem}
+    .nav-links::-webkit-scrollbar{display:none}
+    .ref-link{white-space:nowrap;flex-shrink:0;display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);border-radius:20px;color:#fff;text-decoration:none;font-size:.82rem;transition:background .2s}
+    .ref-link:hover{background:rgba(255,255,255,.3)}
+    .ref-link.active-page{background:rgba(255,255,255,.35);font-weight:700}
+
+    /* ── Main ── */
+    main{padding:1.4rem 1rem 3rem}
+
+    /* ── Tabs ── */
+    .tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.6rem}
+    .tab-btn{padding:.55rem 1.15rem;border:2px solid #2c5f8a;background:#fff;color:#2c5f8a;border-radius:22px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:.875rem;font-weight:500;transition:all .2s}
+    .tab-btn:hover{background:#e8f0f8}
+    .tab-btn.active{background:#2c5f8a;color:#fff}
+    .tab-panel{display:none}
+    .tab-panel.active{display:block}
+
+    /* ── Cards ── */
+    .card{background:#fff;border-radius:14px;padding:1.4rem 1.5rem;margin-bottom:1.1rem;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+    .card-title{display:flex;align-items:center;gap:.55rem;font-size:.97rem;font-weight:700;color:#1a4a7a;margin-bottom:1rem}
+    .badge{width:24px;height:24px;border-radius:50%;background:#2c5f8a;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:.73rem;font-weight:700;flex-shrink:0}
+    .badge-orange{background:#e07b00}
+    .badge-green{background:#388e3c}
+
+    /* Situation card */
+    .situation-card{border-left:4px solid #2c5f8a}
+    .situation-text{font-size:.93rem;line-height:1.85}
+
+    /* ── Toggle ── */
+    .toggle-btn{display:inline-flex;align-items:center;gap:.35rem;margin-top:.8rem;padding:.3rem .85rem;border:1px solid #a8c8e8;background:#eef5fc;color:#1a4a7a;border-radius:7px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:.8rem;transition:all .2s}
+    .toggle-btn:hover{background:#d8ebf8}
+    .toggle-content{display:none;margin-top:.75rem;padding:.85rem 1rem;background:#fdf8ec;border-radius:9px;border-left:3px solid #ddb84a;font-size:.875rem;line-height:1.8;color:#555}
+    .toggle-content.visible{display:block}
+    .hint-toggle-content{background:#fffbf0;border-left-color:#e07b00}
+    .answer-toggle-content{background:#f2faf2;border-left-color:#388e3c}
+
+    /* ── Checklist ── */
+    .checklist{list-style:none}
+    .checklist li{display:flex;align-items:flex-start;gap:.6rem;padding:.4rem 0;border-bottom:1px solid #f0f2f5;font-size:.9rem}
+    .checklist li:last-child{border-bottom:none}
+    .checklist input[type=checkbox]{width:17px;height:17px;accent-color:#2c5f8a;cursor:pointer;flex-shrink:0;margin-top:.25rem}
+    .checklist label{cursor:pointer;line-height:1.5}
+
+    /* ── Mode Toggle ── */
+    .mode-toggle{display:flex;gap:.4rem;margin-bottom:.85rem}
+    .mode-btn{padding:.32rem .85rem;border:1px solid #bbb;background:#fff;border-radius:7px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:.8rem;color:#666;transition:all .2s}
+    .mode-btn:hover{background:#f0f0f0}
+    .mode-btn.active{background:#2c5f8a;border-color:#2c5f8a;color:#fff}
+
+    /* ── Textarea ── */
+    .write-label{font-size:.82rem;color:#888;margin-bottom:.45rem}
+    .write-area{width:100%;min-height:200px;padding:1rem 1.1rem;border:2px solid #d8e8f5;border-radius:9px;font-family:'Noto Sans KR',sans-serif;font-size:.93rem;line-height:1.85;resize:vertical;transition:border-color .2s;color:#2d3748}
+    .write-area:focus{outline:none;border-color:#2c5f8a}
+
+    /* ── Fill-in-blank ── */
+    .fillblank-area{display:none}
+    .template-box{font-size:.93rem;line-height:2.3;padding:1rem 1.2rem;background:#fafbfc;border:2px solid #d8e8f5;border-radius:9px}
+    .blank{display:inline-block;border:none;border-bottom:2px solid #2c5f8a;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:.93rem;color:#1a4a7a;padding:0 3px;text-align:center;min-width:70px}
+    .blank:focus{outline:none;border-bottom-color:#e07b00}
+
+    /* ── Hint card ── */
+    .hint-card{border-left:4px solid #e07b00}
+    .hint-content strong{color:#7b4200}
+
+    /* ── Answer card ── */
+    .answer-card{border-left:4px solid #388e3c}
+    .answer-box{font-size:.9rem;line-height:2;white-space:pre-wrap;background:#f7fdf7;padding:1rem 1.1rem;border-radius:8px;color:#2d3748}
+    .hl{background:#fff3b0;padding:0 2px;border-radius:3px}
+    .answer-note{font-size:.78rem;color:#777;margin-top:.7rem}
+
+    /* ── Buttons ── */
+    .btn-row{display:flex;align-items:center;gap:.5rem;margin-top:.7rem;flex-wrap:wrap}
+    .btn-sm{padding:.32rem .8rem;border-radius:7px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:.8rem;font-weight:500;transition:all .2s}
+    .btn-clear{background:#fff;color:#666;border:1px solid #ccc}
+    .btn-clear:hover{background:#f5f5f5}
+    .save-ok{font-size:.78rem;color:#388e3c;display:none}
+    .save-ok.visible{display:inline}
+
+    /* ── Footer ── */
+    footer{text-align:center;padding:1.8rem;font-size:.8rem;color:#aaa;border-top:1px solid #e8ecf0;margin-top:1rem}
+    footer a{color:#2c5f8a;text-decoration:none}
+
+    /* ── Print ── */
+    @media print{
+      header{background:#1a4a7a !important;-webkit-print-color-adjust:exact}
+      .tab-btn:not(.active){display:none}
+      .tab-panel{display:block !important}
+      .toggle-content{display:block !important}
+    }
+
+    /* ── Responsive ── */
+    @media(max-width:600px){
+      header h1{font-size:1.35rem}
+      .tabs{gap:.3rem}
+      .tab-btn{font-size:.8rem;padding:.45rem .85rem}
+      main{padding:1.2rem .9rem 2rem}
+    }
+    /* ── PC mode ── */
+    body.pc-mode main{max-width:860px;margin:0 auto;padding:2rem 1.2rem 3rem}
+    body.pc-mode .nav-links{justify-content:center;overflow-x:visible;flex-wrap:wrap}
+    /* ── PC toggle button ── */
+    .pc-toggle{position:fixed;bottom:1.2rem;right:1.2rem;z-index:900;background:#1a4a7a;color:#fff;border:none;border-radius:50px;padding:.6rem 1rem;font-family:'Noto Sans KR',sans-serif;font-size:.78rem;font-weight:500;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.22);display:flex;align-items:center;gap:.4rem;transition:background .2s}
+    .pc-toggle:hover{background:#2c5f8a}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>공적인 글쓰기 연습</h1>
+  <p class="subtitle">격식체(합쇼체)로 이메일과 공적인 글을 써 보세요.</p>
+  <div class="nav-links">
+    <a href="index.html" class="ref-link active-page">✉ 실습</a>
+    <a href="reference.html" class="ref-link">📚 참고</a>
+    <a href="activity1.html" class="ref-link">🔍 오류 찾기</a>
+    <a href="activity2.html" class="ref-link">🔄 변환 연습</a>
+    <a href="activity3.html" class="ref-link">📋 순서 맞추기</a>
+    <a href="activity4.html" class="ref-link">🃏 어휘 게임</a>
+    <a href="activity5.html" class="ref-link">🎴 상황 카드</a>
+    <a href="activity6.html" class="ref-link">📝 자기 평가</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── TABS ── -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(0)">✉ 교수님께 이메일</button>
+    <button class="tab-btn" onclick="switchTab(1)">🏢 기관·기업 문의</button>
+    <button class="tab-btn" onclick="switchTab(2)">📋 공적 요청</button>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       TAB 0 : 교수님께 이메일
+  ════════════════════════════════════════ -->
+  <div class="tab-panel active" id="panel-0">
+
+    <!-- 상황 -->
+    <div class="card situation-card">
+      <div class="card-title"><span class="badge">상</span> 이런 상황입니다</div>
+      <div class="situation-text">
+        당신은 한국어학과 2학년 학생입니다.<br>
+        어제 <strong>박민준 교수님의 한국어 문법 수업</strong>에 갑자기 아파서 결석했습니다.<br>
+        교수님께 결석 사실을 알리고, 수업 내용과 과제를 확인하는 이메일을 써야 합니다.
+      </div>
+      <button class="toggle-btn" onclick="doToggle(this)">🇻🇳 베트남어로 보기 ▼</button>
+      <div class="toggle-content">
+        Bạn là sinh viên năm 2 khoa Tiếng Hàn.<br>
+        Hôm qua bạn đã nghỉ học buổi <strong>Ngữ pháp tiếng Hàn của giáo sư Park Min-jun</strong> vì đột ngột bị ốm.<br>
+        Bạn cần viết email thông báo cho giáo sư về việc vắng mặt và hỏi về nội dung bài học cũng như bài tập về nhà.
+      </div>
+    </div>
+
+    <!-- 체크리스트 -->
+    <div class="card">
+      <div class="card-title"><span class="badge">준</span> 쓰기 전 확인</div>
+      <ul class="checklist">
+        <li><input type="checkbox" id="c0a"><label for="c0a">인사말 — 교수님께 정중하게 첫인사를 씁니다.</label></li>
+        <li><input type="checkbox" id="c0b"><label for="c0b">자기소개 — 학과와 이름(학번)을 밝힙니다.</label></li>
+        <li><input type="checkbox" id="c0c"><label for="c0c">용건 ① — 결석 사실과 이유를 전달합니다.</label></li>
+        <li><input type="checkbox" id="c0d"><label for="c0d">용건 ② — 수업 내용과 과제를 문의합니다.</label></li>
+        <li><input type="checkbox" id="c0e"><label for="c0e">마무리 — 정중한 마무리 인사로 끝맺습니다.</label></li>
+      </ul>
+    </div>
+
+    <!-- 쓰기 영역 -->
+    <div class="card">
+      <div class="card-title"><span class="badge">작</span> 직접 써 보세요</div>
+      <div class="mode-toggle">
+        <button class="mode-btn active" onclick="setMode(0,'free',this)">자유 작성</button>
+        <button class="mode-btn" onclick="setMode(0,'fill',this)">빈칸 채우기</button>
+      </div>
+      <!-- 자유 작성 -->
+      <div id="free-0">
+        <p class="write-label">격식체(합쇼체)로 이메일을 작성해 보세요.</p>
+        <textarea class="write-area" id="ta-0"
+          placeholder="제목: (이메일 제목을 먼저 써 보세요)&#10;&#10;교수님께,&#10;&#10;..."
+          oninput="autoSave(0)"></textarea>
+        <div class="btn-row">
+          <button class="btn-sm btn-clear" onclick="clearText(0)">초기화</button>
+          <span class="save-ok" id="saved-0">✓ 저장됨</span>
+        </div>
+      </div>
+      <!-- 빈칸 채우기 -->
+      <div class="fillblank-area" id="fill-0">
+        <div class="template-box">
+          <strong>제목:</strong> <input class="blank" style="min-width:190px" placeholder="이메일 제목"><br><br>
+          <input class="blank" placeholder="교수님 이름">교수님께,<br><br>
+          안녕하십니까? 저는 <input class="blank" placeholder="학과명"> <input class="blank" placeholder="학번·이름"> 입니다.<br><br>
+          다름이 아니오라, <input class="blank" style="min-width:100px" placeholder="날짜">에 있었던
+          <input class="blank" style="min-width:130px" placeholder="수업명"> 수업에
+          <input class="blank" style="min-width:110px" placeholder="결석 이유"> (으)로 인해
+          부득이 결석하게 되었음을 알려 드립니다.<br><br>
+          미리 연락을 드리지 못하여 <input class="blank" style="min-width:110px" placeholder="죄송 표현">.<br><br>
+          혹시 해당 수업의 <input class="blank" style="min-width:140px" placeholder="수업 내용·과제 등">을/를
+          알려 주실 수 있으시겠습니까?<br><br>
+          바쁘신 중에 불편을 드려 <input class="blank" placeholder="감사/죄송">. 답변 기다리겠습니다.<br><br>
+          감사합니다.<br>
+          <input class="blank" placeholder="이름"> 올림
+        </div>
+      </div>
+    </div>
+
+    <!-- 힌트 -->
+    <div class="card hint-card">
+      <div class="card-title"><span class="badge badge-orange">힌</span> 유용한 표현</div>
+      <button class="toggle-btn" onclick="doToggle(this)">💡 힌트 보기 ▼</button>
+      <div class="toggle-content hint-toggle-content">
+        <strong>시작 표현</strong><br>
+        · 안녕하십니까? 저는 ~ 입니다.<br>
+        · 다름이 아니오라, ~을/를 말씀드리고자 이메일을 드립니다.<br><br>
+        <strong>결석을 알릴 때</strong><br>
+        · 부득이한 사정으로 결석하게 되었습니다.<br>
+        · ~(으)로 인해 출석하지 못하였습니다.<br>
+        · 미리 연락을 드리지 못하여 대단히 죄송합니다.<br><br>
+        <strong>문의할 때</strong><br>
+        · 수업 내용과 과제를 알려 주실 수 있으시겠습니까?<br>
+        · 혹시 ~를 여쭤봐도 될까요?<br>
+        · 가능하시다면 ~을/를 보내 주시면 감사하겠습니다.<br><br>
+        <strong>마무리</strong><br>
+        · 바쁘신 중에 불편을 드려 죄송합니다.<br>
+        · 답변 기다리겠습니다. 감사합니다.<br>
+        · [이름] 올림
+      </div>
+    </div>
+
+    <!-- 모범 답안 -->
+    <div class="card answer-card">
+      <div class="card-title"><span class="badge badge-green">답</span> 모범 예시</div>
+      <button class="toggle-btn" style="border-color:#a5d6a7;background:#edf7ed;color:#2e6b30" onclick="doToggle(this)">✅ 모범 예시 보기 ▼</button>
+      <div class="toggle-content answer-toggle-content">
+        <strong>제목: [한국어 문법] 결석 관련 문의 드립니다 — 홍길동</strong><br><br>
+        <div class="answer-box">박민준 교수님께,
+
+<span class="hl">안녕하십니까?</span> 저는 한국어학과 2학년 <span class="hl">홍길동</span>입니다.
+
+다름이 아니오라, <span class="hl">3월 15일(화요일)</span>에 있었던 한국어 문법 수업에 <span class="hl">갑작스러운 몸살</span>로 인해 <span class="hl">부득이</span> 결석하게 되었음을 알려 드립니다. 미리 연락을 드리지 못하여 <span class="hl">대단히 죄송합니다.</span>
+
+<span class="hl">혹시 가능하시다면</span>, 해당 수업의 내용과 과제를 알려 주실 수 있으시겠습니까? 수업 내용은 스스로 찾아 보충하겠습니다.
+
+<span class="hl">바쁘신 중에 이렇게 번거로운 부탁을 드려 죄송합니다.</span> 답변 기다리겠습니다.
+
+감사합니다.
+홍길동 올림</div>
+        <p class="answer-note">🟡 <strong>노란 표시</strong>: 격식체에서 자주 쓰이는 핵심 표현 &nbsp;|&nbsp; <a href="reference.html" style="color:#2c5f8a">참고 페이지에서 더 자세히 보기 →</a></p>
+      </div>
+    </div>
+
+  </div><!-- /panel-0 -->
+
+
+  <!-- ════════════════════════════════════════
+       TAB 1 : 기관·기업 문의
+  ════════════════════════════════════════ -->
+  <div class="tab-panel" id="panel-1">
+
+    <div class="card situation-card">
+      <div class="card-title"><span class="badge">상</span> 이런 상황입니다</div>
+      <div class="situation-text">
+        당신은 한국의 대학원에 진학하고 싶습니다.<br>
+        <strong>한국대학교 대학원 입학처</strong>에 외국인 전형의 지원 서류와 지원 일정에 대해 문의하는 이메일을 써야 합니다.
+      </div>
+      <button class="toggle-btn" onclick="doToggle(this)">🇻🇳 베트남어로 보기 ▼</button>
+      <div class="toggle-content">
+        Bạn muốn tiếp tục học lên bậc Thạc sĩ tại Hàn Quốc.<br>
+        Bạn cần viết email hỏi <strong>Phòng Tuyển sinh Sau đại học Trường Đại học Hankuk</strong> về hồ sơ xét tuyển dành cho người nước ngoài và lịch nộp hồ sơ.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="badge">준</span> 쓰기 전 확인</div>
+      <ul class="checklist">
+        <li><input type="checkbox" id="c1a"><label for="c1a">인사말 — 정중한 첫인사를 씁니다.</label></li>
+        <li><input type="checkbox" id="c1b"><label for="c1b">자기소개 — 간략하게 본인을 소개합니다. (국적·소속 포함)</label></li>
+        <li><input type="checkbox" id="c1c"><label for="c1c">문의 내용 ① — 지원 서류가 무엇인지 문의합니다.</label></li>
+        <li><input type="checkbox" id="c1d"><label for="c1d">문의 내용 ② — 지원 일정(마감일·접수 방법)을 문의합니다.</label></li>
+        <li><input type="checkbox" id="c1e"><label for="c1e">마무리 — 빠른 답변을 부탁하는 표현으로 끝맺습니다.</label></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="badge">작</span> 직접 써 보세요</div>
+      <div class="mode-toggle">
+        <button class="mode-btn active" onclick="setMode(1,'free',this)">자유 작성</button>
+        <button class="mode-btn" onclick="setMode(1,'fill',this)">빈칸 채우기</button>
+      </div>
+      <div id="free-1">
+        <p class="write-label">격식체(합쇼체)로 문의 이메일을 작성해 보세요.</p>
+        <textarea class="write-area" id="ta-1" placeholder="제목: ..." oninput="autoSave(1)"></textarea>
+        <div class="btn-row">
+          <button class="btn-sm btn-clear" onclick="clearText(1)">초기화</button>
+          <span class="save-ok" id="saved-1">✓ 저장됨</span>
+        </div>
+      </div>
+      <div class="fillblank-area" id="fill-1">
+        <div class="template-box">
+          <strong>제목:</strong> <input class="blank" style="min-width:200px" placeholder="이메일 제목"><br><br>
+          안녕하십니까?<br><br>
+          저는 <input class="blank" placeholder="국적"> 출신으로,
+          <input class="blank" style="min-width:130px" placeholder="학교·소속">에 재학 중인
+          <input class="blank" placeholder="이름">이라고 합니다.<br><br>
+          <input class="blank" style="min-width:120px" placeholder="학기·연도"> 대학원 입학을 목표로 하고 있어,
+          외국인 전형에 관해 <input class="blank" style="min-width:100px" placeholder="문의·여쭤보다"> 드립니다.<br><br>
+          <input class="blank" placeholder="첫째">、 외국인 전형 지원에 필요한 서류는 무엇입니까?<br>
+          <input class="blank" placeholder="둘째">、 지원서 접수 마감일과 <input class="blank" placeholder="제출 방법 등">은 어떻게 됩니까?<br><br>
+          바쁘신 중에 <input class="blank" style="min-width:110px" placeholder="문의·여쭤보다"> 드려 죄송합니다.
+          빠른 답변 <input class="blank" placeholder="부탁드립니다 등">.<br><br>
+          감사합니다.<br>
+          <input class="blank" placeholder="이름"> 드림
+        </div>
+      </div>
+    </div>
+
+    <div class="card hint-card">
+      <div class="card-title"><span class="badge badge-orange">힌</span> 유용한 표현</div>
+      <button class="toggle-btn" onclick="doToggle(this)">💡 힌트 보기 ▼</button>
+      <div class="toggle-content hint-toggle-content">
+        <strong>기관 문의 시작 표현</strong><br>
+        · 안녕하십니까? 저는 ~에 재학 중인 ~이라고 합니다.<br>
+        · ~에 관해 문의 드리고자 이메일을 드립니다.<br>
+        · 다음과 같이 몇 가지 여쭤보고자 합니다.<br><br>
+        <strong>항목별로 문의할 때</strong><br>
+        · 첫째, ~ / 둘째, ~ / 셋째, ~<br>
+        · ~에 대해 알려 주시면 감사하겠습니다.<br>
+        · ~을/를 안내해 주실 수 있으시겠습니까?<br><br>
+        <strong>마무리</strong><br>
+        · 바쁘신 중에 문의 드려 죄송합니다.<br>
+        · 빠른 답변 부탁드립니다.<br>
+        · [이름] 드림 <span style="color:#888">(기관에는 "올림"보다 "드림"도 자연스럽습니다)</span>
+      </div>
+    </div>
+
+    <div class="card answer-card">
+      <div class="card-title"><span class="badge badge-green">답</span> 모범 예시</div>
+      <button class="toggle-btn" style="border-color:#a5d6a7;background:#edf7ed;color:#2e6b30" onclick="doToggle(this)">✅ 모범 예시 보기 ▼</button>
+      <div class="toggle-content answer-toggle-content">
+        <strong>제목: 외국인 대학원 입학 전형 관련 문의 드립니다</strong><br><br>
+        <div class="answer-box"><span class="hl">안녕하십니까?</span>
+
+저는 베트남 출신으로, 현재 하노이 외국어대학교 한국어학과에 재학 중인 <span class="hl">응우옌 티 흐엉</span>이라고 합니다.
+
+귀 대학원 한국어교육학과 <span class="hl">2025년 후기(9월) 입학</span>을 목표로 준비 중으로, 외국인 전형에 관해 <span class="hl">다음과 같이</span> 문의 드립니다.
+
+<span class="hl">첫째</span>, 외국인 전형 지원에 필요한 서류는 무엇입니까?
+<span class="hl">둘째</span>, 지원서 접수 마감일과 제출 방법은 어떻게 됩니까?
+<span class="hl">셋째</span>, 합격자 발표 일정도 함께 알려 주시면 감사하겠습니다.
+
+<span class="hl">바쁘신 중에 이렇게 문의 드려 죄송합니다.</span> 빠른 답변 부탁드립니다.
+
+감사합니다.
+응우옌 티 흐엉 드림</div>
+        <p class="answer-note">🟡 <strong>노란 표시</strong>: 격식체에서 자주 쓰이는 핵심 표현 &nbsp;|&nbsp; <a href="reference.html" style="color:#2c5f8a">참고 페이지에서 더 자세히 보기 →</a></p>
+      </div>
+    </div>
+
+  </div><!-- /panel-1 -->
+
+
+  <!-- ════════════════════════════════════════
+       TAB 2 : 공적 요청
+  ════════════════════════════════════════ -->
+  <div class="tab-panel" id="panel-2">
+
+    <div class="card situation-card">
+      <div class="card-title"><span class="badge">상</span> 이런 상황입니다</div>
+      <div class="situation-text">
+        당신은 한국 대학교 교환학생입니다.<br>
+        장학금 신청에 필요한 <strong>재학증명서와 성적증명서</strong>를 학생처에 이메일로 요청해야 합니다.<br>
+        증명서는 우편이 아닌 <strong>이메일로 받기를 원합니다.</strong>
+      </div>
+      <button class="toggle-btn" onclick="doToggle(this)">🇻🇳 베트남어로 보기 ▼</button>
+      <div class="toggle-content">
+        Bạn là sinh viên trao đổi tại một trường đại học ở Hàn Quốc.<br>
+        Bạn cần gửi email đến Phòng Công tác sinh viên để xin cấp <strong>giấy xác nhận đang học và bảng điểm</strong> để nộp học bổng.<br>
+        Bạn muốn nhận tài liệu qua <strong>email thay vì bưu điện</strong>.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="badge">준</span> 쓰기 전 확인</div>
+      <ul class="checklist">
+        <li><input type="checkbox" id="c2a"><label for="c2a">인사말 — 정중하게 인사합니다.</label></li>
+        <li><input type="checkbox" id="c2b"><label for="c2b">자기소개 — 학번, 이름, 교환학생 신분을 밝힙니다.</label></li>
+        <li><input type="checkbox" id="c2c"><label for="c2c">요청 내용 — 필요한 서류명과 부수를 명확하게 적습니다.</label></li>
+        <li><input type="checkbox" id="c2d"><label for="c2d">수령 방법 — 이메일로 받고 싶다고 명시합니다.</label></li>
+        <li><input type="checkbox" id="c2e"><label for="c2e">마무리 — 감사 인사로 끝맺습니다.</label></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="badge">작</span> 직접 써 보세요</div>
+      <div class="mode-toggle">
+        <button class="mode-btn active" onclick="setMode(2,'free',this)">자유 작성</button>
+        <button class="mode-btn" onclick="setMode(2,'fill',this)">빈칸 채우기</button>
+      </div>
+      <div id="free-2">
+        <p class="write-label">격식체(합쇼체)로 요청 이메일을 작성해 보세요.</p>
+        <textarea class="write-area" id="ta-2" placeholder="제목: ..." oninput="autoSave(2)"></textarea>
+        <div class="btn-row">
+          <button class="btn-sm btn-clear" onclick="clearText(2)">초기화</button>
+          <span class="save-ok" id="saved-2">✓ 저장됨</span>
+        </div>
+      </div>
+      <div class="fillblank-area" id="fill-2">
+        <div class="template-box">
+          <strong>제목:</strong> <input class="blank" style="min-width:200px" placeholder="이메일 제목"><br><br>
+          안녕하십니까?<br><br>
+          저는 <input class="blank" placeholder="학과·학번"> 교환학생 <input class="blank" placeholder="이름">입니다.<br><br>
+          이번에 <input class="blank" style="min-width:130px" placeholder="서류가 필요한 이유">을/를 위해
+          아래와 같이 증명서 발급을 <input class="blank" style="min-width:100px" placeholder="요청 드립니다 등">.<br><br>
+          - <input class="blank" style="min-width:130px" placeholder="서류명 1"> 1부<br>
+          - <input class="blank" style="min-width:130px" placeholder="서류명 2"> 1부<br><br>
+          <input class="blank" placeholder="가능하시다면 등">, 발급하신 서류를
+          <input class="blank" style="min-width:180px" placeholder="이메일 주소">으로
+          보내 주시면 감사하겠습니다.<br><br>
+          <input class="blank" style="min-width:200px" placeholder="마무리 문장 (번거로우시겠지만 등)">.<br><br>
+          감사합니다.<br>
+          <input class="blank" placeholder="이름"> 올림
+        </div>
+      </div>
+    </div>
+
+    <div class="card hint-card">
+      <div class="card-title"><span class="badge badge-orange">힌</span> 유용한 표현</div>
+      <button class="toggle-btn" onclick="doToggle(this)">💡 힌트 보기 ▼</button>
+      <div class="toggle-content hint-toggle-content">
+        <strong>요청할 때 쓰는 표현</strong><br>
+        · 아래와 같이 ~을/를 발급해 주시기를 요청 드립니다.<br>
+        · ~을/를 신청 드립니다.<br>
+        · ~을/를 보내 주시면 감사하겠습니다.<br><br>
+        <strong>방법·조건을 설명할 때</strong><br>
+        · 가능하시다면 이메일로 보내 주시기 바랍니다.<br>
+        · ~로 수령하고자 합니다.<br>
+        · 우편 발송보다 이메일 발송이 가능하시겠습니까?<br><br>
+        <strong>마무리</strong><br>
+        · 번거로우시겠지만 잘 부탁드립니다.<br>
+        · 협조해 주셔서 대단히 감사합니다.
+      </div>
+    </div>
+
+    <div class="card answer-card">
+      <div class="card-title"><span class="badge badge-green">답</span> 모범 예시</div>
+      <button class="toggle-btn" style="border-color:#a5d6a7;background:#edf7ed;color:#2e6b30" onclick="doToggle(this)">✅ 모범 예시 보기 ▼</button>
+      <div class="toggle-content answer-toggle-content">
+        <strong>제목: 증명서 발급 요청 드립니다 — 교환학생 홍길동</strong><br><br>
+        <div class="answer-box"><span class="hl">안녕하십니까?</span>
+
+저는 한국어학과 교환학생 <span class="hl">홍길동(학번: 2023-12345)</span>입니다.
+
+이번에 <span class="hl">장학금 신청</span>을 위해 아래와 같이 증명서 발급을 <span class="hl">요청 드립니다.</span>
+
+  - <span class="hl">재학증명서</span> 1부
+  - <span class="hl">성적증명서</span> 1부 (영문 가능 시 영문본으로 부탁드립니다.)
+
+<span class="hl">가능하시다면</span>, 발급하신 서류를 hong.gildong@email.com으로 보내 주시면 감사하겠습니다.
+
+<span class="hl">번거로우시겠지만 잘 부탁드립니다.</span> 감사합니다.
+
+홍길동 올림</div>
+        <p class="answer-note">🟡 <strong>노란 표시</strong>: 격식체에서 자주 쓰이는 핵심 표현 &nbsp;|&nbsp; <a href="reference.html" style="color:#2c5f8a">참고 페이지에서 더 자세히 보기 →</a></p>
+      </div>
+    </div>
+
+  </div><!-- /panel-2 -->
+
+</main>
+
+<footer>
+  공적인 글쓰기 연습 &nbsp;|&nbsp;
+  <a href="reference.html">📚 참고</a> &nbsp;·&nbsp;
+  <a href="activity1.html">🔍 오류 찾기</a> &nbsp;·&nbsp;
+  <a href="activity2.html">🔄 변환 연습</a> &nbsp;·&nbsp;
+  <a href="activity3.html">📋 순서 맞추기</a> &nbsp;·&nbsp;
+  <a href="activity4.html">🃏 어휘 게임</a>
+</footer>
+
+<!-- PC toggle -->
+<button class="pc-toggle" id="pc-toggle-btn" onclick="togglePCMode()">
+  <span>🖥</span>
+  <span id="pc-toggle-label">PC 화면</span>
+</button>
+<script>
+(function(){
+  function initPCMode(){
+    if(localStorage.getItem('formalView')==='pc'){
+      document.body.classList.add('pc-mode');
+      var lbl=document.getElementById('pc-toggle-label');
+      if(lbl) lbl.textContent='모바일 화면';
+    }
+  }
+  window.togglePCMode=function(){
+    var b=document.body;
+    if(b.classList.toggle('pc-mode')){
+      localStorage.setItem('formalView','pc');
+      document.getElementById('pc-toggle-label').textContent='모바일 화면';
+    } else {
+      localStorage.setItem('formalView','mobile');
+      document.getElementById('pc-toggle-label').textContent='PC 화면';
+    }
+  };
+  initPCMode();
+})();
+</script>
+<script>
+  // ── localStorage 복원 ──
+  window.addEventListener('load', () => {
+    for (let i = 0; i < 3; i++) {
+      const v = localStorage.getItem('fw-' + i);
+      if (v) { const el = document.getElementById('ta-' + i); if (el) el.value = v; }
+    }
+  });
+
+  // ── 탭 전환 ──
+  function switchTab(idx) {
+    document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+    document.querySelectorAll('.tab-panel').forEach((p, i) => p.classList.toggle('active', i === idx));
+  }
+
+  // ── 토글 ──
+  function doToggle(btn) {
+    const box = btn.nextElementSibling;
+    const show = !box.classList.contains('visible');
+    box.classList.toggle('visible', show);
+    btn.textContent = btn.textContent.replace(show ? '▼' : '▲', show ? '▲' : '▼');
+  }
+
+  // ── 모드(자유/빈칸) ──
+  function setMode(idx, mode, btn) {
+    btn.closest('.mode-toggle').querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const free = document.getElementById('free-' + idx);
+    const fill = document.getElementById('fill-' + idx);
+    if (mode === 'free') {
+      free.style.display = 'block';
+      fill.style.display = 'none';
+    } else {
+      free.style.display = 'none';
+      fill.style.display = 'block';
+    }
+  }
+
+  // ── 자동 저장 ──
+  let saveTimer = {};
+  function autoSave(idx) {
+    clearTimeout(saveTimer[idx]);
+    saveTimer[idx] = setTimeout(() => {
+      localStorage.setItem('fw-' + idx, document.getElementById('ta-' + idx).value);
+      const el = document.getElementById('saved-' + idx);
+      el.classList.add('visible');
+      setTimeout(() => el.classList.remove('visible'), 1800);
+    }, 800);
+  }
+
+  // ── 초기화 ──
+  function clearText(idx) {
+    if (confirm('작성한 내용을 초기화하시겠습니까?')) {
+      document.getElementById('ta-' + idx).value = '';
+      localStorage.removeItem('fw-' + idx);
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오류 찾기 & 교정 | 격식체 연습</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Noto Sans KR',sans-serif;background:#f5f7fa;color:#2d3748;line-height:1.7}
+
+    /* ── Header ── */
+    header{background:linear-gradient(135deg,#1a4a7a,#2c5f8a);color:#fff;padding:2rem 1.5rem 1.6rem;text-align:center}
+    header h1{font-size:1.65rem;font-weight:700;letter-spacing:-0.5px;margin-bottom:.3rem}
+    header p{font-size:.9rem;opacity:.88;margin-bottom:1rem}
+    .nav-links{display:flex;justify-content:flex-start;gap:.5rem;overflow-x:auto;padding-bottom:.3rem;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .nav-links::-webkit-scrollbar{display:none}
+    .nav-link{white-space:nowrap;flex-shrink:0;padding:.4rem 1rem;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);border-radius:18px;color:#fff;text-decoration:none;font-size:.8rem;transition:background .2s}
+    .nav-link:hover{background:rgba(255,255,255,.32)}
+    .nav-link.active-page{background:rgba(255,255,255,.35);font-weight:700}
+
+    /* ── Main ── */
+    main{padding:1.4rem 1rem 3rem}
+
+    /* ── Instruction card ── */
+    .inst-card{background:#fff3cd;border:1px solid #ffc107;border-radius:12px;padding:1.1rem 1.4rem;margin-bottom:1.6rem;font-size:.9rem;line-height:1.75}
+    .inst-card strong{color:#7a4f00}
+    .inst-sample{display:inline-block;background:#fff;border:1px dashed #e07b00;border-radius:6px;padding:.1rem .5rem;font-size:.875rem;cursor:pointer;color:#c05000;font-weight:500}
+    .inst-card .vn-toggle-btn{margin-top:.6rem;padding:.25rem .7rem;border:1px solid #ddb84a;background:#fffbf0;color:#7a4f00;border-radius:6px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:.78rem;transition:all .2s}
+    .inst-vn{display:none;margin-top:.6rem;padding:.6rem .8rem;background:#fffbf0;border-radius:8px;font-size:.83rem;color:#666}
+    .inst-vn.visible{display:block}
+
+    /* ── Tabs ── */
+    .tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.4rem}
+    .tab-btn{padding:.5rem 1.1rem;border:2px solid #2c5f8a;background:#fff;color:#2c5f8a;border-radius:22px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:.85rem;font-weight:500;transition:all .2s}
+    .tab-btn:hover{background:#e8f0f8}
+    .tab-btn.active{background:#2c5f8a;color:#fff}
+    .tab-panel{display:none}
+    .tab-panel.active{display:block}
+
+    /* ── Score bar ── */
+    .score-bar{display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:10px;padding:.75rem 1.1rem;margin-bottom:1rem;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+    .score-text{font-size:.9rem;font-weight:500;color:#2d3748}
+    .score-dots{display:flex;gap:.4rem}
+    .dot{width:18px;height:18px;border-radius:50%;background:#e2e8f0;border:2px solid #cbd5e0;transition:all .3s}
+    .dot.found{background:#ef4444;border-color:#dc2626}
+    .dot.found.all{background:#22c55e;border-color:#16a34a}
+    .reset-btn{padding:.28rem .75rem;border:1px solid #ccc;background:#fff;border-radius:7px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:.78rem;color:#666;transition:all .2s}
+    .reset-btn:hover{background:#f5f5f5}
+
+    /* ── Email card ── */
+    .email-card{background:#fff;border-radius:13px;box-shadow:0 2px 10px rgba(0,0,0,.07);overflow:hidden;margin-bottom:1rem}
+    .email-header{background:#f8fafc;border-bottom:1px solid #e4ecf5;padding:.85rem 1.3rem}
+    .email-meta{font-size:.82rem;color:#555;line-height:1.9}
+    .email-meta span{color:#1a4a7a;font-weight:500}
+    .email-body{padding:1.3rem 1.5rem;font-size:.93rem;line-height:2;white-space:pre-wrap}
+
+    /* ── Error spans ── */
+    .err-s{
+      display:inline;
+      border-bottom:2px dashed #e07b00;
+      cursor:pointer;
+      border-radius:3px;
+      padding:0 1px;
+      transition:all .2s;
+      color:inherit;
+    }
+    .err-s:hover{background:#fff3e0}
+    .err-s.found{
+      background:#fee2e2;
+      border-bottom:2px solid #ef4444;
+      color:#b91c1c;
+      cursor:default;
+      font-weight:500;
+      border-radius:4px;
+      padding:0 3px;
+    }
+
+    /* ── Detail panel ── */
+    .detail-panel{background:#fff;border-radius:13px;box-shadow:0 2px 10px rgba(0,0,0,.08);overflow:hidden;margin-bottom:1rem;display:none}
+    .detail-panel.visible{display:block;animation:slideIn .25s ease}
+    @keyframes slideIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+    .detail-header{background:#fef2f2;border-bottom:1px solid #fecaca;padding:.75rem 1.2rem;display:flex;align-items:center;gap:.6rem}
+    .detail-header .err-badge{background:#ef4444;color:#fff;font-size:.75rem;font-weight:700;padding:.15rem .55rem;border-radius:10px}
+    .detail-header .err-word{font-weight:700;color:#b91c1c;font-size:.95rem}
+    .detail-body{padding:1rem 1.3rem}
+    .detail-row{display:flex;gap:.7rem;align-items:flex-start;margin-bottom:.7rem}
+    .detail-row:last-child{margin-bottom:0}
+    .detail-icon{font-size:1rem;flex-shrink:0;margin-top:.08rem}
+    .detail-content{font-size:.875rem;line-height:1.7}
+    .correct-form{font-weight:700;color:#166534;background:#dcfce7;padding:.1rem .5rem;border-radius:5px}
+    .vn-row{margin-top:.5rem;padding:.5rem .7rem;background:#fdf8ec;border-radius:7px;border-left:3px solid #ddb84a;font-size:.82rem;color:#666;display:none}
+    .vn-row.visible{display:block}
+    .vn-toggle-sm{margin-top:.55rem;padding:.22rem .65rem;border:1px solid #ddb84a;background:#fffbf0;color:#7a4f00;border-radius:5px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:.75rem}
+
+    /* ── Found list ── */
+    .found-list{background:#fff;border-radius:13px;padding:1rem 1.3rem;box-shadow:0 2px 8px rgba(0,0,0,.05);margin-bottom:1rem;min-height:52px}
+    .found-title{font-size:.8rem;font-weight:700;color:#888;margin-bottom:.55rem;text-transform:uppercase;letter-spacing:.4px}
+    .found-badges{display:flex;flex-wrap:wrap;gap:.4rem}
+    .found-badge{display:flex;align-items:center;gap:.3rem;background:#fee2e2;border:1px solid #fca5a5;border-radius:8px;padding:.25rem .65rem;font-size:.82rem;color:#b91c1c;font-weight:500}
+    .found-badge .arrow{color:#888;font-weight:400}
+    .found-badge .correct-part{color:#166534}
+
+    /* ── Completion banner ── */
+    .completion{background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;border-radius:13px;padding:1.4rem 1.5rem;text-align:center;margin-bottom:1rem;display:none;animation:popIn .4s ease}
+    .completion.visible{display:block}
+    @keyframes popIn{0%{transform:scale(.95);opacity:0}60%{transform:scale(1.03)}100%{transform:scale(1);opacity:1}}
+    .completion h3{font-size:1.2rem;margin-bottom:.4rem}
+    .completion p{font-size:.9rem;opacity:.92}
+    .next-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.8rem;padding:.5rem 1.1rem;background:#fff;color:#16a34a;border-radius:9px;text-decoration:none;font-size:.875rem;font-weight:700;transition:all .2s}
+    .next-btn:hover{background:#f0fdf4}
+
+    /* ── Footer ── */
+    footer{text-align:center;padding:1.8rem;font-size:.8rem;color:#aaa;border-top:1px solid #e8ecf0;margin-top:1rem}
+    footer a{color:#2c5f8a;text-decoration:none}
+
+    @media(max-width:600px){
+      header h1{font-size:1.35rem}
+      .email-body{padding:1rem;font-size:.88rem}
+      main{padding:1.2rem .9rem 2rem}
+    }
+    /* ── PC mode ── */
+    body.pc-mode main{max-width:860px;margin:0 auto;padding:2rem 1.2rem 3rem}
+    body.pc-mode .nav-links{justify-content:center;overflow-x:visible;flex-wrap:wrap}
+    /* ── PC toggle button ── */
+    .pc-toggle{position:fixed;bottom:1.2rem;right:1.2rem;z-index:900;background:#1a4a7a;color:#fff;border:none;border-radius:50px;padding:.6rem 1rem;font-family:'Noto Sans KR',sans-serif;font-size:.78rem;font-weight:500;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.22);display:flex;align-items:center;gap:.4rem;transition:background .2s}
+    .pc-toggle:hover{background:#2c5f8a}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🔍 오류 찾기 & 교정</h1>
+  <p>격식체에 맞지 않는 표현을 찾아 클릭하세요.</p>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">✉ 실습</a>
+    <a href="reference.html" class="nav-link">📚 참고</a>
+    <a href="activity1.html" class="nav-link active-page">🔍 오류 찾기</a>
+    <a href="activity2.html" class="nav-link">🔄 변환 연습</a>
+    <a href="activity3.html" class="nav-link">📋 순서 맞추기</a>
+    <a href="activity4.html" class="nav-link">🃏 어휘 게임</a>
+    <a href="activity5.html" class="nav-link">🎴 상황 카드</a>
+    <a href="activity6.html" class="nav-link">📝 자기 평가</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- 사용 안내 -->
+  <div class="inst-card">
+    <strong>사용 방법:</strong> 각 이메일에는 격식체에 어울리지 않는 표현이 <strong>5개</strong> 숨어 있습니다.<br>
+    어색하다고 느끼는 표현을 클릭하면 오류 이유와 올바른 표현을 확인할 수 있습니다.<br>
+    오류 표시: <span class="inst-sample">이런 표현</span>처럼 점선 밑줄이 있는 부분을 눌러 보세요.
+    <br>
+    <button class="vn-toggle-btn" onclick="toggleInstVN(this)">🇻🇳 베트남어로 보기 ▼</button>
+    <div class="inst-vn" id="inst-vn-box">
+      <strong>Hướng dẫn:</strong> Trong mỗi email có <strong>5 lỗi</strong> về văn phong trang trọng (합쇼체).<br>
+      Hãy click vào những cụm từ có <u style="text-decoration-style:dashed;text-decoration-color:#e07b00">gạch chân nét đứt</u> mà bạn thấy không phù hợp để xem giải thích và cách sửa đúng.
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(0)">✉ 이메일 1 — 교수님께</button>
+    <button class="tab-btn" onclick="switchTab(1)">🏢 이메일 2 — 기관 문의</button>
+    <button class="tab-btn" onclick="switchTab(2)">📋 이메일 3 — 증명서 요청</button>
+  </div>
+
+
+  <!-- ══════════ EMAIL 0 ══════════ -->
+  <div class="tab-panel active" id="panel-0">
+    <div class="score-bar">
+      <span class="score-text">발견한 오류: <strong id="score-0">0</strong> / 5</span>
+      <div class="score-dots" id="dots-0">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <button class="reset-btn" onclick="resetTab(0)">↺ 초기화</button>
+    </div>
+
+    <div class="email-card">
+      <div class="email-header">
+        <div class="email-meta">
+          <b>받는 사람</b>: <span>mjpark@hankuk.ac.kr (박민준 교수님)</span><br>
+          <b>제목</b>: <span>수업 관련 문의</span>
+        </div>
+      </div>
+      <div class="email-body">박민준 교수님께,
+
+<span class="err-s" onclick="hit(0,0)">안녕하세요</span>. 저는 한국어학과 2학년 홍길동<span class="err-s" onclick="hit(0,1)">이에요</span>.
+
+다름이 아니오라, 3월 15일 한국어 문법 수업에 갑작스러운 몸살로 인해 부득이 <span class="err-s" onclick="hit(0,2)">결석했어요</span>. 미리 연락을 드리지 못하여 대단히 죄송합니다.
+
+혹시 해당 수업의 내용과 과제를 <span class="err-s" onclick="hit(0,3)">알려 주세요</span>.
+
+<span class="err-s" onclick="hit(0,4)">수고하세요</span>.
+홍길동 올림</div>
+    </div>
+
+    <div class="detail-panel" id="detail-0"></div>
+    <div class="found-list" id="found-0">
+      <div class="found-title">발견한 오류 목록</div>
+      <div class="found-badges" id="badges-0"></div>
+    </div>
+    <div class="completion" id="done-0">
+      <h3>🎉 5개 오류를 모두 찾았습니다!</h3>
+      <p>이 이메일의 모든 격식체 오류를 발견했습니다. 다음 이메일에도 도전해 보세요.</p>
+      <a href="#" class="next-btn" onclick="switchTab(1);return false;">다음 이메일 →</a>
+    </div>
+  </div><!-- /panel-0 -->
+
+
+  <!-- ══════════ EMAIL 1 ══════════ -->
+  <div class="tab-panel" id="panel-1">
+    <div class="score-bar">
+      <span class="score-text">발견한 오류: <strong id="score-1">0</strong> / 5</span>
+      <div class="score-dots" id="dots-1">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <button class="reset-btn" onclick="resetTab(1)">↺ 초기화</button>
+    </div>
+
+    <div class="email-card">
+      <div class="email-header">
+        <div class="email-meta">
+          <b>받는 사람</b>: <span>graduate@hankuk.ac.kr (한국대학교 대학원 입학처)</span><br>
+          <b>제목</b>: <span>대학원 전형 문의</span>
+        </div>
+      </div>
+      <div class="email-body">안녕하십니까?
+
+저는 베트남 출신으로, 현재 하노이 외국어대학교 한국어학과에 <span class="err-s" onclick="hit(1,0)">다니고 있는</span> 응우옌이라고 합니다.
+
+귀 대학원 외국인 전형에 <span class="err-s" onclick="hit(1,1)">궁금한 게 있어서</span> 이메일을 드립니다.
+
+다음과 같이 여쭤보고자 합니다.
+첫째, 외국인 전형 지원에 필요한 서류가 <span class="err-s" onclick="hit(1,2)">뭐가 있어요</span>?
+둘째, 지원서 접수 마감일이 <span class="err-s" onclick="hit(1,3)">언제예요</span>?
+
+<span class="err-s" onclick="hit(1,4)">빨리 답장해 주세요</span>.
+
+감사합니다.
+응우옌 드림</div>
+    </div>
+
+    <div class="detail-panel" id="detail-1"></div>
+    <div class="found-list" id="found-1">
+      <div class="found-title">발견한 오류 목록</div>
+      <div class="found-badges" id="badges-1"></div>
+    </div>
+    <div class="completion" id="done-1">
+      <h3>🎉 5개 오류를 모두 찾았습니다!</h3>
+      <p>훌륭합니다! 마지막 이메일에도 도전해 보세요.</p>
+      <a href="#" class="next-btn" onclick="switchTab(2);return false;">마지막 이메일 →</a>
+    </div>
+  </div><!-- /panel-1 -->
+
+
+  <!-- ══════════ EMAIL 2 ══════════ -->
+  <div class="tab-panel" id="panel-2">
+    <div class="score-bar">
+      <span class="score-text">발견한 오류: <strong id="score-2">0</strong> / 5</span>
+      <div class="score-dots" id="dots-2">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <button class="reset-btn" onclick="resetTab(2)">↺ 초기화</button>
+    </div>
+
+    <div class="email-card">
+      <div class="email-header">
+        <div class="email-meta">
+          <b>받는 사람</b>: <span>student@hankuk.ac.kr (학생처)</span><br>
+          <b>제목</b>: <span>증명서 요청</span>
+        </div>
+      </div>
+      <div class="email-body">안녕하십니까?
+
+저는 한국어학과 교환학생 홍길동(학번: 2023-12345)입니다.
+
+이번에 장학금 신청 <span class="err-s" onclick="hit(2,0)">때문에</span> 아래와 같이 증명서 발급을 <span class="err-s" onclick="hit(2,1)">부탁드려요</span>.
+
+  · 재학증명서 1부
+  · 성적증명서 1부
+
+발급하신 서류를 hong.gildong@email.com으로 <span class="err-s" onclick="hit(2,2)">보내도 돼요</span>?
+
+<span class="err-s" onclick="hit(2,3)">번거로우시겠지만 잘 부탁드려요</span>.
+
+<span class="err-s" onclick="hit(2,4)">감사해요</span>.
+홍길동 올림</div>
+    </div>
+
+    <div class="detail-panel" id="detail-2"></div>
+    <div class="found-list" id="found-2">
+      <div class="found-title">발견한 오류 목록</div>
+      <div class="found-badges" id="badges-2"></div>
+    </div>
+    <div class="completion" id="done-2">
+      <h3>🎉 3개 이메일을 모두 완료했습니다!</h3>
+      <p>격식체 오류를 모두 찾았습니다. 이제 변환 연습도 해 보세요!</p>
+      <a href="activity2.html" class="next-btn">🔄 변환 연습하러 가기 →</a>
+    </div>
+  </div><!-- /panel-2 -->
+
+</main>
+
+<footer>
+  오류 찾기 & 교정 &nbsp;|&nbsp;
+  <a href="index.html">✉ 실습</a> &nbsp;·&nbsp;
+  <a href="reference.html">📚 참고</a> &nbsp;·&nbsp;
+  <a href="activity2.html">🔄 변환 연습</a> &nbsp;·&nbsp;
+  <a href="activity3.html">📋 순서 맞추기</a> &nbsp;·&nbsp;
+  <a href="activity4.html">🃏 어휘 게임</a>
+</footer>
+
+<!-- PC toggle -->
+<button class="pc-toggle" id="pc-toggle-btn" onclick="togglePCMode()">
+  <span>🖥</span>
+  <span id="pc-toggle-label">PC 화면</span>
+</button>
+<script>
+(function(){
+  function initPCMode(){
+    if(localStorage.getItem('formalView')==='pc'){
+      document.body.classList.add('pc-mode');
+      var lbl=document.getElementById('pc-toggle-label');
+      if(lbl) lbl.textContent='모바일 화면';
+    }
+  }
+  window.togglePCMode=function(){
+    var b=document.body;
+    if(b.classList.toggle('pc-mode')){
+      localStorage.setItem('formalView','pc');
+      document.getElementById('pc-toggle-label').textContent='모바일 화면';
+    } else {
+      localStorage.setItem('formalView','mobile');
+      document.getElementById('pc-toggle-label').textContent='PC 화면';
+    }
+  };
+  initPCMode();
+})();
+</script>
+<script>
+// ──────────────────────────────────────────
+// 오류 데이터
+// ──────────────────────────────────────────
+const ERRS = [
+  // Email 0: 교수님께 결석 알림
+  [
+    {
+      w: "안녕하세요",
+      c: "안녕하십니까?",
+      r: "이메일 등 공식 글에서는 해요체 <strong>'안녕하세요'</strong> 대신 합쇼체 <strong>'안녕하십니까?'</strong>를 사용합니다. '안녕하세요'는 일상 대화나 비공식 상황에 적합합니다.",
+      vn: "Trong email trang trọng dùng <strong>'안녕하십니까?'</strong> (thể 합쇼체) thay vì <strong>'안녕하세요'</strong> (thể 해요체). '안녕하세요' chỉ phù hợp trong hội thoại hàng ngày."
+    },
+    {
+      w: "이에요",
+      c: "입니다",
+      r: "<strong>'~이에요/예요'</strong>는 해요체 어미입니다. 격식체 이메일에서는 <strong>'~입니다'</strong>로 바꿔야 합니다.",
+      vn: "<strong>'~이에요/예요'</strong> là đuôi câu thể 해요체. Trong email trang trọng phải dùng <strong>'~입니다'</strong> (thể 합쇼체)."
+    },
+    {
+      w: "결석했어요",
+      c: "결석하게 되었습니다",
+      r: "<strong>'~았/었어요'</strong>는 해요체 과거형입니다. 격식체에서는 <strong>'~았/었습니다'</strong> 또는 공식 통보 표현인 <strong>'~게 되었습니다'</strong>를 사용합니다.",
+      vn: "<strong>'~았/었어요'</strong> là đuôi câu quá khứ thể 해요체. Trong thể trang trọng dùng <strong>'~았/었습니다'</strong> hoặc <strong>'~게 되었습니다'</strong>."
+    },
+    {
+      w: "알려 주세요",
+      c: "알려 주시면 감사하겠습니다",
+      r: "<strong>'알려 주세요'</strong>는 명령형으로 다소 직접적입니다. 공식 이메일에서는 <strong>'알려 주시면 감사하겠습니다'</strong> 또는 <strong>'알려 주실 수 있으시겠습니까?'</strong>가 더 정중합니다.",
+      vn: "<strong>'알려 주세요'</strong> là câu mệnh lệnh trực tiếp, không phù hợp trong email trang trọng. Nên dùng <strong>'알려 주시면 감사하겠습니다'</strong> (Nếu cho biết thì tôi rất biết ơn)."
+    },
+    {
+      w: "수고하세요",
+      c: "감사합니다",
+      r: "<strong>'수고하세요'</strong>는 동급이나 아랫사람에게 쓰는 표현입니다. 교수님과 같은 윗사람에게 쓰면 <span style='color:#b91c1c'>실례</span>가 됩니다. 공식 이메일은 <strong>'감사합니다'</strong>로 마무리하세요.",
+      vn: "<strong>'수고하세요'</strong> chỉ dùng với người ngang hàng hoặc cấp dưới. Nói với giáo sư hoặc cấp trên là <span style='color:#b91c1c'>bất lịch sự</span>. Kết thúc email bằng <strong>'감사합니다'</strong>."
+    }
+  ],
+  // Email 1: 기관 문의
+  [
+    {
+      w: "다니고 있는",
+      c: "재학 중인",
+      r: "<strong>'다니다'</strong>는 구어적 표현입니다. 공식 이메일에서는 <strong>'재학 중인'</strong>이라는 문어적 표현을 사용합니다.",
+      vn: "<strong>'다니다'</strong> là từ ngữ thông thường (khẩu ngữ). Trong email trang trọng nên dùng <strong>'재학 중인'</strong> (đang theo học — văn viết)."
+    },
+    {
+      w: "궁금한 게 있어서",
+      c: "문의 드릴 사항이 있어",
+      r: "<strong>'궁금한 게 있어서'</strong>는 일상적인 구어 표현입니다. 공식 이메일에서는 <strong>'문의 드릴 사항이 있어'</strong> 또는 <strong>'문의 드리고자'</strong>와 같은 문어적 표현을 사용합니다.",
+      vn: "<strong>'궁금한 게 있어서'</strong> là cách nói thông thường, không trang trọng. Trong email trang trọng dùng <strong>'문의 드릴 사항이 있어'</strong> (có điều muốn hỏi thăm)."
+    },
+    {
+      w: "뭐가 있어요",
+      c: "무엇이 필요합니까",
+      r: "<strong>'뭐가 있어요?'</strong>는 해요체 구어 표현입니다. 격식체에서는 <strong>'무엇이 필요합니까?'</strong>로 씁니다. <strong>'뭐'</strong>는 구어, <strong>'무엇'</strong>은 문어 표현입니다.",
+      vn: "<strong>'뭐가 있어요?'</strong> là thể 해요체 mang tính khẩu ngữ. Trong thể trang trọng dùng <strong>'무엇이 필요합니까?'</strong> ('뭐' là khẩu ngữ, '무엇' là văn viết)."
+    },
+    {
+      w: "언제예요",
+      c: "언제입니까",
+      r: "<strong>'~예요/이에요'</strong>는 해요체 어미입니다. 격식 의문문에서는 <strong>'~입니까?'</strong>를 사용해야 합니다.",
+      vn: "<strong>'~예요/이에요'</strong> là đuôi câu thể 해요체. Trong câu hỏi thể kính ngữ trang trọng (합쇼체) phải dùng <strong>'~입니까?'</strong>"
+    },
+    {
+      w: "빨리 답장해 주세요",
+      c: "빠른 답변 부탁드립니다",
+      r: "<strong>'빨리 답장해 주세요'</strong>는 너무 직접적이고 구어적입니다. 공식 이메일에서는 <strong>'빠른 답변 부탁드립니다'</strong>를 사용합니다.",
+      vn: "<strong>'빨리 답장해 주세요'</strong> quá trực tiếp và mang tính khẩu ngữ. Trong email trang trọng nên dùng <strong>'빠른 답변 부탁드립니다'</strong>."
+    }
+  ],
+  // Email 2: 증명서 요청
+  [
+    {
+      w: "때문에",
+      c: "을 위해",
+      r: "<strong>'때문에'</strong>는 원인이 부정적일 때 자주 씁니다. 목적을 나타낼 때는 <strong>'을/를 위해'</strong>가 더 자연스럽고 적절합니다.<br><span style='color:#888;font-size:.82rem'>예) 장학금 신청을 위해 ○</span>",
+      vn: "<strong>'때문에'</strong> thường dùng khi nguyên nhân mang tính tiêu cực. Khi diễn đạt mục đích nên dùng <strong>'을/를 위해'</strong>.<br><span style='color:#888;font-size:.82rem'>Ví dụ: 장학금 신청을 위해 ○</span>"
+    },
+    {
+      w: "부탁드려요",
+      c: "요청 드립니다",
+      r: "<strong>'~드려요'</strong>는 해요체 어미입니다. 격식체에서는 <strong>'~드립니다'</strong>로 써야 합니다. 또한 <strong>'요청 드립니다'</strong>가 공식 문서에 더 적합한 표현입니다.",
+      vn: "<strong>'~드려요'</strong> là đuôi câu thể 해요체. Trong thể trang trọng (합쇼체) phải dùng <strong>'~드립니다'</strong>. Hơn nữa, <strong>'요청 드립니다'</strong> (xin yêu cầu) phù hợp hơn trong văn bản công vụ."
+    },
+    {
+      w: "보내도 돼요",
+      c: "보내 주시면 감사하겠습니다",
+      r: "<strong>'~해도 돼요?'</strong>는 허락을 구하는 구어 표현입니다. 공식 이메일에서는 <strong>'~해 주시면 감사하겠습니다'</strong>와 같이 정중한 요청 표현을 사용합니다.",
+      vn: "<strong>'~해도 돼요?'</strong> là cách xin phép theo lối khẩu ngữ. Trong email trang trọng nên dùng <strong>'~해 주시면 감사하겠습니다'</strong> (nếu ... thì tôi rất biết ơn)."
+    },
+    {
+      w: "번거로우시겠지만 잘 부탁드려요",
+      c: "번거로우시겠지만 잘 부탁드립니다",
+      r: "<strong>'~드려요'</strong>는 해요체 어미입니다. 격식 이메일에서는 <strong>'~드립니다'</strong>로 마무리해야 합니다. 표현 자체는 좋지만 어미만 바꿔야 합니다.",
+      vn: "<strong>'~드려요'</strong> là đuôi câu thể 해요체. Trong email trang trọng phải kết thúc bằng <strong>'~드립니다'</strong> (thể 합쇼체). Cụm từ này hay, chỉ cần đổi đuôi câu."
+    },
+    {
+      w: "감사해요",
+      c: "감사합니다",
+      r: "<strong>'~해요'</strong>는 해요체 어미입니다. 격식체에서는 <strong>'~합니다'</strong>로 써야 합니다. 공식 이메일의 마지막 문장은 반드시 합쇼체로 마무리합니다.",
+      vn: "<strong>'~해요'</strong> là đuôi câu thể 해요체. Trong thể 합쇼체 trang trọng phải dùng <strong>'~합니다'</strong>. Câu cuối của email trang trọng luôn kết thúc bằng thể 합쇼체."
+    }
+  ]
+];
+
+// ──────────────────────────────────────────
+// 상태 관리
+// ──────────────────────────────────────────
+const state = [[],[],[]]; // found error indices per tab
+let currentTab = 0;
+
+// ──────────────────────────────────────────
+// 탭 전환
+// ──────────────────────────────────────────
+function switchTab(idx) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+  document.querySelectorAll('.tab-panel').forEach((p,i) => p.classList.toggle('active', i===idx));
+  currentTab = idx;
+}
+
+// ──────────────────────────────────────────
+// 안내 베트남어 토글
+// ──────────────────────────────────────────
+function toggleInstVN(btn) {
+  const box = document.getElementById('inst-vn-box');
+  const show = !box.classList.contains('visible');
+  box.classList.toggle('visible', show);
+  btn.textContent = show ? '🇻🇳 베트남어 닫기 ▲' : '🇻🇳 베트남어로 보기 ▼';
+}
+
+// ──────────────────────────────────────────
+// 오류 클릭 처리
+// ──────────────────────────────────────────
+function hit(tab, errIdx) {
+  const span = document.querySelector(`#panel-${tab} .err-s:nth-of-type(${errIdx+1})`);
+  // Use querySelectorAll and index
+  const spans = document.querySelectorAll(`#panel-${tab} .err-s`);
+  const clicked = spans[errIdx];
+
+  if (clicked.classList.contains('found')) {
+    // Already found — just re-show detail
+    showDetail(tab, errIdx);
+    return;
+  }
+
+  clicked.classList.add('found');
+  clicked.onclick = () => showDetail(tab, errIdx); // allow re-click to see detail
+
+  if (!state[tab].includes(errIdx)) state[tab].push(errIdx);
+
+  updateScore(tab);
+  showDetail(tab, errIdx);
+  addBadge(tab, errIdx);
+
+  if (state[tab].length === 5) showCompletion(tab);
+}
+
+// ──────────────────────────────────────────
+// 점수 업데이트
+// ──────────────────────────────────────────
+function updateScore(tab) {
+  const n = state[tab].length;
+  document.getElementById(`score-${tab}`).textContent = n;
+  const dots = document.querySelectorAll(`#dots-${tab} .dot`);
+  dots.forEach((d, i) => {
+    d.classList.toggle('found', i < n);
+    if (n === 5) d.classList.add('all');
+  });
+}
+
+// ──────────────────────────────────────────
+// 상세 패널 표시
+// ──────────────────────────────────────────
+function showDetail(tab, errIdx) {
+  const err = ERRS[tab][errIdx];
+  const panel = document.getElementById(`detail-${tab}`);
+
+  panel.innerHTML = `
+    <div class="detail-header">
+      <span class="err-badge">오류 ${state[tab].length}/5</span>
+      <span class="err-word">"${err.w}"</span>
+    </div>
+    <div class="detail-body">
+      <div class="detail-row">
+        <span class="detail-icon">❌</span>
+        <div class="detail-content"><div id="why-${tab}-${errIdx}">${err.r}</div></div>
+      </div>
+      <div class="detail-row">
+        <span class="detail-icon">✅</span>
+        <div class="detail-content">올바른 표현: <span class="correct-form">${err.c}</span></div>
+      </div>
+      <button class="vn-toggle-sm" onclick="toggleDetailVN(${tab},${errIdx},this)">🇻🇳 베트남어로 보기</button>
+      <div class="vn-row" id="vn-${tab}-${errIdx}">${err.vn}</div>
+    </div>`;
+
+  panel.classList.add('visible');
+  panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function toggleDetailVN(tab, errIdx, btn) {
+  const box = document.getElementById(`vn-${tab}-${errIdx}`);
+  const show = !box.classList.contains('visible');
+  box.classList.toggle('visible', show);
+  btn.textContent = show ? '🇻🇳 베트남어 닫기' : '🇻🇳 베트남어로 보기';
+}
+
+// ──────────────────────────────────────────
+// 배지 추가
+// ──────────────────────────────────────────
+function addBadge(tab, errIdx) {
+  const err = ERRS[tab][errIdx];
+  const container = document.getElementById(`badges-${tab}`);
+  const badge = document.createElement('div');
+  badge.className = 'found-badge';
+  badge.innerHTML = `<span>${err.w}</span><span class="arrow">→</span><span class="correct-part">${err.c}</span>`;
+  container.appendChild(badge);
+}
+
+// ──────────────────────────────────────────
+// 완료 배너
+// ──────────────────────────────────────────
+function showCompletion(tab) {
+  document.getElementById(`done-${tab}`).classList.add('visible');
+}
+
+// ──────────────────────────────────────────
+// 초기화
+// ──────────────────────────────────────────
+function resetTab(tab) {
+  if (!confirm('이 이메일의 진행 상황을 초기화하시겠습니까?')) return;
+
+  state[tab] = [];
+  document.getElementById(`score-${tab}`).textContent = '0';
+  document.querySelectorAll(`#dots-${tab} .dot`).forEach(d => d.className = 'dot');
+
+  const spans = document.querySelectorAll(`#panel-${tab} .err-s`);
+  spans.forEach((s, i) => {
+    s.classList.remove('found');
+    s.onclick = () => hit(tab, i);
+  });
+
+  const detail = document.getElementById(`detail-${tab}`);
+  detail.classList.remove('visible');
+  detail.innerHTML = '';
+
+  document.getElementById(`badges-${tab}`).innerHTML = '';
+  document.getElementById(`done-${tab}`).classList.remove('visible');
+}
+</script>
+</body>
+</html>

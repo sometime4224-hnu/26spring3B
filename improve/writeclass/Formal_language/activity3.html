@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>단락 순서 맞추기 | 격식체 연습</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Noto Sans KR',sans-serif;background:#f5f7fa;color:#2d3748;line-height:1.7}
+
+    /* ── Header ── */
+    header{background:linear-gradient(135deg,#1a4a7a,#2c5f8a);color:#fff;padding:2rem 1.5rem 1.6rem;text-align:center}
+    header h1{font-size:1.65rem;font-weight:700;letter-spacing:-.5px;margin-bottom:.3rem}
+    header p{font-size:.9rem;opacity:.88;margin-bottom:1rem}
+    .nav-links{display:flex;justify-content:flex-start;gap:.5rem;overflow-x:auto;padding-bottom:.3rem;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .nav-links::-webkit-scrollbar{display:none}
+    .nav-link{white-space:nowrap;flex-shrink:0;padding:.4rem 1rem;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);border-radius:18px;color:#fff;text-decoration:none;font-size:.8rem;transition:background .2s}
+    .nav-link:hover{background:rgba(255,255,255,.32)}
+    .nav-link.cur{background:rgba(255,255,255,.35);font-weight:700}
+
+    /* ── Main ── */
+    main{padding:1.4rem 1rem 3rem}
+
+    /* ── Instruction ── */
+    .inst{background:#fff3cd;border:1px solid #ffc107;border-radius:12px;padding:1rem 1.3rem;margin-bottom:1.5rem;font-size:.88rem;line-height:1.75}
+    .inst strong{color:#7a4f00}
+    .inst .how{display:flex;gap:1.2rem;flex-wrap:wrap;margin-top:.55rem}
+    .inst .how-item{display:flex;align-items:center;gap:.35rem;font-size:.82rem;color:#555}
+    .inst .how-icon{font-size:1rem}
+
+    /* ── Tabs ── */
+    .tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.4rem}
+    .tab-btn{padding:.5rem 1.1rem;border:2px solid #2c5f8a;background:#fff;color:#2c5f8a;border-radius:22px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:.85rem;font-weight:500;transition:all .2s}
+    .tab-btn:hover{background:#e8f0f8}
+    .tab-btn.active{background:#2c5f8a;color:#fff}
+    .tab-panel{display:none}
+    .tab-panel.active{display:block}
+
+    /* ── Status bar ── */
+    .status-bar{display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:10px;padding:.65rem 1rem;margin-bottom:1rem;box-shadow:0 2px 6px rgba(0,0,0,.06);gap:.7rem;flex-wrap:wrap}
+    .status-text{font-size:.85rem;color:#555}
+    .status-text strong{color:#1a4a7a}
+    .sel-hint{font-size:.8rem;color:#888;font-style:italic}
+
+    /* ── Block container ── */
+    .blocks-wrap{margin-bottom:1rem}
+
+    /* ── Para block ── */
+    .para-block{
+      background:#fff;border-radius:11px;border:2px solid #e4ecf5;border-left:4px solid #94a3b8;
+      padding:.85rem 1rem;margin-bottom:.6rem;
+      display:flex;align-items:flex-start;gap:.8rem;
+      cursor:pointer;transition:all .2s;user-select:none;
+      box-shadow:0 1px 4px rgba(0,0,0,.05);
+    }
+    .para-block:hover:not(.locked){background:#f5f9ff;border-color:#b0c8e8;border-left-color:#2c5f8a}
+    .para-block.selected{background:#e8f0f8;border-color:#2c5f8a;border-left-color:#2c5f8a;box-shadow:0 2px 10px rgba(44,95,138,.2)}
+    .para-block.correct-pos{border-left-color:#22c55e;background:#f0fdf4;cursor:default}
+    .para-block.wrong-pos{border-left-color:#ef4444;background:#fff5f5}
+    .para-block.dragging-over{border:2px dashed #2c5f8a;background:#e8f0f8}
+    .para-block.locked{cursor:default}
+
+    .block-num{
+      width:26px;height:26px;border-radius:50%;background:#94a3b8;color:#fff;
+      display:flex;align-items:center;justify-content:center;
+      font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:.1rem;transition:background .2s;
+    }
+    .para-block.selected .block-num{background:#2c5f8a}
+    .para-block.correct-pos .block-num{background:#22c55e}
+    .para-block.wrong-pos .block-num{background:#ef4444}
+
+    .block-body{flex:1;min-width:0}
+    .role-tag{
+      display:inline-block;font-size:.72rem;font-weight:700;
+      background:#2c5f8a;color:#fff;padding:.05rem .5rem;border-radius:8px;
+      margin-bottom:.3rem;
+    }
+    .role-tag.vn-tag{background:#ddb84a;color:#7a4f00;margin-left:.3rem}
+    .block-text{font-size:.88rem;line-height:1.75;color:#2d3748;word-break:keep-all}
+
+    .block-status{flex-shrink:0;font-size:1rem;margin-top:.1rem;width:20px;text-align:center}
+    .block-btns{display:flex;flex-direction:column;gap:.25rem;flex-shrink:0}
+    .move-btn{
+      width:26px;height:26px;border:1px solid #ddd;background:#fff;
+      border-radius:6px;cursor:pointer;font-size:.75rem;
+      display:flex;align-items:center;justify-content:center;
+      transition:all .2s;color:#555;
+    }
+    .move-btn:hover:not(:disabled){background:#e8f0f8;border-color:#2c5f8a;color:#2c5f8a}
+    .move-btn:disabled{opacity:.3;cursor:default}
+
+    /* ── Action buttons ── */
+    .action-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem}
+    .btn-check{padding:.55rem 1.3rem;background:#2c5f8a;color:#fff;border:none;border-radius:9px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:.875rem;font-weight:600;transition:background .2s}
+    .btn-check:hover{background:#1e4a6e}
+    .btn-reset{padding:.55rem 1rem;background:#fff;color:#666;border:1px solid #ccc;border-radius:9px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:.875rem;transition:all .2s}
+    .btn-reset:hover{background:#f5f5f5}
+    .btn-answer{padding:.55rem 1rem;background:#fff;color:#6d28d9;border:1px solid #a78bfa;border-radius:9px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:.875rem;transition:all .2s}
+    .btn-answer:hover{background:#f5f3ff}
+
+    /* ── Result message ── */
+    .result-msg{border-radius:10px;padding:.8rem 1.1rem;margin-bottom:.8rem;font-size:.875rem;display:none}
+    .result-msg.visible{display:block}
+    .result-msg.partial{background:#fff8f0;border:1px solid #f5cba4;color:#7c3a00}
+    .result-msg.all-ok{background:#f0fdf4;border:1px solid #86efac;color:#166534}
+
+    /* ── VN toggle ── */
+    .vn-toggle-btn{padding:.25rem .65rem;border:1px solid #ddb84a;background:#fffbf0;color:#7a4f00;border-radius:6px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:.75rem;margin-left:.5rem;transition:all .2s}
+    .vn-toggle-btn:hover{background:#fef3c7}
+    .vn-toggle-btn.on{background:#ddb84a;color:#fff}
+
+    /* ── Completion ── */
+    .completion{background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;border-radius:13px;padding:1.4rem 1.5rem;text-align:center;display:none;animation:popIn .4s ease;margin-top:.5rem}
+    .completion.visible{display:block}
+    @keyframes popIn{0%{transform:scale(.95);opacity:0}60%{transform:scale(1.03)}100%{transform:scale(1);opacity:1}}
+    .completion h3{font-size:1.15rem;margin-bottom:.35rem}
+    .completion p{font-size:.875rem;opacity:.92}
+    .next-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.8rem;padding:.5rem 1.1rem;background:#fff;color:#16a34a;border-radius:9px;text-decoration:none;font-size:.875rem;font-weight:700;transition:all .2s;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif}
+    .next-btn:hover{background:#f0fdf4}
+
+    /* ── Footer ── */
+    footer{text-align:center;padding:1.8rem;font-size:.8rem;color:#aaa;border-top:1px solid #e8ecf0;margin-top:1rem}
+    footer a{color:#2c5f8a;text-decoration:none}
+
+    @media(max-width:600px){
+      header h1{font-size:1.35rem}
+      main{padding:1.2rem .9rem 2rem}
+      .block-text{font-size:.84rem}
+      .action-row{gap:.4rem}
+    }
+    /* ── PC mode ── */
+    body.pc-mode main{max-width:860px;margin:0 auto;padding:2rem 1.2rem 3rem}
+    body.pc-mode .nav-links{justify-content:center;overflow-x:visible;flex-wrap:wrap}
+    /* ── PC toggle button ── */
+    .pc-toggle{position:fixed;bottom:1.2rem;right:1.2rem;z-index:900;background:#1a4a7a;color:#fff;border:none;border-radius:50px;padding:.6rem 1rem;font-family:'Noto Sans KR',sans-serif;font-size:.78rem;font-weight:500;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.22);display:flex;align-items:center;gap:.4rem;transition:background .2s}
+    .pc-toggle:hover{background:#2c5f8a}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>📋 단락 순서 맞추기</h1>
+  <p>뒤섞인 이메일 단락을 올바른 순서로 배열하세요.</p>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">✉ 실습</a>
+    <a href="reference.html" class="nav-link">📚 참고</a>
+    <a href="activity1.html" class="nav-link">🔍 오류 찾기</a>
+    <a href="activity2.html" class="nav-link">🔄 변환 연습</a>
+    <a href="activity3.html" class="nav-link cur">📋 순서 맞추기</a>
+    <a href="activity4.html" class="nav-link">🃏 어휘 게임</a>
+    <a href="activity5.html" class="nav-link">🎴 상황 카드</a>
+    <a href="activity6.html" class="nav-link">📝 자기 평가</a>
+  </div>
+</header>
+
+<main>
+  <div class="inst">
+    <strong>사용 방법</strong> — 단락을 올바른 순서로 배열하세요.
+    <div class="how">
+      <span class="how-item"><span class="how-icon">👆</span> 단락 클릭 → 선택(파란색) → 다른 단락 클릭 → 위치 교환</span>
+      <span class="how-item"><span class="how-icon">↕</span> 우측 ↑↓ 버튼으로 한 칸씩 이동</span>
+      <span class="how-item"><span class="how-icon">🖱</span> 드래그 앤 드롭 가능 (PC)</span>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(0)">✉ 이메일 1 — 교수님께</button>
+    <button class="tab-btn" onclick="switchTab(1)">🏢 이메일 2 — 기관 문의</button>
+    <button class="tab-btn" onclick="switchTab(2)">📋 이메일 3 — 증명서 요청</button>
+  </div>
+
+  <!-- ══ PANEL 0 ══ -->
+  <div class="tab-panel active" id="panel-0">
+    <div class="status-bar">
+      <span class="status-text">이메일: <strong>교수님께 결석 알림</strong> &nbsp;|&nbsp; 단락 수: 4개</span>
+      <span class="sel-hint" id="sel-hint-0">단락을 클릭해 선택하세요</span>
+    </div>
+    <div class="blocks-wrap" id="blocks-0"></div>
+    <div class="action-row">
+      <button class="btn-check" onclick="checkOrder(0)">✅ 정렬 확인</button>
+      <button class="btn-reset" onclick="resetOrder(0)">↺ 초기화</button>
+      <button class="btn-answer" onclick="showAnswer(0)">📄 정답 보기</button>
+    </div>
+    <div class="result-msg" id="result-0"></div>
+    <div class="completion" id="done-0">
+      <h3>🎉 완벽한 순서입니다!</h3>
+      <p>이메일의 4가지 구성 요소를 모두 올바른 순서로 배열했습니다.</p>
+      <button class="next-btn" onclick="switchTab(1)">다음 이메일 →</button>
+    </div>
+  </div>
+
+  <!-- ══ PANEL 1 ══ -->
+  <div class="tab-panel" id="panel-1">
+    <div class="status-bar">
+      <span class="status-text">이메일: <strong>기관 문의</strong> &nbsp;|&nbsp; 단락 수: 5개</span>
+      <span class="sel-hint" id="sel-hint-1">단락을 클릭해 선택하세요</span>
+    </div>
+    <div class="blocks-wrap" id="blocks-1"></div>
+    <div class="action-row">
+      <button class="btn-check" onclick="checkOrder(1)">✅ 정렬 확인</button>
+      <button class="btn-reset" onclick="resetOrder(1)">↺ 초기화</button>
+      <button class="btn-answer" onclick="showAnswer(1)">📄 정답 보기</button>
+    </div>
+    <div class="result-msg" id="result-1"></div>
+    <div class="completion" id="done-1">
+      <h3>🎉 완벽한 순서입니다!</h3>
+      <p>5단락 이메일을 완벽하게 정렬했습니다!</p>
+      <button class="next-btn" onclick="switchTab(2)">마지막 이메일 →</button>
+    </div>
+  </div>
+
+  <!-- ══ PANEL 2 ══ -->
+  <div class="tab-panel" id="panel-2">
+    <div class="status-bar">
+      <span class="status-text">이메일: <strong>증명서 요청</strong> &nbsp;|&nbsp; 단락 수: 5개</span>
+      <span class="sel-hint" id="sel-hint-2">단락을 클릭해 선택하세요</span>
+    </div>
+    <div class="blocks-wrap" id="blocks-2"></div>
+    <div class="action-row">
+      <button class="btn-check" onclick="checkOrder(2)">✅ 정렬 확인</button>
+      <button class="btn-reset" onclick="resetOrder(2)">↺ 초기화</button>
+      <button class="btn-answer" onclick="showAnswer(2)">📄 정답 보기</button>
+    </div>
+    <div class="result-msg" id="result-2"></div>
+    <div class="completion" id="done-2">
+      <h3>🎉 3개 이메일을 모두 완료!</h3>
+      <p>공적 이메일의 구조를 완벽하게 이해했습니다. 어휘 게임도 도전해 보세요!</p>
+      <a href="activity4.html" class="next-btn">🃏 어휘 게임하러 가기 →</a>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  단락 순서 맞추기 &nbsp;|&nbsp;
+  <a href="index.html">✉ 실습</a> &nbsp;·&nbsp;
+  <a href="activity1.html">🔍 오류 찾기</a> &nbsp;·&nbsp;
+  <a href="activity2.html">🔄 변환 연습</a> &nbsp;·&nbsp;
+  <a href="activity4.html">🃏 어휘 게임</a>
+</footer>
+
+<!-- PC toggle -->
+<button class="pc-toggle" id="pc-toggle-btn" onclick="togglePCMode()">
+  <span>🖥</span>
+  <span id="pc-toggle-label">PC 화면</span>
+</button>
+<script>
+(function(){
+  function initPCMode(){
+    if(localStorage.getItem('formalView')==='pc'){
+      document.body.classList.add('pc-mode');
+      var lbl=document.getElementById('pc-toggle-label');
+      if(lbl) lbl.textContent='모바일 화면';
+    }
+  }
+  window.togglePCMode=function(){
+    var b=document.body;
+    if(b.classList.toggle('pc-mode')){
+      localStorage.setItem('formalView','pc');
+      document.getElementById('pc-toggle-label').textContent='모바일 화면';
+    } else {
+      localStorage.setItem('formalView','mobile');
+      document.getElementById('pc-toggle-label').textContent='PC 화면';
+    }
+  };
+  initPCMode();
+})();
+</script>
+<script>
+// ─────────────────────────────────────────
+// 이메일 데이터 (parts = 올바른 순서)
+// ─────────────────────────────────────────
+const EMAILS = [
+  {
+    title: "교수님께 결석 알림",
+    parts: [
+      {
+        role: "인사말 & 자기소개",
+        roleVN: "Lời chào & Giới thiệu bản thân",
+        text: "박민준 교수님께,\n\n안녕하십니까? 저는 한국어학과 2학년 홍길동입니다."
+      },
+      {
+        role: "용건 — 결석 알림",
+        roleVN: "Nội dung — Thông báo vắng mặt",
+        text: "다름이 아니오라, 3월 15일 한국어 문법 수업에 갑작스러운 몸살로 인해 부득이 결석하게 되었음을 알려 드립니다. 미리 연락을 드리지 못하여 대단히 죄송합니다."
+      },
+      {
+        role: "문의 & 요청",
+        roleVN: "Hỏi & Yêu cầu",
+        text: "혹시 가능하시다면, 해당 수업의 내용과 과제를 알려 주시면 감사하겠습니다."
+      },
+      {
+        role: "마무리",
+        roleVN: "Lời kết",
+        text: "바쁘신 중에 불편을 드려 죄송합니다. 답변 기다리겠습니다.\n\n감사합니다.\n홍길동 올림"
+      }
+    ],
+    scramble: [2, 3, 0, 1]
+  },
+  {
+    title: "기관 문의",
+    parts: [
+      {
+        role: "인사말",
+        roleVN: "Lời chào",
+        text: "안녕하십니까?"
+      },
+      {
+        role: "자기소개",
+        roleVN: "Giới thiệu bản thân",
+        text: "저는 베트남 출신으로, 현재 하노이 외국어대학교 한국어학과에 재학 중인 응우옌이라고 합니다."
+      },
+      {
+        role: "이메일 목적",
+        roleVN: "Mục đích email",
+        text: "귀 대학원 외국인 전형에 관해 다음과 같이 문의 드립니다."
+      },
+      {
+        role: "문의 항목",
+        roleVN: "Các câu hỏi cụ thể",
+        text: "첫째, 외국인 전형 지원에 필요한 서류는 무엇입니까?\n둘째, 지원서 접수 마감일은 언제입니까?\n셋째, 합격자 발표 일정도 함께 알려 주시면 감사하겠습니다."
+      },
+      {
+        role: "마무리",
+        roleVN: "Lời kết",
+        text: "바쁘신 중에 문의 드려 죄송합니다. 빠른 답변 부탁드립니다.\n\n감사합니다.\n응우옌 드림"
+      }
+    ],
+    scramble: [3, 0, 4, 1, 2]
+  },
+  {
+    title: "증명서 요청",
+    parts: [
+      {
+        role: "인사말 & 자기소개",
+        roleVN: "Lời chào & Giới thiệu",
+        text: "안녕하십니까?\n저는 한국어학과 교환학생 홍길동(학번: 2023-12345)입니다."
+      },
+      {
+        role: "요청 목적",
+        roleVN: "Mục đích yêu cầu",
+        text: "이번에 장학금 신청을 위해 아래와 같이 증명서 발급을 요청 드립니다."
+      },
+      {
+        role: "요청 서류 목록",
+        roleVN: "Danh sách tài liệu",
+        text: "  · 재학증명서 1부\n  · 성적증명서 1부"
+      },
+      {
+        role: "수령 방법",
+        roleVN: "Cách nhận tài liệu",
+        text: "가능하시다면, 발급하신 서류를 hong.gildong@email.com으로 보내 주시면 감사하겠습니다."
+      },
+      {
+        role: "마무리",
+        roleVN: "Lời kết",
+        text: "번거로우시겠지만 잘 부탁드립니다.\n\n감사합니다.\n홍길동 올림"
+      }
+    ],
+    scramble: [2, 4, 1, 0, 3]
+  }
+];
+
+// ─────────────────────────────────────────
+// 상태
+// ─────────────────────────────────────────
+const state = EMAILS.map(e => ({
+  order: [...e.scramble],   // order[pos] = partIdx
+  selected: null,
+  checked: false,
+  showVN: false
+}));
+
+let dragSrc = null;
+
+// ─────────────────────────────────────────
+// 렌더
+// ─────────────────────────────────────────
+function render(ei) {
+  const { order, selected, checked, showVN } = state[ei];
+  const parts = EMAILS[ei].parts;
+  const container = document.getElementById(`blocks-${ei}`);
+  container.innerHTML = '';
+
+  order.forEach((partIdx, pos) => {
+    const part = parts[partIdx];
+    const isCorrect = checked && partIdx === pos;
+    const isWrong   = checked && partIdx !== pos;
+    const isSel     = selected === pos;
+
+    const div = document.createElement('div');
+    div.className = 'para-block'
+      + (isSel     ? ' selected'   : '')
+      + (isCorrect ? ' correct-pos locked' : '')
+      + (isWrong   ? ' wrong-pos'  : '');
+    div.draggable = !isCorrect;
+    div.dataset.pos = pos;
+
+    // drag events
+    div.addEventListener('dragstart', e => {
+      dragSrc = { ei, pos };
+      e.dataTransfer.effectAllowed = 'move';
+      div.style.opacity = '.5';
+    });
+    div.addEventListener('dragend', () => { div.style.opacity = ''; });
+    div.addEventListener('dragover', e => {
+      e.preventDefault();
+      div.classList.add('dragging-over');
+    });
+    div.addEventListener('dragleave', () => div.classList.remove('dragging-over'));
+    div.addEventListener('drop', e => {
+      e.preventDefault();
+      div.classList.remove('dragging-over');
+      if (dragSrc && dragSrc.ei === ei && dragSrc.pos !== pos) {
+        swapPos(ei, dragSrc.pos, pos);
+      }
+      dragSrc = null;
+    });
+
+    // click to select/swap
+    div.addEventListener('click', e => {
+      if (e.target.classList.contains('move-btn') || e.target.classList.contains('vn-toggle-btn')) return;
+      if (isCorrect) return;
+      onBlockClick(ei, pos);
+    });
+
+    // role tag (always shown, VN optional)
+    const roleHtml = isCorrect
+      ? `<div style="margin-bottom:.3rem">
+           <span class="role-tag">${part.role}</span>
+           <button class="vn-toggle-btn${showVN?' on':''}" onclick="event.stopPropagation();toggleVN(${ei})">🇻🇳</button>
+           ${showVN ? `<span class="role-tag vn-tag">${part.roleVN}</span>` : ''}
+         </div>`
+      : '';
+
+    // status icon
+    const statusIcon = isCorrect ? '✅' : isWrong ? '❌' : '';
+
+    div.innerHTML = `
+      <div class="block-num">${pos + 1}</div>
+      <div class="block-body">
+        ${roleHtml}
+        <div class="block-text">${part.text.replace(/\n/g, '<br>')}</div>
+      </div>
+      <div class="block-status">${statusIcon}</div>
+      <div class="block-btns">
+        <button class="move-btn" title="위로" ${pos===0?'disabled':''} onclick="event.stopPropagation();moveBlock(${ei},${pos},-1)">↑</button>
+        <button class="move-btn" title="아래로" ${pos===order.length-1?'disabled':''} onclick="event.stopPropagation();moveBlock(${ei},${pos},1)">↓</button>
+      </div>`;
+
+    container.appendChild(div);
+  });
+
+  // selection hint
+  const hint = document.getElementById(`sel-hint-${ei}`);
+  hint.textContent = selected !== null
+    ? `"${selected+1}번" 선택됨 — 이동할 위치를 클릭하세요`
+    : '단락을 클릭해 선택하세요';
+  hint.style.color = selected !== null ? '#2c5f8a' : '#888';
+}
+
+// ─────────────────────────────────────────
+// 클릭 선택 / 교환
+// ─────────────────────────────────────────
+function onBlockClick(ei, pos) {
+  const s = state[ei];
+  if (s.selected === null) {
+    s.selected = pos;
+  } else if (s.selected === pos) {
+    s.selected = null;
+  } else {
+    swapPos(ei, s.selected, pos);
+    s.selected = null;
+  }
+  render(ei);
+}
+
+function swapPos(ei, a, b) {
+  const arr = state[ei].order;
+  [arr[a], arr[b]] = [arr[b], arr[a]];
+  state[ei].checked = false;
+  document.getElementById(`result-${ei}`).classList.remove('visible');
+  render(ei);
+}
+
+// ─────────────────────────────────────────
+// ↑↓ 버튼 이동
+// ─────────────────────────────────────────
+function moveBlock(ei, pos, dir) {
+  const np = pos + dir;
+  const arr = state[ei].order;
+  if (np < 0 || np >= arr.length) return;
+  [arr[pos], arr[np]] = [arr[np], arr[pos]];
+  state[ei].checked = false;
+  state[ei].selected = null;
+  document.getElementById(`result-${ei}`).classList.remove('visible');
+  render(ei);
+}
+
+// ─────────────────────────────────────────
+// 정렬 확인
+// ─────────────────────────────────────────
+function checkOrder(ei) {
+  state[ei].checked = true;
+  state[ei].selected = null;
+  render(ei);
+
+  const { order } = state[ei];
+  const correct = order.every((p, i) => p === i);
+  const correctCount = order.filter((p, i) => p === i).length;
+  const total = order.length;
+
+  const msg = document.getElementById(`result-${ei}`);
+  if (correct) {
+    msg.className = 'result-msg all-ok visible';
+    msg.innerHTML = `✅ 완벽합니다! 모든 단락이 올바른 위치에 있습니다. 각 단락의 역할을 확인해 보세요.`;
+    setTimeout(() => document.getElementById(`done-${ei}`).classList.add('visible'), 500);
+  } else {
+    msg.className = 'result-msg partial visible';
+    msg.innerHTML = `🔸 ${correctCount}/${total}개가 올바른 위치입니다. ✅ 표시된 단락은 맞게 배치됐습니다. ❌ 표시된 단락을 다시 이동해 보세요.`;
+  }
+}
+
+// ─────────────────────────────────────────
+// 정답 보기
+// ─────────────────────────────────────────
+function showAnswer(ei) {
+  state[ei].order = EMAILS[ei].parts.map((_, i) => i);
+  state[ei].checked = true;
+  state[ei].selected = null;
+  render(ei);
+
+  const msg = document.getElementById(`result-${ei}`);
+  msg.className = 'result-msg all-ok visible';
+  msg.innerHTML = `📄 정답을 표시했습니다. 각 단락의 역할을 확인하고 이메일 구조를 익히세요.`;
+  setTimeout(() => document.getElementById(`done-${ei}`).classList.add('visible'), 300);
+}
+
+// ─────────────────────────────────────────
+// 초기화
+// ─────────────────────────────────────────
+function resetOrder(ei) {
+  if (!confirm('이 이메일의 진행 상황을 초기화하시겠습니까?')) return;
+  state[ei].order = [...EMAILS[ei].scramble];
+  state[ei].selected = null;
+  state[ei].checked = false;
+  document.getElementById(`result-${ei}`).className = 'result-msg';
+  document.getElementById(`done-${ei}`).classList.remove('visible');
+  render(ei);
+}
+
+// ─────────────────────────────────────────
+// VN 토글
+// ─────────────────────────────────────────
+function toggleVN(ei) {
+  state[ei].showVN = !state[ei].showVN;
+  render(ei);
+}
+
+// ─────────────────────────────────────────
+// 탭
+// ─────────────────────────────────────────
+function switchTab(idx) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+  document.querySelectorAll('.tab-panel').forEach((p,i) => p.classList.toggle('active', i===idx));
+}
+
+// ─────────────────────────────────────────
+// 초기 렌더
+// ─────────────────────────────────────────
+[0, 1, 2].forEach(render);
+</script>
+</body>
+</html>

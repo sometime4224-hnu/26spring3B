@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>해요체 → 합쇼체 변환 연습 | 격식체</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Noto Sans KR',sans-serif;background:#f5f7fa;color:#2d3748;line-height:1.7}
+
+    /* ── Header ── */
+    header{background:linear-gradient(135deg,#1a4a7a,#2c5f8a);color:#fff;padding:2rem 1.5rem 1.6rem;text-align:center}
+    header h1{font-size:1.65rem;font-weight:700;letter-spacing:-0.5px;margin-bottom:.3rem}
+    header p{font-size:.9rem;opacity:.88;margin-bottom:1rem}
+    .nav-links{display:flex;justify-content:flex-start;gap:.5rem;overflow-x:auto;padding-bottom:.3rem;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .nav-links::-webkit-scrollbar{display:none}
+    .nav-link{white-space:nowrap;flex-shrink:0;padding:.4rem 1rem;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);border-radius:18px;color:#fff;text-decoration:none;font-size:.8rem;transition:background .2s}
+    .nav-link:hover{background:rgba(255,255,255,.32)}
+    .nav-link.active-page{background:rgba(255,255,255,.35);font-weight:700}
+
+    /* ── Main ── */
+    main{padding:1.4rem 1rem 3rem}
+
+    /* ── Level Nav ── */
+    .level-nav{display:flex;gap:.5rem;margin-bottom:1.6rem;flex-wrap:wrap}
+    .level-btn{padding:.5rem 1.1rem;border:2px solid #2c5f8a;background:#fff;color:#2c5f8a;border-radius:22px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:.875rem;font-weight:500;transition:all .2s}
+    .level-btn:hover{background:#e8f0f8}
+    .level-btn.active{background:#2c5f8a;color:#fff}
+    .level-panel{display:none}
+    .level-panel.active{display:block}
+
+    /* ── Section subtitle ── */
+    .lv-intro{background:#fff;border-radius:13px;padding:1.1rem 1.4rem;margin-bottom:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,.06);border-left:4px solid #2c5f8a}
+    .lv-intro h2{font-size:1rem;font-weight:700;color:#1a4a7a;margin-bottom:.3rem}
+    .lv-intro p{font-size:.875rem;color:#555}
+
+    /* ── Progress ── */
+    .progress-bar-wrap{background:#fff;border-radius:10px;padding:.75rem 1.1rem;margin-bottom:1.2rem;box-shadow:0 2px 6px rgba(0,0,0,.05);display:flex;align-items:center;gap:1rem}
+    .progress-label{font-size:.85rem;font-weight:500;color:#555;white-space:nowrap}
+    .progress-track{flex:1;height:8px;background:#e4ecf5;border-radius:10px;overflow:hidden}
+    .progress-fill{height:100%;background:linear-gradient(90deg,#2c5f8a,#4a9fd4);border-radius:10px;transition:width .4s ease}
+    .progress-count{font-size:.82rem;font-weight:700;color:#2c5f8a;white-space:nowrap}
+
+    /* ── Exercise Card ── */
+    .ex-card{background:#fff;border-radius:13px;padding:1.3rem 1.4rem;margin-bottom:1rem;box-shadow:0 2px 8px rgba(0,0,0,.06);transition:box-shadow .2s}
+    .ex-card.correct-state{border-left:4px solid #22c55e}
+    .ex-card.wrong-state{border-left:4px solid #ef4444}
+    .ex-card.shown-state{border-left:4px solid #a78bfa}
+
+    .ex-num{font-size:.75rem;font-weight:700;color:#888;letter-spacing:.5px;margin-bottom:.5rem}
+    .ex-source{background:#fef9ec;border:1px solid #f5e18a;border-radius:9px;padding:.75rem 1rem;margin-bottom:.9rem;font-size:.93rem;line-height:1.75}
+    .ex-source .label{font-size:.73rem;font-weight:700;color:#7a4f00;background:#fde68a;padding:.05rem .4rem;border-radius:5px;margin-right:.5rem;vertical-align:middle}
+
+    .ex-input-row{display:flex;gap:.5rem;align-items:stretch;margin-bottom:.6rem}
+    .ex-input{flex:1;padding:.6rem .9rem;border:2px solid #d8e8f5;border-radius:8px;font-family:'Noto Sans KR',sans-serif;font-size:.9rem;color:#2d3748;transition:border-color .2s}
+    .ex-input:focus{outline:none;border-color:#2c5f8a}
+    .ex-input.correct{border-color:#22c55e;background:#f0fdf4}
+    .ex-input.wrong{border-color:#ef4444;background:#fff5f5}
+    .ex-input.shown{border-color:#a78bfa;background:#f5f3ff}
+    .ex-input:disabled{background:#f8f9fa;color:#888}
+
+    .btn-check{padding:.6rem 1rem;background:#2c5f8a;color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:.85rem;font-weight:500;transition:background .2s;white-space:nowrap}
+    .btn-check:hover{background:#1e4a6e}
+    .btn-check:disabled{background:#94a3b8;cursor:default}
+
+    .ex-actions{display:flex;gap:.4rem;flex-wrap:wrap}
+    .btn-sm-act{padding:.3rem .75rem;border:1px solid #ccc;background:#fff;border-radius:7px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:.78rem;color:#555;transition:all .2s}
+    .btn-sm-act:hover{background:#f0f0f0}
+    .btn-hint{border-color:#ddb84a;color:#7a4f00;background:#fffbf0}
+    .btn-hint:hover{background:#fef3c7}
+    .btn-ans{border-color:#a78bfa;color:#6d28d9;background:#f5f3ff}
+    .btn-ans:hover{background:#ede9fe}
+
+    .feedback{margin-top:.6rem;padding:.55rem .9rem;border-radius:8px;font-size:.875rem;line-height:1.6;display:none}
+    .feedback.visible{display:block}
+    .feedback.ok{background:#dcfce7;color:#166534;border:1px solid #86efac}
+    .feedback.ng{background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5}
+    .feedback.info{background:#f5f3ff;color:#4c1d95;border:1px solid #c4b5fd}
+    .hint-box{background:#fffbf0;border:1px solid #fde68a;border-radius:8px;padding:.5rem .9rem;margin-top:.5rem;font-size:.84rem;color:#7a4f00;display:none}
+    .hint-box.visible{display:block}
+    .ans-box{background:#f5f3ff;border:1px solid #c4b5fd;border-radius:8px;padding:.6rem .9rem;margin-top:.5rem;font-size:.88rem;color:#4c1d95;display:none;line-height:1.75}
+    .ans-box.visible{display:block}
+    .ans-box strong{color:#6d28d9}
+
+    /* ── Level 3: Textarea ── */
+    .lv3-source{background:#fff8f0;border:2px solid #fed7aa;border-radius:10px;padding:.9rem 1.1rem;margin-bottom:.9rem;font-size:.92rem;line-height:1.85;color:#7c2d12}
+    .lv3-label{font-size:.73rem;font-weight:700;color:#9a3412;background:#fed7aa;padding:.05rem .45rem;border-radius:5px;margin-right:.5rem}
+    .lv3-textarea{width:100%;min-height:150px;padding:.85rem 1rem;border:2px solid #d8e8f5;border-radius:9px;font-family:'Noto Sans KR',sans-serif;font-size:.9rem;line-height:1.85;resize:vertical;transition:border-color .2s;color:#2d3748}
+    .lv3-textarea:focus{outline:none;border-color:#2c5f8a}
+    .lv3-model{background:#f2faf2;border:1px solid #86efac;border-radius:9px;padding:.85rem 1.1rem;margin-top:.7rem;font-size:.88rem;line-height:2;white-space:pre-wrap;color:#166534;display:none}
+    .lv3-model.visible{display:block}
+    .lv3-model-label{font-size:.75rem;font-weight:700;color:#166534;margin-bottom:.4rem}
+    .lv3-hl{background:#bbf7d0;padding:0 2px;border-radius:3px}
+
+    /* ── All-correct banner ── */
+    .all-done{background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;border-radius:13px;padding:1.4rem 1.5rem;text-align:center;display:none;animation:popIn .4s ease;margin-top:1rem}
+    .all-done.visible{display:block}
+    @keyframes popIn{0%{transform:scale(.95);opacity:0}60%{transform:scale(1.03)}100%{transform:scale(1);opacity:1}}
+    .all-done h3{font-size:1.15rem;margin-bottom:.35rem}
+    .all-done p{font-size:.875rem;opacity:.92}
+    .next-act-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.8rem;padding:.5rem 1.1rem;background:#fff;color:#16a34a;border-radius:9px;text-decoration:none;font-size:.875rem;font-weight:700;transition:all .2s}
+    .next-act-btn:hover{background:#f0fdf4}
+
+    /* ── Footer ── */
+    footer{text-align:center;padding:1.8rem;font-size:.8rem;color:#aaa;border-top:1px solid #e8ecf0;margin-top:1rem}
+    footer a{color:#2c5f8a;text-decoration:none}
+
+    @media(max-width:600px){
+      header h1{font-size:1.35rem}
+      .ex-input-row{flex-direction:column}
+      .btn-check{width:100%}
+      main{padding:1.2rem .9rem 2rem}
+    }
+    /* ── PC mode ── */
+    body.pc-mode main{max-width:860px;margin:0 auto;padding:2rem 1.2rem 3rem}
+    body.pc-mode .nav-links{justify-content:center;overflow-x:visible;flex-wrap:wrap}
+    /* ── PC toggle button ── */
+    .pc-toggle{position:fixed;bottom:1.2rem;right:1.2rem;z-index:900;background:#1a4a7a;color:#fff;border:none;border-radius:50px;padding:.6rem 1rem;font-family:'Noto Sans KR',sans-serif;font-size:.78rem;font-weight:500;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.22);display:flex;align-items:center;gap:.4rem;transition:background .2s}
+    .pc-toggle:hover{background:#2c5f8a}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🔄 해요체 → 합쇼체 변환 연습</h1>
+  <p>비격식체 표현을 격식체로 바꾸는 연습을 합니다.</p>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">✉ 실습</a>
+    <a href="reference.html" class="nav-link">📚 참고</a>
+    <a href="activity1.html" class="nav-link">🔍 오류 찾기</a>
+    <a href="activity2.html" class="nav-link active-page">🔄 변환 연습</a>
+    <a href="activity3.html" class="nav-link">📋 순서 맞추기</a>
+    <a href="activity4.html" class="nav-link">🃏 어휘 게임</a>
+    <a href="activity5.html" class="nav-link">🎴 상황 카드</a>
+    <a href="activity6.html" class="nav-link">📝 자기 평가</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- Level Navigation -->
+  <div class="level-nav">
+    <button class="level-btn active" onclick="switchLevel(0)">레벨 1 — 어미 변환</button>
+    <button class="level-btn" onclick="switchLevel(1)">레벨 2 — 표현 변환</button>
+    <button class="level-btn" onclick="switchLevel(2)">레벨 3 — 전체 변환</button>
+  </div>
+
+
+  <!-- ══════════ LEVEL 1: 어미 변환 ══════════ -->
+  <div class="level-panel active" id="lv-0">
+    <div class="lv-intro">
+      <h2>레벨 1 — 어미 변환</h2>
+      <p>해요체(-아/어요, -이에요/예요) 어미를 합쇼체(-습니다, -입니다, -십시오)로 바꾸세요. 어미만 바꾸면 됩니다.</p>
+    </div>
+    <div class="progress-bar-wrap">
+      <span class="progress-label">진행률</span>
+      <div class="progress-track"><div class="progress-fill" id="prog-fill-0" style="width:0%"></div></div>
+      <span class="progress-count" id="prog-count-0">0 / 8</span>
+    </div>
+    <div id="exlist-0"></div>
+    <div class="all-done" id="alldone-0">
+      <h3>🎉 레벨 1 완료!</h3>
+      <p>해요체 어미를 모두 정확하게 합쇼체로 바꿨습니다!</p>
+      <a href="#" class="next-act-btn" onclick="switchLevel(1);return false;">레벨 2로 가기 →</a>
+    </div>
+  </div>
+
+  <!-- ══════════ LEVEL 2: 표현 변환 ══════════ -->
+  <div class="level-panel" id="lv-1">
+    <div class="lv-intro">
+      <h2>레벨 2 — 표현 변환</h2>
+      <p>어미뿐 아니라 표현 자체를 더 격식 있는 형태로 바꿔 보세요. 정답이 여러 가지일 수 있습니다.</p>
+    </div>
+    <div class="progress-bar-wrap">
+      <span class="progress-label">진행률</span>
+      <div class="progress-track"><div class="progress-fill" id="prog-fill-1" style="width:0%"></div></div>
+      <span class="progress-count" id="prog-count-1">0 / 6</span>
+    </div>
+    <div id="exlist-1"></div>
+    <div class="all-done" id="alldone-1">
+      <h3>🎉 레벨 2 완료!</h3>
+      <p>모든 표현을 격식체로 바꿨습니다! 이제 전체 문장 변환에 도전해 보세요.</p>
+      <a href="#" class="next-act-btn" onclick="switchLevel(2);return false;">레벨 3으로 가기 →</a>
+    </div>
+  </div>
+
+  <!-- ══════════ LEVEL 3: 전체 변환 ══════════ -->
+  <div class="level-panel" id="lv-2">
+    <div class="lv-intro">
+      <h2>레벨 3 — 전체 변환</h2>
+      <p>일상적으로 쓴 문장 전체를 공적인 이메일 문체로 바꿔 보세요. 작성 후 <strong>모범 예시</strong>와 비교해 보세요.</p>
+    </div>
+    <div id="exlist-2"></div>
+  </div>
+
+</main>
+
+<footer>
+  해요체 → 합쇼체 변환 연습 &nbsp;|&nbsp;
+  <a href="index.html">✉ 실습</a> &nbsp;·&nbsp;
+  <a href="reference.html">📚 참고</a> &nbsp;·&nbsp;
+  <a href="activity1.html">🔍 오류 찾기</a> &nbsp;·&nbsp;
+  <a href="activity3.html">📋 순서 맞추기</a> &nbsp;·&nbsp;
+  <a href="activity4.html">🃏 어휘 게임</a>
+</footer>
+
+<!-- PC toggle -->
+<button class="pc-toggle" id="pc-toggle-btn" onclick="togglePCMode()">
+  <span>🖥</span>
+  <span id="pc-toggle-label">PC 화면</span>
+</button>
+<script>
+(function(){
+  function initPCMode(){
+    if(localStorage.getItem('formalView')==='pc'){
+      document.body.classList.add('pc-mode');
+      var lbl=document.getElementById('pc-toggle-label');
+      if(lbl) lbl.textContent='모바일 화면';
+    }
+  }
+  window.togglePCMode=function(){
+    var b=document.body;
+    if(b.classList.toggle('pc-mode')){
+      localStorage.setItem('formalView','pc');
+      document.getElementById('pc-toggle-label').textContent='모바일 화면';
+    } else {
+      localStorage.setItem('formalView','mobile');
+      document.getElementById('pc-toggle-label').textContent='PC 화면';
+    }
+  };
+  initPCMode();
+})();
+</script>
+<script>
+// ──────────────────────────────────────────
+// 연습 데이터
+// ──────────────────────────────────────────
+
+const LV1 = [
+  {
+    q: "저는 베트남 학생이에요.",
+    a: ["저는 베트남 학생입니다."],
+    hint: "'이에요' → '입니다' (명사 + 이다의 합쇼체)"
+  },
+  {
+    q: "오늘 학교에 가요.",
+    a: ["오늘 학교에 갑니다."],
+    hint: "'가요' → '갑니다' (동사 합쇼체 평서형)"
+  },
+  {
+    q: "이 과제가 언제까지예요?",
+    a: ["이 과제가 언제까지입니까?"],
+    hint: "'예요?' → '입니까?' (합쇼체 의문형)"
+  },
+  {
+    q: "잘 부탁드려요.",
+    a: ["잘 부탁드립니다."],
+    hint: "'-드려요' → '-드립니다' (어미만 바꾸기)"
+  },
+  {
+    q: "내용을 확인해 주세요.",
+    a: ["내용을 확인해 주십시오."],
+    hint: "'-주세요' → '-주십시오' (합쇼체 명령형)"
+  },
+  {
+    q: "어제 결석했어요.",
+    a: ["어제 결석하였습니다.", "어제 결석했습니다."],
+    hint: "'-했어요' → '-하였습니다 / -했습니다' (합쇼체 과거형)"
+  },
+  {
+    q: "어디로 보내요?",
+    a: ["어디로 보냅니까?"],
+    hint: "'-보내요?' → '-보냅니까?' (합쇼체 의문형)"
+  },
+  {
+    q: "감사해요.",
+    a: ["감사합니다."],
+    hint: "'-해요' → '-합니다' (합쇼체 평서형)"
+  }
+];
+
+const LV2 = [
+  {
+    q: "안녕하세요. (이메일의 첫 인사)",
+    a: ["안녕하십니까?"],
+    hint: "이메일의 공식 인사말은 '안녕하십니까?'입니다.",
+    note: "해요체 '안녕하세요'는 이메일 인사말로 쓸 수 없습니다."
+  },
+  {
+    q: "수업 내용 알려 줘요.",
+    a: [
+      "수업 내용을 알려 주시면 감사하겠습니다.",
+      "수업 내용을 알려 주시면 감사하겠습니다",
+      "수업 내용을 알려 주실 수 있으시겠습니까?",
+      "수업 내용을 알려 주실 수 있으시겠습니까"
+    ],
+    hint: "'알려 줘요' → '알려 주시면 감사하겠습니다' 또는 '알려 주실 수 있으시겠습니까?'",
+    note: "단순히 어미만 바꾸는 것이 아니라, 요청 표현 전체를 더 정중하게 바꿉니다."
+  },
+  {
+    q: "이메일로 받아도 돼요?",
+    a: [
+      "이메일로 보내 주시면 감사하겠습니다.",
+      "이메일로 보내 주시면 감사하겠습니다",
+      "이메일로 보내 주실 수 있으시겠습니까?",
+      "이메일로 보내 주실 수 있으시겠습니까"
+    ],
+    hint: "'~해도 돼요?' → '~해 주시면 감사하겠습니다' (허락 요청 → 정중한 요청으로 변환)",
+    note: "'~해도 돼요?'는 구어적 허락 요청 표현입니다. 공식 이메일에서는 요청 형태로 바꿉니다."
+  },
+  {
+    q: "빨리 답장해 주세요.",
+    a: [
+      "빠른 답변 부탁드립니다.",
+      "빠른 답변을 부탁드립니다."
+    ],
+    hint: "'빨리 답장해 주세요' → '빠른 답변 부탁드립니다'",
+    note: "직접적인 명령형보다 명사형으로 표현하는 것이 더 격식 있습니다."
+  },
+  {
+    q: "궁금한 게 있어서요.",
+    a: [
+      "문의 드릴 사항이 있습니다.",
+      "문의 드리고자 합니다.",
+      "문의 드릴 사항이 있어 연락드립니다."
+    ],
+    hint: "'궁금한 게 있어서요' → '문의 드릴 사항이 있습니다'",
+    note: "'궁금하다'는 구어적 표현입니다. 공식 문서에서는 '문의 드리다'를 사용합니다."
+  },
+  {
+    q: "수고하세요. (교수님께 이메일 마무리)",
+    a: ["감사합니다."],
+    hint: "교수님과 같은 윗사람에게 '수고하세요'는 쓸 수 없습니다. → '감사합니다'",
+    note: "'수고하세요'는 동급이나 아랫사람에게 쓰는 표현입니다. 윗사람에게 쓰면 실례입니다."
+  }
+];
+
+const LV3 = [
+  {
+    label: "교수님께 결석 알림",
+    q: "교수님, 저 오늘 많이 아파서 수업 못 갔어요. 수업 내용이랑 과제 알려 주세요. 감사해요.",
+    model: `박민준 교수님께,
+
+안녕하십니까? 저는 한국어학과 2학년 홍길동입니다.
+
+오늘 갑작스러운 몸살로 인해 부득이 결석하게 되었음을 알려 드립니다. 미리 연락을 드리지 못하여 대단히 죄송합니다.
+
+혹시 가능하시다면, 수업 내용과 과제를 알려 주시면 감사하겠습니다.
+
+바쁘신 중에 불편을 드려 죄송합니다. 답변 기다리겠습니다.
+
+감사합니다.
+홍길동 올림`,
+    highlights: ["부득이 결석하게 되었음을 알려 드립니다", "대단히 죄송합니다", "알려 주시면 감사하겠습니다", "바쁘신 중에 불편을 드려 죄송합니다"]
+  },
+  {
+    label: "기관 문의",
+    q: "안녕하세요. 대학원 전형에 대해 궁금한 게 있어서요. 지원 서류가 뭐가 필요해요? 마감일도 알려 주세요. 빨리 답장해 주세요.",
+    model: `안녕하십니까?
+
+저는 베트남 출신으로 현재 하노이 외국어대학교 한국어학과에 재학 중인 [이름]이라고 합니다.
+
+귀 대학원 외국인 전형과 관련하여 다음과 같이 문의 드립니다.
+
+첫째, 외국인 전형 지원에 필요한 서류는 무엇입니까?
+둘째, 지원서 접수 마감일은 언제입니까?
+
+바쁘신 중에 문의 드려 죄송합니다. 빠른 답변 부탁드립니다.
+
+감사합니다.
+[이름] 드림`,
+    highlights: ["다음과 같이 문의 드립니다", "무엇입니까?", "언제입니까?", "빠른 답변 부탁드립니다"]
+  },
+  {
+    label: "증명서 요청",
+    q: "안녕하세요. 저 홍길동인데요. 장학금 때문에 재학증명서랑 성적증명서가 필요해서요. 이메일로 받아도 돼요? 고마워요.",
+    model: `안녕하십니까?
+
+저는 한국어학과 교환학생 홍길동(학번: 2023-12345)입니다.
+
+이번에 장학금 신청을 위해 아래와 같이 증명서 발급을 요청 드립니다.
+
+  - 재학증명서 1부
+  - 성적증명서 1부
+
+가능하시다면, 발급하신 서류를 hong.gildong@email.com으로 보내 주시면 감사하겠습니다.
+
+번거로우시겠지만 잘 부탁드립니다. 감사합니다.
+
+홍길동 올림`,
+    highlights: ["장학금 신청을 위해", "요청 드립니다", "보내 주시면 감사하겠습니다", "번거로우시겠지만 잘 부탁드립니다"]
+  }
+];
+
+// ──────────────────────────────────────────
+// 레벨 전환
+// ──────────────────────────────────────────
+function switchLevel(idx) {
+  document.querySelectorAll('.level-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+  document.querySelectorAll('.level-panel').forEach((p,i) => p.classList.toggle('active', i===idx));
+}
+
+// ──────────────────────────────────────────
+// 정답 비교 (정규화)
+// ──────────────────────────────────────────
+function normalize(s) {
+  return s.trim().replace(/\s+/g,' ').replace(/[.。]$/, '').toLowerCase();
+}
+
+function isCorrect(input, answers) {
+  const n = normalize(input);
+  return answers.some(a => normalize(a) === n);
+}
+
+// ──────────────────────────────────────────
+// 레벨 1 & 2 렌더링
+// ──────────────────────────────────────────
+const scores = [0, 0]; // correct count per level
+const totals = [LV1.length, LV2.length];
+
+function renderLevel12(data, lvIdx) {
+  const container = document.getElementById(`exlist-${lvIdx}`);
+  data.forEach((item, i) => {
+    const card = document.createElement('div');
+    card.className = 'ex-card';
+    card.id = `ex-${lvIdx}-${i}`;
+    card.innerHTML = `
+      <div class="ex-num">문제 ${i+1} / ${data.length}</div>
+      <div class="ex-source">
+        <span class="label">해요체</span>${item.q}
+        ${item.note ? `<div style="margin-top:.4rem;font-size:.8rem;color:#7a4f00">💡 ${item.note}</div>` : ''}
+      </div>
+      <div class="ex-input-row">
+        <input class="ex-input" id="inp-${lvIdx}-${i}" placeholder="합쇼체로 바꿔 쓰세요..."
+          onkeydown="if(event.key==='Enter')checkAns(${lvIdx},${i})">
+        <button class="btn-check" id="btn-${lvIdx}-${i}" onclick="checkAns(${lvIdx},${i})">확인</button>
+      </div>
+      <div class="ex-actions">
+        <button class="btn-sm-act btn-hint" onclick="toggleHint(${lvIdx},${i})">💡 힌트</button>
+        <button class="btn-sm-act btn-ans" onclick="showAns(${lvIdx},${i})">정답 보기</button>
+      </div>
+      <div class="hint-box" id="hint-${lvIdx}-${i}">${item.hint}</div>
+      <div class="ans-box" id="ans-${lvIdx}-${i}">
+        <strong>정답:</strong> ${item.a[0]}
+        ${item.a.length > 1 ? '<br><strong>또는:</strong> ' + item.a.slice(1).join(' / ') : ''}
+      </div>
+      <div class="feedback" id="fb-${lvIdx}-${i}"></div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function checkAns(lvIdx, exIdx) {
+  const data = lvIdx === 0 ? LV1 : LV2;
+  const item = data[exIdx];
+  const inp = document.getElementById(`inp-${lvIdx}-${exIdx}`);
+  const fb = document.getElementById(`fb-${lvIdx}-${exIdx}`);
+  const card = document.getElementById(`ex-${lvIdx}-${exIdx}`);
+  const btn = document.getElementById(`btn-${lvIdx}-${exIdx}`);
+
+  if (!inp.value.trim()) return;
+  if (inp.disabled) return;
+
+  if (isCorrect(inp.value, item.a)) {
+    inp.className = 'ex-input correct';
+    card.className = 'ex-card correct-state';
+    fb.className = 'feedback ok visible';
+    fb.innerHTML = `✅ 정답입니다! <strong>${item.a[0]}</strong>`;
+    btn.disabled = true;
+    inp.disabled = true;
+
+    if (!card.dataset.counted) {
+      card.dataset.counted = '1';
+      scores[lvIdx]++;
+      updateProgress(lvIdx);
+      if (scores[lvIdx] === totals[lvIdx]) {
+        setTimeout(() => document.getElementById(`alldone-${lvIdx}`).classList.add('visible'), 400);
+      }
+    }
+  } else {
+    inp.className = 'ex-input wrong';
+    card.className = 'ex-card wrong-state';
+    fb.className = 'feedback ng visible';
+    fb.innerHTML = `❌ 다시 시도해 보세요. 힌트를 참고하거나 '정답 보기'를 눌러 확인하세요.`;
+    // shake animation
+    inp.style.animation = 'shake .3s';
+    setTimeout(() => inp.style.animation = '', 300);
+  }
+}
+
+function toggleHint(lvIdx, exIdx) {
+  const box = document.getElementById(`hint-${lvIdx}-${exIdx}`);
+  box.classList.toggle('visible');
+}
+
+function showAns(lvIdx, exIdx) {
+  const data = lvIdx === 0 ? LV1 : LV2;
+  const inp = document.getElementById(`inp-${lvIdx}-${exIdx}`);
+  const card = document.getElementById(`ex-${lvIdx}-${exIdx}`);
+  const btn = document.getElementById(`btn-${lvIdx}-${exIdx}`);
+  const fb = document.getElementById(`fb-${lvIdx}-${exIdx}`);
+
+  document.getElementById(`ans-${lvIdx}-${exIdx}`).classList.add('visible');
+
+  if (!inp.disabled) {
+    inp.className = 'ex-input shown';
+    card.className = 'ex-card shown-state';
+    inp.disabled = true;
+    btn.disabled = true;
+    fb.className = 'feedback info visible';
+    fb.textContent = '정답을 확인하고 꼭 외워 두세요.';
+  }
+}
+
+function updateProgress(lvIdx) {
+  const n = scores[lvIdx];
+  const t = totals[lvIdx];
+  const pct = Math.round(n / t * 100);
+  document.getElementById(`prog-fill-${lvIdx}`).style.width = pct + '%';
+  document.getElementById(`prog-count-${lvIdx}`).textContent = `${n} / ${t}`;
+}
+
+// ──────────────────────────────────────────
+// 레벨 3 렌더링
+// ──────────────────────────────────────────
+function renderLevel3() {
+  const container = document.getElementById('exlist-2');
+  LV3.forEach((item, i) => {
+    // Build highlighted model
+    let modelHtml = item.model;
+    item.highlights.forEach(h => {
+      modelHtml = modelHtml.replace(new RegExp(h.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'g'),
+        `<span class="lv3-hl">${h}</span>`);
+    });
+
+    const card = document.createElement('div');
+    card.className = 'ex-card';
+    card.innerHTML = `
+      <div class="ex-num">문제 ${i+1} — ${item.label}</div>
+      <div class="lv3-source">
+        <span class="lv3-label">해요체</span>${item.q}
+      </div>
+      <textarea class="lv3-textarea" id="ta3-${i}" placeholder="합쇼체 이메일 문체로 바꿔 써 보세요..."></textarea>
+      <div style="margin-top:.6rem;display:flex;gap:.5rem;flex-wrap:wrap">
+        <button class="btn-sm-act btn-ans" onclick="toggleModel(${i})">📄 모범 예시 보기 / 닫기</button>
+      </div>
+      <div class="lv3-model" id="model-${i}">
+        <div class="lv3-model-label">✅ 모범 예시 (노란 표시 = 핵심 격식 표현)</div>${modelHtml}
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function toggleModel(i) {
+  document.getElementById(`model-${i}`).classList.toggle('visible');
+}
+
+// ──────────────────────────────────────────
+// 흔들기 애니메이션
+// ──────────────────────────────────────────
+const shakeStyle = document.createElement('style');
+shakeStyle.textContent = `@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}`;
+document.head.appendChild(shakeStyle);
+
+// ──────────────────────────────────────────
+// 초기화
+// ──────────────────────────────────────────
+renderLevel12(LV1, 0);
+renderLevel12(LV2, 1);
+renderLevel3();
+</script>
+</body>
+</html>
