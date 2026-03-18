@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>격식체 말하기 발음 연습</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Noto Sans KR', sans-serif; background: #f0f4f9; color: #2d3748; line-height: 1.7; }
+
+        /* 헤더 */
+        header {
+            background: linear-gradient(135deg, #1a4a7a, #2c5f8a);
+            color: #fff; padding: 1.5rem 1.2rem 1.2rem; text-align: center;
+        }
+        header h1 { font-size: 1.35rem; font-weight: 700; margin-bottom: .25rem; }
+        header p { font-size: .82rem; opacity: .88; }
+        .nav-strip {
+            display: flex; gap: .4rem; overflow-x: auto; padding: .75rem 1.2rem .5rem;
+            background: rgba(255,255,255,.08); scrollbar-width: none;
+        }
+        .nav-strip::-webkit-scrollbar { display: none; }
+        .nav-link {
+            white-space: nowrap; flex-shrink: 0;
+            padding: .3rem .85rem; border-radius: 20px;
+            background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.35);
+            color: #fff; text-decoration: none; font-size: .78rem; transition: background .2s;
+        }
+        .nav-link:hover { background: rgba(255,255,255,.3); }
+        .nav-link.active-page { background: rgba(255,255,255,.35); font-weight: 700; }
+
+        /* 메인 */
+        main { max-width: 480px; margin: 0 auto; padding: 1.2rem 1rem 4rem; }
+
+        /* 카드 공통 */
+        .card {
+            background: #fff; border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.07);
+            margin-bottom: 1rem; overflow: hidden;
+        }
+        .card-body { padding: 1.1rem 1.2rem; }
+
+        /* 진행 바 */
+        .prog-wrap { padding: 0 1.2rem 1rem; }
+        .prog-row { display: flex; justify-content: space-between; font-size: .75rem; color: #94a3b8; margin-bottom: .3rem; }
+        .prog-track { height: 6px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+        .prog-fill { height: 100%; background: #2c5f8a; border-radius: 4px; transition: width .5s ease; }
+
+        /* 시나리오 탭 */
+        .scenario-tabs { display: flex; gap: .4rem; flex-wrap: wrap; margin-bottom: 1rem; }
+        .sc-btn {
+            flex: 1; min-width: 80px; padding: .45rem .5rem; border-radius: 10px;
+            border: 2px solid #d1dce8; background: #fff; color: #2c5f8a;
+            font-family: 'Noto Sans KR', sans-serif; font-size: .78rem; font-weight: 700;
+            cursor: pointer; text-align: center; transition: all .2s;
+        }
+        .sc-btn.active { background: #2c5f8a; border-color: #2c5f8a; color: #fff; }
+
+        /* 씬 배지 */
+        .scene-badge {
+            display: inline-flex; align-items: center; gap: .3rem;
+            padding: .2rem .7rem; border-radius: 20px;
+            background: #dbeafe; color: #1e40af;
+            font-size: .73rem; font-weight: 700; margin-bottom: .75rem;
+        }
+
+        /* 문법 태그 */
+        .gram-tag {
+            display: inline-block; padding: .15rem .6rem; border-radius: 8px;
+            background: #fef3c7; color: #92400e;
+            font-size: .72rem; font-weight: 700; margin-left: .4rem;
+        }
+
+        /* 말풍선 */
+        .bubble-formal {
+            background: #eff6ff; border-radius: 14px 14px 14px 0;
+            border-left: 4px solid #2c5f8a;
+            padding: .9rem 1.1rem; margin-bottom: .5rem;
+        }
+        .bubble-ko { font-size: 1rem; font-weight: 700; color: #1a3a5c; line-height: 1.65; }
+        .bubble-vi { font-size: .8rem; color: #4f6d8a; margin-top: .3rem; line-height: 1.5; }
+        .hl-end { color: #1d4ed8; font-weight: 900; background: #dbeafe; border-radius: 3px; padding: 0 2px; }
+
+        /* 단계 인디케이터 */
+        .step-row { display: flex; align-items: center; gap: .4rem; margin-bottom: .9rem; }
+        .sd { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+        .sd.done   { background: #dcfce7; color: #16a34a; }
+        .sd.active { background: #dbeafe; color: #1d4ed8; }
+        .sd.idle   { background: #f1f5f9; color: #94a3b8; }
+        .sl { flex: 1; height: 2px; background: #e2e8f0; }
+        .step-lbl { font-size: .75rem; color: #64748b; white-space: nowrap; }
+
+        /* 베트남어 가이드 박스 */
+        .vi-box {
+            background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 12px;
+            padding: .9rem 1rem; margin-bottom: .9rem;
+        }
+        .vi-head {
+            display: flex; align-items: center; gap: .4rem;
+            font-size: .75rem; font-weight: 700; color: #3730a3; margin-bottom: .5rem;
+        }
+        .vi-badge { background: #e0e7ff; border: 1px solid #a5b4fc; border-radius: 5px; padding: 1px 6px; font-size: .68rem; }
+        .vi-step-item { display: flex; gap: .5rem; align-items: flex-start; margin-bottom: .35rem; }
+        .vi-step-item:last-child { margin-bottom: 0; }
+        .vi-num { width: 18px; height: 18px; border-radius: 50%; background: #4f46e5; color: #fff; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+        .vi-text { font-size: .8rem; color: #3730a3; line-height: 1.5; }
+
+        /* 격식 팁 */
+        .formal-tip {
+            background: #fefce8; border: 1px solid #fde68a; border-radius: 10px;
+            padding: .7rem .9rem; margin-bottom: .9rem;
+        }
+        .formal-tip-head { font-size: .73rem; font-weight: 700; color: #92400e; margin-bottom: .25rem; }
+        .formal-tip-body { font-size: .78rem; color: #78350f; line-height: 1.55; }
+        .formal-tip-vi   { font-size: .75rem; color: #a16207; margin-top: .25rem; }
+
+        /* 발음 포인트 */
+        .pronun-box {
+            background: #fdf4ff; border: 1px solid #f0abfc; border-radius: 10px;
+            padding: .7rem .9rem; margin-bottom: .9rem;
+        }
+        .pronun-head { font-size: .73rem; font-weight: 700; color: #86198f; margin-bottom: .35rem; }
+        .chip { display: inline-block; background: #fff; border: 1px solid #f0abfc; border-radius: 6px; padding: 2px 8px; font-size: .75rem; color: #86198f; margin: 2px; }
+
+        /* 인식 박스 */
+        .rec-box {
+            border-radius: 10px; padding: .7rem 1rem;
+            text-align: center; margin-bottom: .75rem; min-height: 52px;
+            border: 2px dashed #cbd5e1;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .rec-box.active { background: #fff1f2; border-color: #fca5a5; border-style: solid; }
+        .rec-box.done   { background: #f0fdf4; border-color: #86efac; border-style: solid; }
+        .rec-label { font-size: .7rem; color: #94a3b8; margin-bottom: .2rem; }
+        .rec-text  { font-size: .95rem; color: #2d3748; font-weight: 500; }
+
+        /* 음파 */
+        @keyframes wave { 0%,100%{height:5px} 50%{height:20px} }
+        .wv { width: 3px; border-radius: 2px; background: #2c5f8a; animation: wave .7s ease-in-out infinite; }
+        .wv:nth-child(2){animation-delay:.1s} .wv:nth-child(3){animation-delay:.2s}
+        .wv:nth-child(4){animation-delay:.3s} .wv:nth-child(5){animation-delay:.4s}
+        .waveform { display: none; justify-content: center; align-items: flex-end; gap: 3px; height: 28px; margin-bottom: .5rem; }
+
+        /* 마이크 */
+        @keyframes pulse-ring { 0%{transform:scale(1);opacity:.8} 100%{transform:scale(1.6);opacity:0} }
+        .mic-pulse::before { content:''; position:absolute; inset:-5px; border-radius:50%; background:rgba(220,38,38,.25); animation:pulse-ring 1s ease-out infinite; }
+
+        /* 점수 */
+        .score-svg { transition: stroke-dashoffset .9s ease; }
+        .ch-ok  { color: #16a34a; }
+        .ch-err { color: #dc2626; text-decoration: underline wavy; }
+        .ch-ext { color: #d97706; }
+
+        /* 버튼 */
+        .btn-primary {
+            width: 100%; padding: .85rem; border-radius: 12px; border: none;
+            background: #2c5f8a; color: #fff; font-family: 'Noto Sans KR', sans-serif;
+            font-size: .95rem; font-weight: 700; cursor: pointer; transition: background .2s;
+            display: block; text-align: center;
+        }
+        .btn-primary:hover { background: #1a4a7a; }
+        .btn-listen {
+            padding: .6rem .9rem; border-radius: 10px; border: 1.5px solid #86efac;
+            background: #f0fdf4; color: #15803d;
+            font-family: 'Noto Sans KR', sans-serif; font-size: .8rem; font-weight: 600;
+            cursor: pointer; transition: background .2s;
+        }
+        .btn-listen:hover { background: #dcfce7; }
+        .btn-slow {
+            padding: .6rem .9rem; border-radius: 10px; border: 1.5px solid #d8b4fe;
+            background: #faf5ff; color: #7e22ce;
+            font-family: 'Noto Sans KR', sans-serif; font-size: .8rem; font-weight: 600;
+            cursor: pointer; transition: background .2s;
+        }
+        .btn-slow:hover { background: #f3e8ff; }
+        .btn-ghost {
+            padding: .6rem .9rem; border-radius: 10px; border: 1.5px solid #e2e8f0;
+            background: #f8fafc; color: #475569;
+            font-family: 'Noto Sans KR', sans-serif; font-size: .8rem; font-weight: 600;
+            cursor: pointer; transition: background .2s;
+        }
+        .btn-ghost:hover { background: #f1f5f9; }
+        .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-bottom: .5rem; }
+        .btn-row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .4rem; margin-bottom: .5rem; }
+
+        /* 결과 점수 셀 */
+        .score-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: .5rem; margin-bottom: .9rem; }
+        .score-cell { border-radius: 10px; padding: .6rem .4rem; text-align: center; border: 1px solid #e2e8f0; }
+        .score-cell .val { font-size: 1.3rem; font-weight: 900; }
+        .score-cell .lbl { font-size: .7rem; color: #64748b; margin-top: .1rem; }
+        .score-cell .lbl-vi { font-size: .65rem; color: #94a3b8; }
+
+        /* 세션 완료 */
+        .finish-card { background: #fff; border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,.07); padding: 2rem 1.5rem; text-align: center; }
+
+        /* 경고 */
+        .warn { border-radius: 10px; padding: .6rem .9rem; margin-bottom: .75rem; font-size: .78rem; }
+        .warn-yellow { background: #fefce8; border: 1px solid #fde68a; color: #92400e; }
+        .warn-orange { background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412; }
+
+        /* 버튼 강조 애니메이션 */
+        @keyframes glow-speak { 0%,100%{box-shadow:0 0 0 0 rgba(44,95,138,.65)} 50%{box-shadow:0 0 0 11px rgba(44,95,138,0)} }
+        @keyframes bounce-y   { 0%,100%{transform:translateY(0)} 45%{transform:translateY(-6px)} }
+        .anim-speak { animation: glow-speak .85s ease-in-out 4, bounce-y .85s ease-in-out 4; }
+        @keyframes glow-next  { 0%,100%{box-shadow:0 0 0 0 rgba(26,74,122,.75)} 50%{box-shadow:0 0 0 13px rgba(26,74,122,0)} }
+        @keyframes scale-up   { 0%,100%{transform:scale(1)} 50%{transform:scale(1.035)} }
+        .anim-next { animation: glow-next .9s ease-in-out 4, scale-up .9s ease-in-out 4; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🎙️ 격식체 말하기 발음 연습</h1>
+    <p>공적인 상황에서 쓰는 합쇼체 표현 / Luyện nói tiếng Hàn lịch sự (합쇼체)</p>
+    <div class="nav-strip">
+        <a href="index.html" class="nav-link">✉ 쓰기 실습</a>
+        <a href="reference.html" class="nav-link">📚 참고 자료</a>
+        <a href="speak.html" class="nav-link active-page">🎙️ 말하기</a>
+        <span id="completeBadge" class="hidden nav-link" style="background:rgba(22,163,74,.25);border-color:rgba(22,163,74,.5);color:#bbf7d0;font-weight:700;margin-left:auto;flex-shrink:0">👍 완료됨</span>
+        <a href="activity1.html" class="nav-link">🔍 오류 찾기</a>
+        <a href="activity2.html" class="nav-link">🔄 변환</a>
+        <a href="activity9.html" class="nav-link">⭕ OX</a>
+    </div>
+</header>
+
+<main>
+
+    <!-- 경고 배너 -->
+    <div id="browserWarn" class="hidden warn warn-yellow">
+        <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+        이 브라우저는 음성 인식을 지원하지 않습니다. <b>Chrome</b>을 사용해 주세요.
+        <br><span style="color:#a16207">Trình duyệt này không hỗ trợ STT. Dùng <b>Chrome</b>.</span>
+    </div>
+    <div id="httpsWarn" class="hidden warn warn-orange">
+        <i class="fa-solid fa-lock-open mr-1"></i>
+        마이크는 <b>HTTPS</b> 또는 <b>localhost</b>에서만 동작합니다.
+        <br><span style="color:#9a3412">Microphone chỉ hoạt động trên <b>HTTPS</b> hoặc <b>localhost</b>.</span>
+    </div>
+
+    <!-- 시나리오 탭 -->
+    <div class="scenario-tabs">
+        <button class="sc-btn active" id="sc0" onclick="selectScenario(0)">📧 교수님께</button>
+        <button class="sc-btn" id="sc1" onclick="selectScenario(1)">🏛️ 기관 문의</button>
+        <button class="sc-btn" id="sc2" onclick="selectScenario(2)">📋 공적 요청</button>
+    </div>
+
+    <!-- 진행 -->
+    <div class="card">
+        <div class="card-body" style="padding-bottom:.5rem">
+            <div class="prog-row">
+                <span id="progLabel">1 / 4</span>
+                <span id="progPct">0%</span>
+            </div>
+            <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+        </div>
+    </div>
+
+    <!-- 메인 콘텐츠 -->
+    <div id="mainArea"></div>
+
+    <!-- 세션 완료 -->
+    <div id="sessionFinish" class="hidden finish-card">
+        <div style="font-size:3rem;margin-bottom:.75rem">🏆</div>
+        <h2 style="font-size:1.4rem;font-weight:900;color:#1a3a5c;margin-bottom:.3rem">연습 완료!</h2>
+        <p style="font-size:.8rem;color:#64748b;margin-bottom:.2rem">이 시나리오의 모든 문장을 연습했습니다.</p>
+        <p style="font-size:.78rem;color:#6366f1;margin-bottom:1.2rem">Bạn đã luyện xong toàn bộ câu trong tình huống này!</p>
+        <div class="score-grid" style="margin-bottom:1.2rem">
+            <div class="score-cell" style="background:#eef2ff">
+                <div class="val" style="color:#4338ca" id="fin-tries">0</div>
+                <div class="lbl">시도<div class="lbl-vi">Lần thử</div></div>
+            </div>
+            <div class="score-cell" style="background:#f0fdf4">
+                <div class="val" style="color:#16a34a" id="fin-best">—</div>
+                <div class="lbl">최고점<div class="lbl-vi">Điểm cao</div></div>
+            </div>
+            <div class="score-cell" style="background:#eff6ff">
+                <div class="val" style="color:#2c5f8a" id="fin-avg">—</div>
+                <div class="lbl">평균<div class="lbl-vi">Trung bình</div></div>
+            </div>
+        </div>
+        <!-- 다음 시나리오 버튼 -->
+        <button class="btn-primary" style="margin-bottom:.5rem" id="finNextBtn" onclick="goNextScenario()">다음 시나리오 / Tình huống tiếp theo →</button>
+        <button class="btn-ghost" style="width:100%;margin-bottom:1rem" onclick="replayScenario()">이 시나리오 다시 / Làm lại</button>
+        <!-- 연습 로그 -->
+        <div id="logArea" style="text-align:left"></div>
+    </div>
+
+</main>
+
+<script>
+// ─── 데이터 ─────────────────────────────────────────────────────────────────
+// gramEnd: 합쇼체 어미 하이라이트 대상
+const SCENARIOS = [
+    {
+        id: 0,
+        name: '교수님께 이메일',
+        nameVi: 'Email gửi giáo sư',
+        sentences: [
+            {
+                ko: '안녕하십니까? 저는 한국어학과 2학년 홍길동입니다.',
+                vi: 'Xin chào ạ. Tôi là Hồng Kil-đông, sinh viên năm 2 khoa Tiếng Hàn.',
+                gramEnd: ['안녕하십니까', '입니다'],
+                gramNote: '합쇼체 인사 + 자기소개', gramNoteVi: 'Chào hỏi và tự giới thiệu bằng 합쇼체',
+                formalTip: '"안녕하십니까?" — "안녕하세요?"보다 격식이 높습니다.',
+                formalTipVi: '"안녕하십니까?" trang trọng hơn "안녕하세요?". Dùng khi gặp lần đầu hoặc viết email.',
+                pronunTips: ['"하십니까" → 하-심-니-까 (4음절)', '"입니다" → 임-니-다']
+            },
+            {
+                ko: '갑작스러운 몸살로 인해 부득이 결석하게 되었음을 알려 드립니다.',
+                vi: 'Tôi xin thông báo rằng do đột ngột bị ốm, tôi đã bất đắc dĩ phải vắng mặt.',
+                gramEnd: ['알려 드립니다'],
+                gramNote: '-게 되었음을 알려 드립니다 (공식 통보)', gramNoteVi: 'Thông báo chính thức: "-게 되었음을 알려 드립니다"',
+                formalTip: '"부득이" = 어쩔 수 없이. 격식 이메일의 핵심 어휘입니다.',
+                formalTipVi: '"부득이" = bất đắc dĩ. Từ quan trọng trong email trang trọng.',
+                pronunTips: ['"부득이" → 부-드-기 (연음)', '"되었음을" → 되-어-쓰-믈 (연음)']
+            },
+            {
+                ko: '미리 연락을 드리지 못하여 대단히 죄송합니다.',
+                vi: 'Tôi vô cùng xin lỗi vì đã không liên hệ trước.',
+                gramEnd: ['죄송합니다'],
+                gramNote: '격식 사과 표현 / 합쇼체 평서문', gramNoteVi: 'Xin lỗi trang trọng / Câu trần thuật 합쇼체',
+                formalTip: '"대단히" = 매우. 격식 문장에서 "많이" 대신 씁니다.',
+                formalTipVi: '"대단히" = rất (mức độ cao). Dùng thay cho "많이" trong văn phong trang trọng.',
+                pronunTips: ['"죄송합니다" → 죄-송-함-니-다 (5음절)', '"못하여" → 모-타-여']
+            },
+            {
+                ko: '혹시 가능하시다면, 수업 내용과 과제를 알려 주시면 감사하겠습니다.',
+                vi: 'Nếu có thể, tôi sẽ rất biết ơn nếu Thầy/Cô cho tôi biết nội dung bài học và bài tập.',
+                gramEnd: ['감사하겠습니다'],
+                gramNote: '-아/어 주시면 감사하겠습니다 (정중 요청)', gramNoteVi: 'Yêu cầu lịch sự nhất: "-아/어 주시면 감사하겠습니다"',
+                formalTip: '"알려 주세요"(X) → "알려 주시면 감사하겠습니다"(O) — 이메일에서는 후자를 씁니다.',
+                formalTipVi: 'Không dùng "주세요" trong email. Dùng "주시면 감사하겠습니다" thay thế.',
+                pronunTips: ['"가능하시다면" → 가-능-하-시-다-면', '"감사하겠습니다" → 감-사-하-겓-씀-니-다']
+            }
+        ]
+    },
+    {
+        id: 1,
+        name: '기관·기업 문의',
+        nameVi: 'Hỏi thăm cơ quan/doanh nghiệp',
+        sentences: [
+            {
+                ko: '저는 베트남 출신으로, 한국어학과에 재학 중인 응우옌이라고 합니다.',
+                vi: 'Tôi là Nguyễn, đến từ Việt Nam, hiện đang học tại khoa Tiếng Hàn.',
+                gramEnd: ['이라고 합니다'],
+                gramNote: '처음 연락 시 자기소개 / 합쇼체', gramNoteVi: 'Tự giới thiệu khi liên hệ lần đầu',
+                formalTip: '"이라고 합니다" — 처음 이메일 보낼 때 이름을 격식 있게 소개하는 표현.',
+                formalTipVi: '"이라고 합니다" = "Tôi tên là ~" / "Tôi là ~". Dùng khi tự giới thiệu trang trọng lần đầu.',
+                pronunTips: ['"이라고 합니다" → 이-라-고-함-니-다', '"재학 중인" → 재-항-중-인 (연음)']
+            },
+            {
+                ko: '귀 대학원 입학 전형에 관해 문의 드리고자 합니다.',
+                vi: 'Tôi muốn hỏi thăm về kỳ thi tuyển sinh vào trường đại học (sau đại học) của Quý trường.',
+                gramEnd: ['합니다'],
+                gramNote: '-고자 합니다 (의향 표현, 격식)', gramNoteVi: '"-고자 합니다" diễn đạt ý định một cách trang trọng.',
+                formalTip: '"귀" = 상대방의 기관을 높이는 접두어 (귀 대학, 귀 기관, 귀 사).',
+                formalTipVi: '"귀(貴)" = Quý (dùng trước tên cơ quan đối phương để thể hiện sự kính trọng).',
+                pronunTips: ['"관해" → 관-해 (ㅎ 약화)', '"드리고자" → 드-리-고-자 (또박또박)']
+            },
+            {
+                ko: '외국인 전형 지원에 필요한 서류는 무엇입니까?',
+                vi: 'Các tài liệu cần thiết để đăng ký dự tuyển dành cho người nước ngoài là gì ạ?',
+                gramEnd: ['입니까'],
+                gramNote: '-ㅂ니까? (격식체 의문문)', gramNoteVi: '"-ㅂ니까?" = câu hỏi trang trọng (thay cho "-어요?")',
+                formalTip: '"무엇입니까?" — "뭐예요?"보다 훨씬 격식이 높습니다. 기관 이메일에서는 반드시 씁니다.',
+                formalTipVi: '"무엇입니까?" trang trọng hơn nhiều so với "뭐예요?". Bắt buộc dùng khi viết email cho cơ quan.',
+                pronunTips: ['"입니까" → 임-니-까 (비음화)', '"필요한" → 피-료-한']
+            },
+            {
+                ko: '바쁘신 중에 문의 드려 죄송합니다. 빠른 답변 부탁드립니다.',
+                vi: 'Xin lỗi vì đã làm phiền trong lúc bận rộn. Mong nhận được phản hồi sớm.',
+                gramEnd: ['죄송합니다', '부탁드립니다'],
+                gramNote: '마무리 사과 + 답변 요청 (격식)', gramNoteVi: 'Kết thúc email: xin lỗi + yêu cầu phản hồi',
+                formalTip: '"부탁드립니다" = "부탁합니다"의 더 격식 있는 형태.',
+                formalTipVi: '"부탁드립니다" lịch sự hơn "부탁합니다". Luôn dùng dạng này trong email gửi cơ quan.',
+                pronunTips: ['"바쁘신" → 바-쁘-신 (ㄴ삽입 없음)', '"부탁드립니다" → 부-탁-드-림-니-다']
+            }
+        ]
+    },
+    {
+        id: 2,
+        name: '공적 요청',
+        nameVi: 'Yêu cầu chính thức',
+        sentences: [
+            {
+                ko: '저는 한국어학과 교환학생 홍길동(학번: 2023-12345)입니다.',
+                vi: 'Tôi là Hồng Kil-đông (MSSV: 2023-12345), sinh viên trao đổi khoa Tiếng Hàn.',
+                gramEnd: ['입니다'],
+                gramNote: '자기소개 + 합쇼체 평서문', gramNoteVi: 'Tự giới thiệu + câu trần thuật 합쇼체',
+                formalTip: '공적 요청 이메일은 자기소개에서 학번·소속을 꼭 밝혀야 합니다.',
+                formalTipVi: 'Email yêu cầu chính thức phải nêu rõ mã số sinh viên và đơn vị trong phần tự giới thiệu.',
+                pronunTips: ['"교환학생" → 교-환-학-쌩', '"학번" → 항-번 (연음)']
+            },
+            {
+                ko: '이번에 장학금 신청을 위해 아래와 같이 증명서 발급을 요청 드립니다.',
+                vi: 'Tôi xin đề nghị cấp các giấy tờ như sau đây để nộp đơn xin học bổng.',
+                gramEnd: ['드립니다'],
+                gramNote: '아래와 같이 + 요청 드립니다 (공적 요청)', gramNoteVi: '"아래와 같이" + "요청 드립니다" = yêu cầu trang trọng',
+                formalTip: '"아래와 같이" — 목록을 제시하기 전에 씁니다. 서면 한국어의 전형적인 표현.',
+                formalTipVi: '"아래와 같이" = như dưới đây / như sau. Dùng trước khi liệt kê danh sách.',
+                pronunTips: ['"아래와" → 아-래-와 (3음절)', '"요청" → 요-청 (ㅎ유지)']
+            },
+            {
+                ko: '가능하시다면, 발급하신 서류를 이메일로 보내 주시면 감사하겠습니다.',
+                vi: 'Nếu có thể, tôi sẽ rất biết ơn nếu Quý vị gửi các tài liệu đã cấp qua email.',
+                gramEnd: ['감사하겠습니다'],
+                gramNote: '-아/어 주시면 감사하겠습니다 (가장 정중한 요청)', gramNoteVi: 'Cách yêu cầu lịch sự nhất trong email chính thức',
+                formalTip: '"보내 주세요"(X) → "보내 주시면 감사하겠습니다"(O) — 한 단계 더 격식 있는 요청 방법.',
+                formalTipVi: 'Thay vì "주세요", dùng "주시면 감사하겠습니다" để thể hiện sự tôn trọng cao nhất.',
+                pronunTips: ['"발급하신" → 발-그-파-신 (연음)', '"감사하겠습니다" → 감-사-하-겓-씀-니-다']
+            },
+            {
+                ko: '번거로우시겠지만 잘 부탁드립니다. 감사합니다.',
+                vi: 'Tuy có gây phiền phức nhưng mong Quý vị giúp đỡ. Xin cảm ơn.',
+                gramEnd: ['부탁드립니다', '감사합니다'],
+                gramNote: '요청 마무리 + 격식체 감사 표현', gramNoteVi: 'Kết thúc yêu cầu + cảm ơn trang trọng',
+                formalTip: '"번거로우시겠지만" — 상대방에게 번거로움을 인정하며 요청할 때 쓰는 관용 표현.',
+                formalTipVi: '"번거로우시겠지만" = Mặc dù biết là phiền phức nhưng... (Cụm từ lịch sự khi yêu cầu ai đó).',
+                pronunTips: ['"번거로우시겠지만" → 번-거-로-우-시-겓-찌-만', '"감사합니다" → 감-사-함-니-다']
+            }
+        ]
+    }
+];
+
+// ─── 상태 ───────────────────────────────────────────────────────────────────
+let scenIdx = 0;
+let sentIdx = 0;
+let step = 'listen'; // listen | record | result
+let recognition = null;
+let isRecording = false;
+let sessionScores = [];
+let sessionLog = []; // { no, scenName, sentNo, target, spoken, accuracy, completeness, score, ts }
+
+// ─── 초기화 ─────────────────────────────────────────────────────────────────
+window.onload = () => {
+    checkSupport();
+    renderSentence();
+};
+function checkSupport() {
+    if (!window.SpeechRecognition && !window.webkitSpeechRecognition)
+        document.getElementById('browserWarn').classList.remove('hidden');
+    if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1')
+        document.getElementById('httpsWarn').classList.remove('hidden');
+}
+
+// ─── 시나리오 선택 ───────────────────────────────────────────────────────────
+function selectScenario(idx) {
+    scenIdx = idx; sentIdx = 0; sessionScores = []; sessionLog = [];
+    document.querySelectorAll('.sc-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+    document.getElementById('sessionFinish').classList.add('hidden');
+    document.getElementById('completeBadge').classList.add('hidden');
+    renderSentence();
+}
+
+// ─── 문장 렌더 ───────────────────────────────────────────────────────────────
+function renderSentence() {
+    const scen = SCENARIOS[scenIdx];
+    if (sentIdx >= scen.sentences.length) { showFinish(); return; }
+    const s = scen.sentences[sentIdx];
+    step = 'listen';
+    updateProgress();
+
+    // 합쇼체 어미 하이라이트
+    let koHl = s.ko;
+    s.gramEnd.forEach(e => {
+        koHl = koHl.replaceAll(e, `<span class="hl-end">${e}</span>`);
+    });
+
+    const pronuns = s.pronunTips.map(t => `<span class="chip"><i class="fa-solid fa-waveform-lines" style="font-size:.65rem;margin-right:3px"></i>${t}</span>`).join('');
+
+    document.getElementById('sessionFinish').classList.add('hidden');
+    document.getElementById('mainArea').innerHTML = `
+    <!-- 씬 배지 -->
+    <div>
+        <span class="scene-badge">
+            ${scenIdx===0?'📧':scenIdx===1?'🏛️':'📋'} ${scen.name}
+            <span style="font-size:.68rem;color:#60a5fa;margin-left:.3rem">${scen.nameVi}</span>
+        </span>
+        <span class="gram-tag">${s.gramNote}</span>
+    </div>
+
+    <!-- 문장 카드 -->
+    <div class="card" style="margin-top:.6rem">
+        <div class="card-body">
+            <div class="bubble-formal">
+                <div class="bubble-ko">${koHl}</div>
+                <div class="bubble-vi">${s.vi}</div>
+            </div>
+
+            <!-- 격식 팁 -->
+            <div class="formal-tip">
+                <div class="formal-tip-head"><i class="fa-solid fa-scale-balanced" style="margin-right:4px;color:#92400e"></i>격식체 포인트 / Điểm ngữ pháp</div>
+                <div class="formal-tip-body">${s.formalTip}</div>
+                <div class="formal-tip-vi">${s.formalTipVi}</div>
+            </div>
+
+            <!-- 발음 포인트 -->
+            <div class="pronun-box">
+                <div class="pronun-head"><i class="fa-solid fa-ear-listen" style="margin-right:4px"></i>발음 포인트 / Điểm phát âm</div>
+                ${pronuns}
+            </div>
+        </div>
+    </div>
+
+    <!-- 단계 인디케이터 -->
+    <div class="step-row">
+        <div class="sd active" id="sd1">1</div>
+        <div class="sl"></div>
+        <div class="sd idle" id="sd2">2</div>
+        <div class="sl"></div>
+        <div class="sd idle" id="sd3">3</div>
+        <span class="step-lbl" id="stepLbl">① Nghe / 듣기</span>
+    </div>
+
+    <!-- 단계 패널 -->
+    <div id="stepPanel">${listenPanel(s)}</div>
+    <div id="resultPanel" class="hidden"></div>
+    `;
+    speechSynthesis.getVoices();
+    // 새 문장 로드 시: 대화 카드로 스크롤 + 따라 말하기 버튼 강조
+    setTimeout(() => {
+        document.getElementById('mainArea').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(() => {
+            const sb = document.getElementById('speakBtn');
+            if (sb) { sb.classList.add('anim-speak'); setTimeout(() => sb.classList.remove('anim-speak'), 3500); }
+        }, 600);
+    }, 50);
+}
+
+// ─── 패널 1: 듣기 ─────────────────────────────────────────────────────────────
+function listenPanel(s) {
+    return `
+    <div class="card">
+        <div class="card-body">
+            <!-- 베트남어 가이드 -->
+            <div class="vi-box">
+                <div class="vi-head"><span class="vi-badge">🇻🇳 VI</span> Hướng dẫn bước 1: Nghe</div>
+                <div class="vi-step-item"><div class="vi-num">1</div><div class="vi-text">Nhấn <b>"보통 속도"</b> để nghe phát âm bình thường của câu này.</div></div>
+                <div class="vi-step-item"><div class="vi-num">2</div><div class="vi-text">Nhấn <b>"천천히"</b> để nghe chậm và bắt chước từng âm tiết.</div></div>
+                <div class="vi-step-item"><div class="vi-num">3</div><div class="vi-text">Chú ý phần <span style="color:#1d4ed8;font-weight:700">màu xanh đậm</span> — đây là kết thúc câu 합쇼체 quan trọng.</div></div>
+                <div class="vi-step-item"><div class="vi-num">4</div><div class="vi-text">Khi tự tin, nhấn <b>"따라 말하기"</b> để bắt đầu luyện nói.</div></div>
+            </div>
+
+            <!-- TTS 버튼 -->
+            <div class="btn-row3 mb-1">
+                <button class="btn-listen" onclick="speakCur(0.85)">
+                    <i class="fa-solid fa-play" style="font-size:.75rem;margin-right:3px"></i>보통 속도
+                </button>
+                <button class="btn-slow" onclick="speakCur(0.6)">
+                    <i class="fa-solid fa-snail" style="font-size:.75rem;margin-right:3px"></i>천천히
+                </button>
+                <button class="btn-slow" onclick="speakCur(0.4)" style="background:#fdf4ff;border-color:#e879f9;color:#86198f">
+                    <i class="fa-solid fa-turtle" style="font-size:.75rem;margin-right:3px"></i>매우 천천히
+                </button>
+            </div>
+            <p style="font-size:.7rem;color:#94a3b8;text-align:center;margin-bottom:.9rem">Nghe 2~3 lần rồi hãy nói thử nhé!</p>
+
+            <button id="speakBtn" class="btn-primary" onclick="goRecord()">
+                <i class="fa-solid fa-microphone" style="margin-right:.4rem"></i>따라 말하기
+                <span style="font-size:.78rem;opacity:.8;margin-left:.3rem">→ Bắt đầu nói</span>
+            </button>
+        </div>
+    </div>`;
+}
+
+// ─── 패널 2: 말하기 ──────────────────────────────────────────────────────────
+function recordPanel(s) {
+    return `
+    <div class="card">
+        <div class="card-body">
+            <!-- 베트남어 가이드 -->
+            <div class="vi-box">
+                <div class="vi-head"><span class="vi-badge">🇻🇳 VI</span> Hướng dẫn bước 2: Nói</div>
+                <div class="vi-step-item"><div class="vi-num">1</div><div class="vi-text">Đọc lại câu bên dưới một lần trước khi nói.</div></div>
+                <div class="vi-step-item"><div class="vi-num">2</div><div class="vi-text">Nhấn nút <b>🎤 màu xanh</b> và nói to, rõ ràng.</div></div>
+                <div class="vi-step-item"><div class="vi-num">3</div><div class="vi-text">Chú ý phần <span style="color:#1d4ed8;font-weight:700">kết thúc câu</span> — đây là phần quan trọng nhất!</div></div>
+                <div class="vi-step-item"><div class="vi-num">4</div><div class="vi-text">Hệ thống sẽ tự nhận dạng và cho điểm sau khi bạn nói xong.</div></div>
+            </div>
+
+            <!-- 참조 문장 -->
+            <div style="background:#eff6ff;border-left:4px solid #2c5f8a;border-radius:0 10px 10px 0;padding:.75rem 1rem;margin-bottom:.75rem">
+                <p style="font-size:.7rem;color:#2c5f8a;font-weight:700;margin-bottom:.2rem">말할 문장 / Câu cần nói</p>
+                <p style="font-size:.95rem;font-weight:700;color:#1a3a5c;line-height:1.6">${s.ko}</p>
+                <p style="font-size:.75rem;color:#4f6d8a;margin-top:.2rem">${s.vi}</p>
+            </div>
+
+            <!-- 인식 결과 -->
+            <div class="rec-box" id="recBox">
+                <div class="rec-label">인식 결과 / Kết quả nhận dạng</div>
+                <div class="rec-text" id="recText" style="color:#94a3b8">—</div>
+            </div>
+
+            <!-- 음파 -->
+            <div class="waveform" id="waveform">
+                <div class="wv"></div><div class="wv"></div><div class="wv"></div><div class="wv"></div><div class="wv"></div>
+            </div>
+
+            <!-- 상태 -->
+            <p id="recStatus" style="font-size:.75rem;text-align:center;margin-bottom:.8rem">
+                <span style="color:#64748b">준비 완료</span>
+                <span style="display:block;color:#6366f1;font-size:.72rem">Sẵn sàng — nhấn nút mic</span>
+            </p>
+
+            <!-- 마이크 버튼 -->
+            <div style="display:flex;justify-content:center;margin-bottom:.9rem">
+                <div style="position:relative">
+                    <button id="micBtn" onclick="toggleRec()"
+                        style="width:72px;height:72px;border-radius:50%;background:#2c5f8a;border:none;color:#fff;font-size:1.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(44,95,138,.4);transition:all .2s">
+                        <i id="micIcon" class="fa-solid fa-microphone"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 하단 버튼 -->
+            <div class="btn-row" style="margin-bottom:.5rem">
+                <button class="btn-listen" onclick="speakCur(0.85)">
+                    <i class="fa-solid fa-volume-high" style="font-size:.75rem;margin-right:3px"></i>다시 듣기
+                </button>
+                <button class="btn-slow" onclick="speakCur(0.55)">
+                    <i class="fa-solid fa-snail" style="font-size:.75rem;margin-right:3px"></i>천천히
+                </button>
+            </div>
+            <button class="btn-ghost" style="width:100%" onclick="goListen()">
+                <i class="fa-solid fa-arrow-left" style="margin-right:.3rem"></i>뒤로 / Quay lại
+            </button>
+        </div>
+    </div>`;
+}
+
+// ─── 단계 이동 ───────────────────────────────────────────────────────────────
+function goRecord() {
+    step = 'record';
+    setDots('record');
+    document.getElementById('stepPanel').innerHTML = recordPanel(SCENARIOS[scenIdx].sentences[sentIdx]);
+}
+function goListen() {
+    step = 'listen';
+    setDots('listen');
+    if (isRecording) stopRec();
+    document.getElementById('stepPanel').innerHTML = listenPanel(SCENARIOS[scenIdx].sentences[sentIdx]);
+}
+function setDots(s) {
+    const labels = {
+        listen: { d1:'active', d2:'idle', d3:'idle', lbl:'① Nghe / 듣기' },
+        record: { d1:'done',   d2:'active', d3:'idle', lbl:'② Nói / 말하기' },
+        result: { d1:'done',   d2:'done',  d3:'active', lbl:'③ Kết quả / 결과' }
+    };
+    const l = labels[s];
+    ['sd1','sd2','sd3'].forEach((id, i) => {
+        document.getElementById(id).className = 'sd ' + [l.d1, l.d2, l.d3][i];
+    });
+    document.getElementById('stepLbl').textContent = l.lbl;
+}
+
+// ─── TTS ─────────────────────────────────────────────────────────────────────
+function speakCur(rate) {
+    const s = SCENARIOS[scenIdx].sentences[sentIdx];
+    if (!s) return;
+    const utt = new SpeechSynthesisUtterance(s.ko);
+    utt.lang = 'ko-KR'; utt.rate = rate || 0.85;
+    const v = speechSynthesis.getVoices().find(v => v.lang.startsWith('ko'));
+    if (v) utt.voice = v;
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utt);
+}
+
+// ─── STT ─────────────────────────────────────────────────────────────────────
+function toggleRec() { isRecording ? stopRec() : startRec(); }
+
+function startRec() {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) return;
+    recognition = new SR();
+    recognition.lang = 'ko-KR';
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 3;
+
+    recognition.onstart = () => {
+        isRecording = true;
+        document.getElementById('micBtn').style.cssText =
+            'width:72px;height:72px;border-radius:50%;background:#dc2626;border:none;color:#fff;font-size:1.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(220,38,38,.4);position:relative';
+        document.getElementById('micBtn').classList.add('mic-pulse');
+        document.getElementById('micIcon').className = 'fa-solid fa-stop';
+        document.getElementById('recStatus').innerHTML =
+            '<span style="color:#dc2626;font-weight:700">● 녹음 중</span>' +
+            '<span style="display:block;color:#ef4444;font-size:.72rem">Đang ghi âm... Nói to vào!</span>';
+        const wf = document.getElementById('waveform');
+        wf.style.display = 'flex';
+        const box = document.getElementById('recBox');
+        box.className = 'rec-box active';
+        document.getElementById('recText').textContent = '인식 중... / Đang nhận dạng...';
+        document.getElementById('recText').style.color = '#2d3748';
+    };
+
+    recognition.onresult = (e) => {
+        let interim = '', final = '';
+        for (let i = e.resultIndex; i < e.results.length; i++) {
+            const t = e.results[i][0].transcript;
+            if (e.results[i].isFinal) final += t; else interim += t;
+        }
+        document.getElementById('recText').textContent = final || interim || '—';
+        if (final) { stopRec(); analyze(final.trim()); }
+    };
+
+    recognition.onerror = (e) => {
+        const m = { 'not-allowed':'마이크 권한이 필요합니다.\nBạn cần cho phép dùng microphone.', 'no-speech':'음성이 감지되지 않았습니다.\nKhông nghe thấy giọng nói. Hãy nói to hơn!' };
+        document.getElementById('recStatus').innerHTML =
+            '<span style="color:#d97706">' + (m[e.error] || '오류: '+e.error).replace('\n','<br>') + '</span>';
+        stopRec();
+    };
+    recognition.onend = () => { if (isRecording) stopRec(); };
+    recognition.start();
+}
+
+function stopRec() {
+    isRecording = false;
+    if (recognition) { try { recognition.stop(); } catch(e) {} }
+    const btn = document.getElementById('micBtn');
+    if (btn) {
+        btn.classList.remove('mic-pulse');
+        btn.style.cssText = 'width:72px;height:72px;border-radius:50%;background:#2c5f8a;border:none;color:#fff;font-size:1.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(44,95,138,.4);transition:all .2s';
+        document.getElementById('micIcon').className = 'fa-solid fa-microphone';
+    }
+    const wf = document.getElementById('waveform');
+    if (wf) wf.style.display = 'none';
+    const rs = document.getElementById('recStatus');
+    if (rs) rs.innerHTML = '<span style="color:#16a34a;font-weight:700">완료!</span><span style="display:block;color:#15803d;font-size:.72rem">Xong! Đang phân tích...</span>';
+    const box = document.getElementById('recBox');
+    if (box) box.className = 'rec-box done';
+}
+
+// ─── 분석 ───────────────────────────────────────────────────────────────────
+function norm(s) { return s.replace(/[\s.,!?。]/g, ''); }
+function lcs(a, b) {
+    const m = a.length, n = b.length;
+    const dp = Array.from({length:m+1}, () => new Array(n+1).fill(0));
+    for (let i = 1; i <= m; i++)
+        for (let j = 1; j <= n; j++)
+            dp[i][j] = a[i-1]===b[j-1] ? dp[i-1][j-1]+1 : Math.max(dp[i-1][j],dp[i][j-1]);
+    return dp[m][n];
+}
+
+function analyze(spoken) {
+    const s = SCENARIOS[scenIdx].sentences[sentIdx];
+    const target = norm(s.ko);
+    const sp = norm(spoken);
+    const lcsLen = lcs(target, sp);
+    const accuracy    = target.length ? Math.round(lcsLen / target.length * 100) : 0;
+    const completeness = Math.round(lcsLen / Math.max(target.length, sp.length) * 100);
+    const score = Math.round(accuracy * 0.65 + completeness * 0.35);
+    sessionScores.push(score);
+    sessionLog.push({
+        no: sessionLog.length + 1,
+        scenName: SCENARIOS[scenIdx].name,
+        sentNo: sentIdx + 1,
+        target: s.ko, spoken: spoken,
+        accuracy, completeness, score,
+        ts: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+    });
+    step = 'result';
+    setDots('result');
+    showResult(s, spoken, target, sp, accuracy, completeness, score);
+}
+
+// ─── 결과 패널 ───────────────────────────────────────────────────────────────
+function showResult(s, spokenRaw, target, spoken, accuracy, completeness, score) {
+    const color = score >= 80 ? '#16a34a' : score >= 60 ? '#d97706' : '#dc2626';
+    const msgs = score >= 80
+        ? { ko:'훌륭합니다! 합쇼체 발음이 정확합니다. 🌟', vi:'Xuất sắc! Phát âm 합쇼체 của bạn rất chính xác.' }
+        : score >= 60
+        ? { ko:'잘 했어요! 어미 발음에 조금 더 신경 써 보세요. 👍', vi:'Khá tốt! Hãy chú ý hơn đến cách phát âm kết thúc câu.' }
+        : { ko:'계속 연습해 보세요. 천천히 듣고 따라해 보세요. 💪', vi:'Hãy tiếp tục luyện tập. Nghe chậm và bắt chước từng âm.' };
+
+    // 어미 중심 피드백
+    const endFeedback = s.gramEnd.map(e => {
+        const found = spoken.includes(norm(e));
+        return `<span style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:6px;font-size:.75rem;margin:2px;background:${found?'#dcfce7':'#fee2e2'};border:1px solid ${found?'#86efac':'#fca5a5'};color:${found?'#15803d':'#dc2626'}">
+            <i class="fa-solid fa-${found?'check':'xmark'}"></i> ${e}
+        </span>`;
+    }).join('');
+
+    // 글자 비교
+    const maxLen = Math.max(target.length, spoken.length);
+    let tHtml = '', sHtml = '';
+    for (let i = 0; i < maxLen; i++) {
+        const tc = target[i]||'', sc = spoken[i]||'';
+        if (i < target.length) tHtml += tc===sc ? `<span class="ch-ok">${tc}</span>` : `<span class="ch-err">${tc}</span>`;
+        if (i < spoken.length)
+            sHtml += i>=target.length ? `<span class="ch-ext">${sc}</span>`
+                   : sc===tc ? `<span class="ch-ok">${sc}</span>` : `<span class="ch-err">${sc}</span>`;
+    }
+
+    const circ = 251.3;
+    const offset = circ - (score/100)*circ;
+    const isLast = sentIdx === SCENARIOS[scenIdx].sentences.length - 1;
+
+    // 개선 팁
+    const improve = score < 60
+        ? '매우 천천히 듣기 버튼을 누른 후 음절 단위로 따라해 보세요.\nNhấn "매우 천천히" rồi bắt chước từng âm tiết một.'
+        : score < 80
+        ? `어미 부분(${s.gramEnd.join(', ')})을 특히 정확하게 발음해 보세요.\nChú ý phát âm chính xác phần kết thúc câu: ${s.gramEnd.join(', ')}`
+        : '완벽합니다! 다음 문장으로 넘어가도 좋습니다.\nHoàn hảo! Bạn có thể tiếp tục câu tiếp theo.';
+
+    document.getElementById('resultPanel').classList.remove('hidden');
+    document.getElementById('stepPanel').classList.add('hidden');
+    document.getElementById('resultPanel').innerHTML = `
+    <div class="card" id="resultCard">
+        <div class="card-body">
+            <h3 style="font-size:1rem;font-weight:900;color:#1a3a5c;text-align:center;margin-bottom:.25rem">발음 분석 결과</h3>
+            <p style="font-size:.75rem;color:#6366f1;text-align:center;margin-bottom:1rem">Kết quả phân tích phát âm</p>
+
+            <!-- 점수 원 + 바 -->
+            <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+                <div style="position:relative;flex-shrink:0">
+                    <svg width="80" height="80" viewBox="0 0 80 80">
+                        <circle cx="40" cy="40" r="34" fill="none" stroke="#f1f5f9" stroke-width="7"/>
+                        <circle cx="40" cy="40" r="34" fill="none" stroke="${color}" stroke-width="7"
+                            stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"
+                            transform="rotate(-90 40 40)" class="score-svg"/>
+                    </svg>
+                    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                        <span style="font-size:1.5rem;font-weight:900;color:${color}">${score}</span>
+                        <span style="font-size:.65rem;color:#94a3b8">점</span>
+                    </div>
+                </div>
+                <div style="flex:1">
+                    <div style="display:flex;justify-content:space-between;font-size:.73rem;margin-bottom:.2rem">
+                        <span style="color:#64748b">정확도<span style="color:#6366f1;font-size:.68rem;margin-left:2px">/Chính xác</span></span>
+                        <span style="font-weight:700;color:#2d3748">${accuracy}%</span>
+                    </div>
+                    <div style="height:6px;background:#e2e8f0;border-radius:4px;overflow:hidden;margin-bottom:.6rem">
+                        <div style="height:100%;background:#16a34a;border-radius:4px;width:${accuracy}%"></div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;font-size:.73rem;margin-bottom:.2rem">
+                        <span style="color:#64748b">완성도<span style="color:#6366f1;font-size:.68rem;margin-left:2px">/Hoàn chỉnh</span></span>
+                        <span style="font-weight:700;color:#2d3748">${completeness}%</span>
+                    </div>
+                    <div style="height:6px;background:#e2e8f0;border-radius:4px;overflow:hidden">
+                        <div style="height:100%;background:#2c5f8a;border-radius:4px;width:${completeness}%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 합쇼체 어미 체크 -->
+            <div style="margin-bottom:.9rem">
+                <p style="font-size:.73rem;font-weight:700;color:#1a3a5c;margin-bottom:.35rem">
+                    합쇼체 어미 확인 <span style="color:#6366f1;font-weight:400">/ Kiểm tra kết thúc câu</span>
+                </p>
+                ${endFeedback}
+            </div>
+
+            <!-- 점수 설명 -->
+            <div class="vi-box" style="margin-bottom:.9rem">
+                <div class="vi-head"><span class="vi-badge">🇻🇳 VI</span> Giải thích điểm số</div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;font-size:.72rem;text-align:center">
+                    <div style="padding:.4rem;border-radius:8px;background:${score>=80?'#dcfce7':'#f8fafc'};border:1px solid ${score>=80?'#86efac':'#e2e8f0'}">
+                        <div style="font-weight:700;color:#15803d">80~100</div>
+                        <div style="color:#16a34a;font-size:.65rem">Xuất sắc</div>
+                    </div>
+                    <div style="padding:.4rem;border-radius:8px;background:${score>=60&&score<80?'#fef9c3':'#f8fafc'};border:1px solid ${score>=60&&score<80?'#fde68a':'#e2e8f0'}">
+                        <div style="font-weight:700;color:#a16207">60~79</div>
+                        <div style="color:#d97706;font-size:.65rem">Khá tốt</div>
+                    </div>
+                    <div style="padding:.4rem;border-radius:8px;background:${score<60?'#fee2e2':'#f8fafc'};border:1px solid ${score<60?'#fca5a5':'#e2e8f0'}">
+                        <div style="font-weight:700;color:#dc2626">0~59</div>
+                        <div style="color:#ef4444;font-size:.65rem">Cần luyện</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 글자 비교 -->
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:.75rem 1rem;margin-bottom:.5rem;font-size:.85rem">
+                <p style="font-size:.7rem;color:#94a3b8;margin-bottom:.4rem">글자별 비교 / So sánh từng chữ</p>
+                <div style="margin-bottom:.3rem"><span style="font-size:.68rem;color:#94a3b8;margin-right:.4rem">목표</span><span style="letter-spacing:.05em">${tHtml}</span></div>
+                <div><span style="font-size:.68rem;color:#94a3b8;margin-right:.4rem">발음</span><span style="letter-spacing:.05em">${sHtml||'<span style="color:#94a3b8;font-size:.8rem">인식 없음</span>'}</span></div>
+            </div>
+            <div style="display:flex;gap:.8rem;justify-content:center;font-size:.72rem;color:#94a3b8;margin-bottom:.9rem">
+                <span><span class="ch-ok">■</span> 정확</span>
+                <span><span class="ch-err">■</span> 오류</span>
+                <span><span class="ch-ext">■</span> 여분</span>
+            </div>
+
+            <!-- 피드백 메시지 -->
+            <div style="background:${score>=80?'#f0fdf4':score>=60?'#fffbeb':'#fef2f2'};border:1px solid ${score>=80?'#86efac':score>=60?'#fcd34d':'#fca5a5'};border-radius:10px;padding:.75rem 1rem;margin-bottom:.9rem">
+                <p style="font-size:.88rem;font-weight:700;color:${color}">${msgs.ko}</p>
+                <p style="font-size:.78rem;color:${color};margin-top:.2rem">${msgs.vi}</p>
+            </div>
+
+            <!-- 개선 가이드 -->
+            <div class="vi-box" style="margin-bottom:1rem">
+                <div class="vi-head"><span class="vi-badge">🇻🇳 VI</span> Gợi ý tiếp theo</div>
+                <p style="font-size:.78rem;color:#3730a3;line-height:1.55">${improve.replace('\n','<br>')}</p>
+            </div>
+
+            <!-- 버튼 -->
+            <div class="btn-row" style="margin-bottom:.5rem">
+                <button class="btn-ghost" onclick="retryThis()">
+                    <i class="fa-solid fa-rotate-right" style="margin-right:3px"></i>다시
+                    <span style="display:block;font-size:.68rem;color:#94a3b8">Thử lại</span>
+                </button>
+                <button class="btn-listen" onclick="speakCur(0.85)">
+                    <i class="fa-solid fa-volume-high" style="margin-right:3px"></i>모범 발음
+                    <span style="display:block;font-size:.68rem;color:#15803d">Nghe mẫu</span>
+                </button>
+            </div>
+            ${!isLast ? '<p style="text-align:center;font-size:11px;color:#2c5f8a;font-weight:700;margin-bottom:6px;animation:bounce-y .85s ease-in-out infinite">👆 다음 문장으로 넘어가세요 / Nhấn để tiếp tục</p>' : ''}
+            <button id="nextBtn" class="btn-primary" onclick="${isLast ? 'showFinish()' : 'nextSentence()'}">
+                ${isLast
+                    ? '<i class="fa-solid fa-flag-checkered" style="margin-right:.4rem"></i>결과 보기 / Xem kết quả'
+                    : '<i class="fa-solid fa-arrow-right" style="margin-right:.4rem"></i>다음 문장 / Câu tiếp'}
+            </button>
+        </div>
+    </div>`;
+    // 결과 패널로 자동 스크롤 + 다음 버튼 강조
+    setTimeout(() => {
+        const rp = document.getElementById('resultCard');
+        if (rp) rp.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(() => {
+            const nb = document.getElementById('nextBtn');
+            if (nb) { nb.classList.add('anim-next'); setTimeout(() => nb.classList.remove('anim-next'), 3800); }
+        }, 500);
+    }, 60);
+}
+
+function retryThis() {
+    step = 'record';
+    setDots('record');
+    document.getElementById('resultPanel').classList.add('hidden');
+    document.getElementById('resultPanel').innerHTML = '';
+    document.getElementById('stepPanel').classList.remove('hidden');
+    document.getElementById('stepPanel').innerHTML = recordPanel(SCENARIOS[scenIdx].sentences[sentIdx]);
+    setTimeout(() => {
+        document.getElementById('stepPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+}
+
+function nextSentence() {
+    sentIdx++;
+    renderSentence();
+}
+
+function showFinish() {
+    document.getElementById('mainArea').innerHTML = '';
+    document.getElementById('sessionFinish').classList.remove('hidden');
+    document.getElementById('completeBadge').classList.remove('hidden');
+    document.getElementById('fin-tries').textContent = sessionScores.length;
+    if (sessionScores.length > 0) {
+        document.getElementById('fin-best').textContent = Math.max(...sessionScores);
+        document.getElementById('fin-avg').textContent = Math.round(sessionScores.reduce((a,b)=>a+b,0)/sessionScores.length);
+    }
+    // 다음 시나리오 버튼
+    const nextBtn = document.getElementById('finNextBtn');
+    nextBtn.style.display = scenIdx < SCENARIOS.length - 1 ? 'block' : 'none';
+    renderLog();
+    setTimeout(() => document.getElementById('sessionFinish').scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
+}
+
+function renderLog() {
+    if (!sessionLog.length) return;
+    const sc = s => s >= 80 ? '#16a34a' : s >= 60 ? '#d97706' : '#dc2626';
+    const rows = sessionLog.map(e => `
+        <details style="border:1px solid #d1dce8;border-radius:10px;margin-bottom:6px;overflow:hidden">
+            <summary style="display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;background:#f0f4f9;list-style:none;user-select:none">
+                <span style="width:22px;height:22px;border-radius:50%;background:#dbeafe;color:#1e40af;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">${e.no}</span>
+                <span style="flex:1;font-size:12px;color:#1a3a5c;font-weight:600;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${e.scenName} · ${e.sentNo}번</span>
+                <span style="font-size:13px;font-weight:900;color:${sc(e.score)};flex-shrink:0">${e.score}점</span>
+                <span style="font-size:10px;color:#94a3b8;flex-shrink:0">${e.ts}</span>
+            </summary>
+            <div style="padding:8px 12px;font-size:11.5px;background:#fff">
+                <p style="color:#475569;margin-bottom:3px"><span style="font-weight:700;color:#1e40af">목표</span> ${e.target}</p>
+                <p style="color:#475569"><span style="font-weight:700;color:${sc(e.score)}">내 발음</span> ${e.spoken || '(인식 없음)'}</p>
+                <div style="display:flex;gap:8px;margin-top:5px;font-size:10.5px">
+                    <span style="color:#16a34a">정확도 ${e.accuracy}%</span>
+                    <span style="color:#2c5f8a">완성도 ${e.completeness}%</span>
+                </div>
+            </div>
+        </details>`).join('');
+
+    document.getElementById('logArea').innerHTML = `
+        <div style="border-top:1px solid #d1dce8;padding-top:14px">
+            <p style="font-size:12px;font-weight:700;color:#1a4a7a;margin-bottom:8px">
+                <i class="fa-solid fa-clock-rotate-left" style="margin-right:4px"></i>연습 로그 / Nhật ký luyện tập
+                <span style="font-weight:400;color:#94a3b8;font-size:10.5px;margin-left:4px">(항목 클릭 시 상세 보기)</span>
+            </p>
+            ${rows}
+        </div>`;
+}
+
+function goNextScenario() {
+    selectScenario(scenIdx + 1);
+}
+function replayScenario() {
+    sentIdx = 0; sessionScores = []; sessionLog = [];
+    document.getElementById('sessionFinish').classList.add('hidden');
+    document.getElementById('completeBadge').classList.add('hidden');
+    renderSentence();
+}
+
+function updateProgress() {
+    const total = SCENARIOS[scenIdx].sentences.length;
+    const pct = Math.round(sentIdx / total * 100);
+    document.getElementById('progLabel').textContent = `${sentIdx + 1} / ${total}`;
+    document.getElementById('progPct').textContent = pct + '%';
+    document.getElementById('progFill').style.width = pct + '%';
+}
+
+speechSynthesis.getVoices();
+speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+</script>
+</body>
+</html>
