@@ -1,246 +1,392 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>한국어 듣기 퀴즈 2</title>
+    <title>11과 듣기 2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared/listening-workbook.css?v=20260318-c11-listening">
     <style>
         body {
-            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            font-family: "Noto Sans KR", sans-serif;
+            background: linear-gradient(180deg, #f4fbff 0%, #fbfeff 42%, #f8fafc 100%);
         }
-        .option-btn {
-            transition: all 0.2s;
-        }
-        .option-btn.correct {
-            background-color: #10b981; /* green-500 */
-            color: white;
-            border-color: #10b981;
-        }
-        .option-btn.incorrect {
-            background-color: #ef4444; /* red-500 */
-            color: white;
-            border-color: #ef4444;
-        }
-        .option-btn:disabled {
-            cursor: not-allowed;
-            opacity: 0.8;
-        }
-        #script-content {
-            display: none;
-        }
-    </style>
-    <style id="c11-global-nav-style">
-        body { margin: 0; }
-        .c11-global-nav {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+        .injected-global-nav {
             width: 100%;
-            height: 58px;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #d7eef7;
+            height: 60px;
             display: flex;
             align-items: center;
-            gap: 12px;
             padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
             box-sizing: border-box;
-            background: rgba(255, 255, 255, 0.92);
-            border-bottom: 1px solid #dbeafe;
-            backdrop-filter: blur(8px);
+            gap: 15px;
         }
-        .c11-global-nav a {
-            color: #4f46e5;
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #0369a1;
             text-decoration: none;
             font-weight: 700;
             font-size: 14px;
-            line-height: 1;
+            transition: color 0.2s;
         }
-        .c11-divider {
+        .injected-global-nav a:hover {
+            color: #075985;
+        }
+        .injected-global-nav .divider {
             color: #cbd5e1;
-            font-weight: 700;
-            line-height: 1;
         }
     </style>
 </head>
-<body class="bg-gray-100 p-4">
-    <nav class="c11-global-nav" aria-label="상단 이동">
-        <a href="../index.html">메인</a>
-        <span class="c11-divider">|</span>
-        <a href="index.html">11과 목록</a>
+<body>
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 11과 목록</a>
     </nav>
 
-    <div class="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-6 sm:p-8 space-y-6">
-        <div class="text-center">
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">🎧 한국어 듣기 퀴즈 2</h1>
-            <p class="text-gray-600">듣기 내용을 잘 듣고 질문에 답해 보세요.</p>
-        </div>
+    <div id="listening-workbook-app"></div>
 
-        <!-- 오디오 플레이어 -->
-        <div class="audio-player bg-gray-50 p-4 rounded-lg">
-             <label for="audio-file" class="text-sm font-medium text-gray-700">Track 20 (음원)</label>
-             <audio id="audio-file" controls class="w-full mt-2">
-                 <source src="track20.mp3" type="audio/mpeg">
-                 Your browser does not support the audio element.
-             </audio>
-        </div>
-
-        <!-- 스크립트 보기 -->
-        <div>
-            <button id="toggle-script-btn" class="w-full text-left text-indigo-600 font-semibold py-2 px-3 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition">
-                <i class="fas fa-file-alt mr-2"></i>스크립트 보기
-            </button>
-            <div id="script-content" class="mt-3 bg-gray-50 p-4 rounded-lg text-sm space-y-2 border">
-                <p><strong>남:</strong> 요즘 회사를 옮길까 말까 고민 중이야.</p>
-                <p><strong>여:</strong> 아니, 왜? 연봉이 높아서 좋다고 했잖아.</p>
-                <p><strong>남:</strong> 연봉은 마음에 드는데 너무 바빠서 내 생활이 없어. 지난 주말에도 늦게까지 회사에서 일하느라고 다른 일은 아무것도 못 했어.</p>
-                <p><strong>여:</strong> 많이 힘들겠다. 만약 회사를 옮긴다면 어떤 곳에서 일하고 싶은데?</p>
-                <p><strong>남:</strong> 연봉은 좀 낮아도 휴가가 길었으면 좋겠어. 또 야근도 없었으면 좋겠고.</p>
-                <p><strong>여:</strong> 어떤 회사든지 힘든 점은 있을 거야. 그리고 아무리 휴가가 길어도 월급이 적으면 좋아하는 일을 할 수 없잖아.</p>
-                <p><strong>남:</strong> 그 말도 맞네. 정말 어떻게 해야 할지 모르겠어.</p>
-                <p><strong>여:</strong> 지금 다니는 회사의 좋은 점을 한번 생각해 보는 건 어때? 무엇이든지 좋으니까 얘기해 봐.</p>
-                <p><strong>남:</strong> 우선 집에서 가깝고 무엇보다 함께 일하는 동료들이 마음에 들어. 그리고 새로 온 상사도 나한테 잘해 주고 사무실 분위기도 좋고.</p>
-                <p><strong>여:</strong> 이렇게 좋은 점이 많은데 옮길 수 있겠어?</p>
-                <p><strong>남:</strong> 그래, 다시 한 번 생각해 볼게. 고마워.</p>
-            </div>
-        </div>
-
-        <!-- 퀴즈 컨테이너 -->
-        <div id="quiz-container" class="space-y-8 border-t pt-6">
-            <!-- 퀴즈가 여기에 동적으로 생성됩니다. -->
-        </div>
-        
-        <!-- 결과 및 버튼 컨테이너 -->
-        <div class="border-t pt-6 text-center">
-             <div id="result-container" class="hidden mb-4">
-                <h2 class="text-2xl font-bold text-green-600">퀴즈 완료!</h2>
-                <p id="score-text" class="text-gray-700 text-lg mt-2"></p>
-            </div>
-            <button id="submit-btn" class="bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-indigo-700 transition duration-300 w-full sm:w-auto">결과 보기</button>
-            <button id="retry-btn" class="hidden bg-gray-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-700 transition duration-300 w-full sm:w-auto">다시 풀기</button>
-        </div>
-
-    </div>
-
-<script>
-    const quizData = [
-        {
-            question: "남자가 회사를 옮기고 싶어 하는 이유는 무엇입니까?",
-            options: ["연봉이 낮아서", "휴가가 짧아서", "너무 바빠서", "동료들이 마음에 안 들어서"],
-            answer: "너무 바빠서"
-        },
-        {
-            question: "남자가 새로 옮기고 싶은 회사의 조건이 아닌 것은 무엇입니까?",
-            options: ["휴가가 길었으면 좋겠다", "야근이 없었으면 좋겠다", "연봉이 높았으면 좋겠다", "집에서 가까웠으면 좋겠다"],
-            answer: "연봉이 높았으면 좋겠다"
-        },
-        {
-            question: "남자가 현재 다니는 회사의 장점으로 이야기하지 않은 것은 무엇입니까?",
-            options: ["집에서 가깝다", "동료들이 좋다", "상사가 잘해준다", "월급이 많다"],
-            answer: "월급이 많다"
-        },
-        {
-            question: "대화의 마지막에 남자는 어떻게 하기로 했습니까?",
-            options: [
-                "바로 회사를 그만두기로 했다",
-                "친구에게 회사를 소개해달라고 했다",
-                "이직 문제에 대해 다시 생각해 보기로 했다",
-                "상사에게 휴가를 달라고 하기로 했다"
+    <script>
+        window.LISTENING_WORKBOOK_CONFIG = {
+            kicker: "Chapter 11 Listening Lab",
+            title: "11과 듣기 2",
+            titleVi: "Luyen nghe bai 11 - Nghe 2",
+            description: "이직을 고민하는 직장인의 대화를 바탕으로 이유 설명, 가정, 양보 표현을 듣고 핵심 장단점을 정리하는 듣기 워크북입니다. 단계별 자막과 문장 훈련, 딕토글로스, 노트, 확인 퀴즈가 한 페이지에 묶여 있습니다.",
+            descriptionVi: "Day la workbook nghe ve cuoc tro chuyen cua mot nhan vien dang can nhac chuyen viec. Em se nghe ly do, gia dinh neu, cach nhuong bo va sap xep lai uu diem, nhoc diem cua cong viec hien tai qua phu de tung buoc, luyen tung cau, dictogloss, ghi chu va bai kiem tra.",
+            instructionLanguage: {
+                enabled: true,
+                default: "ko"
+            },
+            theme: {
+                accent: "#0284c7",
+                accentDark: "#075985",
+                soft: "#e0f2fe",
+                surface: "rgba(255,255,255,0.94)",
+                pageBackground: "linear-gradient(180deg, #f4fbff 0%, #fbfeff 42%, #f8fafc 100%)"
+            },
+            featureList: [
+                "상황 예측",
+                "단계별 자막",
+                "문장 반복과 shadowing",
+                "딕토글로스",
+                "좋은 점과 고민 정리",
+                "이해 점검"
             ],
-            answer: "이직 문제에 대해 다시 생각해 보기로 했다"
-        }
-    ];
-
-    let score = 0;
-    let questionsAnswered = 0;
-
-    const quizContainer = document.getElementById('quiz-container');
-    const resultContainer = document.getElementById('result-container');
-    const scoreText = document.getElementById('score-text');
-    const submitBtn = document.getElementById('submit-btn');
-    const retryBtn = document.getElementById('retry-btn');
-    const toggleScriptBtn = document.getElementById('toggle-script-btn');
-    const scriptContent = document.getElementById('script-content');
-
-    function loadAllQuizzes() {
-        quizContainer.innerHTML = '';
-        quizData.forEach((quiz, index) => {
-            const questionBlock = document.createElement('div');
-            questionBlock.id = `question-${index}`;
-            
-            const questionEl = document.createElement('h2');
-            questionEl.className = 'text-xl font-bold text-gray-800 mb-4';
-            questionEl.innerText = `Q${index + 1}. ${quiz.question}`;
-            
-            const optionsEl = document.createElement('div');
-            optionsEl.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
-            
-            quiz.options.forEach(optionText => {
-                const button = document.createElement('button');
-                button.innerText = optionText;
-                button.classList.add('option-btn', 'w-full', 'p-3', 'text-left', 'border-2', 'rounded-lg', 'hover:bg-gray-100');
-                button.addEventListener('click', () => checkAnswer(index, button, optionText, quiz.answer));
-                optionsEl.appendChild(button);
-            });
-
-            questionBlock.appendChild(questionEl);
-            questionBlock.appendChild(optionsEl);
-            quizContainer.appendChild(questionBlock);
-        });
-    }
-
-    function checkAnswer(questionIndex, button, selected, correct) {
-        const questionBlock = document.getElementById(`question-${questionIndex}`);
-        const optionButtons = questionBlock.querySelectorAll('.option-btn');
-        
-        // Prevent re-answering
-        if (optionButtons[0].disabled) return;
-
-        questionsAnswered++;
-
-        optionButtons.forEach(btn => {
-            btn.disabled = true;
-            if (btn.innerText === correct) {
-                btn.classList.add('correct');
-            }
-        });
-
-        if (selected === correct) {
-            score++;
-        } else {
-            button.classList.add('incorrect');
-        }
-    }
-
-    submitBtn.addEventListener('click', () => {
-        if (questionsAnswered < quizData.length) {
-            alert('모든 문제를 풀어주세요.');
-            return;
-        }
-        resultContainer.classList.remove('hidden');
-        scoreText.innerText = `총 ${quizData.length}문제 중 ${score}문제를 맞혔습니다!`;
-        submitBtn.classList.add('hidden');
-        retryBtn.classList.remove('hidden');
-    });
-
-    retryBtn.addEventListener('click', () => {
-        score = 0;
-        questionsAnswered = 0;
-        resultContainer.classList.add('hidden');
-        submitBtn.classList.remove('hidden');
-        retryBtn.classList.add('hidden');
-        loadAllQuizzes();
-    });
-
-    toggleScriptBtn.addEventListener('click', () => {
-        const isHidden = scriptContent.style.display === 'none' || scriptContent.style.display === '';
-        scriptContent.style.display = isHidden ? 'block' : 'none';
-        toggleScriptBtn.innerHTML = isHidden ? '<i class="fas fa-eye-slash mr-2"></i>스크립트 숨기기' : '<i class="fas fa-file-alt mr-2"></i>스크립트 보기';
-    });
-
-    loadAllQuizzes();
-</script>
-
-    <script src="../shared/learning-enhancements.js"></script>
+            featureListVi: [
+                "Du doan tinh huong",
+                "Phu de theo tung buoc",
+                "Lap lai tung cau va shadowing",
+                "Dictogloss",
+                "Sap xep diem tot va dieu dang do du",
+                "Kiem tra muc do hieu"
+            ],
+            lessons: [
+                {
+                    id: "track20",
+                    label: "Track 20",
+                    title: "듣기 2: 이직을 고민하는 직장인",
+                    titleVi: "Nghe 2: Nhan vien dang can nhac chuyen viec",
+                    summary: "남자가 왜 회사를 옮기고 싶어 하는지, 또 현재 회사의 어떤 점 때문에 망설이는지를 비교하며 듣는 활동입니다.",
+                    summaryVi: "Em nghe xem vi sao nguoi nam muon chuyen viec va vi sao anh ay lai do du vi nhung diem tot cua cong ty hien tai.",
+                    activityImage: {
+                        src: "litsen2pic.webp",
+                        alt: "회사 라운지에서 직장인이 고민 상담을 하는 장면",
+                        altVi: "Canh hai dong nghiep noi chuyen ve viec chuyen cong ty trong phong lounge",
+                        caption: "참고 그림: 업무 조건과 직장 분위기를 두고 현실적인 고민을 나누는 상황입니다.",
+                        captionVi: "Hinh tham khao: tinh huong chia se mot cach thuc te ve dieu kien lam viec va khong khi cong ty."
+                    },
+                    audioSrc: "track20.mp3",
+                    scene: {
+                        emoji: "💼",
+                        title: "상황 그림: 이직을 고민하며 장단점을 따져 보는 대화",
+                        titleVi: "Tinh huong: cuoc tro chuyen can nhac uu diem va nhoc diem khi chuyen viec",
+                        caption: "연봉, 휴가, 야근, 동료, 상사, 분위기처럼 직장 선택의 기준이 차례대로 나오는 장면입니다.",
+                        captionVi: "Trong doan hoi thoai nay, cac tieu chi chon noi lam viec nhu luong, nghi phep, tang ca, dong nghiep, cap tren va khong khi lam viec lan luot xuat hien.",
+                        tags: ["이직 고민", "조건 비교", "직장 분위기", "조언"]
+                    },
+                    preListening: {
+                        vocab: [
+                            { ko: "옮기다", vi: "chuyen sang noi khac", hint: "직장이나 자리를 다른 곳으로 바꾸다" },
+                            { ko: "연봉", vi: "luong nam", hint: "한 해 동안 받는 전체 급여" },
+                            { ko: "야근", vi: "tang ca buoi toi", hint: "정해진 시간보다 늦게까지 일하는 것" },
+                            { ko: "휴가", vi: "nghi phep", hint: "일을 쉬는 기간" },
+                            { ko: "분위기", vi: "khong khi, bau khong khi", hint: "사무실이나 조직 안의 느낌" }
+                        ],
+                        relationshipOptions: [
+                            { value: "friends", label: "친한 친구나 동료" },
+                            { value: "boss-employee", label: "상사와 부하 직원" },
+                            { value: "customer-clerk", label: "손님과 점원" }
+                        ],
+                        relationshipAnswer: "friends",
+                        genreOptions: [
+                            { value: "advice", label: "고민 상담과 조언" },
+                            { value: "complaint", label: "서비스 불만 제기" },
+                            { value: "interview", label: "취업 면접" }
+                        ],
+                        genreAnswer: "advice",
+                        predictionNote: "남자의 불만과 여자의 조언이 번갈아 나오면서, 이직 기준을 다시 정리하게 만드는 대화입니다.",
+                        predictionNoteVi: "Day la cuoc tro chuyen trong do su than phien cua nguoi nam va loi khuyen cua nguoi nu lan luot xuat hien, giup sap xep lai tieu chi chuyen viec.",
+                        backgroundPrompt: "직장을 옮길지 말지 고민할 때 가장 중요하다고 생각하는 기준을 두세 가지 적어 보세요.",
+                        backgroundPromptVi: "Khi can nhac co nen chuyen viec hay khong, theo em tieu chi nao la quan trong nhat? Hay viet ra hai hoac ba y."
+                    },
+                    transcript: [
+                        {
+                            speaker: "남",
+                            text: "요즘 회사를 옮길까 말까 고민 중이야.",
+                            vi: "Dao nay toi dang phan van khong biet co nen chuyen cong ty hay khong.",
+                            keywords: ["요즘", "회사를 옮기다", "고민"]
+                        },
+                        {
+                            speaker: "여",
+                            text: "아니, 왜? 연봉이 높아서 좋다고 했잖아.",
+                            vi: "Sao the? Truoc day ban bao luong cao nen rat tot ma.",
+                            keywords: ["왜", "연봉", "했잖아"],
+                            highlights: [
+                                { term: "했잖아", type: "공유 사실 환기" }
+                            ]
+                        },
+                        {
+                            speaker: "남",
+                            text: "연봉은 마음에 드는데 너무 바빠서 내 생활이 없어. 지난 주말에도 늦게까지 회사에서 일하느라고 다른 일은 아무것도 못 했어.",
+                            vi: "Luong thi toi ung y, nhung vi qua ban nen toi khong co cuoc song rieng. Cuoi tuan truoc toi cung phai lam den muon o cong ty nen khong lam duoc viec gi khac ca.",
+                            keywords: ["마음에 들다", "너무 바쁘다", "일하느라고"],
+                            highlights: [
+                                { term: "일하느라고", type: "이유 설명" }
+                            ]
+                        },
+                        {
+                            speaker: "여",
+                            text: "많이 힘들겠다. 만약 회사를 옮긴다면 어떤 곳에서 일하고 싶은데?",
+                            vi: "Chac la ban met lam. Neu chuyen cong ty thi ban muon lam o noi nhu the nao?",
+                            keywords: ["힘들겠다", "만약", "옮긴다면"],
+                            highlights: [
+                                { term: "옮긴다면", type: "가정 제시" }
+                            ]
+                        },
+                        {
+                            speaker: "남",
+                            text: "연봉은 좀 낮아도 휴가가 길었으면 좋겠어. 또 야근도 없었으면 좋겠고.",
+                            vi: "Luong co thap hon mot chut cung duoc, toi muon ky nghi dai hon. Va toi cung muon khong phai tang ca nua.",
+                            keywords: ["연봉은 낮아도", "휴가", "야근"]
+                        },
+                        {
+                            speaker: "여",
+                            text: "어떤 회사든지 힘든 점은 있을 거야. 그리고 아무리 휴가가 길어도 월급이 적으면 좋아하는 일을 할 수 없잖아.",
+                            vi: "Cong ty nao chac cung co diem kho khan. Va du cho ky nghi co dai den dau thi neu luong thap qua cung khong the lam nhung dieu minh thich duoc ma.",
+                            keywords: ["힘든 점", "아무리", "월급이 적으면"],
+                            highlights: [
+                                { term: "아무리", type: "양보 강조" },
+                                { term: "없잖아", type: "공감 유도" }
+                            ]
+                        },
+                        {
+                            speaker: "남",
+                            text: "그 말도 맞네. 정말 어떻게 해야 할지 모르겠어.",
+                            vi: "Nghe cung co ly. That su toi khong biet phai lam sao nua.",
+                            keywords: ["맞네", "모르겠어"]
+                        },
+                        {
+                            speaker: "여",
+                            text: "지금 다니는 회사의 좋은 점을 한번 생각해 보는 건 어때? 무엇이든지 좋으니까 얘기해 봐.",
+                            vi: "Thu nghi xem cong ty hien gio co diem tot nao di. Bat cu dieu gi cung duoc, thu noi xem.",
+                            keywords: ["좋은 점", "생각해 보다", "얘기해 봐"]
+                        },
+                        {
+                            speaker: "남",
+                            text: "우선 집에서 가깝고 무엇보다 함께 일하는 동료들이 마음에 들어. 그리고 새로 온 상사도 나한테 잘해 주고 사무실 분위기도 좋고.",
+                            vi: "Truoc tien cong ty gan nha, va hon het la nhung dong nghiep lam cung toi rat hop. Cap tren moi den cung doi xu tot voi toi, khong khi van phong cung de chiu.",
+                            keywords: ["집에서 가깝다", "무엇보다", "동료", "상사", "분위기"],
+                            highlights: [
+                                { term: "무엇보다", type: "중요 정보 강조" }
+                            ]
+                        },
+                        {
+                            speaker: "여",
+                            text: "이렇게 좋은 점이 많은데 옮길 수 있겠어?",
+                            vi: "Co nhieu diem tot nhu vay thi ban co the de dang chuyen di duoc sao?",
+                            keywords: ["좋은 점", "옮길 수 있겠어"]
+                        },
+                        {
+                            speaker: "남",
+                            text: "그래, 다시 한 번 생각해 볼게. 고마워.",
+                            vi: "Dung vay, de toi suy nghi lai them mot lan nua. Cam on ban.",
+                            keywords: ["다시 생각", "고마워"],
+                            highlights: [
+                                { term: "생각해 볼게", type: "즉석의 다짐" }
+                            ]
+                        }
+                    ],
+                    dictogloss: {
+                        prompt: "남자가 왜 이직을 고민하는지, 또 왜 망설이게 되는지를 핵심어로 다시 정리해 보세요.",
+                        promptVi: "Hay dung tu khoa de viet lai vi sao nguoi nam muon chuyen viec va vi sao anh ay lai do du.",
+                        keywords: ["연봉", "너무 바쁘다", "휴가", "야근", "동료", "상사", "분위기", "다시 생각"],
+                        modelSummary: "남자는 연봉은 만족스럽지만 너무 바빠서 회사를 옮길까 고민한다. 그는 휴가가 길고 야근이 없는 회사를 원한다. 그러나 여자는 어느 회사나 힘든 점이 있고 월급이 적으면 하고 싶은 일을 하기 어렵다고 말한다. 남자는 현재 회사가 집에서 가깝고 동료, 상사, 분위기가 좋아서 다시 생각해 보기로 한다.",
+                        placeholder: "이직하고 싶은 이유와 현재 회사의 장점을 함께 넣어 4~5문장으로 정리해 보세요.",
+                        placeholderVi: "Hay viet lai thanh 4 den 5 cau, gom ca ly do muon chuyen viec va uu diem cua cong ty hien tai."
+                    },
+                    notePrompts: {
+                        keywords: "이직 이유, 원하는 조건, 현재 회사 장점",
+                        details: "남자의 불만과 여자의 조언을 나누어 적기",
+                        questions: "어떤 표현이 생각을 바꾸게 만드는지 표시하기",
+                        cue: "연봉 / 바쁨 / 휴가 / 동료 / 상사 / 분위기",
+                        notes: "장점과 단점을 두 칸으로 나누어 메모하기",
+                        summary: "남자가 왜 다시 생각하기로 했는지 한두 문장으로 정리하기"
+                    },
+                    notePromptsVi: {
+                        keywords: "Ly do chuyen viec, dieu kien mong muon, uu diem cong ty hien tai",
+                        details: "Chia ra va ghi rieng su than phien cua nguoi nam va loi khuyen cua nguoi nu",
+                        questions: "Danh dau cach noi nao lam nguoi nam thay doi suy nghi",
+                        cue: "Luong / ban ron / nghi phep / dong nghiep / cap tren / khong khi",
+                        notes: "Chia hai cot de ghi diem tot va diem bat tien",
+                        summary: "Tom tat trong mot hai cau vi sao nguoi nam quyet dinh nghi lai"
+                    },
+                    clarifications: [
+                        {
+                            ko: "다시 한 번 말씀해 주세요.",
+                            vi: "Xin noi lai mot lan nua.",
+                            use: "상대의 설명을 처음부터 다시 듣고 싶을 때 쓸 수 있습니다.",
+                            useVi: "Dung khi em muon nghe lai phan giai thich cua doi phuong tu dau."
+                        },
+                        {
+                            ko: "즉, 연봉은 괜찮지만 너무 바쁘다는 말이죠?",
+                            vi: "Tuc la luong on nhung qua ban, dung khong?",
+                            use: "불만의 핵심을 한 문장으로 확인할 때 좋습니다.",
+                            useVi: "Phu hop khi em muon xac nhan y chinh cua loi than phien trong mot cau."
+                        },
+                        {
+                            ko: "휴가가 길고 야근이 없는 회사를 원한다는 말씀이군요.",
+                            vi: "Y ban la muon mot cong ty co ky nghi dai va khong phai tang ca.",
+                            use: "조건을 정리해서 다시 말해 줄 때 자연스럽습니다.",
+                            useVi: "Rat tu nhien khi em muon tom tat va noi lai cac dieu kien mong muon."
+                        },
+                        {
+                            ko: "지금 회사의 좋은 점을 먼저 생각해 보라는 말이죠?",
+                            vi: "Y ban la nen nghi truoc ve diem tot cua cong ty hien tai, dung khong?",
+                            use: "상대의 조언을 다시 확인하며 받아들일 때 좋습니다.",
+                            useVi: "Dung khi em tiep nhan loi khuyen va muon xac nhan lai noi dung do."
+                        }
+                    ],
+                    clarificationPrompt: "이직 이유와 조언을 다시 확인하는 표현을 골라 연습해 보세요.",
+                    clarificationPromptVi: "Hay luyen cac cach xac nhan lai ly do chuyen viec va loi khuyen trong hoi thoai.",
+                    clarifyScenario: "예: '즉, 연봉보다 생활 균형이 더 중요하다는 말씀이죠?'처럼 핵심을 확인하는 문장을 만들어 보세요.",
+                    clarifyScenarioVi: "Vi du: hay tao mot cau xac nhan y chinh nhu 'Tuc la su can bang cuoc song quan trong hon luong, dung khong?'.",
+                    oralFeatures: [
+                        {
+                            term: "했잖아",
+                            type: "공유 사실 환기",
+                            typeVi: "Goi lai dieu ca hai deu biet",
+                            note: "상대가 이미 알고 있는 사실을 다시 꺼내며 대화를 시작하는 표현입니다.",
+                            noteVi: "Day la cach noi nhac lai mot thong tin ma ca hai nguoi deu da biet."
+                        },
+                        {
+                            term: "일하느라고",
+                            type: "이유 설명",
+                            typeVi: "Giai thich nguyen nhan",
+                            note: "어떤 일 때문에 다른 일을 하지 못했다는 결과를 자연스럽게 이어 줍니다.",
+                            noteVi: "Cach noi nay noi ro vi mot viec nao do ma nguoi noi khong the lam viec khac."
+                        },
+                        {
+                            term: "옮긴다면",
+                            type: "가정 제시",
+                            typeVi: "Neu gia su",
+                            note: "아직 결정되지 않은 상황을 가정해서 조건을 물을 때 쓰는 표현입니다.",
+                            noteVi: "Dung khi dua ra mot gia dinh chua duoc quyet dinh de hoi ve dieu kien mong muon."
+                        },
+                        {
+                            term: "아무리",
+                            type: "양보 강조",
+                            typeVi: "Nhan manh su nhuong bo",
+                            note: "앞의 조건이 좋아 보여도 뒤의 조건 때문에 한계가 있다는 뜻을 강조합니다.",
+                            noteVi: "No nhan manh rang du dieu kien phia truoc co tot den dau thi van co gioi han do dieu kien phia sau."
+                        },
+                        {
+                            term: "무엇보다",
+                            type: "중요 정보 강조",
+                            typeVi: "Nhan manh diem quan trong nhat",
+                            note: "여러 장점 가운데 가장 결정적인 이유를 앞세워 말할 때 쓰입니다.",
+                            noteVi: "Dung khi nguoi noi muon dua ly do quan trong nhat len dau trong so nhieu diem tot."
+                        },
+                        {
+                            term: "생각해 볼게",
+                            type: "즉석의 다짐",
+                            typeVi: "Loi hua ngay luc noi",
+                            note: "상대의 조언을 받아들여 스스로 행동을 바꿔 보겠다는 태도를 보여 줍니다.",
+                            noteVi: "Cach noi nay cho thay nguoi noi tiep thu loi khuyen va se tu xem xet lai hanh dong cua minh."
+                        }
+                    ],
+                    quizTitle: "이해 점검",
+                    quizTitleVi: "Kiem tra muc do hieu",
+                    quizGuideKo: "남자의 불만과 현재 회사의 장점을 구분해서 답해 보세요.",
+                    quizGuideVi: "Hay phan biet ro dieu nguoi nam khong hai long va nhung uu diem cua cong ty hien tai.",
+                    questions: [
+                        {
+                            prompt: "남자가 이직을 고민하는 가장 큰 이유는 무엇입니까?",
+                            promptVi: "Ly do lon nhat khien nguoi nam can nhac chuyen viec la gi?",
+                            answer: "2",
+                            explanation: "연봉은 마음에 들지만 너무 바빠서 자기 생활이 없다고 말합니다.",
+                            explanationVi: "Nguoi nam noi rang luong thi tot nhung anh ay qua ban, den muc khong con cuoc song rieng.",
+                            options: [
+                                { value: "1", label: "연봉이 너무 낮아서", labelVi: "Vi luong qua thap" },
+                                { value: "2", label: "너무 바빠서", labelVi: "Vi qua ban" },
+                                { value: "3", label: "동료들과 갈등이 있어서", labelVi: "Vi co mau thuan voi dong nghiep" },
+                                { value: "4", label: "집에서 너무 멀어서", labelVi: "Vi cong ty qua xa nha" }
+                            ]
+                        },
+                        {
+                            prompt: "남자가 새 회사에서 바라는 조건으로 맞는 것은 무엇입니까?",
+                            promptVi: "Dieu kien nao phu hop voi cong ty moi ma nguoi nam mong muon?",
+                            answer: "2",
+                            explanation: "남자는 연봉이 좀 낮아도 휴가가 길고 야근이 없는 회사를 원합니다.",
+                            explanationVi: "Nguoi nam muon mot cong ty du luong co thap hon mot chut nhung co ky nghi dai va khong can tang ca.",
+                            options: [
+                                { value: "1", label: "연봉이 지금보다 훨씬 높다", labelVi: "Luong cao hon rat nhieu so voi hien tai" },
+                                { value: "2", label: "휴가가 길다", labelVi: "Ky nghi dai" },
+                                { value: "3", label: "사무실이 더 넓다", labelVi: "Van phong rong hon" },
+                                { value: "4", label: "집에서 훨씬 더 가깝다", labelVi: "Gan nha hon rat nhieu" }
+                            ]
+                        },
+                        {
+                            prompt: "남자가 현재 회사의 장점으로 말하지 않은 것은 무엇입니까?",
+                            promptVi: "Dieu nao khong duoc nguoi nam nhac den nhu uu diem cua cong ty hien tai?",
+                            answer: "4",
+                            explanation: "남자는 집에서 가깝고 동료, 상사, 분위기가 좋다고 했지만 월급이 많다고는 말하지 않았습니다.",
+                            explanationVi: "Nguoi nam noi cong ty gan nha, dong nghiep tot, cap tren tot va khong khi van phong tot, nhung khong noi luong cao la mot uu diem o phan nay.",
+                            options: [
+                                { value: "1", label: "집에서 가깝다", labelVi: "Gan nha" },
+                                { value: "2", label: "동료들이 좋다", labelVi: "Dong nghiep tot" },
+                                { value: "3", label: "상사가 잘해준다", labelVi: "Cap tren doi xu tot" },
+                                { value: "4", label: "월급이 많다", labelVi: "Luong nhieu" }
+                            ]
+                        },
+                        {
+                            prompt: "대화 마지막에 남자는 어떻게 하기로 했습니까?",
+                            promptVi: "Cuoi cuoc tro chuyen, nguoi nam quyet dinh the nao?",
+                            answer: "3",
+                            explanation: "여자의 말을 듣고 이직 문제를 다시 한 번 생각해 보겠다고 합니다.",
+                            explanationVi: "Sau khi nghe loi khuyen cua nguoi nu, nguoi nam noi se suy nghi lai mot lan nua ve viec chuyen cong ty.",
+                            options: [
+                                { value: "1", label: "바로 회사를 그만두기로 했다", labelVi: "Quyet dinh nghi viec ngay lap tuc" },
+                                { value: "2", label: "친구에게 회사를 소개해 달라고 했다", labelVi: "Nho ban gioi thieu cong ty moi" },
+                                { value: "3", label: "이직 문제를 다시 생각해 보기로 했다", labelVi: "Quyet dinh suy nghi lai ve viec chuyen viec" },
+                                { value: "4", label: "상사에게 휴가를 달라고 하기로 했다", labelVi: "Quyet dinh xin nghi phep voi cap tren" }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        };
+    </script>
+    <script src="../shared/listening-workbook.js?v=20260318-c11-listening"></script>
+    <script src="../shared/learning-enhancements.js?v=20260318-c11-listening"></script>
 </body>
 </html>

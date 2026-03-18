@@ -1,246 +1,395 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>한국어 듣기 퀴즈</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-        }
-        .option-btn {
-            transition: all 0.2s;
-        }
-        .option-btn.correct {
-            background-color: #10b981; /* green-500 */
-            color: white;
-            border-color: #10b981;
-        }
-        .option-btn.incorrect {
-            background-color: #ef4444; /* red-500 */
-            color: white;
-            border-color: #ef4444;
-        }
-        .option-btn:disabled {
-            cursor: not-allowed;
-            opacity: 0.8;
-        }
-    </style>
-    <style id="c11-global-nav-style">
-        body { margin: 0; }
-        .c11-global-nav {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>11과 듣기 1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared/listening-workbook.css?v=20260318-c11-listening">
+    <style>
+        body {
+            margin: 0;
+            font-family: "Noto Sans KR", sans-serif;
+            background: linear-gradient(180deg, #fff9f2 0%, #fffdf8 42%, #f7faf8 100%);
+        }
+        .injected-global-nav {
             width: 100%;
-            height: 58px;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #f6ddc6;
+            height: 60px;
             display: flex;
             align-items: center;
-            gap: 12px;
             padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
             box-sizing: border-box;
-            background: rgba(255, 255, 255, 0.92);
-            border-bottom: 1px solid #dbeafe;
-            backdrop-filter: blur(8px);
+            gap: 15px;
         }
-        .c11-global-nav a {
-            color: #4f46e5;
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #b45309;
             text-decoration: none;
             font-weight: 700;
             font-size: 14px;
-            line-height: 1;
+            transition: color 0.2s;
         }
-        .c11-divider {
+        .injected-global-nav a:hover {
+            color: #7c2d12;
+        }
+        .injected-global-nav .divider {
             color: #cbd5e1;
-            font-weight: 700;
-            line-height: 1;
         }
     </style>
 </head>
-<body class="bg-gray-100 p-4">
-    <nav class="c11-global-nav" aria-label="상단 이동">
-        <a href="../index.html">메인</a>
-        <span class="c11-divider">|</span>
-        <a href="index.html">11과 목록</a>
+<body>
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 11과 목록</a>
     </nav>
 
-    <div class="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-6 sm:p-8">
-        <div class="text-center mb-6">
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">🎧 한국어 듣기 퀴즈</h1>
-            <p class="text-gray-600">듣기 내용을 잘 듣고 질문에 답해 보세요.</p>
-        </div>
+    <div id="listening-workbook-app"></div>
 
-        <!-- 오디오 플레이어 -->
-        <div class="audio-player bg-gray-50 p-4 rounded-lg mb-4">
-             <label for="audio-file" class="text-sm font-medium text-gray-700">Track 19 (음원)</label>
-             <audio id="audio-file" controls class="w-full mt-2">
-                 <source src="./track19.mp3" type="audio/mpeg">
-                 Your browser does not support the audio element.
-             </audio>
-        </div>
-
-        <!-- 스크립트 보기 -->
-        <div class="mb-6">
-            <button id="toggle-script-btn" class="w-full text-left text-indigo-600 font-semibold py-2 px-3 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition">
-                <i class="fas fa-file-alt mr-2"></i>스크립트 보기
-            </button>
-            <div id="script-content" class="hidden mt-3 bg-gray-50 p-4 rounded-lg text-sm space-y-2 border">
-                <p><strong>남:</strong> 안녕하세요?</p>
-                <p><strong>여:</strong> 어서 와요. 오늘은 첫날이니까 제가 하는 걸 보고 잘 따라하세요. 전에도 옷가게에서 일한 적이 있으니까 어렵지 않을 거예요.</p>
-                <p><strong>남:</strong> 네, 열심히 하겠습니다.</p>
-                <p><strong>여:</strong> 우선 마네킹이 입고 있는 옷을 벗기고 이 점퍼를 입혀 주세요.</p>
-                <p><strong>남:</strong> 네, 알겠습니다.</p>
-                <p><strong>여:</strong> 옷을 다 입히고 나서 이 모자도 좀 씌워 줄래요? 신발은 이 등산화로 갈아 신겨 주세요.</p>
-                <p><strong>남:</strong> 네, 알겠습니다.</p>
-                <p><strong>여:</strong> 다 했으면 이 포스터를 잘 보이는 데에 붙여 주세요.</p>
-                <p><strong>남:</strong> 가게 문 앞쪽에 붙일까요?</p>
-                <p><strong>여:</strong> 문보다는 저기 계산대 아래 붙이는 게 좋겠네요.</p>
-                <p><strong>남:</strong> 네.</p>
-                <p><strong>여:</strong> 저는 물건 가지러 창고에 좀 다녀올 테니까 무슨 일 생기면 연락하세요.</p>
-                <p><strong>남:</strong> 네, 걱정 마세요.</p>
-            </div>
-        </div>
-
-        <!-- 퀴즈 컨테이너 -->
-        <div id="quiz-container" class="space-y-8 border-t pt-6">
-            <!-- 퀴즈가 여기에 동적으로 생성됩니다. -->
-        </div>
-        
-        <!-- 결과 및 버튼 컨테이너 -->
-        <div class="border-t pt-6 text-center mt-6">
-             <div id="result-container" class="hidden mb-4">
-                <h2 class="text-2xl font-bold text-green-600">퀴즈 완료!</h2>
-                <p id="score-text" class="text-gray-700 text-lg mt-2"></p>
-            </div>
-            <button id="submit-btn" class="bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-indigo-700 transition duration-300 w-full sm:w-auto">결과 보기</button>
-            <button id="retry-btn" class="hidden bg-gray-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-700 transition duration-300 w-full sm:w-auto">다시 풀기</button>
-        </div>
-
-    </div>
-
-<script>
-    const quizData = [
-        {
-            question: "남자는 전에 어디에서 일했습니까?",
-            options: ["신발 가게", "옷가게", "모자 가게", "서점"],
-            answer: "옷가게"
-        },
-        {
-            question: "여자가 남자에게 가장 먼저 시킨 일은 무엇입니까?",
-            options: ["포스터 붙이기", "신발 갈아 신기기", "마네킹 옷 입히기", "창고 다녀오기"],
-            answer: "마네킹 옷 입히기"
-        },
-        {
-            question: "남자는 포스터를 어디에 붙여야 합니까?",
-            options: ["가게 문 앞", "창고 문", "계산대 아래", "마네킹 옆"],
-            answer: "계산대 아래"
-        },
-        {
-            question: "이 대화의 내용과 다른 것은 무엇입니까?",
-            options: [
-                "오늘은 남자가 일하는 첫날입니다.",
-                "남자는 마네킹에 모자를 씌워야 합니다.",
-                "여자는 창고에 물건을 가지러 갑니다.",
-                "남자는 마네킹에 등산화 대신 운동화를 신겨야 합니다."
-            ],
-            answer: "남자는 마네킹에 등산화 대신 운동화를 신겨야 합니다."
-        }
-    ];
-
-    let score = 0;
-    let questionsAnswered = 0;
-
-    const quizContainer = document.getElementById('quiz-container');
-    const resultContainer = document.getElementById('result-container');
-    const scoreText = document.getElementById('score-text');
-    const submitBtn = document.getElementById('submit-btn');
-    const retryBtn = document.getElementById('retry-btn');
-    const toggleScriptBtn = document.getElementById('toggle-script-btn');
-    const scriptContent = document.getElementById('script-content');
-
-    function loadAllQuizzes() {
-        quizContainer.innerHTML = '';
-        quizData.forEach((quiz, index) => {
-            const questionBlock = document.createElement('div');
-            questionBlock.id = `question-${index}`;
-            
-            const questionEl = document.createElement('h2');
-            questionEl.className = 'text-xl font-bold text-gray-800 mb-4';
-            questionEl.innerText = `Q${index + 1}. ${quiz.question}`;
-            
-            const optionsEl = document.createElement('div');
-            optionsEl.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
-            
-            quiz.options.forEach(optionText => {
-                const button = document.createElement('button');
-                button.innerText = optionText;
-                button.classList.add('option-btn', 'w-full', 'p-3', 'text-left', 'border-2', 'rounded-lg', 'hover:bg-gray-100');
-                button.addEventListener('click', () => checkAnswer(index, button, optionText, quiz.answer));
-                optionsEl.appendChild(button);
-            });
-
-            questionBlock.appendChild(questionEl);
-            questionBlock.appendChild(optionsEl);
-            quizContainer.appendChild(questionBlock);
-        });
-    }
-
-    function checkAnswer(questionIndex, button, selected, correct) {
-        const questionBlock = document.getElementById(`question-${questionIndex}`);
-        const optionButtons = questionBlock.querySelectorAll('.option-btn');
-        
-        // Prevent re-answering
-        if (optionButtons[0].disabled) return;
-
-        questionsAnswered++;
-
-        optionButtons.forEach(btn => {
-            btn.disabled = true;
-            if (btn.innerText === correct) {
-                btn.classList.add('correct');
-            }
-        });
-
-        if (selected === correct) {
-            score++;
-        } else {
-            button.classList.add('incorrect');
-        }
-    }
-
-    submitBtn.addEventListener('click', () => {
-        if (questionsAnswered < quizData.length) {
-            alert('모든 문제를 풀어주세요.');
-            return;
-        }
-        resultContainer.classList.remove('hidden');
-        scoreText.innerText = `총 ${quizData.length}문제 중 ${score}문제를 맞혔습니다!`;
-        submitBtn.classList.add('hidden');
-        retryBtn.classList.remove('hidden');
-    });
-
-    retryBtn.addEventListener('click', () => {
-        score = 0;
-        questionsAnswered = 0;
-        resultContainer.classList.add('hidden');
-        submitBtn.classList.remove('hidden');
-        retryBtn.classList.add('hidden');
-        loadAllQuizzes();
-    });
-
-    toggleScriptBtn.addEventListener('click', () => {
-        scriptContent.classList.toggle('hidden');
-        const isHidden = scriptContent.classList.contains('hidden');
-        toggleScriptBtn.innerHTML = isHidden ? '<i class="fas fa-file-alt mr-2"></i>스크립트 보기' : '<i class="fas fa-eye-slash mr-2"></i>스크립트 숨기기';
-    });
-
-    loadAllQuizzes();
-</script>
-
-    <script src="../shared/learning-enhancements.js"></script>
+    <script>
+        window.LISTENING_WORKBOOK_CONFIG = {
+            kicker: "Chapter 11 Listening Lab",
+            title: "11과 듣기 1",
+            titleVi: "Luyen nghe bai 11 - Nghe 1",
+            description: "아웃도어 매장 첫 출근 상황을 바탕으로 지시 표현과 작업 순서를 익히는 듣기 워크북입니다. 장면 예측, 단계별 자막, 문장 반복, 딕토글로스, 노트 정리, 확인 퀴즈까지 한 흐름으로 연습할 수 있습니다.",
+            descriptionVi: "Day la workbook nghe ve tinh huong ngay dau di lam o cua hang outdoor. Em se luyen du doan tinh huong, nghe theo tung buoc, lap lai tung cau, dictogloss, ghi chu va lam bai kiem tra hieu noi dung.",
+            instructionLanguage: {
+                enabled: true,
+                default: "ko"
+            },
+            theme: {
+                accent: "#b45309",
+                accentDark: "#7c2d12",
+                soft: "#ffedd5",
+                surface: "rgba(255,255,255,0.94)",
+                pageBackground: "linear-gradient(180deg, #fff9f2 0%, #fffdf8 42%, #f7faf8 100%)"
+            },
+            featureList: [
+                "장면 예측",
+                "단계별 자막",
+                "문장 반복과 shadowing",
+                "딕토글로스",
+                "노트 정리",
+                "이해 점검"
+            ],
+            featureListVi: [
+                "Du doan tinh huong",
+                "Phu de theo tung buoc",
+                "Lap lai tung cau va shadowing",
+                "Dictogloss",
+                "Ghi chu",
+                "Kiem tra muc do hieu"
+            ],
+            lessons: [
+                {
+                    id: "track19",
+                    label: "Track 19",
+                    title: "듣기 1: 아웃도어 매장 첫날",
+                    titleVi: "Nghe 1: Ngay dau o cua hang outdoor",
+                    summary: "새 직원이 매장에서 처음으로 받은 지시를 순서대로 듣고, 마네킹 옷차림과 포스터 위치 같은 핵심 정보를 정리하는 활동입니다.",
+                    summaryVi: "Em nghe cac chi dan ma nhan vien moi nhan duoc trong ngay dau di lam va sap xep lai thong tin quan trong nhu trang phuc cua ma-no-canh va vi tri dan poster.",
+                    activityImage: {
+                        src: "litsen1pic.webp",
+                        alt: "아웃도어 매장에서 새 직원이 지시를 듣는 장면",
+                        altVi: "Canh nhan vien moi nghe huong dan trong cua hang outdoor",
+                        caption: "참고 그림: 매장 첫날에 해야 할 일을 순서대로 안내받는 상황입니다.",
+                        captionVi: "Hinh tham khao: tinh huong duoc huong dan cong viec theo thu tu trong ngay dau di lam."
+                    },
+                    audioSrc: "track19.mp3",
+                    scene: {
+                        emoji: "🧥",
+                        title: "상황 그림: 새 직원에게 업무를 설명하는 매장 책임자",
+                        titleVi: "Tinh huong: quan ly cua hang dang giao viec cho nhan vien moi",
+                        caption: "일의 순서, 옷을 갈아입히는 방법, 포스터를 붙일 위치처럼 구체적인 지시가 이어지는 장면입니다.",
+                        captionVi: "Day la canh co nhieu chi dan cu the ve thu tu cong viec, cach thay do cho ma-no-canh va vi tri dan poster.",
+                        tags: ["첫 출근", "매장 업무", "순서 지시", "위치 표현"]
+                    },
+                    preListening: {
+                        vocab: [
+                            { ko: "마네킹", vi: "ma-no-canh", hint: "옷을 전시할 때 쓰는 사람 모형" },
+                            { ko: "입히다", vi: "mac cho", hint: "옷을 다른 사람이나 물건에 입게 하다" },
+                            { ko: "씌우다", vi: "doi len, cho doi", hint: "모자처럼 머리 위에 올리다" },
+                            { ko: "갈아 신기다", vi: "thay giay cho", hint: "신발을 다른 것으로 바꾸어 신게 하다" },
+                            { ko: "계산대", vi: "quay thu ngan", hint: "손님이 돈을 계산하는 곳" }
+                        ],
+                        relationshipOptions: [
+                            { value: "manager-staff", label: "매장 책임자와 새 직원" },
+                            { value: "customer-clerk", label: "손님과 점원" },
+                            { value: "friends", label: "친구 사이" }
+                        ],
+                        relationshipAnswer: "manager-staff",
+                        genreOptions: [
+                            { value: "work-instruction", label: "업무 지시와 설명" },
+                            { value: "shopping", label: "물건 구매 대화" },
+                            { value: "interview", label: "면접 대화" }
+                        ],
+                        genreAnswer: "work-instruction",
+                        predictionNote: "처음 출근한 사람에게 일을 하나씩 맡기면서 순서를 분명하게 알려 주는 대화입니다.",
+                        predictionNoteVi: "Day la doan hoi thoai trong do nguoi quan ly giao tung viec mot va noi ro thu tu cong viec cho nhan vien moi.",
+                        backgroundPrompt: "첫 출근한 직원이라면 어떤 순서로 일을 배우게 될지 두세 가지를 먼저 적어 보세요.",
+                        backgroundPromptVi: "Neu la nhan vien moi, em nghi se duoc hoc viec theo thu tu nao? Hay ghi truoc hai hoac ba y."
+                    },
+                    transcript: [
+                        {
+                            speaker: "남",
+                            text: "안녕하세요?",
+                            vi: "Xin chao a?",
+                            keywords: ["인사", "첫 만남"]
+                        },
+                        {
+                            speaker: "여",
+                            text: "어서 와요. 오늘은 첫날이니까 제가 하는 걸 보고 잘 따라하세요. 전에도 옷가게에서 일한 적이 있으니까 어렵지 않을 거예요.",
+                            vi: "Chao mung ban. Hom nay la ngay dau nen hay nhin viec toi lam roi lam theo nhe. Vi truoc day ban da tung lam o cua hang quan ao nen chac se khong qua kho dau.",
+                            keywords: ["첫날", "따라하세요", "옷가게 경험"],
+                            highlights: [
+                                { term: "첫날이니까", type: "이유 제시" },
+                                { term: "따라하세요", type: "지시 표현" }
+                            ]
+                        },
+                        {
+                            speaker: "남",
+                            text: "네, 열심히 하겠습니다.",
+                            vi: "Vang, toi se co gang lam viec.",
+                            keywords: ["다짐", "예의"]
+                        },
+                        {
+                            speaker: "여",
+                            text: "우선 마네킹이 입고 있는 옷을 벗기고 이 점퍼를 입혀 주세요.",
+                            vi: "Truoc tien hay coi bo bo do ma no canh dang mac va mac chiec ao khoac nay cho no.",
+                            keywords: ["우선", "마네킹", "점퍼"],
+                            highlights: [
+                                { term: "우선", type: "순서 제시" }
+                            ]
+                        },
+                        {
+                            speaker: "남",
+                            text: "네, 알겠습니다.",
+                            vi: "Vang, toi hieu roi.",
+                            keywords: ["확인", "응답"]
+                        },
+                        {
+                            speaker: "여",
+                            text: "옷을 다 입히고 나서 이 모자도 좀 씌워 줄래요? 신발은 이 등산화로 갈아 신겨 주세요.",
+                            vi: "Sau khi mac xong quan ao thi doi cho no ca chiec mu nay nua duoc khong? Con giay thi hay thay bang doi giay leo nui nay nhe.",
+                            keywords: ["입히고 나서", "모자", "등산화"],
+                            highlights: [
+                                { term: "입히고 나서", type: "순차 연결" },
+                                { term: "씌워 줄래요?", type: "완곡한 부탁" }
+                            ]
+                        },
+                        {
+                            speaker: "남",
+                            text: "네, 알겠습니다.",
+                            vi: "Vang, toi ro roi.",
+                            keywords: ["응답", "확인"]
+                        },
+                        {
+                            speaker: "여",
+                            text: "다 했으면 이 포스터를 잘 보이는 데에 붙여 주세요.",
+                            vi: "Lam xong thi hay dan tam poster nay o cho de nhin thay nhe.",
+                            keywords: ["포스터", "잘 보이는 데", "붙이다"]
+                        },
+                        {
+                            speaker: "남",
+                            text: "가게 문 앞쪽에 붙일까요?",
+                            vi: "Dan o phia truoc cua cua hang co duoc khong a?",
+                            keywords: ["문 앞", "확인 질문"]
+                        },
+                        {
+                            speaker: "여",
+                            text: "문보다는 저기 계산대 아래 붙이는 게 좋겠네요.",
+                            vi: "Hon la dan o cua thi dan o duoi quay thu ngan dang kia co ve se tot hon.",
+                            keywords: ["문보다는", "계산대 아래", "위치 수정"],
+                            highlights: [
+                                { term: "문보다는", type: "비교하며 수정" }
+                            ]
+                        },
+                        {
+                            speaker: "남",
+                            text: "네.",
+                            vi: "Vang.",
+                            keywords: ["짧은 응답"]
+                        },
+                        {
+                            speaker: "여",
+                            text: "저는 물건 가지러 창고에 좀 다녀올 테니까 무슨 일 생기면 연락하세요.",
+                            vi: "Toi se di nha kho lay do mot luc, nen neu co viec gi xay ra thi hay lien lac voi toi nhe.",
+                            keywords: ["창고", "다녀올 테니까", "연락하세요"],
+                            highlights: [
+                                { term: "다녀올 테니까", type: "이유 + 지시" }
+                            ]
+                        },
+                        {
+                            speaker: "남",
+                            text: "네, 걱정 마세요.",
+                            vi: "Vang, xin dung lo.",
+                            keywords: ["안심", "마무리"]
+                        }
+                    ],
+                    dictogloss: {
+                        prompt: "두세 번 들은 뒤 핵심어만 보고 업무 지시의 순서를 다시 구성해 보세요.",
+                        promptVi: "Sau khi nghe hai hoac ba lan, hay nhin cac tu khoa va viet lai thu tu chi dan cong viec.",
+                        keywords: ["첫날", "마네킹", "점퍼", "모자", "등산화", "포스터", "계산대 아래", "창고"],
+                        modelSummary: "오늘은 남자의 첫 출근날이다. 여자는 먼저 마네킹이 입고 있는 옷을 벗기고 점퍼를 입히라고 한다. 그다음 모자를 씌우고 신발을 등산화로 바꾸라고 말한다. 일이 끝나면 포스터를 계산대 아래에 붙이고, 여자는 창고에 다녀오는 동안 무슨 일이 생기면 연락하라고 한다.",
+                        placeholder: "작업 순서가 드러나도록 4~5문장으로 정리해 보세요.",
+                        placeholderVi: "Hay sap xep lai noi dung thanh 4 den 5 cau, lam ro thu tu cong viec."
+                    },
+                    notePrompts: {
+                        keywords: "인물 관계, 지시 순서, 장소 표현",
+                        details: "무엇을 먼저 하고 무엇을 나중에 하는지 순서대로 적기",
+                        questions: "어느 위치 표현이 정답을 가르는지 표시하기",
+                        cue: "첫날 / 마네킹 / 포스터 / 창고",
+                        notes: "지시 내용을 동사 중심으로 짧게 메모하기",
+                        summary: "이 대화의 업무 흐름을 두 문장으로 요약하기"
+                    },
+                    notePromptsVi: {
+                        keywords: "Quan he nhan vat, thu tu chi dan, cach noi vi tri",
+                        details: "Ghi theo thu tu xem viec nao lam truoc, viec nao lam sau",
+                        questions: "Danh dau cach noi vi tri quyet dinh dap an",
+                        cue: "Ngay dau / ma-no-canh / poster / nha kho",
+                        notes: "Ghi ngan gon noi dung chi dan theo dong tu",
+                        summary: "Tom tat luong cong viec cua hoi thoai bang hai cau"
+                    },
+                    clarifications: [
+                        {
+                            ko: "다시 한 번 말씀해 주세요.",
+                            vi: "Xin noi lai mot lan nua.",
+                            use: "전체 지시를 다시 듣고 싶을 때 쓰는 가장 기본 표현입니다.",
+                            useVi: "Day la cach noi co ban nhat khi em muon nghe lai toan bo chi dan."
+                        },
+                        {
+                            ko: "즉, 점퍼를 먼저 입히면 되죠?",
+                            vi: "Tuc la mac ao khoac truoc, dung khong a?",
+                            use: "첫 번째 작업을 정확히 확인할 때 좋습니다.",
+                            useVi: "Dung khi em muon xac nhan chinh xac cong viec dau tien."
+                        },
+                        {
+                            ko: "포스터는 계산대 아래에 붙이면 되나요?",
+                            vi: "Poster thi dan o duoi quay thu ngan, dung khong a?",
+                            use: "장소 지시를 다시 확인할 때 자연스럽게 쓸 수 있습니다.",
+                            useVi: "Dung tu nhien khi em can xac nhan lai chi dan ve vi tri."
+                        },
+                        {
+                            ko: "무슨 일 생기면 바로 연락드릴게요.",
+                            vi: "Neu co viec gi xay ra thi toi se lien lac ngay.",
+                            use: "지시를 이해했다는 뜻을 덧붙이며 응답할 때 좋습니다.",
+                            useVi: "Phu hop khi em dap lai va cho thay minh da hieu chi dan."
+                        }
+                    ],
+                    clarificationPrompt: "못 들은 지시를 다시 묻거나, 장소와 순서를 확인하는 표현을 골라 연습해 보세요.",
+                    clarificationPromptVi: "Hay luyen cac cach hoi lai chi dan khi nghe chua ro va cac cach xac nhan vi tri, thu tu cong viec.",
+                    clarifyScenario: "예: '즉, 포스터는 계산대 아래에 붙이면 되는 거죠?'처럼 장소를 다시 확인하는 문장을 만들어 보세요.",
+                    clarifyScenarioVi: "Vi du: hay viet mot cau de xac nhan lai vi tri nhu 'Tuc la poster dan o duoi quay thu ngan, dung khong a?'.",
+                    oralFeatures: [
+                        {
+                            term: "우선",
+                            type: "순서 제시",
+                            typeVi: "Danh dau thu tu",
+                            note: "여러 지시 가운데 첫 번째 작업이 무엇인지 또렷하게 시작해 주는 말입니다.",
+                            noteVi: "Tu nay mo dau ro rang cho biet cong viec nao la buoc dau tien."
+                        },
+                        {
+                            term: "입히고 나서",
+                            type: "순차 연결",
+                            typeVi: "Noi cac buoc theo thu tu",
+                            note: "한 동작이 끝난 뒤 다음 동작으로 넘어간다는 흐름을 보여 줍니다.",
+                            noteVi: "Cach noi nay cho thay mot hanh dong xong roi moi chuyen sang hanh dong tiep theo."
+                        },
+                        {
+                            term: "씌워 줄래요?",
+                            type: "완곡한 부탁",
+                            typeVi: "Loi nho nhe nhang",
+                            note: "명령처럼 딱딱하지 않게 부탁하는 말투라서 직장 대화에서 자주 들립니다.",
+                            noteVi: "Day la cach nho nghe mem hon lenh truc tiep nen hay gap trong hoi thoai noi lam viec."
+                        },
+                        {
+                            term: "문보다는",
+                            type: "비교하며 수정",
+                            typeVi: "Sua lai bang cach so sanh",
+                            note: "상대가 제안한 위치보다 더 적절한 위치를 제시할 때 쓰는 표현입니다.",
+                            noteVi: "Dung khi nguoi noi sua de xuat cua doi phuong va dua ra vi tri phu hop hon."
+                        },
+                        {
+                            term: "다녀올 테니까",
+                            type: "이유 + 지시",
+                            typeVi: "Neu ly do roi dua ra chi dan",
+                            note: "자신이 잠시 자리를 비운다는 이유를 먼저 말하고, 이어서 필요한 행동을 부탁합니다.",
+                            noteVi: "Nguoi noi dua ra ly do minh tam vang mat truoc roi moi yeu cau hanh dong tiep theo."
+                        }
+                    ],
+                    quizTitle: "이해 점검",
+                    quizTitleVi: "Kiem tra muc do hieu",
+                    quizGuideKo: "작업 순서와 위치 표현에 주의하면서 답해 보세요.",
+                    quizGuideVi: "Hay tra loi trong khi chu y den thu tu cong viec va cac cach noi ve vi tri.",
+                    questions: [
+                        {
+                            prompt: "남자는 전에 어디에서 일했습니까?",
+                            promptVi: "Truoc day nguoi nam da tung lam o dau?",
+                            answer: "2",
+                            explanation: "여자가 남자에게 전에도 옷가게에서 일한 적이 있다고 말합니다.",
+                            explanationVi: "Nguoi nu noi rang truoc day nguoi nam da tung lam o cua hang quan ao.",
+                            options: [
+                                { value: "1", label: "신발 가게", labelVi: "Cua hang giay" },
+                                { value: "2", label: "옷가게", labelVi: "Cua hang quan ao" },
+                                { value: "3", label: "모자 가게", labelVi: "Cua hang mu" },
+                                { value: "4", label: "서점", labelVi: "Nha sach" }
+                            ]
+                        },
+                        {
+                            prompt: "여자가 남자에게 가장 먼저 시킨 일은 무엇입니까?",
+                            promptVi: "Viec dau tien nguoi nu giao cho nguoi nam la gi?",
+                            answer: "3",
+                            explanation: "여자는 우선 마네킹의 옷을 벗기고 점퍼를 입히라고 말합니다.",
+                            explanationVi: "Nguoi nu bao truoc tien hay coi bo do cua ma-no-canh va mac ao khoac cho no.",
+                            options: [
+                                { value: "1", label: "포스터 붙이기", labelVi: "Dan poster" },
+                                { value: "2", label: "신발 갈아 신기기", labelVi: "Thay giay" },
+                                { value: "3", label: "마네킹 옷 입히기", labelVi: "Mac do cho ma-no-canh" },
+                                { value: "4", label: "창고 다녀오기", labelVi: "Di nha kho" }
+                            ]
+                        },
+                        {
+                            prompt: "포스터는 어디에 붙이는 것이 좋다고 했습니까?",
+                            promptVi: "Poster nen duoc dan o dau?",
+                            answer: "3",
+                            explanation: "가게 문 앞보다 계산대 아래에 붙이는 것이 좋다고 정정합니다.",
+                            explanationVi: "Nguoi nu sua lai va noi rang nen dan o duoi quay thu ngan hon la truoc cua.",
+                            options: [
+                                { value: "1", label: "가게 문 앞", labelVi: "Truoc cua hang" },
+                                { value: "2", label: "창고 문", labelVi: "Cua nha kho" },
+                                { value: "3", label: "계산대 아래", labelVi: "Duoi quay thu ngan" },
+                                { value: "4", label: "마네킹 옆", labelVi: "Ben canh ma-no-canh" }
+                            ]
+                        },
+                        {
+                            prompt: "대화 내용과 다른 것은 무엇입니까?",
+                            promptVi: "Noi dung nao khac voi hoi thoai?",
+                            answer: "4",
+                            explanation: "대화에서는 운동화가 아니라 등산화로 갈아 신기라고 했습니다.",
+                            explanationVi: "Trong hoi thoai, nguoi nu noi hay thay bang giay leo nui, khong phai giay the thao.",
+                            options: [
+                                { value: "1", label: "오늘은 남자가 일하는 첫날입니다.", labelVi: "Hom nay la ngay dau nguoi nam di lam." },
+                                { value: "2", label: "남자는 마네킹에 모자를 씌워야 합니다.", labelVi: "Nguoi nam phai doi mu cho ma-no-canh." },
+                                { value: "3", label: "여자는 창고에 물건을 가지러 갑니다.", labelVi: "Nguoi nu di nha kho lay do." },
+                                { value: "4", label: "남자는 마네킹에 운동화를 신겨야 합니다.", labelVi: "Nguoi nam phai cho ma-no-canh mang giay the thao." }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        };
+    </script>
+    <script src="../shared/listening-workbook.js?v=20260318-c11-listening"></script>
+    <script src="../shared/learning-enhancements.js?v=20260318-c11-listening"></script>
 </body>
 </html>
-
