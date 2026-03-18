@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>메모리 플립 카드</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Noto Sans KR',sans-serif;background:#f0f4f8;color:#1e293b;font-size:16px}
+
+    header{background:linear-gradient(135deg,#1a4a7a,#2c5f8a);color:#fff;padding:1rem 1rem .6rem;text-align:center}
+    header h1{font-size:1.25rem;font-weight:700;margin-bottom:.2rem}
+    header p{font-size:.8rem;opacity:.85;margin-bottom:.7rem}
+    .nav-links{display:flex;gap:.4rem;overflow-x:auto;padding:.2rem 0;scrollbar-width:none}
+    .nav-links::-webkit-scrollbar{display:none}
+    .nav-link{white-space:nowrap;padding:.32rem .75rem;border-radius:14px;background:rgba(255,255,255,.15);color:#fff;text-decoration:none;font-size:.75rem;font-weight:500;transition:background .2s;flex-shrink:0}
+    .nav-link:hover{background:rgba(255,255,255,.28)}
+    .nav-link.cur{background:#fff;color:#1a4a7a;font-weight:700}
+
+    body.pc-mode main{max-width:860px;margin:0 auto}
+    .pc-toggle{position:fixed;bottom:1rem;right:1rem;z-index:999;background:#1a4a7a;color:#fff;border:none;border-radius:20px;padding:.45rem 1rem;font-size:.78rem;font-family:inherit;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.25);display:flex;align-items:center;gap:.35rem}
+    .pc-toggle:hover{background:#2c5f8a}
+
+    main{padding:.9rem .85rem 5rem}
+
+    /* Set selector */
+    .set-bar{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+    .set-btn{flex:1;min-width:100px;padding:.55rem .5rem;border:2px solid #dbeafe;border-radius:12px;background:#fff;color:#2c5f8a;font-size:.8rem;font-weight:700;font-family:inherit;cursor:pointer;transition:all .2s;text-align:center}
+    .set-btn:hover{border-color:#93c5fd}
+    .set-btn.active{background:#1a4a7a;color:#fff;border-color:#1a4a7a}
+
+    /* Score bar */
+    .stat-bar{background:#fff;border-radius:12px;padding:.65rem 1rem;margin-bottom:.9rem;display:flex;align-items:center;gap:.7rem;box-shadow:0 1px 6px rgba(0,0,0,.07);flex-wrap:wrap}
+    .stat-item{font-size:.8rem;font-weight:700;white-space:nowrap}
+    .stat-matched{color:#22c55e}
+    .stat-tries{color:#555}
+    .stat-flex{flex:1}
+    .btn-reshuffle{background:none;border:1px solid #dbeafe;border-radius:10px;color:#2c5f8a;font-size:.75rem;padding:.25rem .7rem;cursor:pointer;font-family:inherit}
+    .btn-reshuffle:hover{background:#eff6ff}
+
+    /* Grid */
+    .card-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-bottom:1rem}
+    @media(min-width:480px){.card-grid{grid-template-columns:repeat(4,1fr);gap:.65rem}}
+
+    /* Card */
+    .mem-card{aspect-ratio:3/4;perspective:600px;cursor:pointer}
+    .card-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .4s ease}
+    .mem-card.flipped .card-inner{transform:rotateY(180deg)}
+    .mem-card.matched .card-inner{transform:rotateY(180deg)}
+    .card-front, .card-back{position:absolute;inset:0;border-radius:12px;display:flex;align-items:center;justify-content:center;padding:.4rem;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+    .card-front{background:linear-gradient(135deg,#1a4a7a,#2c5f8a);color:#fff;font-size:1.5rem}
+    .card-back{background:#fff;border:2px solid #e2e8f0;transform:rotateY(180deg);flex-direction:column;gap:.2rem}
+    .card-tag{font-size:.62rem;font-weight:700;border-radius:6px;padding:.1rem .4rem;align-self:flex-start}
+    .tag-a{background:#dbeafe;color:#1e40af}
+    .tag-b{background:#dcfce7;color:#166534}
+    .card-word{font-size:.72rem;font-weight:700;text-align:center;line-height:1.4;color:#1e293b}
+    .mem-card.matched .card-back{background:#f0fdf4;border-color:#86efac}
+    .mem-card.matched .card-word{color:#166534}
+    .mem-card.wrong-flash .card-back{animation:wrongFlash .5s ease}
+    @keyframes wrongFlash{0%,100%{background:#fff}30%,70%{background:#fee2e2;border-color:#fca5a5}}
+    .mem-card.matched{cursor:default}
+
+    /* Completion */
+    .complete-banner{display:none;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border-radius:16px;padding:1.3rem 1rem;text-align:center;margin-bottom:1rem;animation:popIn .4s ease}
+    .complete-banner.show{display:block}
+    @keyframes popIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+    .cb-icon{font-size:2.8rem;margin-bottom:.4rem}
+    .cb-title{font-size:1.1rem;font-weight:700;margin-bottom:.2rem}
+    .cb-sub{font-size:.82rem;opacity:.92}
+    .btn-next-set{background:#fff;color:#1a4a7a;border:none;border-radius:12px;padding:.6rem 1.5rem;font-size:.88rem;font-weight:700;font-family:inherit;cursor:pointer;margin-top:.75rem}
+    .btn-next-set:hover{background:#f0fdf4}
+
+    /* Pair key table */
+    .pair-table{background:#fff;border-radius:14px;box-shadow:0 1px 8px rgba(0,0,0,.07);overflow:hidden;margin-bottom:1rem;display:none}
+    .pair-table.show{display:block;animation:fadeIn .3s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    .pt-head{background:#eff6ff;padding:.6rem 1rem;font-size:.82rem;font-weight:700;color:#1a4a7a;border-bottom:1px solid #dbeafe}
+    .pt-row{display:flex;align-items:stretch;border-bottom:1px solid #f0f4f8;font-size:.8rem}
+    .pt-row:last-child{border-bottom:none}
+    .pt-a{flex:1;padding:.5rem .75rem;background:#eff6ff;color:#1e40af;font-weight:600;border-right:1px solid #dbeafe;display:flex;align-items:center}
+    .pt-b{flex:1;padding:.5rem .75rem;color:#166534;font-weight:600;display:flex;align-items:center;background:#f0fdf4}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🧩 메모리 플립 카드</h1>
+  <p>짝을 찾아 모든 카드를 뒤집어 보세요!</p>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">✉ 실습</a>
+    <a href="reference.html" class="nav-link">📚 참고</a>
+    <a href="activity1.html" class="nav-link">🔍 오류 찾기</a>
+    <a href="activity2.html" class="nav-link">🔄 변환</a>
+    <a href="activity3.html" class="nav-link">📋 순서</a>
+    <a href="activity4.html" class="nav-link">🃏 어휘</a>
+    <a href="activity5.html" class="nav-link">🎴 상황 카드</a>
+    <a href="activity6.html" class="nav-link">📝 자기 평가</a>
+    <a href="activity7.html" class="nav-link">⚡ 판단 게임</a>
+    <a href="activity8.html" class="nav-link">📧 비교 선택</a>
+    <a href="activity9.html" class="nav-link">⭕ OX 퀴즈</a>
+    <a href="activity10.html" class="nav-link cur">🧩 메모리</a>
+    <a href="activity11.html" class="nav-link">🏆 퀴즈쇼</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- Set selector -->
+  <div class="set-bar" id="set-bar">
+    <button class="set-btn active" id="set-btn-0" onclick="loadSet(0)">Set 1<br>해요체→합쇼체</button>
+    <button class="set-btn" id="set-btn-1" onclick="loadSet(1)">Set 2<br>표현 짝 맞추기</button>
+    <button class="set-btn" id="set-btn-2" onclick="loadSet(2)">Set 3<br>어휘↔뜻</button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stat-bar">
+    <span class="stat-item stat-matched">✅ <span id="stat-matched">0</span> / <span id="stat-total">8</span> 쌍</span>
+    <span class="stat-item stat-tries">시도: <span id="stat-tries">0</span>회</span>
+    <div class="stat-flex"></div>
+    <button class="btn-reshuffle" onclick="reshuffleSet()">🔀 다시 섞기</button>
+  </div>
+
+  <!-- Completion banner -->
+  <div class="complete-banner" id="complete-banner">
+    <div class="cb-icon">🎉</div>
+    <div class="cb-title" id="cb-title">세트 완료!</div>
+    <div class="cb-sub" id="cb-sub"></div>
+    <button class="btn-next-set" id="btn-next-set" onclick="goNextSet()">다음 세트 →</button>
+  </div>
+
+  <!-- Card grid -->
+  <div class="card-grid" id="card-grid"></div>
+
+  <!-- Pair key table -->
+  <div class="pair-table" id="pair-table">
+    <div class="pt-head">📋 정답 목록</div>
+    <div id="pair-rows"></div>
+  </div>
+
+</main>
+
+<button class="pc-toggle" onclick="togglePCMode()">
+  🖥 <span id="pc-toggle-label">PC 화면</span>
+</button>
+
+<footer style="text-align:center;padding:1.5rem;font-size:.78rem;color:#aaa;border-top:1px solid #e8ecf0;margin-top:1rem">
+  <a href="index.html" style="color:#2c5f8a;text-decoration:none">← 실습 페이지로</a>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════
+   DATA — 3 sets × 8 pairs
+   a: 해요체/비격식/어휘  b: 합쇼체/격식/뜻
+══════════════════════════════════════════ */
+const SETS = [
+  {
+    title: 'Set 1: 해요체 → 합쇼체',
+    pairs: [
+      { a:'안녕하세요', b:'안녕하십니까?' },
+      { a:'감사해요', b:'감사합니다' },
+      { a:'죄송해요', b:'죄송합니다' },
+      { a:'부탁해요', b:'부탁드립니다' },
+      { a:'물어보고 싶어요', b:'여쭤보고 싶습니다' },
+      { a:'확인해 줄 수 있어요?', b:'확인해 주시겠습니까?' },
+      { a:'알려줘요', b:'알려 주시면 감사하겠습니다' },
+      { a:'잘 부탁해요', b:'잘 부탁드립니다' },
+    ]
+  },
+  {
+    title: 'Set 2: 격식 표현 짝 맞추기',
+    pairs: [
+      { a:'본론 시작', b:'다름이 아니오라' },
+      { a:'공손한 요청 마무리', b:'~해 주시면 감사하겠습니다' },
+      { a:'양해 구하기', b:'번거로우시겠지만' },
+      { a:'빠른 답변 요청', b:'빠른 시일 내에 답변해 주시면' },
+      { a:'상대 회사 지칭', b:'귀사' },
+      { a:'이메일 서명', b:'○○○ 드림' },
+      { a:'사전 사과', b:'불편을 드려 죄송합니다' },
+      { a:'확인 요청', b:'확인해 주실 수 있으신지요?' },
+    ]
+  },
+  {
+    title: 'Set 3: 어휘 ↔ 뜻',
+    pairs: [
+      { a:'부득이한', b:'어쩔 수 없는' },
+      { a:'여쭤보다', b:'물어보다 (높임)' },
+      { a:'말씀드리다', b:'말하다 (높임)' },
+      { a:'검토하다', b:'살펴보고 판단하다' },
+      { a:'전형', b:'선발 방식·절차' },
+      { a:'안내하다', b:'길을 가르쳐 알려주다' },
+      { a:'첨부하다', b:'파일 등을 함께 보내다' },
+      { a:'허락하다', b:'요청을 받아들이다' },
+    ]
+  },
+];
+
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+let setIdx = 0;
+let cards = [];        // [{pairIdx, side:'a'|'b', id}]
+let flipped = [];      // currently face-up card ids
+let matched = new Set();
+let tries = 0;
+let blocking = false;
+
+/* ══════════════════════════════════════════
+   PC MODE
+══════════════════════════════════════════ */
+function initPCMode(){
+  if(localStorage.getItem('formalView')==='pc'){
+    document.body.classList.add('pc-mode');
+    document.getElementById('pc-toggle-label').textContent='모바일 화면';
+  }
+}
+function togglePCMode(){
+  const b=document.body;
+  if(b.classList.toggle('pc-mode')){
+    localStorage.setItem('formalView','pc');
+    document.getElementById('pc-toggle-label').textContent='모바일 화면';
+  } else {
+    localStorage.setItem('formalView','mobile');
+    document.getElementById('pc-toggle-label').textContent='PC 화면';
+  }
+}
+
+/* ══════════════════════════════════════════
+   LOAD / RENDER
+══════════════════════════════════════════ */
+function fisher(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function loadSet(idx){
+  setIdx = idx;
+  flipped = []; matched = new Set(); tries = 0; blocking = false;
+  // activate button
+  document.querySelectorAll('.set-btn').forEach((b,i)=>b.classList.toggle('active',i===idx));
+  document.getElementById('complete-banner').classList.remove('show');
+  document.getElementById('pair-table').classList.remove('show');
+  buildCards();
+}
+
+function reshuffleSet(){ loadSet(setIdx); }
+
+function buildCards(){
+  const set = SETS[setIdx];
+  // create card list: each pair → 2 cards (a, b)
+  let list = [];
+  set.pairs.forEach((p,pi)=>{
+    list.push({pairIdx:pi, side:'a', id:`${pi}-a`});
+    list.push({pairIdx:pi, side:'b', id:`${pi}-b`});
+  });
+  cards = fisher(list);
+  updateStats();
+  renderGrid();
+}
+
+function renderGrid(){
+  const set = SETS[setIdx];
+  const grid = document.getElementById('card-grid');
+  grid.innerHTML = cards.map(c=>{
+    const pair = SETS[setIdx].pairs[c.pairIdx];
+    const word = c.side==='a' ? pair.a : pair.b;
+    const tag = c.side==='a' ? '<span class="card-tag tag-a">A</span>' : '<span class="card-tag tag-b">B</span>';
+    const isMatched = matched.has(c.pairIdx);
+    const isFlipped = flipped.includes(c.id);
+    return `
+      <div class="mem-card${isMatched?' matched':isFlipped?' flipped':''}" id="card-${c.id}" onclick="flipCard('${c.id}')">
+        <div class="card-inner">
+          <div class="card-front">🃏</div>
+          <div class="card-back">${tag}<div class="card-word">${word}</div></div>
+        </div>
+      </div>`;
+  }).join('');
+
+  // Render pair table (hidden until complete)
+  document.getElementById('pair-rows').innerHTML = set.pairs.map(p=>
+    `<div class="pt-row"><div class="pt-a">${p.a}</div><div class="pt-b">${p.b}</div></div>`
+  ).join('');
+}
+
+function updateStats(){
+  const set = SETS[setIdx];
+  document.getElementById('stat-matched').textContent = matched.size;
+  document.getElementById('stat-total').textContent = set.pairs.length;
+  document.getElementById('stat-tries').textContent = tries;
+}
+
+/* ══════════════════════════════════════════
+   FLIP LOGIC
+══════════════════════════════════════════ */
+function flipCard(id){
+  if(blocking) return;
+  if(flipped.includes(id)) return;
+  const c = cards.find(x=>x.id===id);
+  if(!c || matched.has(c.pairIdx)) return;
+
+  const el = document.getElementById('card-'+id);
+  el.classList.add('flipped');
+  flipped.push(id);
+
+  if(flipped.length === 2){
+    tries++;
+    blocking = true;
+    checkMatch();
+  }
+}
+
+function checkMatch(){
+  const [id1, id2] = flipped;
+  const c1 = cards.find(x=>x.id===id1);
+  const c2 = cards.find(x=>x.id===id2);
+  const isMatch = c1.pairIdx === c2.pairIdx && c1.side !== c2.side;
+
+  if(isMatch){
+    matched.add(c1.pairIdx);
+    document.getElementById('card-'+id1).classList.add('matched');
+    document.getElementById('card-'+id2).classList.add('matched');
+    flipped = [];
+    blocking = false;
+    updateStats();
+    if(matched.size === SETS[setIdx].pairs.length) onComplete();
+  } else {
+    // wrong flash
+    document.getElementById('card-'+id1).classList.add('wrong-flash');
+    document.getElementById('card-'+id2).classList.add('wrong-flash');
+    setTimeout(()=>{
+      [id1,id2].forEach(id=>{
+        const el=document.getElementById('card-'+id);
+        if(el){ el.classList.remove('flipped','wrong-flash'); }
+      });
+      flipped = [];
+      blocking = false;
+      updateStats();
+    }, 700);
+  }
+}
+
+function onComplete(){
+  const set = SETS[setIdx];
+  const banner = document.getElementById('complete-banner');
+  document.getElementById('cb-title').textContent = `🎉 ${set.title} 완료!`;
+  document.getElementById('cb-sub').textContent = `${tries}번 시도 만에 완성했습니다!`;
+  const isLast = setIdx === SETS.length - 1;
+  document.getElementById('btn-next-set').textContent = isLast ? '🔄 처음부터' : '다음 세트 →';
+  banner.classList.add('show');
+  document.getElementById('pair-table').classList.add('show');
+}
+
+function goNextSet(){
+  const next = (setIdx + 1) % SETS.length;
+  loadSet(next);
+}
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+initPCMode();
+loadSet(0);
+</script>
+</body>
+</html>

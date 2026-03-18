@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OX 퀴즈</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Noto Sans KR',sans-serif;background:#f0f4f8;color:#1e293b;font-size:16px}
+
+    header{background:linear-gradient(135deg,#1a4a7a,#2c5f8a);color:#fff;padding:1rem 1rem .6rem;text-align:center}
+    header h1{font-size:1.25rem;font-weight:700;margin-bottom:.2rem}
+    header p{font-size:.8rem;opacity:.85;margin-bottom:.7rem}
+    .nav-links{display:flex;gap:.4rem;overflow-x:auto;padding:.2rem 0;scrollbar-width:none}
+    .nav-links::-webkit-scrollbar{display:none}
+    .nav-link{white-space:nowrap;padding:.32rem .75rem;border-radius:14px;background:rgba(255,255,255,.15);color:#fff;text-decoration:none;font-size:.75rem;font-weight:500;transition:background .2s;flex-shrink:0}
+    .nav-link:hover{background:rgba(255,255,255,.28)}
+    .nav-link.cur{background:#fff;color:#1a4a7a;font-weight:700}
+
+    body.pc-mode main{max-width:860px;margin:0 auto}
+    .pc-toggle{position:fixed;bottom:1rem;right:1rem;z-index:999;background:#1a4a7a;color:#fff;border:none;border-radius:20px;padding:.45rem 1rem;font-size:.78rem;font-family:inherit;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.25);display:flex;align-items:center;gap:.35rem}
+    .pc-toggle:hover{background:#2c5f8a}
+
+    main{padding:.9rem .85rem 5rem}
+
+    /* Top bar */
+    .top-bar{display:flex;align-items:center;gap:.6rem;margin-bottom:.9rem}
+    .progress-dots{display:flex;gap:.3rem;flex-wrap:wrap;flex:1}
+    .dot{width:14px;height:14px;border-radius:50%;background:#e2e8f0;transition:background .3s}
+    .dot.correct{background:#22c55e}
+    .dot.wrong{background:#ef4444}
+    .dot.current{background:#93c5fd;animation:pulse .8s infinite alternate}
+    @keyframes pulse{from{transform:scale(1)}to{transform:scale(1.25)}}
+    .score-pill{background:#1a4a7a;color:#fff;border-radius:14px;padding:.3rem .8rem;font-size:.78rem;font-weight:700;white-space:nowrap}
+
+    /* Timer */
+    .timer-wrap{text-align:center;margin-bottom:.8rem}
+    .timer-ring{position:relative;display:inline-block;width:72px;height:72px}
+    .timer-ring svg{transform:rotate(-90deg)}
+    .timer-track{fill:none;stroke:#e2e8f0;stroke-width:6}
+    .timer-arc{fill:none;stroke:#2c5f8a;stroke-width:6;stroke-linecap:round;
+      stroke-dasharray:201;stroke-dashoffset:0;transition:stroke-dashoffset .95s linear,stroke .3s}
+    .timer-arc.warn{stroke:#f59e0b}
+    .timer-arc.danger{stroke:#ef4444}
+    .timer-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:700;color:#1a4a7a}
+    .timer-num.warn{color:#f59e0b}
+    .timer-num.danger{color:#ef4444}
+
+    /* Question card */
+    .q-card{background:#fff;border-radius:18px;box-shadow:0 4px 18px rgba(0,0,0,.1);padding:1.3rem 1.1rem;margin-bottom:1rem;animation:slideIn .3s ease;position:relative}
+    @keyframes slideIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    .q-num{font-size:.75rem;font-weight:700;color:#2c5f8a;margin-bottom:.5rem}
+    .q-ctx{font-size:.8rem;color:#666;background:#f0f6ff;border-radius:8px;padding:.4rem .7rem;margin-bottom:.75rem;line-height:1.5}
+    .q-text{font-size:1rem;font-weight:700;color:#1e293b;line-height:1.6;margin-bottom:.5rem}
+    .q-sentence{font-size:.95rem;font-style:italic;color:#2c5f8a;background:#f0f8ff;border-radius:10px;padding:.55rem .85rem;margin-bottom:.8rem;line-height:1.6}
+
+    /* VN toggle */
+    .vn-row{margin-bottom:.7rem}
+    .vn-btn-small{background:none;border:1px solid #bcd;border-radius:10px;color:#2c5f8a;font-size:.72rem;padding:.18rem .55rem;cursor:pointer;font-family:inherit}
+    .vn-btn-small.on{background:#eff6ff}
+    .q-vn{display:none;font-size:.76rem;color:#5a7a9a;margin-top:.3rem;padding:.4rem .6rem;background:#f7fbff;border-radius:7px;border-left:3px solid #93c5fd;line-height:1.5}
+    .q-vn.visible{display:block}
+
+    /* Feedback */
+    .feedback-bar{display:none;border-radius:12px;padding:.75rem 1rem;margin-bottom:.8rem;animation:slideIn .25s ease;line-height:1.6}
+    .feedback-bar.show{display:block}
+    .feedback-bar.correct{background:#dcfce7;border-left:4px solid #22c55e;color:#166534}
+    .feedback-bar.wrong{background:#fee2e2;border-left:4px solid #ef4444;color:#991b1b}
+    .fb-head{font-weight:700;font-size:.92rem;margin-bottom:.3rem}
+    .fb-body{font-size:.82rem}
+
+    /* OX buttons */
+    .ox-row{display:flex;gap:1rem;justify-content:center;margin-bottom:.5rem}
+    .ox-btn{flex:1;max-width:160px;padding:1rem .5rem;border:none;border-radius:16px;font-size:2rem;font-weight:700;font-family:inherit;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:.2rem}
+    .ox-btn span.lbl{font-size:.72rem;font-weight:600}
+    .btn-o{background:#22c55e;color:#fff;box-shadow:0 3px 12px rgba(34,197,94,.4)}
+    .btn-o:hover{background:#16a34a}
+    .btn-x{background:#ef4444;color:#fff;box-shadow:0 3px 12px rgba(239,68,68,.35)}
+    .btn-x:hover{background:#dc2626}
+    .ox-btn:disabled{opacity:.4;cursor:not-allowed;transform:none !important}
+    .btn-next{background:#1a4a7a;color:#fff;border:none;border-radius:12px;padding:.65rem 2rem;font-size:.9rem;font-weight:700;font-family:inherit;cursor:pointer;width:100%;display:none;margin-top:.4rem}
+    .btn-next.show{display:block}
+    .btn-next:hover{background:#2c5f8a}
+
+    /* Timeout bar */
+    .timeout-msg{display:none;text-align:center;background:#fff7ed;border:1px solid #fdba74;border-radius:10px;padding:.6rem;font-size:.85rem;color:#c2410c;font-weight:600;margin-bottom:.5rem;animation:slideIn .2s}
+    .timeout-msg.show{display:block}
+
+    /* Result */
+    .result-screen{display:none;animation:slideIn .4s ease}
+    .result-screen.show{display:block}
+    .result-card{background:#fff;border-radius:18px;padding:1.6rem 1.2rem;box-shadow:0 4px 20px rgba(0,0,0,.1);text-align:center}
+    .r-icon{font-size:3.5rem;margin-bottom:.5rem}
+    .r-title{font-size:1.3rem;font-weight:700;color:#1a4a7a;margin-bottom:.3rem}
+    .r-score{font-size:2.2rem;font-weight:700;color:#22c55e;margin:.5rem 0}
+    .r-msg{font-size:.88rem;color:#555;line-height:1.6;margin-bottom:1rem}
+    .r-stats{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.1rem}
+    .rs-item{padding:.35rem .85rem;border-radius:10px;font-size:.8rem;font-weight:700}
+    .rs-o{background:#dcfce7;color:#166534}
+    .rs-x{background:#fee2e2;color:#991b1b}
+    .rs-t{background:#fef3c7;color:#92400e}
+    .btn-retry{background:#1a4a7a;color:#fff;border:none;border-radius:12px;padding:.7rem 2rem;font-size:.9rem;font-weight:700;font-family:inherit;cursor:pointer;width:100%;max-width:240px}
+    .btn-retry:hover{background:#2c5f8a}
+    .review-list{text-align:left;margin-top:1rem}
+    .rv-item{padding:.6rem .8rem;background:#fff7ed;border-left:3px solid #f97316;border-radius:0 8px 8px 0;margin-bottom:.5rem;font-size:.8rem;line-height:1.55}
+    .rv-item strong{display:block;color:#c2410c;margin-bottom:.2rem;font-size:.82rem}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>⭕ OX 퀴즈</h1>
+  <p>격식체로 쓸 수 있을까요? 10초 안에 답하세요!</p>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">✉ 실습</a>
+    <a href="reference.html" class="nav-link">📚 참고</a>
+    <a href="activity1.html" class="nav-link">🔍 오류 찾기</a>
+    <a href="activity2.html" class="nav-link">🔄 변환</a>
+    <a href="activity3.html" class="nav-link">📋 순서</a>
+    <a href="activity4.html" class="nav-link">🃏 어휘</a>
+    <a href="activity5.html" class="nav-link">🎴 상황 카드</a>
+    <a href="activity6.html" class="nav-link">📝 자기 평가</a>
+    <a href="activity7.html" class="nav-link">⚡ 판단 게임</a>
+    <a href="activity8.html" class="nav-link">📧 비교 선택</a>
+    <a href="activity9.html" class="nav-link cur">⭕ OX 퀴즈</a>
+    <a href="activity10.html" class="nav-link">🧩 메모리</a>
+    <a href="activity11.html" class="nav-link">🏆 퀴즈쇼</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- Top bar -->
+  <div class="top-bar">
+    <div class="progress-dots" id="progress-dots"></div>
+    <div class="score-pill" id="score-pill">✓ 0</div>
+  </div>
+
+  <!-- Timer -->
+  <div class="timer-wrap">
+    <div class="timer-ring">
+      <svg width="72" height="72" viewBox="0 0 72 72">
+        <circle class="timer-track" cx="36" cy="36" r="32"/>
+        <circle class="timer-arc" id="timer-arc" cx="36" cy="36" r="32"/>
+      </svg>
+      <div class="timer-num" id="timer-num">10</div>
+    </div>
+  </div>
+
+  <!-- Question card -->
+  <div id="q-area"></div>
+
+  <!-- OX buttons -->
+  <div class="ox-row" id="ox-row">
+    <button class="ox-btn btn-x" id="btn-x" onclick="answer(false)">
+      ✕<span class="lbl">비격식 · 부적절</span>
+    </button>
+    <button class="ox-btn btn-o" id="btn-o" onclick="answer(true)">
+      ○<span class="lbl">격식체 · 적절</span>
+    </button>
+  </div>
+  <div class="timeout-msg" id="timeout-msg">⏰ 시간 초과! 다음 문제로 넘어갑니다.</div>
+  <button class="btn-next" id="btn-next" onclick="nextQ()">다음 문제 →</button>
+
+  <!-- Result -->
+  <div class="result-screen" id="result-screen">
+    <div class="result-card">
+      <div class="r-icon" id="r-icon"></div>
+      <div class="r-title" id="r-title"></div>
+      <div class="r-score" id="r-score"></div>
+      <div class="r-msg" id="r-msg"></div>
+      <div class="r-stats">
+        <span class="rs-item rs-o" id="r-o">⭕ 0</span>
+        <span class="rs-item rs-x" id="r-x">✕ 0</span>
+        <span class="rs-item rs-t" id="r-t">⏰ 0 시간초과</span>
+      </div>
+      <button class="btn-retry" onclick="startGame()">🔄 다시 도전</button>
+      <div class="review-list" id="review-list"></div>
+    </div>
+  </div>
+
+</main>
+
+<button class="pc-toggle" onclick="togglePCMode()">
+  🖥 <span id="pc-toggle-label">PC 화면</span>
+</button>
+
+<footer style="text-align:center;padding:1.5rem;font-size:.78rem;color:#aaa;border-top:1px solid #e8ecf0;margin-top:1rem">
+  <a href="index.html" style="color:#2c5f8a;text-decoration:none">← 실습 페이지로</a>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════
+   QUESTIONS (20개)
+   correct: true = 격식체 O  / false = X (비격식·부적절)
+══════════════════════════════════════════ */
+const QS = [
+  // ── O (격식체 적절) ──
+  { ctx:'교수님께 이메일 인사', s:'"안녕하십니까? ○○학과 ○학년 ○○○입니다."', correct:true,
+    why:'"안녕하십니까?"는 가장 격식 있는 인사 표현입니다.',
+    vn:'Đây là lời chào trang trọng nhất, phù hợp với email gửi giáo sư.' },
+  { ctx:'요청을 마무리하는 표현', s:'"확인해 주시면 감사하겠습니다."', correct:true,
+    why:'"-아/어 주시다"와 "-겠습니다"를 결합한 공손한 요청 표현입니다.',
+    vn:'Kết hợp "-아/어 주시다" và "-겠습니다" tạo nên cách diễn đạt lịch sự và trang trọng.' },
+  { ctx:'본론 시작 표현', s:'"다름이 아니오라, 과제와 관련하여 말씀드리고자 합니다."', correct:true,
+    why:'"다름이 아니오라"는 격식 이메일에서 본론을 시작할 때 쓰는 전형적인 표현입니다.',
+    vn:'"다름이 아니오라" là cụm từ mở đầu nội dung chính, rất đặc trưng trong email trang trọng.' },
+  { ctx:'기관에 문의할 때', s:'"몇 가지 여쭤보고 싶습니다."', correct:true,
+    why:'"여쭤보다"는 "물어보다"의 높임 표현으로 격식 문서에 적합합니다.',
+    vn:'"여쭤보다" là dạng kính ngữ của "물어보다", phù hợp với văn phong trang trọng.' },
+  { ctx:'기업에 문의 이메일 마무리', s:'"바쁘신 중에 문의드려 죄송합니다."', correct:true,
+    why:'상대방의 바쁨을 인정하고 양해를 구하는 배려 표현입니다.',
+    vn:'Đây là cách thể hiện sự quan tâm lịch sự, thừa nhận sự bận rộn của người nhận.' },
+  { ctx:'교수님께 부탁드릴 때', s:'"번거로우시겠지만 양해 부탁드립니다."', correct:true,
+    why:'"번거로우시겠지만"은 상대의 수고를 먼저 인정하는 격식 표현입니다.',
+    vn:'"번거로우시겠지만" thừa nhận sự phiền hà trước, thể hiện sự lịch sự.' },
+  { ctx:'기관에 이메일 마무리', s:'"빠른 시일 내에 답변해 주시면 감사하겠습니다."', correct:true,
+    why:'"빠른 시일 내에"는 정중하게 기한을 요청하는 격식 표현입니다.',
+    vn:'"빠른 시일 내에" là cách yêu cầu lịch sự về thời gian phản hồi.' },
+  { ctx:'회사에 처음 연락할 때', s:'"귀사의 서비스에 관심이 있어 문의드립니다."', correct:true,
+    why:'"귀사"는 상대 회사를 높이는 표현입니다. "문의드립니다"도 격식 표현입니다.',
+    vn:'"귀사" là cách tôn trọng để gọi công ty của người nhận trong văn phong trang trọng.' },
+  { ctx:'결석 사유를 설명할 때', s:'"부득이한 사정으로 인해 결석하게 되었습니다."', correct:true,
+    why:'"부득이한 사정"은 어쩔 수 없는 상황을 격식 있게 표현하는 어휘입니다.',
+    vn:'"부득이한 사정" là từ ngữ trang trọng, diễn đạt "hoàn cảnh bất khả kháng" một cách lịch sự.' },
+  { ctx:'이메일 본인 서명', s:'"응우옌 티 민 드림"', correct:true,
+    why:'"드림"은 격식 이메일에서 본인 이름 뒤에 붙이는 정중한 표현입니다.',
+    vn:'"드림" là cách ký tên lịch sự sau họ tên trong email trang trọng.' },
+
+  // ── X (비격식·부적절) ──
+  { ctx:'교수님께 이메일 인사', s:'"안녕하세요~ 교수님! 잘 지내고 계시죠?"', correct:false,
+    why:'"안녕하세요~"는 해요체이고 "~"는 구어 표현입니다. "안녕하십니까?"로 바꿔야 합니다.',
+    vn:'"안녕하세요~" là thể 해요체 và "~" là khẩu ngữ. Cần dùng "안녕하십니까?" trong email trang trọng.' },
+  { ctx:'교수님께 자료를 요청할 때', s:'"자료 좀 보내줄 수 있어요?"', correct:false,
+    why:'"보내줄 수 있어요?"는 해요체 구어 표현입니다. "보내 주시면 감사하겠습니다"로 바꿔야 합니다.',
+    vn:'Đây là thể 해요체 và khẩu ngữ. Cần dùng "보내 주시면 감사하겠습니다".' },
+  { ctx:'기관에 답변을 요청할 때', s:'"빨리 답장해 주세요."', correct:false,
+    why:'"빨리"는 지나치게 직접적입니다. "빠른 시일 내에 답변해 주시면 감사하겠습니다"로 표현해야 합니다.',
+    vn:'"빨리"(nhanh) quá trực tiếp và thiếu lịch sự. Cần dùng "빠른 시일 내에 답변해 주시면 감사하겠습니다".' },
+  { ctx:'교수님께 양해를 구할 때', s:'"미안해요, 늦었어요."', correct:false,
+    why:'"미안해요", "늦었어요"는 해요체입니다. "늦어서 죄송합니다"로 바꿔야 합니다.',
+    vn:'"미안해요", "늦었어요" là thể 해요체. Cần dùng "늦어서 죄송합니다" trong email chính thức.' },
+  { ctx:'기관에 방법을 물을 때', s:'"어떻게 하면 돼요?"', correct:false,
+    why:'"-면 돼요?"는 해요체 구어체입니다. "어떻게 진행하면 되는지 안내해 주시면 감사하겠습니다"로 바꿔야 합니다.',
+    vn:'"-면 돼요?" là thể 해요체 và khẩu ngữ. Cần viết lại theo thể lịch sự hơn.' },
+  { ctx:'이메일을 마무리할 때', s:'"잘 부탁해요!"', correct:false,
+    why:'"잘 부탁해요"는 해요체이며 "!"는 격식 이메일에서 피해야 합니다. "잘 부탁드립니다"로 바꿔야 합니다.',
+    vn:'"잘 부탁해요"는 해요체 và "!" không phù hợp với email trang trọng. Cần dùng "잘 부탁드립니다".' },
+  { ctx:'교수님께 성적을 물을 때', s:'"교수님, 제 성적 좀 봐줄 수 있어요?"', correct:false,
+    why:'"봐줄 수 있어요?"는 구어체입니다. "확인해 주실 수 있으신지요?"로 바꿔야 합니다.',
+    vn:'Đây là khẩu ngữ quá thân mật. Cần dùng "확인해 주실 수 있으신지요?" trong email.' },
+  { ctx:'기관에 마감일을 물을 때', s:'"언제까지 신청할 수 있어요?"', correct:false,
+    why:'"-을 수 있어요?"는 해요체입니다. "언제까지 신청 가능한지 알 수 있을까요?"로 바꿔야 합니다.',
+    vn:'"-을 수 있어요?" là thể 해요체. Cần viết lại bằng thể 합쇼체 trang trọng hơn.' },
+  { ctx:'기업에 인턴십을 문의할 때', s:'"인턴십 하고 싶어서요~ 모집 하고 있나요?"', correct:false,
+    why:'구어체이고 "~"가 있습니다. "귀사의 인턴십 프로그램에 관심이 있어 문의드립니다"로 바꿔야 합니다.',
+    vn:'Đây là khẩu ngữ và có dấu "~". Cần viết lại bằng thể trang trọng phù hợp với email công việc.' },
+  { ctx:'교수님께 추천서를 부탁할 때', s:'"추천서 써주실 수 있어요? 잘 부탁해요!"', correct:false,
+    why:'"써주실 수 있어요?"는 해요체이고 "!"는 부적절합니다. "추천서를 부탁드리고자 합니다"로 바꿔야 합니다.',
+    vn:'Cả hai cụm này đều là thể 해요체 và thiếu trang trọng khi nhờ viết thư giới thiệu.' },
+];
+
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+const TIMER_SEC = 10;
+let order = [];
+let current = 0;
+let correctCount = 0;
+let timeoutCount = 0;
+let wrongItems = [];
+let timerInterval = null;
+let timeLeft = TIMER_SEC;
+let answered = false;
+
+/* ══════════════════════════════════════════
+   PC MODE
+══════════════════════════════════════════ */
+function initPCMode(){
+  if(localStorage.getItem('formalView')==='pc'){
+    document.body.classList.add('pc-mode');
+    document.getElementById('pc-toggle-label').textContent='모바일 화면';
+  }
+}
+function togglePCMode(){
+  const b=document.body;
+  if(b.classList.toggle('pc-mode')){
+    localStorage.setItem('formalView','pc');
+    document.getElementById('pc-toggle-label').textContent='모바일 화면';
+  } else {
+    localStorage.setItem('formalView','mobile');
+    document.getElementById('pc-toggle-label').textContent='PC 화면';
+  }
+}
+
+/* ══════════════════════════════════════════
+   TIMER
+══════════════════════════════════════════ */
+const CIRCUMFERENCE = 2 * Math.PI * 32; // r=32
+function startTimer(){
+  clearInterval(timerInterval);
+  timeLeft = TIMER_SEC;
+  updateTimerUI();
+  timerInterval = setInterval(()=>{
+    timeLeft--;
+    updateTimerUI();
+    if(timeLeft <= 0){ clearInterval(timerInterval); onTimeout(); }
+  }, 1000);
+}
+function stopTimer(){ clearInterval(timerInterval); }
+function updateTimerUI(){
+  const arc = document.getElementById('timer-arc');
+  const num = document.getElementById('timer-num');
+  const pct = timeLeft / TIMER_SEC;
+  arc.style.strokeDashoffset = CIRCUMFERENCE * (1 - pct);
+  num.textContent = timeLeft;
+  const warn = timeLeft <= 5;
+  const danger = timeLeft <= 3;
+  arc.className = 'timer-arc' + (danger?' danger':warn?' warn':'');
+  num.className = 'timer-num' + (danger?' danger':warn?' warn':'');
+}
+
+/* ══════════════════════════════════════════
+   GAME LOGIC
+══════════════════════════════════════════ */
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function startGame(){
+  order = shuffle([...Array(QS.length).keys()]);
+  current = 0; correctCount = 0; timeoutCount = 0; wrongItems = [];
+  answered = false;
+  document.getElementById('result-screen').classList.remove('show');
+  document.getElementById('q-area').style.display='';
+  document.getElementById('ox-row').style.display='flex';
+  document.querySelector('.timer-wrap').style.display='block';
+  document.getElementById('btn-next').classList.remove('show');
+  document.getElementById('timeout-msg').classList.remove('show');
+  buildDots();
+  showQuestion();
+}
+
+function buildDots(){
+  const wrap = document.getElementById('progress-dots');
+  wrap.innerHTML = order.map((_,i)=>`<div class="dot${i===0?' current':''}" id="dot-${i}"></div>`).join('');
+}
+
+function updateDot(i, cls){
+  const d = document.getElementById('dot-'+i);
+  if(d) d.className='dot '+cls;
+}
+
+function showQuestion(){
+  const q = QS[order[current]];
+  answered = false;
+  document.getElementById('btn-o').disabled=false;
+  document.getElementById('btn-x').disabled=false;
+  document.getElementById('btn-next').classList.remove('show');
+  document.getElementById('timeout-msg').classList.remove('show');
+
+  document.getElementById('q-area').innerHTML = `
+    <div class="q-card" id="q-card">
+      <div class="q-num">문제 ${current+1} / ${QS.length}</div>
+      <div class="q-ctx">📌 ${q.ctx}</div>
+      <div class="q-text">이 표현을 공식 이메일에서 사용할 수 있을까요?</div>
+      <div class="q-sentence">${q.s}</div>
+      <div class="vn-row">
+        <button class="vn-btn-small" id="vn-btn-q" onclick="toggleQVN()">🇻🇳 VN</button>
+        <div class="q-vn" id="q-vn">${q.vn}</div>
+      </div>
+      <div class="feedback-bar" id="feedback-bar"></div>
+    </div>
+  `;
+  document.getElementById('score-pill').textContent='✓ '+correctCount;
+  if(current<order.length){ updateDot(current,'current'); }
+  startTimer();
+}
+
+function toggleQVN(){
+  const vn=document.getElementById('q-vn');
+  const btn=document.getElementById('vn-btn-q');
+  const on=vn.classList.toggle('visible');
+  btn.classList.toggle('on',on);
+  btn.textContent=on?'🇻🇳 숨기기':'🇻🇳 VN';
+}
+
+function answer(isO){
+  if(answered) return;
+  answered = true;
+  stopTimer();
+  const q = QS[order[current]];
+  const correct = (isO === q.correct);
+  document.getElementById('btn-o').disabled=true;
+  document.getElementById('btn-x').disabled=true;
+
+  const fb = document.getElementById('feedback-bar');
+  if(correct){
+    correctCount++;
+    updateDot(current,'correct');
+    fb.className='feedback-bar correct show';
+    fb.innerHTML=`<div class="fb-head">🎉 정답입니다!</div><div class="fb-body">${q.why}</div>`;
+  } else {
+    wrongItems.push(order[current]);
+    updateDot(current,'wrong');
+    fb.className='feedback-bar wrong show';
+    fb.innerHTML=`<div class="fb-head">${q.correct ? '⭕ 격식체가 맞습니다!' : '✕ 비격식체 표현입니다!'}</div><div class="fb-body">${q.why}</div>`;
+  }
+  document.getElementById('score-pill').textContent='✓ '+correctCount;
+  if(current < order.length-1){
+    document.getElementById('btn-next').classList.add('show');
+  } else {
+    setTimeout(showResult, 1200);
+  }
+}
+
+function onTimeout(){
+  if(answered) return;
+  answered = true;
+  timeoutCount++;
+  const q = QS[order[current]];
+  wrongItems.push(order[current]);
+  document.getElementById('btn-o').disabled=true;
+  document.getElementById('btn-x').disabled=true;
+  document.getElementById('timeout-msg').classList.add('show');
+  updateDot(current,'wrong');
+
+  const fb = document.getElementById('feedback-bar');
+  fb.className='feedback-bar wrong show';
+  fb.innerHTML=`<div class="fb-head">${q.correct ? '⭕ 격식체였습니다!' : '✕ 비격식체 표현이었습니다!'}</div><div class="fb-body">${q.why}</div>`;
+
+  if(current < order.length-1){
+    document.getElementById('btn-next').classList.add('show');
+  } else {
+    setTimeout(showResult, 1200);
+  }
+}
+
+function nextQ(){
+  if(current < order.length-1){
+    current++;
+    if(current < order.length){ updateDot(current,'current'); }
+    showQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult(){
+  stopTimer();
+  document.getElementById('q-area').style.display='none';
+  document.getElementById('ox-row').style.display='none';
+  document.querySelector('.timer-wrap').style.display='none';
+  document.getElementById('btn-next').classList.remove('show');
+  const rs = document.getElementById('result-screen');
+  rs.classList.add('show');
+
+  const total = QS.length;
+  const wrong = total - correctCount;
+  const pct = Math.round((correctCount/total)*100);
+  let icon='',title='',msg='';
+  if(pct>=90){ icon='🏆'; title='격식체 마스터!'; msg='거의 완벽합니다. 격식체 감각이 매우 뛰어나요!'; }
+  else if(pct>=70){ icon='😊'; title='훌륭해요!'; msg='좋은 성적입니다. 틀린 문항을 다시 확인해 보세요.'; }
+  else if(pct>=50){ icon='🙂'; title='절반 이상!'; msg='격식체와 비격식체 차이를 조금 더 익혀 보세요!'; }
+  else { icon='📚'; title='다시 도전!'; msg='참고 페이지를 먼저 복습한 뒤 다시 도전해 보세요.'; }
+
+  document.getElementById('r-icon').textContent=icon;
+  document.getElementById('r-title').textContent=title;
+  document.getElementById('r-score').textContent=`${correctCount} / ${total} (${pct}%)`;
+  document.getElementById('r-msg').textContent=msg;
+  document.getElementById('r-o').textContent=`⭕ ${correctCount}개 정답`;
+  document.getElementById('r-x').textContent=`✕ ${wrong-timeoutCount}개 오답`;
+  document.getElementById('r-t').textContent=`⏰ ${timeoutCount}개 시간 초과`;
+
+  const rl = document.getElementById('review-list');
+  if(wrongItems.length===0){ rl.innerHTML=''; return; }
+  rl.innerHTML='<div style="font-weight:700;font-size:.85rem;color:#1a4a7a;margin:.8rem 0 .4rem">틀린 표현 복습</div>'+
+    wrongItems.map(i=>{
+      const q=QS[i];
+      return `<div class="rv-item"><strong>${q.correct?'⭕ 격식체 (O가 정답)':'✕ 비격식체 (X가 정답)'}</strong>${q.s}<br><span style="color:#555;font-size:.78rem">${q.why}</span></div>`;
+    }).join('');
+}
+
+initPCMode();
+startGame();
+</script>
+</body>
+</html>

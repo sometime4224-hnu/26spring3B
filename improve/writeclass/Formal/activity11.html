@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>레벨 도전 퀴즈쇼</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Noto Sans KR',sans-serif;background:#f0f4f8;color:#1e293b;font-size:16px}
+
+    header{background:linear-gradient(135deg,#1a4a7a,#2c5f8a);color:#fff;padding:1rem 1rem .6rem;text-align:center}
+    header h1{font-size:1.25rem;font-weight:700;margin-bottom:.2rem}
+    header p{font-size:.8rem;opacity:.85;margin-bottom:.7rem}
+    .nav-links{display:flex;gap:.4rem;overflow-x:auto;padding:.2rem 0;scrollbar-width:none}
+    .nav-links::-webkit-scrollbar{display:none}
+    .nav-link{white-space:nowrap;padding:.32rem .75rem;border-radius:14px;background:rgba(255,255,255,.15);color:#fff;text-decoration:none;font-size:.75rem;font-weight:500;transition:background .2s;flex-shrink:0}
+    .nav-link:hover{background:rgba(255,255,255,.28)}
+    .nav-link.cur{background:#fff;color:#1a4a7a;font-weight:700}
+
+    body.pc-mode main{max-width:860px;margin:0 auto}
+    .pc-toggle{position:fixed;bottom:1rem;right:1rem;z-index:999;background:#1a4a7a;color:#fff;border:none;border-radius:20px;padding:.45rem 1rem;font-size:.78rem;font-family:inherit;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.25);display:flex;align-items:center;gap:.35rem}
+    .pc-toggle:hover{background:#2c5f8a}
+
+    main{padding:.9rem .85rem 5rem}
+
+    /* ── Level map ── */
+    .level-map{background:#fff;border-radius:16px;box-shadow:0 2px 10px rgba(0,0,0,.08);padding:.9rem;margin-bottom:1rem}
+    .lm-title{font-size:.8rem;font-weight:700;color:#555;margin-bottom:.7rem}
+    .lm-steps{display:flex;align-items:center;gap:0}
+    .lm-step{flex:1;display:flex;flex-direction:column;align-items:center;gap:.3rem;position:relative}
+    .lm-step::after{content:'';position:absolute;right:-50%;top:50%;transform:translateY(-100%);width:100%;height:3px;background:#e2e8f0;z-index:0}
+    .lm-step:last-child::after{display:none}
+    .lm-circle{width:36px;height:36px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;color:#94a3b8;border:3px solid #e2e8f0;z-index:1;position:relative;transition:all .3s}
+    .lm-circle.done{background:#22c55e;border-color:#22c55e;color:#fff}
+    .lm-circle.current{background:#1a4a7a;border-color:#1a4a7a;color:#fff;animation:pulse .9s infinite alternate}
+    .lm-circle.locked{background:#f1f5f9;border-color:#e2e8f0;color:#cbd5e1}
+    @keyframes pulse{from{box-shadow:0 0 0 0 rgba(26,74,122,.4)}to{box-shadow:0 0 0 8px rgba(26,74,122,0)}}
+    .lm-label{font-size:.63rem;color:#94a3b8;font-weight:600;text-align:center}
+    .lm-label.done{color:#22c55e}
+    .lm-label.current{color:#1a4a7a;font-weight:700}
+
+    /* ── Score bar ── */
+    .score-row{display:flex;gap:.6rem;margin-bottom:.9rem;flex-wrap:wrap}
+    .score-chip{background:#fff;border-radius:10px;padding:.45rem .8rem;font-size:.8rem;font-weight:700;box-shadow:0 1px 5px rgba(0,0,0,.07);white-space:nowrap}
+    .chip-level{color:#1a4a7a}
+    .chip-score{color:#22c55e}
+    .chip-streak{color:#f59e0b}
+
+    /* ── Question card ── */
+    .q-card{background:#fff;border-radius:18px;box-shadow:0 4px 18px rgba(0,0,0,.1);overflow:hidden;margin-bottom:.9rem;animation:slideUp .3s ease}
+    @keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+    .q-head{padding:.75rem 1rem;border-bottom:1px solid #f0f4f8;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+    .q-level-badge{background:#1a4a7a;color:#fff;border-radius:10px;font-size:.73rem;font-weight:700;padding:.2rem .65rem;white-space:nowrap}
+    .q-num-text{font-size:.78rem;color:#888;flex:1}
+    .vn-btn-q{background:none;border:1px solid #bcd;border-radius:10px;color:#2c5f8a;font-size:.72rem;padding:.18rem .55rem;cursor:pointer;font-family:inherit}
+    .vn-btn-q.on{background:#eff6ff}
+    .q-body{padding:.9rem 1rem}
+    .q-ctx{font-size:.78rem;color:#2c5f8a;background:#eff6ff;border-radius:8px;padding:.4rem .7rem;margin-bottom:.7rem;line-height:1.5}
+    .q-text{font-size:.95rem;font-weight:700;color:#1e293b;line-height:1.6;margin-bottom:.5rem}
+    .q-sentence{font-size:.88rem;font-style:italic;color:#2c5f8a;background:#f0f8ff;border-radius:10px;padding:.5rem .8rem;margin-bottom:.6rem;line-height:1.6}
+    .q-vn{display:none;font-size:.76rem;color:#4a7a9a;padding:.4rem .6rem;background:#f7fbff;border-radius:7px;border-left:3px solid #93c5fd;margin-bottom:.6rem;line-height:1.5}
+    .q-vn.visible{display:block}
+
+    /* ── Options ── */
+    .options{display:flex;flex-direction:column;gap:.55rem;padding:0 1rem .9rem}
+    .opt-btn{width:100%;text-align:left;padding:.75rem .95rem;border:2px solid #e2e8f0;border-radius:14px;background:#f8fafc;font-size:.88rem;font-weight:500;font-family:inherit;cursor:pointer;transition:all .15s;color:#1e293b;line-height:1.5}
+    .opt-btn:hover:not(:disabled){border-color:#93c5fd;background:#eff6ff}
+    .opt-btn.selected{border-color:#1a4a7a;background:#eff6ff}
+    .opt-btn.correct{border-color:#22c55e !important;background:#f0fdf4 !important;color:#166534;font-weight:700}
+    .opt-btn.wrong{border-color:#ef4444 !important;background:#fef2f2 !important;color:#991b1b}
+    .opt-btn:disabled{cursor:default}
+
+    /* ── Feedback ── */
+    .feedback{display:none;margin:0 1rem .9rem;padding:.7rem .9rem;border-radius:12px;font-size:.82rem;line-height:1.6}
+    .feedback.show{display:block;animation:slideUp .2s ease}
+    .feedback.correct{background:#dcfce7;border-left:4px solid #22c55e;color:#166534}
+    .feedback.wrong{background:#fee2e2;border-left:4px solid #ef4444;color:#991b1b}
+    .fb-title{font-weight:700;margin-bottom:.2rem}
+
+    /* ── Next button ── */
+    .btn-next-q{background:#1a4a7a;color:#fff;border:none;border-radius:14px;padding:.75rem;font-size:.92rem;font-weight:700;font-family:inherit;cursor:pointer;width:100%;margin:0 0 .5rem;display:none}
+    .btn-next-q.show{display:block}
+    .btn-next-q:hover{background:#2c5f8a}
+
+    /* ── Level up screen ── */
+    .levelup-screen{display:none;animation:popIn .4s ease;margin-bottom:1rem}
+    .levelup-screen.show{display:block}
+    @keyframes popIn{from{transform:scale(.75);opacity:0}to{transform:scale(1);opacity:1}}
+    .lu-card{background:linear-gradient(135deg,#1a4a7a,#2c5f8a);color:#fff;border-radius:20px;padding:1.6rem 1.2rem;text-align:center;box-shadow:0 6px 24px rgba(26,74,122,.35)}
+    .lu-icon{font-size:3.5rem;margin-bottom:.5rem;animation:spin .6s ease}
+    @keyframes spin{from{transform:rotate(-20deg) scale(.8)}to{transform:rotate(0) scale(1)}}
+    .lu-title{font-size:1.3rem;font-weight:700;margin-bottom:.3rem}
+    .lu-sub{font-size:.9rem;opacity:.88;margin-bottom:.8rem}
+    .lu-badge{display:inline-block;background:rgba(255,255,255,.2);border-radius:14px;padding:.4rem 1.2rem;font-size:.95rem;font-weight:700;margin-bottom:1rem}
+    .btn-continue{background:#fff;color:#1a4a7a;border:none;border-radius:12px;padding:.7rem 2rem;font-size:.9rem;font-weight:700;font-family:inherit;cursor:pointer}
+    .btn-continue:hover{background:#f0f9ff}
+
+    /* ── Final result ── */
+    .result-screen{display:none;animation:slideUp .4s ease}
+    .result-screen.show{display:block}
+    .result-card{background:#fff;border-radius:20px;padding:1.8rem 1.2rem;box-shadow:0 4px 20px rgba(0,0,0,.1);text-align:center}
+    .r-trophy{font-size:4rem;margin-bottom:.5rem}
+    .r-title{font-size:1.35rem;font-weight:700;color:#1a4a7a;margin-bottom:.3rem}
+    .r-rank{font-size:1.1rem;font-weight:700;margin:.5rem 0 .3rem}
+    .r-score{font-size:2.5rem;font-weight:700;color:#22c55e}
+    .r-total{font-size:.9rem;color:#888}
+    .r-msg{font-size:.88rem;color:#555;margin:1rem 0;line-height:1.6}
+    .rank-bars{display:flex;flex-direction:column;gap:.4rem;margin:1rem 0;text-align:left}
+    .rank-bar{display:flex;align-items:center;gap:.6rem;font-size:.8rem}
+    .rb-label{width:70px;font-weight:700;flex-shrink:0;font-size:.75rem}
+    .rb-track{flex:1;height:8px;background:#f1f5f9;border-radius:4px;overflow:hidden}
+    .rb-fill{height:100%;border-radius:4px;transition:width .8s .3s ease}
+    .rb-val{width:30px;text-align:right;color:#888;font-size:.73rem}
+    .btn-retry{background:#1a4a7a;color:#fff;border:none;border-radius:12px;padding:.7rem 2rem;font-size:.9rem;font-weight:700;font-family:inherit;cursor:pointer;width:100%;max-width:240px;margin-top:.5rem}
+    .btn-retry:hover{background:#2c5f8a}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🏆 레벨 도전 퀴즈쇼</h1>
+  <p>레벨 1부터 5까지 도전하여 격식체 마스터가 되세요!</p>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">✉ 실습</a>
+    <a href="reference.html" class="nav-link">📚 참고</a>
+    <a href="activity1.html" class="nav-link">🔍 오류 찾기</a>
+    <a href="activity2.html" class="nav-link">🔄 변환</a>
+    <a href="activity3.html" class="nav-link">📋 순서</a>
+    <a href="activity4.html" class="nav-link">🃏 어휘</a>
+    <a href="activity5.html" class="nav-link">🎴 상황 카드</a>
+    <a href="activity6.html" class="nav-link">📝 자기 평가</a>
+    <a href="activity7.html" class="nav-link">⚡ 판단 게임</a>
+    <a href="activity8.html" class="nav-link">📧 비교 선택</a>
+    <a href="activity9.html" class="nav-link">⭕ OX 퀴즈</a>
+    <a href="activity10.html" class="nav-link">🧩 메모리</a>
+    <a href="activity11.html" class="nav-link cur">🏆 퀴즈쇼</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- Level map -->
+  <div class="level-map">
+    <div class="lm-title">📊 레벨 진행</div>
+    <div class="lm-steps" id="lm-steps"></div>
+  </div>
+
+  <!-- Score row -->
+  <div class="score-row">
+    <div class="score-chip chip-level">레벨 <span id="chip-lv">1</span></div>
+    <div class="score-chip chip-score">총점 <span id="chip-score">0</span></div>
+    <div class="score-chip chip-streak">🔥 <span id="chip-streak">0</span> 연속</div>
+  </div>
+
+  <!-- Question area -->
+  <div id="q-area"></div>
+
+  <!-- Level-up screen -->
+  <div class="levelup-screen" id="levelup-screen">
+    <div class="lu-card">
+      <div class="lu-icon" id="lu-icon">⭐</div>
+      <div class="lu-title" id="lu-title">레벨 업!</div>
+      <div class="lu-sub" id="lu-sub"></div>
+      <div class="lu-badge" id="lu-badge"></div>
+      <button class="btn-continue" id="btn-continue" onclick="continueGame()">계속 →</button>
+    </div>
+  </div>
+
+  <!-- Result screen -->
+  <div class="result-screen" id="result-screen">
+    <div class="result-card">
+      <div class="r-trophy" id="r-trophy">🏆</div>
+      <div class="r-title" id="r-title">완주 축하합니다!</div>
+      <div class="r-rank" id="r-rank"></div>
+      <div class="r-score" id="r-score">0</div>
+      <div class="r-total">점 / 100점</div>
+      <div class="r-msg" id="r-msg"></div>
+      <div class="rank-bars" id="rank-bars"></div>
+      <button class="btn-retry" onclick="startGame()">🔄 다시 도전</button>
+    </div>
+  </div>
+
+</main>
+
+<button class="pc-toggle" onclick="togglePCMode()">
+  🖥 <span id="pc-toggle-label">PC 화면</span>
+</button>
+
+<footer style="text-align:center;padding:1.5rem;font-size:.78rem;color:#aaa;border-top:1px solid #e8ecf0;margin-top:1rem">
+  <a href="index.html" style="color:#2c5f8a;text-decoration:none">← 실습 페이지로</a>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════
+   LEVELS & QUESTIONS
+   5 levels × 4 questions = 20 total
+   Each correct = +5pts (max 100)
+══════════════════════════════════════════ */
+const LEVELS = [
+  {
+    num: 1,
+    title: 'Lv.1 기초',
+    theme: '해요체 vs 합쇼체',
+    icon: '🌱',
+    badge: '초보 작가',
+    color: '#22c55e',
+    qs: [
+      {
+        ctx: '교수님께 이메일 인사',
+        q: '격식 이메일에서 가장 적절한 인사말은?',
+        opts: ['안녕하세요', '안녕하십니까?', '반갑습니다~', '잘 지내고 계세요?'],
+        ans: 1,
+        why: '"안녕하십니까?"는 합쇼체 의문형으로 가장 격식 있는 인사말입니다.',
+        vn: '"안녕하십니까?" là lời chào trang trọng nhất trong tiếng Hàn.'
+      },
+      {
+        ctx: '사과 표현',
+        q: '격식 이메일에서 "미안해요"의 올바른 합쇼체 표현은?',
+        opts: ['미안합니다', '죄송합니다', '사과합니다', '잘못했습니다'],
+        ans: 1,
+        why: '"죄송합니다"는 공식적·격식체에서 쓰는 사과 표현입니다. "미안합니다"도 맞지만 격식도는 조금 낮습니다.',
+        vn: '"죄송합니다" là cách xin lỗi trang trọng nhất trong email chính thức.'
+      },
+      {
+        ctx: '요청 표현',
+        q: '"알려줘요"를 격식체로 바꾸면?',
+        opts: ['알려 주세요', '알려 주십시오', '알려 주시면 감사하겠습니다', '알려 줘요'],
+        ans: 2,
+        why: '"알려 주시면 감사하겠습니다"는 공손한 요청을 가장 격식 있게 표현합니다.',
+        vn: '"알려 주시면 감사하겠습니다" là cách yêu cầu lịch sự nhất, kết hợp "-아/어 주시다" và "-겠습니다".'
+      },
+      {
+        ctx: '이메일 서명',
+        q: '격식 이메일에서 이름 뒤에 붙이는 표현은?',
+        opts: ['에서', '올림 / 드림', '씀', '보냄'],
+        ans: 1,
+        why: '"드림"과 "올림"은 격식 이메일에서 발신인 이름 뒤에 붙이는 정중한 표현입니다.',
+        vn: '"드림" và "올림" là cách ký tên lịch sự trong email trang trọng tiếng Hàn.'
+      },
+    ]
+  },
+  {
+    num: 2,
+    title: 'Lv.2 기본',
+    theme: '격식 어휘 선택',
+    icon: '📝',
+    badge: '견습 작가',
+    color: '#3b82f6',
+    qs: [
+      {
+        ctx: '기관에 문의할 때',
+        q: '"물어보고 싶어요"의 격식체 표현은?',
+        opts: ['물어보고 싶습니다', '여쭤보고 싶습니다', '질문하고 싶어요', '묻고 싶습니다'],
+        ans: 1,
+        why: '"여쭤보다"는 "물어보다"의 높임말입니다. 격식 이메일에서는 높임 어휘를 사용해야 합니다.',
+        vn: '"여쭤보다" là dạng kính ngữ (높임말) của "물어보다". Cần dùng trong email trang trọng.'
+      },
+      {
+        ctx: '이메일 본론 시작',
+        q: '격식 이메일에서 본론을 시작하는 표현은?',
+        opts: ['그래서요,', '다름이 아니오라,', '사실은요,', '근데요,'],
+        ans: 1,
+        why: '"다름이 아니오라"는 격식 이메일에서 본론을 시작할 때 쓰는 관용 표현입니다.',
+        vn: '"다름이 아니오라" là cụm từ cố định để mở đầu nội dung chính trong email trang trọng.'
+      },
+      {
+        ctx: '상대 회사를 가리킬 때',
+        q: '격식 이메일에서 상대방의 회사를 높여 부르는 표현은?',
+        opts: ['그 회사', '너희 회사', '귀사', '당신 회사'],
+        ans: 2,
+        why: '"귀사(貴社)"는 "귀하의 회사"라는 뜻으로, 상대 회사를 높이는 격식 어휘입니다.',
+        vn: '"귀사(貴社)" nghĩa là "công ty của quý vị", dùng để tôn trọng công ty của người nhận.'
+      },
+      {
+        ctx: '어쩔 수 없는 상황 설명',
+        q: '"어쩔 수 없이"를 격식체로 바꾸면?',
+        opts: ['하는 수 없이', '부득이하게', '어쩔 수 없게', '불가피하게도'],
+        ans: 1,
+        why: '"부득이하게"는 어쩔 수 없는 상황을 나타내는 대표적인 격식 어휘입니다.',
+        vn: '"부득이하게" là từ trang trọng phổ biến để diễn đạt "không thể tránh khỏi / bất khả kháng".'
+      },
+    ]
+  },
+  {
+    num: 3,
+    title: 'Lv.3 중급',
+    theme: '적절한 표현 완성',
+    icon: '💡',
+    badge: '수련 작가',
+    color: '#8b5cf6',
+    qs: [
+      {
+        ctx: '요청을 부드럽게 할 때',
+        q: '부탁을 드릴 때 상대방의 수고를 먼저 인정하는 표현은?',
+        opts: [
+          '빨리 해주세요.',
+          '번거로우시겠지만 부탁드립니다.',
+          '당장 처리해 주세요.',
+          '무조건 해주셔야 합니다.'
+        ],
+        ans: 1,
+        why: '"번거로우시겠지만"은 상대의 수고를 먼저 인정하며 부탁드리는 배려의 격식 표현입니다.',
+        vn: '"번거로우시겠지만" thừa nhận sự vất vả của người nhận trước khi đề nghị — đây là cách thể hiện sự lịch sự.'
+      },
+      {
+        ctx: '빠른 답변을 요청할 때',
+        q: '"빨리 답장해 주세요"를 격식체로 바꾸면?',
+        opts: [
+          '급히 답장해 주세요.',
+          '서둘러 주시기 바랍니다.',
+          '빠른 시일 내에 답변해 주시면 감사하겠습니다.',
+          '즉시 회신 바랍니다.'
+        ],
+        ans: 2,
+        why: '"빠른 시일 내에 답변해 주시면 감사하겠습니다"는 기한을 정중하게 요청하는 격식 표현입니다.',
+        vn: '"빠른 시일 내에 답변해 주시면 감사하겠습니다" là cách yêu cầu thời hạn một cách lịch sự nhất.'
+      },
+      {
+        ctx: '교수님께 자료를 요청할 때',
+        q: '수업 자료를 요청하는 가장 적절한 표현은?',
+        opts: [
+          '자료 빨리 주세요.',
+          '자료 좀 보내줄 수 있어요?',
+          '수업 자료를 보내 주시면 감사하겠습니다.',
+          '자료 필요하니까 주세요.'
+        ],
+        ans: 2,
+        why: '"보내 주시다"의 조건형과 "-겠습니다"를 결합한 공손한 요청 표현입니다.',
+        vn: 'Kết hợp điều kiện "-시면" và cảm ơn "-겠습니다" tạo nên cách yêu cầu tài liệu lịch sự.'
+      },
+      {
+        ctx: '이메일에서 확인을 부탁할 때',
+        q: '"확인해줄 수 있어요?"의 가장 격식 있는 표현은?',
+        opts: [
+          '확인해 주세요.',
+          '확인해 주실 수 있으신지요?',
+          '확인 좀 해줘요.',
+          '확인 바랍니다.'
+        ],
+        ans: 1,
+        why: '"확인해 주실 수 있으신지요?"는 의문형으로 강요하지 않고 정중하게 요청하는 표현입니다.',
+        vn: '"확인해 주실 수 있으신지요?" dùng câu hỏi thay vì mệnh lệnh, thể hiện sự tôn trọng.'
+      },
+    ]
+  },
+  {
+    num: 4,
+    title: 'Lv.4 고급',
+    theme: '문맥에 맞는 표현',
+    icon: '⭐',
+    badge: '격식체 달인',
+    color: '#f59e0b',
+    qs: [
+      {
+        ctx: '성적 확인을 요청하는 이메일',
+        q: '교수님께 성적이 잘못된 것 같다고 말할 때 가장 적절한 표현은?',
+        opts: [
+          '성적이 잘못됐어요. 고쳐주세요.',
+          '혹시 채점 과정에서 오류가 있었던 것은 아닌지 여쭤보고 싶습니다.',
+          '제 성적 좀 다시 확인해 줄 수 있어요?',
+          '성적이 틀렸으니 다시 매겨주세요.'
+        ],
+        ans: 1,
+        why: '"혹시"로 불확실함을 나타내고 "여쭤보다"로 높임을 표현하여 강요 없이 정중하게 의문을 제기합니다.',
+        vn: '"혹시" diễn đạt sự không chắc chắn, "여쭤보다" là kính ngữ — cùng nhau tạo cách đặt vấn đề lịch sự.'
+      },
+      {
+        ctx: '교수님께 추천서를 부탁할 때',
+        q: '추천서 작성을 요청하는 마무리 문장으로 가장 적절한 것은?',
+        opts: [
+          '꼭 써주세요. 잘 부탁해요!',
+          '안 써주시면 안 돼요.',
+          '바쁘신 중에 무리한 부탁을 드려 죄송합니다. 긍정적으로 검토해 주시면 감사하겠습니다.',
+          '빨리 써주시면 좋겠어요.'
+        ],
+        ans: 2,
+        why: '상대의 수고를 인정하고("무리한 부탁 죄송"), 결정권을 존중하며("긍정적 검토"), 감사로 마무리하는 완벽한 격식 표현입니다.',
+        vn: 'Thừa nhận sự vất vả, tôn trọng quyết định của giáo sư và kết thúc bằng lời cảm ơn — đây là cấu trúc email trang trọng hoàn hảo.'
+      },
+      {
+        ctx: '기관에 서류를 요청할 때',
+        q: '재학증명서 발급을 요청할 때 포함해야 할 정보가 아닌 것은?',
+        opts: [
+          '제출처 (어디에 낼 서류인지)',
+          '필요 부수 (몇 장 필요한지)',
+          '발급 담당자의 개인 전화번호',
+          '언어 (한국어/영어 등)'
+        ],
+        ans: 2,
+        why: '서류 요청 이메일에는 제출처, 부수, 언어, 기한을 포함해야 합니다. 담당자의 개인 전화번호는 요청 내용이 아닙니다.',
+        vn: 'Email xin cấp giấy tờ cần ghi: nơi nộp, số bản, ngôn ngữ, và thời hạn. Không cần yêu cầu số điện thoại cá nhân của nhân viên.'
+      },
+      {
+        ctx: '이메일 문체 전체 판단',
+        q: '다음 이메일에서 격식체에 맞지 않는 부분은?\n"안녕하십니까? 교수님, 저는 ○○학과 응우옌입니다. 이번 과제 제출이 조금 늦을 것 같아요. 죄송합니다."',
+        opts: [
+          '"안녕하십니까?"',
+          '"저는 ○○학과 응우옌입니다"',
+          '"늦을 것 같아요"',
+          '"죄송합니다"'
+        ],
+        ans: 2,
+        why: '"늦을 것 같아요"는 해요체입니다. "늦을 것 같습니다" 또는 "부득이하게 늦게 제출하게 되었습니다"로 바꿔야 합니다.',
+        vn: '"늦을 것 같아요" là thể 해요체. Cần đổi thành "늦을 것 같습니다" (합쇼체) trong email trang trọng.'
+      },
+    ]
+  },
+  {
+    num: 5,
+    title: 'Lv.5 마스터',
+    theme: '종합 판단',
+    icon: '🏆',
+    badge: '격식체 마스터',
+    color: '#ef4444',
+    qs: [
+      {
+        ctx: '이메일 전체 구성',
+        q: '격식 이메일의 기본 구성 순서로 가장 올바른 것은?',
+        opts: [
+          '인사 → 자기소개 → 본론 → 마무리 인사 → 서명',
+          '서명 → 본론 → 인사 → 자기소개',
+          '본론 → 인사 → 마무리',
+          '자기소개 → 서명 → 본론'
+        ],
+        ans: 0,
+        why: '격식 이메일: ① 인사(안녕하십니까?) ② 자기소개(학과·이름) ③ 본론(다름이 아니오라~) ④ 마무리 인사 ⑤ 서명(○○○ 드림)',
+        vn: 'Cấu trúc email trang trọng: ① Chào hỏi ② Giới thiệu bản thân ③ Nội dung chính ④ Kết thúc ⑤ Ký tên'
+      },
+      {
+        ctx: '다음 이메일의 문제점 찾기',
+        q: '다음 이메일에서 문제가 되는 것을 고르세요.\n"안녕하십니까? 입학처에 외국인 전형 관련해서 문의드립니다. 빨리 답장해 주세요."',
+        opts: [
+          '"안녕하십니까?" — 인사가 너무 격식적이다',
+          '"빨리 답장해 주세요" — 지나치게 직접적이고 무례하다',
+          '"외국인 전형 관련해서" — 주제가 불분명하다',
+          '"문의드립니다" — 해요체이다'
+        ],
+        ans: 1,
+        why: '"빨리"는 기관에 보내는 이메일에서 무례하게 느껴질 수 있습니다. "빠른 시일 내에 답변해 주시면 감사하겠습니다"로 바꿔야 합니다.',
+        vn: '"빨리"(nhanh) quá thẳng thắn và thiếu lịch sự. Cần dùng "빠른 시일 내에 답변해 주시면 감사하겠습니다".'
+      },
+      {
+        ctx: '교수님께 보낼 이메일 선택',
+        q: '교수님께 과제 기한 연장을 요청하는 이메일로 가장 적절한 것은?',
+        opts: [
+          '교수님, 과제 기한 좀 늘려주세요. 몸이 안 좋아요.',
+          '안녕하십니까? 사정이 생겨서 과제를 기한 내에 제출하기 어렵게 되었습니다. 죄송하지만 기한 연장이 가능한지 여쭤보고 싶습니다.',
+          '과제를 못 낼 것 같아요. 기한 좀 바꿔줄 수 있어요?',
+          '바쁘신 것 알지만 과제 기한 좀 바꿔주세요.'
+        ],
+        ans: 1,
+        why: '합쇼체(-ㅂ니다, -습니다) 일관 사용, 사유 설명, "여쭤보다" 높임 어휘, 결정권을 교수님께 드리는 구성이 모두 갖춰진 표현입니다.',
+        vn: 'Sử dụng nhất quán 합쇼체, giải thích lý do, dùng kính ngữ "여쭤보다", và tôn trọng quyết định của giáo sư.'
+      },
+      {
+        ctx: '종합 마무리 질문',
+        q: '격식체 이메일에서 절대 피해야 할 표현 유형이 아닌 것은?',
+        opts: [
+          '"~해요", "~어요" 해요체 어미',
+          '"빨리", "당장" 등 명령성 부사',
+          '"-겠습니다"로 끝나는 의지 표현',
+          '"ㅋㅋ", "~", "^^" 등 이모티콘·비격식 부호'
+        ],
+        ans: 2,
+        why: '"-겠습니다"는 의지·공손함을 표현하는 격식 어미로 격식 이메일에 매우 적합합니다. 나머지는 모두 피해야 합니다.',
+        vn: '"-겠습니다" là đuôi câu trang trọng thể hiện ý chí và sự lịch sự — hoàn toàn phù hợp với email chính thức.'
+      },
+    ]
+  },
+];
+
+/* ══════════════════════════════════════════
+   RANK TABLE
+══════════════════════════════════════════ */
+const RANKS = [
+  { min:95, icon:'🏆', label:'격식체 마스터', color:'#ef4444', msg:'완벽합니다! 격식체 실력이 최고 수준입니다.' },
+  { min:80, icon:'⭐', label:'격식체 달인', color:'#f59e0b', msg:'훌륭해요! 거의 완벽한 격식체 실력입니다.' },
+  { min:65, icon:'🎓', label:'격식체 수련자', color:'#8b5cf6', msg:'잘 하고 있습니다! 조금 더 연습하면 달인이 될 거예요.' },
+  { min:45, icon:'📝', label:'격식체 견습생', color:'#3b82f6', msg:'기초가 잡혔어요. 오답을 복습하고 다시 도전해 보세요.' },
+  { min:0,  icon:'🌱', label:'초보 작가', color:'#22c55e', msg:'시작이 반! 참고 페이지를 함께 보면서 천천히 익혀 보세요.' },
+];
+
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+let currentLevel = 0;   // 0~4
+let currentQ = 0;       // 0~3
+let totalScore = 0;
+let streak = 0;
+let levelScores = [0,0,0,0,0];  // per level correct count
+let gameOver = false;
+let answeredQ = false;
+
+/* ══════════════════════════════════════════
+   PC MODE
+══════════════════════════════════════════ */
+function initPCMode(){
+  if(localStorage.getItem('formalView')==='pc'){
+    document.body.classList.add('pc-mode');
+    document.getElementById('pc-toggle-label').textContent='모바일 화면';
+  }
+}
+function togglePCMode(){
+  const b=document.body;
+  if(b.classList.toggle('pc-mode')){
+    localStorage.setItem('formalView','pc');
+    document.getElementById('pc-toggle-label').textContent='모바일 화면';
+  } else {
+    localStorage.setItem('formalView','mobile');
+    document.getElementById('pc-toggle-label').textContent='PC 화면';
+  }
+}
+
+/* ══════════════════════════════════════════
+   GAME
+══════════════════════════════════════════ */
+function startGame(){
+  currentLevel=0; currentQ=0; totalScore=0; streak=0;
+  levelScores=[0,0,0,0,0]; gameOver=false; answeredQ=false;
+  document.getElementById('levelup-screen').classList.remove('show');
+  document.getElementById('result-screen').classList.remove('show');
+  document.getElementById('q-area').style.display='';
+  buildLevelMap();
+  updateChips();
+  showQuestion();
+}
+
+function buildLevelMap(){
+  const wrap = document.getElementById('lm-steps');
+  wrap.innerHTML = LEVELS.map((lv,i)=>{
+    let cls = i < currentLevel ? 'done' : i===currentLevel ? 'current' : 'locked';
+    let lblCls = cls;
+    return `<div class="lm-step">
+      <div class="lm-circle ${cls}" id="lm-c-${i}">${lv.icon}</div>
+      <div class="lm-label ${lblCls}" id="lm-l-${i}">Lv.${lv.num}</div>
+    </div>`;
+  }).join('');
+}
+
+function refreshLevelMap(){
+  LEVELS.forEach((lv,i)=>{
+    const c=document.getElementById('lm-c-'+i);
+    const l=document.getElementById('lm-l-'+i);
+    if(!c||!l) return;
+    let cls = i < currentLevel ? 'done' : i===currentLevel ? 'current' : 'locked';
+    c.className='lm-circle '+cls;
+    l.className='lm-label '+cls;
+  });
+}
+
+function updateChips(){
+  document.getElementById('chip-lv').textContent=LEVELS[currentLevel].num;
+  document.getElementById('chip-score').textContent=totalScore;
+  document.getElementById('chip-streak').textContent=streak;
+}
+
+function showQuestion(){
+  answeredQ=false;
+  const lv = LEVELS[currentLevel];
+  const q = lv.qs[currentQ];
+  document.getElementById('q-area').innerHTML=`
+    <div class="q-card">
+      <div class="q-head">
+        <span class="q-level-badge">${lv.icon} ${lv.title}</span>
+        <span class="q-num-text">문제 ${currentQ+1}/4 · ${lv.theme}</span>
+        <button class="vn-btn-q" id="vn-btn-q" onclick="toggleQVN()">🇻🇳 VN</button>
+      </div>
+      <div class="q-body">
+        <div class="q-ctx">📌 ${q.ctx}</div>
+        <div class="q-text">${q.q.replace(/\n/g,'<br>')}</div>
+        ${q.sentence ? `<div class="q-sentence">${q.sentence}</div>` : ''}
+        <div class="q-vn" id="q-vn">${q.vn}</div>
+      </div>
+      <div class="feedback" id="feedback"></div>
+      <div class="options" id="options">
+        ${q.opts.map((o,i)=>`<button class="opt-btn" id="opt-${i}" onclick="choose(${i})">${String.fromCharCode(9312+i)} ${o}</button>`).join('')}
+      </div>
+      <button class="btn-next-q" id="btn-next-q" onclick="nextQ()">다음 문제 →</button>
+    </div>
+  `;
+}
+
+function toggleQVN(){
+  const vn=document.getElementById('q-vn');
+  const btn=document.getElementById('vn-btn-q');
+  const on=vn.classList.toggle('visible');
+  btn.classList.toggle('on',on);
+  btn.textContent=on?'🇻🇳 숨기기':'🇻🇳 VN';
+}
+
+function choose(idx){
+  if(answeredQ) return;
+  answeredQ=true;
+  const lv=LEVELS[currentLevel];
+  const q=lv.qs[currentQ];
+  const correct=(idx===q.ans);
+
+  // Disable all options
+  for(let i=0;i<q.opts.length;i++){
+    const el=document.getElementById('opt-'+i);
+    el.disabled=true;
+    if(i===q.ans) el.classList.add('correct');
+    else if(i===idx && !correct) el.classList.add('wrong');
+  }
+
+  if(correct){
+    totalScore+=5;
+    streak++;
+    levelScores[currentLevel]++;
+  } else {
+    streak=0;
+  }
+  updateChips();
+
+  const fb=document.getElementById('feedback');
+  fb.className='feedback '+(correct?'correct':'wrong')+' show';
+  fb.innerHTML=`<div class="fb-title">${correct?'🎉 정답!':'😅 오답!'}</div>${q.why}`;
+
+  const isLastQ = currentQ === 3;
+  const isLastLv = currentLevel === LEVELS.length-1;
+  const btnNext = document.getElementById('btn-next-q');
+  btnNext.classList.add('show');
+  if(isLastQ && isLastLv){
+    btnNext.textContent='결과 보기 →';
+  } else if(isLastQ){
+    btnNext.textContent='다음 레벨 →';
+  } else {
+    btnNext.textContent='다음 문제 →';
+  }
+}
+
+function nextQ(){
+  const isLastQ = currentQ===3;
+  if(!isLastQ){
+    currentQ++;
+    showQuestion();
+  } else {
+    const isLastLv = currentLevel===LEVELS.length-1;
+    if(isLastLv){
+      showFinalResult();
+    } else {
+      showLevelUp();
+    }
+  }
+}
+
+function showLevelUp(){
+  document.getElementById('q-area').style.display='none';
+  const nextLv = LEVELS[currentLevel+1];
+  document.getElementById('lu-icon').textContent = LEVELS[currentLevel].icon;
+  document.getElementById('lu-title').textContent = `레벨 ${LEVELS[currentLevel].num} 클리어!`;
+  document.getElementById('lu-sub').textContent = `${levelScores[currentLevel]} / 4 정답 · 총 ${totalScore}점`;
+  document.getElementById('lu-badge').textContent = `${LEVELS[currentLevel].badge} 달성!`;
+  document.getElementById('btn-continue').textContent = `${nextLv.icon} ${nextLv.title} 시작 →`;
+  document.getElementById('levelup-screen').classList.add('show');
+  currentLevel++;
+  currentQ=0;
+  refreshLevelMap();
+  updateChips();
+}
+
+function continueGame(){
+  document.getElementById('levelup-screen').classList.remove('show');
+  document.getElementById('q-area').style.display='';
+  showQuestion();
+}
+
+function showFinalResult(){
+  document.getElementById('q-area').style.display='none';
+  document.getElementById('result-screen').classList.add('show');
+  const pct = (totalScore/100)*100;
+  const rank = RANKS.find(r=>pct>=r.min);
+
+  document.getElementById('r-trophy').textContent=rank.icon;
+  document.getElementById('r-title').textContent='모든 레벨 완주!';
+  document.getElementById('r-rank').innerHTML=`<span style="color:${rank.color}">${rank.label}</span>`;
+  document.getElementById('r-score').textContent=totalScore;
+  document.getElementById('r-msg').textContent=rank.msg;
+
+  // Per-level bars
+  const barColors=['#22c55e','#3b82f6','#8b5cf6','#f59e0b','#ef4444'];
+  document.getElementById('rank-bars').innerHTML = LEVELS.map((lv,i)=>`
+    <div class="rank-bar">
+      <div class="rb-label">${lv.icon} Lv.${lv.num}</div>
+      <div class="rb-track"><div class="rb-fill" style="width:${levelScores[i]/4*100}%;background:${barColors[i]}"></div></div>
+      <div class="rb-val">${levelScores[i]}/4</div>
+    </div>
+  `).join('');
+}
+
+initPCMode();
+startGame();
+</script>
+</body>
+</html>

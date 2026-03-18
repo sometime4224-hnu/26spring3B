@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>이메일 비교 선택</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Noto Sans KR',sans-serif;background:#f0f4f8;color:#1e293b;font-size:16px}
+
+    header{background:linear-gradient(135deg,#1a4a7a,#2c5f8a);color:#fff;padding:1rem 1rem .6rem;text-align:center}
+    header h1{font-size:1.25rem;font-weight:700;margin-bottom:.2rem}
+    header p{font-size:.8rem;opacity:.85;margin-bottom:.7rem}
+    .nav-links{display:flex;gap:.4rem;overflow-x:auto;padding:.2rem 0;scrollbar-width:none}
+    .nav-links::-webkit-scrollbar{display:none}
+    .nav-link{white-space:nowrap;padding:.32rem .75rem;border-radius:14px;background:rgba(255,255,255,.15);color:#fff;text-decoration:none;font-size:.75rem;font-weight:500;transition:background .2s;flex-shrink:0}
+    .nav-link:hover{background:rgba(255,255,255,.28)}
+    .nav-link.cur{background:#fff;color:#1a4a7a;font-weight:700}
+
+    body.pc-mode main{max-width:860px;margin:0 auto}
+    .pc-toggle{position:fixed;bottom:1rem;right:1rem;z-index:999;background:#1a4a7a;color:#fff;border:none;border-radius:20px;padding:.45rem 1rem;font-size:.78rem;font-family:inherit;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.25);display:flex;align-items:center;gap:.35rem}
+    .pc-toggle:hover{background:#2c5f8a}
+
+    main{padding:.9rem .85rem 5rem}
+
+    /* Progress */
+    .progress-bar{background:#fff;border-radius:12px;padding:.7rem 1rem;margin-bottom:.9rem;display:flex;align-items:center;gap:.6rem;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+    .pb-track{flex:1;height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden}
+    .pb-fill{height:100%;background:linear-gradient(90deg,#2c5f8a,#22c55e);border-radius:4px;transition:width .4s}
+    .pb-label{font-size:.8rem;font-weight:700;color:#1a4a7a;white-space:nowrap}
+    .pb-score{font-size:.8rem;color:#555;white-space:nowrap}
+
+    /* Situation card */
+    .sit-card{background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.09);overflow:hidden;margin-bottom:1rem;animation:fadeIn .3s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .sit-head{background:#eff6ff;border-bottom:1px solid #dbeafe;padding:.75rem 1rem;display:flex;align-items:flex-start;gap:.6rem;flex-wrap:wrap}
+    .sit-num{background:#1a4a7a;color:#fff;border-radius:50%;width:1.6rem;height:1.6rem;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0;margin-top:.1rem}
+    .sit-desc{font-size:.88rem;font-weight:700;color:#1e3a5f;flex:1;line-height:1.5}
+    .vn-sit-btn{background:none;border:1px solid #93c5fd;border-radius:10px;color:#2c5f8a;font-size:.72rem;padding:.18rem .55rem;cursor:pointer;font-family:inherit;flex-shrink:0}
+    .vn-sit-btn.on{background:#eff6ff}
+    .sit-vn{font-size:.78rem;color:#4a7a9a;padding:.5rem 1rem .6rem;background:#f0f9ff;border-top:1px solid #dbeafe;display:none;line-height:1.5}
+    .sit-vn.visible{display:block}
+
+    /* Email cards */
+    .email-row{display:flex;flex-direction:column;gap:.8rem;padding:.85rem}
+    @media(min-width:600px){.email-row{flex-direction:row}}
+    .email-option{flex:1;border:2.5px solid #e2e8f0;border-radius:14px;overflow:hidden;cursor:pointer;transition:border-color .2s,box-shadow .2s;position:relative}
+    .email-option:hover{border-color:#93c5fd;box-shadow:0 2px 10px rgba(44,95,138,.15)}
+    .email-option.selected{border-color:#1a4a7a;box-shadow:0 0 0 3px rgba(26,74,122,.18)}
+    .email-option.correct{border-color:#22c55e !important;box-shadow:0 0 0 3px rgba(34,197,94,.2)}
+    .email-option.wrong{border-color:#ef4444 !important;box-shadow:0 0 0 3px rgba(239,68,68,.2)}
+    .eo-label{background:#f8fafc;border-bottom:1px solid #e2e8f0;padding:.45rem .85rem;font-size:.78rem;font-weight:700;color:#555;display:flex;align-items:center;gap:.4rem}
+    .eo-body{padding:.7rem .85rem;font-size:.82rem;color:#334155;line-height:1.8;white-space:pre-wrap}
+    .result-badge{position:absolute;top:.5rem;right:.5rem;border-radius:10px;font-size:.78rem;font-weight:700;padding:.2rem .6rem;display:none}
+    .result-badge.show{display:inline-block}
+    .rb-ok{background:#dcfce7;color:#166534}
+    .rb-ng{background:#fee2e2;color:#991b1b}
+
+    /* Explanation panel */
+    .explain-panel{display:none;padding:.75rem .85rem;background:#f8fafc;border-top:1px solid #e2e8f0;animation:fadeIn .25s ease}
+    .explain-panel.show{display:block}
+    .explain-title{font-size:.82rem;font-weight:700;color:#1a4a7a;margin-bottom:.4rem}
+    .explain-body{font-size:.8rem;color:#334155;line-height:1.7}
+    .explain-body .point{display:flex;gap:.4rem;margin-bottom:.3rem}
+    .explain-body .pt-icon{flex-shrink:0}
+
+    /* Next button */
+    .next-row{padding:.5rem .85rem .9rem;text-align:center}
+    .btn-next{background:#1a4a7a;color:#fff;border:none;border-radius:12px;padding:.65rem 2rem;font-size:.9rem;font-weight:700;font-family:inherit;cursor:pointer;display:none}
+    .btn-next.show{display:inline-block}
+    .btn-next:hover{background:#2c5f8a}
+
+    /* Result screen */
+    .result-screen{display:none;animation:fadeIn .35s ease}
+    .result-screen.show{display:block}
+    .result-card{background:#fff;border-radius:18px;padding:1.6rem 1.2rem;box-shadow:0 4px 20px rgba(0,0,0,.1);text-align:center}
+    .r-icon{font-size:3.2rem;margin-bottom:.5rem}
+    .r-title{font-size:1.25rem;font-weight:700;color:#1a4a7a;margin-bottom:.3rem}
+    .r-score{font-size:2rem;font-weight:700;color:#22c55e;margin:.5rem 0}
+    .r-msg{font-size:.88rem;color:#555;line-height:1.6;margin-bottom:1rem}
+    .r-breakdown{display:flex;gap:.6rem;justify-content:center;margin-bottom:1.1rem;flex-wrap:wrap}
+    .rb-item{padding:.35rem .8rem;border-radius:10px;font-size:.78rem;font-weight:700}
+    .rb-c{background:#dcfce7;color:#166534}
+    .rb-w{background:#fee2e2;color:#991b1b}
+    .btn-retry{background:#1a4a7a;color:#fff;border:none;border-radius:12px;padding:.7rem 2rem;font-size:.9rem;font-weight:700;font-family:inherit;cursor:pointer;width:100%;max-width:240px}
+    .btn-retry:hover{background:#2c5f8a}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>📧 이메일 비교 선택</h1>
+  <p>두 이메일 중 더 적절한 것을 고르세요.</p>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">✉ 실습</a>
+    <a href="reference.html" class="nav-link">📚 참고</a>
+    <a href="activity1.html" class="nav-link">🔍 오류 찾기</a>
+    <a href="activity2.html" class="nav-link">🔄 변환</a>
+    <a href="activity3.html" class="nav-link">📋 순서</a>
+    <a href="activity4.html" class="nav-link">🃏 어휘</a>
+    <a href="activity5.html" class="nav-link">🎴 상황 카드</a>
+    <a href="activity6.html" class="nav-link">📝 자기 평가</a>
+    <a href="activity7.html" class="nav-link">⚡ 판단 게임</a>
+    <a href="activity8.html" class="nav-link cur">📧 비교 선택</a>
+    <a href="activity9.html" class="nav-link">⭕ OX 퀴즈</a>
+    <a href="activity10.html" class="nav-link">🧩 메모리</a>
+    <a href="activity11.html" class="nav-link">🏆 퀴즈쇼</a>
+  </div>
+</header>
+
+<main>
+
+  <div class="progress-bar">
+    <div class="pb-track"><div class="pb-fill" id="pb-fill" style="width:0%"></div></div>
+    <span class="pb-label" id="pb-label">0 / 8</span>
+    <span class="pb-score" id="pb-score">✓ 0</span>
+  </div>
+
+  <!-- Question area -->
+  <div id="question-area"></div>
+
+  <!-- Result screen -->
+  <div class="result-screen" id="result-screen">
+    <div class="result-card">
+      <div class="r-icon" id="r-icon"></div>
+      <div class="r-title" id="r-title"></div>
+      <div class="r-score" id="r-score"></div>
+      <div class="r-msg" id="r-msg"></div>
+      <div class="r-breakdown">
+        <span class="rb-item rb-c" id="r-c">✓ 0개 정답</span>
+        <span class="rb-item rb-w" id="r-w">✗ 0개 오답</span>
+      </div>
+      <button class="btn-retry" onclick="startGame()">🔄 다시 도전</button>
+    </div>
+  </div>
+
+</main>
+
+<button class="pc-toggle" onclick="togglePCMode()">
+  🖥 <span id="pc-toggle-label">PC 화면</span>
+</button>
+
+<footer style="text-align:center;padding:1.5rem;font-size:.78rem;color:#aaa;border-top:1px solid #e8ecf0;margin-top:1rem">
+  <a href="index.html" style="color:#2c5f8a;text-decoration:none">← 실습 페이지로</a>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════
+   DATA  — 8쌍
+   correct: 'A' or 'B'
+══════════════════════════════════════════ */
+const PAIRS = [
+  {
+    ctx: '교수님께 결석 사유를 알리는 이메일',
+    ctxVN: 'Email báo vắng mặt gửi giáo sư',
+    A: `안녕하세요~ 교수님!
+
+저 다음 주 화요일에 병원 가야 해서 수업에 못 가요.
+수업 자료 좀 보내줄 수 있어요?
+
+감사합니다!
+응우옌 티 민`,
+    B: `안녕하십니까? 한국어학과 3학년 응우옌 티 민입니다.
+
+다름이 아니오라, 다음 주 화요일 수업에 병원 진료로 인해 부득이하게 결석하게 되었습니다. 미리 말씀드리지 못하여 죄송합니다.
+
+혹시 가능하시다면, 수업 자료를 보내 주시면 감사하겠습니다.
+
+바쁘신 중에 번거롭게 해드려 죄송합니다.
+
+응우옌 티 민 드림`,
+    correct: 'B',
+    points: [
+      { icon: '✅', text: 'B: "안녕하십니까?"로 격식 있게 시작, 소속과 이름을 명확히 밝혔습니다.' },
+      { icon: '✅', text: 'B: "부득이하게 결석하게 되었습니다" — 격식체 종결어미(-ㅂ니다/습니다) 사용.' },
+      { icon: '✅', text: 'B: "보내 주시면 감사하겠습니다" — 공손한 요청 표현.' },
+      { icon: '❌', text: 'A: "안녕하세요~", "못 가요", "보내줄 수 있어요?" — 모두 해요체 또는 구어체로 격식에 부적합.' },
+    ]
+  },
+  {
+    ctx: '교수님께 과제 기한 연장을 요청하는 이메일',
+    ctxVN: 'Email xin gia hạn nộp bài gửi giáo sư',
+    A: `안녕하십니까? 교수님, 한국어학과 응우옌 반 안입니다.
+
+다름이 아니오라, 이번 주 금요일까지 제출해야 하는 ○○ 과제와 관련하여 말씀드리고자 합니다.
+
+지난 화요일부터 건강이 좋지 않아 과제를 기한 내에 완성하기 어렵게 되었습니다. 죄송하지만, 제출 기한을 다음 주 월요일까지 연장해 주실 수 있는지 여쭤보고 싶습니다. 최대한 빨리 완성하여 제출하겠습니다.
+
+허락해 주시면 정말 감사하겠습니다.
+
+응우옌 반 안 드림`,
+    B: `안녕하세요 교수님.
+
+과제 기한 좀 늘려주실 수 있나요? 요즘 몸이 안 좋아서 힘들어요.
+월요일까지 하면 안 될까요?
+
+감사해요.`,
+    correct: 'A',
+    points: [
+      { icon: '✅', text: 'A: 전체적으로 합쇼체(-ㅂ니다/-습니다/-겠습니다) 일관 사용.' },
+      { icon: '✅', text: 'A: 사유를 구체적으로 설명하고, 구체적인 날짜를 제시.' },
+      { icon: '✅', text: 'A: "여쭤보고 싶습니다" — "물어보다"의 높임 표현 사용.' },
+      { icon: '❌', text: 'B: "늘려주실 수 있나요?", "힘들어요", "감사해요" — 모두 해요체, 격식 부족.' },
+    ]
+  },
+  {
+    ctx: '대학원 입학처에 외국인 전형을 문의하는 이메일',
+    ctxVN: 'Email hỏi phòng tuyển sinh về diện tuyển sinh dành cho người nước ngoài',
+    A: `안녕하세요.
+
+대학원 외국인 전형에 대해 궁금한 게 있어요.
+① 지원 자격이 어떻게 되나요?
+② 서류는 뭐 필요해요?
+③ 어떻게 접수해요?
+
+답장 기다릴게요.`,
+    B: `안녕하십니까? 저는 ○○대학교 대학원 진학을 준비 중인 베트남 유학생입니다.
+
+대학원 외국인 전형과 관련하여 몇 가지 문의드립니다.
+
+① 외국인 전형 지원 자격은 어떻게 되는지요?
+② 제출 서류는 무엇이 필요한지요?
+③ 원서 접수 방법은 어떻게 되는지요?
+
+바쁘신 중에 문의드려 죄송합니다. 빠른 시일 내에 답변해 주시면 감사하겠습니다.
+
+○○○ 드림 | email@example.com`,
+    correct: 'B',
+    points: [
+      { icon: '✅', text: 'B: 문의 사항을 번호로 정리하고, 각 질문에 "-는지요?" 격식 의문형 사용.' },
+      { icon: '✅', text: 'B: "빠른 시일 내에 답변해 주시면 감사하겠습니다" — 격식 있는 마무리.' },
+      { icon: '✅', text: 'B: 연락처(이메일)를 남겨 상대방이 쉽게 답변할 수 있게 했습니다.' },
+      { icon: '❌', text: 'A: "궁금한 게 있어요", "뭐 필요해요?", "기다릴게요" — 해요체 & 구어체, 기관 문의에 부적합.' },
+    ]
+  },
+  {
+    ctx: '학생처에 재학증명서 발급을 요청하는 이메일',
+    ctxVN: 'Email xin cấp giấy chứng nhận đang học gửi phòng học sinh',
+    A: `안녕하십니까? 한국어학과 2학년 레 티 호아입니다.
+
+다름이 아니오라, 재학증명서 발급을 요청드리고자 연락드립니다.
+
+제출처: 베트남 대사관
+필요 부수: 2부
+언어: 영문
+
+번거로우시겠지만 발급 후 이메일로 보내 주시면 감사하겠습니다.
+
+레 티 호아 드림`,
+    B: `안녕하세요!
+
+재학증명서 2장 필요한데요, 영문으로 발급해 주실 수 있어요?
+대사관에 낼 거예요.
+
+빨리 부탁드려요!`,
+    correct: 'A',
+    points: [
+      { icon: '✅', text: 'A: 요청 정보(제출처, 부수, 언어)를 구조적으로 명확하게 정리했습니다.' },
+      { icon: '✅', text: 'A: "번거로우시겠지만" — 상대의 수고를 먼저 인정하는 배려 표현.' },
+      { icon: '❌', text: 'B: "필요한데요", "주실 수 있어요?", "빨리 부탁드려요" — 해요체 + "빨리"는 기관 요청에 무례하게 느껴질 수 있습니다.' },
+    ]
+  },
+  {
+    ctx: '기업 고객 센터에 제품 불량으로 교환을 요청하는 이메일',
+    ctxVN: 'Email yêu cầu đổi hàng do sản phẩm bị lỗi gửi trung tâm hỗ trợ',
+    A: `안녕하십니까? 귀사 온라인 쇼핑몰에서 제품을 구매한 팜 민 후이입니다.
+
+구매한 제품에 불량이 발견되어 교환을 요청드립니다.
+
+- 주문 번호: 2024-XXXXXX
+- 구매일: ○월 ○일
+- 불량 내용: 포장 개봉 시 외관에 긁힘 및 전원이 켜지지 않음
+
+관련 사진을 첨부하였으니 확인 부탁드립니다. 교환 처리 절차를 안내해 주시면 감사하겠습니다.
+
+팜 민 후이 드림`,
+    B: `안녕하세요.
+
+물건 샀는데 불량이에요. 바꿔주세요.
+주문번호는 2024-XXXXXX이고요,
+사진도 찍었어요.
+
+빨리 처리해 주세요.`,
+    correct: 'A',
+    points: [
+      { icon: '✅', text: 'A: 주문 번호, 구매일, 불량 내용을 구체적으로 정리하여 상대가 빠르게 처리할 수 있습니다.' },
+      { icon: '✅', text: 'A: "귀사" — 회사를 높이는 격식 어휘. "안내해 주시면 감사하겠습니다" — 공손한 마무리.' },
+      { icon: '❌', text: 'B: "바꿔주세요", "빨리 처리해 주세요" — 요구하는 톤이 강해 불필요한 갈등을 유발할 수 있습니다.' },
+    ]
+  },
+  {
+    ctx: '교수님께 성적 확인을 요청하는 이메일',
+    ctxVN: 'Email xin kiểm tra điểm gửi giáo sư',
+    A: `교수님 안녕하세요.
+
+성적이 좀 이상한 것 같아요. 확인해 줄 수 있어요?
+제가 맞게 받은 건지 모르겠어요.`,
+    B: `안녕하십니까? 교수님, 한국어학과 레 티 호아입니다.
+
+다름이 아니오라, 이번 학기 중간고사 성적과 관련하여 여쭤보고 싶은 것이 있습니다.
+
+학교 시스템에서 확인한 성적이 예상보다 낮아, 혹시 채점 과정에서 오류가 있었던 것은 아닌지 걱정이 되었습니다. 번거로우시겠지만, 성적을 한 번 확인해 주실 수 있으신지요?
+
+바쁘신 중에 불편을 드려 죄송합니다.
+
+레 티 호아 드림`,
+    correct: 'B',
+    points: [
+      { icon: '✅', text: 'B: 어느 시험의 성적인지 구체적으로 밝혔습니다.' },
+      { icon: '✅', text: 'B: "확인해 주실 수 있으신지요?" — 강요하지 않고 정중하게 요청.' },
+      { icon: '✅', text: 'B: 요청이 부담될 수 있음을 인정하며 ("번거로우시겠지만") 배려를 표현.' },
+      { icon: '❌', text: 'A: "이상한 것 같아요", "확인해 줄 수 있어요?" — 격식 없음. 교수님과의 소통에 부적합.' },
+    ]
+  },
+  {
+    ctx: '스타트업 회사에 인턴십을 문의하는 이메일',
+    ctxVN: 'Email hỏi về thực tập sinh gửi công ty startup',
+    A: `안녕하십니까? 저는 ○○대학교 한국어학과 3학년에 재학 중인 레 티 호아입니다.
+
+귀사에서 진행하시는 여름 방학 인턴십 프로그램에 관심이 있어 문의드립니다.
+
+① 올해 여름 인턴십 모집 계획이 있으신지요?
+② 모집이 있다면 지원 자격과 지원 방법을 알 수 있을까요?
+
+바쁘신 중에 문의드려 죄송합니다. 검토 후 답변해 주시면 감사하겠습니다.
+
+레 티 호아 드림 | hoa.le@email.com`,
+    B: `안녕하세요!
+
+인턴십 하고 싶어서요~ 모집 하고 있나요?
+저 한국어학과 3학년이에요.
+
+연락 주세요!`,
+    correct: 'A',
+    points: [
+      { icon: '✅', text: 'A: "귀사" 사용, 합쇼체 일관 유지 — 기업에 처음 연락하는 격식에 맞습니다.' },
+      { icon: '✅', text: 'A: 질문을 번호로 구분하여 읽기 편하고 답변하기 쉽게 구성.' },
+      { icon: '✅', text: 'A: 연락처를 남겨 담당자가 쉽게 회신할 수 있도록 했습니다.' },
+      { icon: '❌', text: 'B: "하고 싶어서요~", "하고 있나요?", "연락 주세요!" — 지나치게 구어체, 비즈니스 이메일로 부적합.' },
+    ]
+  },
+  {
+    ctx: '교수님께 추천서 작성을 요청하는 이메일',
+    ctxVN: 'Email nhờ giáo sư viết thư giới thiệu',
+    A: `교수님, 안녕하세요.
+
+대학원 가려고 하는데 추천서 써주실 수 있어요?
+마감이 다음 달 10일이에요.
+양식은 나중에 보내드릴게요.
+
+잘 부탁해요!`,
+    B: `안녕하십니까? 교수님, 한국어학과 팜 민 후이입니다.
+
+다름이 아니오라, 이번에 ○○대학교 대학원에 지원하게 되어 추천서를 부탁드리고자 이렇게 이메일을 드립니다.
+
+지원 마감일은 다음 달 10일이며, 추천서 양식을 이메일에 첨부해 드리겠습니다. 허락해 주신다면 ○월 ○일까지 제출해 주시면 정말 감사하겠습니다.
+
+바쁘신 중에 무리한 부탁을 드려 죄송합니다. 긍정적으로 검토해 주시면 감사하겠습니다.
+
+팜 민 후이 드림`,
+    correct: 'B',
+    points: [
+      { icon: '✅', text: 'B: "부탁드리고자" — "부탁하다"의 격식 표현. "긍정적으로 검토해 주시면" — 강요 없이 정중한 마무리.' },
+      { icon: '✅', text: 'B: 마감일, 양식 첨부 여부 등 필요한 정보를 모두 포함.' },
+      { icon: '✅', text: 'B: "무리한 부탁을 드려 죄송합니다" — 상대의 수고를 먼저 인정하는 배려 표현.' },
+      { icon: '❌', text: 'A: "써주실 수 있어요?", "잘 부탁해요!" — 해요체. 지도 교수님께 중요한 부탁을 드릴 때 격식이 부족합니다.' },
+    ]
+  },
+];
+
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+let order = [];
+let current = 0;
+let score = 0;
+
+/* ══════════════════════════════════════════
+   PC MODE
+══════════════════════════════════════════ */
+function initPCMode(){
+  if(localStorage.getItem('formalView')==='pc'){
+    document.body.classList.add('pc-mode');
+    document.getElementById('pc-toggle-label').textContent='모바일 화면';
+  }
+}
+function togglePCMode(){
+  const b=document.body;
+  if(b.classList.toggle('pc-mode')){
+    localStorage.setItem('formalView','pc');
+    document.getElementById('pc-toggle-label').textContent='모바일 화면';
+  } else {
+    localStorage.setItem('formalView','mobile');
+    document.getElementById('pc-toggle-label').textContent='PC 화면';
+  }
+}
+
+/* ══════════════════════════════════════════
+   GAME
+══════════════════════════════════════════ */
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function startGame(){
+  order = shuffle([...Array(PAIRS.length).keys()]);
+  current = 0;
+  score = 0;
+  document.getElementById('result-screen').classList.remove('show');
+  renderQuestion();
+  updateProgress();
+}
+
+function updateProgress(){
+  const total = PAIRS.length;
+  const pct = total > 0 ? (current / total) * 100 : 0;
+  document.getElementById('pb-fill').style.width = pct + '%';
+  document.getElementById('pb-label').textContent = `${current} / ${total}`;
+  document.getElementById('pb-score').textContent = `✓ ${score}`;
+}
+
+function renderQuestion(){
+  if(current >= PAIRS.length){ showResult(); return; }
+  const p = PAIRS[order[current]];
+  const qi = current + 1;
+
+  // Randomly swap A/B on display for variety
+  const swap = Math.random() < .5;
+  const leftKey = swap ? 'B' : 'A';
+  const rightKey = swap ? 'A' : 'B';
+
+  document.getElementById('question-area').innerHTML = `
+    <div class="sit-card" id="sit-card-${qi}">
+      <div class="sit-head">
+        <div class="sit-num">${qi}</div>
+        <div class="sit-desc">📌 ${p.ctx}</div>
+        <button class="vn-sit-btn" onclick="toggleSitVN(${qi})">🇻🇳 VN</button>
+      </div>
+      <div class="sit-vn" id="sit-vn-${qi}">${p.ctxVN}</div>
+      <div class="email-row">
+        <div class="email-option" id="opt-left" onclick="choose('${leftKey}',${qi})">
+          <div class="eo-label">📄 이메일 ${leftKey}</div>
+          <div class="eo-body">${p[leftKey]}</div>
+          <span class="result-badge" id="badge-left"></span>
+        </div>
+        <div class="email-option" id="opt-right" onclick="choose('${rightKey}',${qi})">
+          <div class="eo-label">📄 이메일 ${rightKey}</div>
+          <div class="eo-body">${p[rightKey]}</div>
+          <span class="result-badge" id="badge-right"></span>
+        </div>
+      </div>
+      <div class="explain-panel" id="explain-${qi}">
+        <div class="explain-title">💡 해설</div>
+        <div class="explain-body">
+          ${p.points.map(pt=>`<div class="point"><span class="pt-icon">${pt.icon}</span><span>${pt.text}</span></div>`).join('')}
+        </div>
+      </div>
+      <div class="next-row">
+        <button class="btn-next" id="btn-next-${qi}" onclick="nextQ()">다음 문제 →</button>
+      </div>
+    </div>
+  `;
+  // store mapping
+  document.getElementById('opt-left').dataset.key = leftKey;
+  document.getElementById('opt-right').dataset.key = rightKey;
+  document.getElementById('opt-left').dataset.correct = p.correct;
+  document.getElementById('opt-right').dataset.correct = p.correct;
+}
+
+function toggleSitVN(qi){
+  const vn = document.getElementById('sit-vn-'+qi);
+  const btn = vn.previousElementSibling.querySelector('.vn-sit-btn');
+  const on = vn.classList.toggle('visible');
+  if(btn){ btn.classList.toggle('on',on); btn.textContent=on?'🇻🇳 숨기기':'🇻🇳 VN'; }
+}
+
+let answered = false;
+function choose(chosen, qi){
+  if(answered) return;
+  answered = true;
+  const p = PAIRS[order[current]];
+  const correct = chosen === p.correct;
+  if(correct) score++;
+
+  // Visual feedback
+  const left = document.getElementById('opt-left');
+  const right = document.getElementById('opt-right');
+  const lKey = left.dataset.key;
+  const rKey = right.dataset.key;
+
+  [left, right].forEach(el => {
+    const k = el.dataset.key;
+    const badge = el.querySelector('.result-badge');
+    if(k === p.correct){
+      el.classList.add('correct');
+      badge.textContent = '✅ 정답';
+      badge.className = 'result-badge rb-ok show';
+    } else {
+      el.classList.add('wrong');
+      badge.textContent = '❌ 오답';
+      badge.className = 'result-badge rb-ng show';
+    }
+    el.onclick = null; // disable
+  });
+
+  // Show explanation
+  document.getElementById('explain-'+qi).classList.add('show');
+  document.getElementById('btn-next-'+qi).classList.add('show');
+  updateProgress();
+}
+
+function nextQ(){
+  answered = false;
+  current++;
+  updateProgress();
+  renderQuestion();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showResult(){
+  document.getElementById('question-area').innerHTML='';
+  const rs = document.getElementById('result-screen');
+  rs.classList.add('show');
+  const total = PAIRS.length;
+  const pct = Math.round((score/total)*100);
+  let icon='🎉',title='',msg='';
+  if(pct===100){ icon='🏆'; title='완벽합니다!'; msg='모든 이메일을 정확히 판단했습니다. 격식체 감각이 탁월해요!'; }
+  else if(pct>=75){ icon='😊'; title='훌륭해요!'; msg='대부분의 이메일을 올바르게 골랐습니다.'; }
+  else if(pct>=50){ icon='🙂'; title='절반 이상!'; msg='조금 더 연습하면 금방 잘할 수 있을 거예요.'; }
+  else { icon='📚'; title='다시 도전해요!'; msg='해설을 잘 읽고 다시 한번 도전해 보세요!'; }
+  document.getElementById('r-icon').textContent=icon;
+  document.getElementById('r-title').textContent=title;
+  document.getElementById('r-score').textContent=`${score} / ${total} (${pct}%)`;
+  document.getElementById('r-msg').textContent=msg;
+  document.getElementById('r-c').textContent=`✓ ${score}개 정답`;
+  document.getElementById('r-w').textContent=`✗ ${total-score}개 오답`;
+  document.getElementById('pb-fill').style.width='100%';
+  document.getElementById('pb-label').textContent=`${total} / ${total}`;
+  document.getElementById('pb-score').textContent=`✓ ${score}`;
+}
+
+initPCMode();
+startGame();
+</script>
+</body>
+</html>
