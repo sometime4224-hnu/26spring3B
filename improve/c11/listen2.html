@@ -60,7 +60,7 @@
         window.LISTENING_WORKBOOK_CONFIG = {
             kicker: "Chapter 11 Listening Lab",
             title: "11과 듣기 2",
-            titleVi: "Luyen nghe bai 11 - Nghe 2",
+            titleVi: "Luyện nghe bài 11 - Nghe 2",
             description: "이직을 고민하는 직장인의 대화를 바탕으로 이유 설명, 가정, 양보 표현을 듣고 핵심 장단점을 정리하는 듣기 워크북입니다. 단계별 자막과 문장 훈련, 딕토글로스, 노트, 확인 퀴즈가 한 페이지에 묶여 있습니다.",
             descriptionVi: "Day la workbook nghe ve cuoc tro chuyen cua mot nhan vien dang can nhac chuyen viec. Em se nghe ly do, gia dinh neu, cach nhuong bo va sap xep lai uu diem, nhoc diem cua cong viec hien tai qua phu de tung buoc, luyen tung cau, dictogloss, ghi chu va bai kiem tra.",
             instructionLanguage: {
@@ -98,6 +98,15 @@
                     titleVi: "Nghe 2: Nhan vien dang can nhac chuyen viec",
                     summary: "남자가 왜 회사를 옮기고 싶어 하는지, 또 현재 회사의 어떤 점 때문에 망설이는지를 비교하며 듣는 활동입니다.",
                     summaryVi: "Em nghe xem vi sao nguoi nam muon chuyen viec va vi sao anh ay lai do du vi nhung diem tot cua cong ty hien tai.",
+                    grammarLink: {
+                        href: "gram3-1.html",
+                        title: "문법 연결",
+                        titleVi: "Lien ket ngu phap",
+                        label: "-느라고, -(으)ㄴ/는다면",
+                        labelVi: "-neurago, -(eu)n/neundamyeon",
+                        description: "이직 고민의 이유 설명과 가정 표현을 문법 페이지에서 바로 이어서 복습해 보세요.",
+                        descriptionVi: "Hay on lai ngay cach giai thich ly do va cau gia dinh xuat hien trong bai nghe nay."
+                    },
                     activityImage: {
                         src: "litsen2pic.webp",
                         alt: "회사 라운지에서 직장인이 고민 상담을 하는 장면",
@@ -116,11 +125,11 @@
                     },
                     preListening: {
                         vocab: [
-                            { ko: "옮기다", vi: "chuyen sang noi khac", hint: "직장이나 자리를 다른 곳으로 바꾸다" },
-                            { ko: "연봉", vi: "luong nam", hint: "한 해 동안 받는 전체 급여" },
-                            { ko: "야근", vi: "tang ca buoi toi", hint: "정해진 시간보다 늦게까지 일하는 것" },
-                            { ko: "휴가", vi: "nghi phep", hint: "일을 쉬는 기간" },
-                            { ko: "분위기", vi: "khong khi, bau khong khi", hint: "사무실이나 조직 안의 느낌" }
+                            { ko: "옮기다", vi: "chuyển sang nơi khác", hint: "직장이나 자리를 다른 곳으로 바꾸다" },
+                            { ko: "연봉", vi: "lương năm", hint: "한 해 동안 받는 전체 급여" },
+                            { ko: "야근", vi: "tăng ca buổi tối", hint: "정해진 시간보다 늦게까지 일하는 것" },
+                            { ko: "휴가", vi: "nghỉ phép", hint: "일을 쉬는 기간" },
+                            { ko: "분위기", vi: "không khí, bầu không khí", hint: "사무실이나 조직 안의 느낌" }
                         ],
                         relationshipOptions: [
                             { value: "friends", label: "친한 친구나 동료" },
@@ -143,12 +152,16 @@
                         {
                             speaker: "남",
                             text: "요즘 회사를 옮길까 말까 고민 중이야.",
+                            start: 6.77,
+                            end: 10.49,
                             vi: "Dao nay toi dang phan van khong biet co nen chuyen cong ty hay khong.",
                             keywords: ["요즘", "회사를 옮기다", "고민"]
                         },
                         {
                             speaker: "여",
                             text: "아니, 왜? 연봉이 높아서 좋다고 했잖아.",
+                            start: 11.51,
+                            end: 14.73,
                             vi: "Sao the? Truoc day ban bao luong cao nen rat tot ma.",
                             keywords: ["왜", "연봉", "했잖아"],
                             highlights: [
@@ -158,6 +171,12 @@
                         {
                             speaker: "남",
                             text: "연봉은 마음에 드는데 너무 바빠서 내 생활이 없어. 지난 주말에도 늦게까지 회사에서 일하느라고 다른 일은 아무것도 못 했어.",
+                            start: 15.77,
+                            end: 26.89,
+                            chunks: [
+                                { text: "연봉은 마음에 드는데 너무 바빠서 내 생활이 없어.", start: 15.77, end: 20.41 },
+                                { text: "지난 주말에도 늦게까지 회사에서 일하느라고 다른 일은 아무것도 못 했어.", start: 21.43, end: 26.89 }
+                            ],
                             vi: "Luong thi toi ung y, nhung vi qua ban nen toi khong co cuoc song rieng. Cuoi tuan truoc toi cung phai lam den muon o cong ty nen khong lam duoc viec gi khac ca.",
                             keywords: ["마음에 들다", "너무 바쁘다", "일하느라고"],
                             highlights: [
@@ -167,6 +186,8 @@
                         {
                             speaker: "여",
                             text: "많이 힘들겠다. 만약 회사를 옮긴다면 어떤 곳에서 일하고 싶은데?",
+                            start: 26.89,
+                            end: 33.53,
                             vi: "Chac la ban met lam. Neu chuyen cong ty thi ban muon lam o noi nhu the nao?",
                             keywords: ["힘들겠다", "만약", "옮긴다면"],
                             highlights: [
@@ -176,12 +197,16 @@
                         {
                             speaker: "남",
                             text: "연봉은 좀 낮아도 휴가가 길었으면 좋겠어. 또 야근도 없었으면 좋겠고.",
+                            start: 34.27,
+                            end: 41.55,
                             vi: "Luong co thap hon mot chut cung duoc, toi muon ky nghi dai hon. Va toi cung muon khong phai tang ca nua.",
                             keywords: ["연봉은 낮아도", "휴가", "야근"]
                         },
                         {
                             speaker: "여",
                             text: "어떤 회사든지 힘든 점은 있을 거야. 그리고 아무리 휴가가 길어도 월급이 적으면 좋아하는 일을 할 수 없잖아.",
+                            start: 42.01,
+                            end: 51.33,
                             vi: "Cong ty nao chac cung co diem kho khan. Va du cho ky nghi co dai den dau thi neu luong thap qua cung khong the lam nhung dieu minh thich duoc ma.",
                             keywords: ["힘든 점", "아무리", "월급이 적으면"],
                             highlights: [
@@ -192,18 +217,28 @@
                         {
                             speaker: "남",
                             text: "그 말도 맞네. 정말 어떻게 해야 할지 모르겠어.",
+                            start: 51.33,
+                            end: 56.25,
                             vi: "Nghe cung co ly. That su toi khong biet phai lam sao nua.",
                             keywords: ["맞네", "모르겠어"]
                         },
                         {
                             speaker: "여",
                             text: "지금 다니는 회사의 좋은 점을 한번 생각해 보는 건 어때? 무엇이든지 좋으니까 얘기해 봐.",
+                            start: 57.51,
+                            end: 64.33,
                             vi: "Thu nghi xem cong ty hien gio co diem tot nao di. Bat cu dieu gi cung duoc, thu noi xem.",
                             keywords: ["좋은 점", "생각해 보다", "얘기해 봐"]
                         },
                         {
                             speaker: "남",
                             text: "우선 집에서 가깝고 무엇보다 함께 일하는 동료들이 마음에 들어. 그리고 새로 온 상사도 나한테 잘해 주고 사무실 분위기도 좋고.",
+                            start: 65.31,
+                            end: 77.67,
+                            chunks: [
+                                { text: "우선 집에서 가깝고 무엇보다 함께 일하는 동료들이 마음에 들어.", start: 65.31, end: 71.47 },
+                                { text: "그리고 새로 온 상사도 나한테 잘해 주고 사무실 분위기도 좋고.", start: 72.25, end: 77.67 }
+                            ],
                             vi: "Truoc tien cong ty gan nha, va hon het la nhung dong nghiep lam cung toi rat hop. Cap tren moi den cung doi xu tot voi toi, khong khi van phong cung de chiu.",
                             keywords: ["집에서 가깝다", "무엇보다", "동료", "상사", "분위기"],
                             highlights: [
@@ -213,12 +248,16 @@
                         {
                             speaker: "여",
                             text: "이렇게 좋은 점이 많은데 옮길 수 있겠어?",
+                            start: 77.67,
+                            end: 81.31,
                             vi: "Co nhieu diem tot nhu vay thi ban co the de dang chuyen di duoc sao?",
                             keywords: ["좋은 점", "옮길 수 있겠어"]
                         },
                         {
                             speaker: "남",
                             text: "그래, 다시 한 번 생각해 볼게. 고마워.",
+                            start: 81.99,
+                            end: 85.75,
                             vi: "Dung vay, de toi suy nghi lai them mot lan nua. Cam on ban.",
                             keywords: ["다시 생각", "고마워"],
                             highlights: [
@@ -233,6 +272,20 @@
                         modelSummary: "남자는 연봉은 만족스럽지만 너무 바빠서 회사를 옮길까 고민한다. 그는 휴가가 길고 야근이 없는 회사를 원한다. 그러나 여자는 어느 회사나 힘든 점이 있고 월급이 적으면 하고 싶은 일을 하기 어렵다고 말한다. 남자는 현재 회사가 집에서 가깝고 동료, 상사, 분위기가 좋아서 다시 생각해 보기로 한다.",
                         placeholder: "이직하고 싶은 이유와 현재 회사의 장점을 함께 넣어 4~5문장으로 정리해 보세요.",
                         placeholderVi: "Hay viet lai thanh 4 den 5 cau, gom ca ly do muon chuyen viec va uu diem cua cong ty hien tai."
+                    },
+                    prosConsTable: {
+                        title: "장단점 비교 표",
+                        titleVi: "Bang so sanh uu diem va nhoc diem",
+                        guide: "현재 회사의 좋은 점과 고민되는 점을 나눠 적어 보세요. 마지막 판단이 왜 흔들리는지 더 분명해집니다.",
+                        guideVi: "Hay tach rieng diem tot va dieu dang do du cua cong ty hien tai. Nhu vay se thay ro hon vi sao quyet dinh cuoi cung lai dao dong.",
+                        prosLabel: "좋은 점",
+                        prosLabelVi: "Diem tot",
+                        consLabel: "고민되는 점",
+                        consLabelVi: "Dieu dang do du",
+                        prosPlaceholder: "예: 집에서 가깝다, 동료들이 좋다, 상사가 잘해 준다, 분위기가 좋다",
+                        prosPlaceholderVi: "Vi du: gan nha, dong nghiep tot, cap tren doi xu tot, khong khi tot",
+                        consPlaceholder: "예: 너무 바쁘다, 야근이 많다, 생활이 없다",
+                        consPlaceholderVi: "Vi du: qua ban, tang ca nhieu, khong co cuoc song rieng"
                     },
                     notePrompts: {
                         keywords: "이직 이유, 원하는 조건, 현재 회사 장점",
@@ -249,6 +302,60 @@
                         cue: "Luong / ban ron / nghi phep / dong nghiep / cap tren / khong khi",
                         notes: "Chia hai cot de ghi diem tot va diem bat tien",
                         summary: "Tom tat trong mot hai cau vi sao nguoi nam quyet dinh nghi lai"
+                    },
+                    clozeSection: {
+                        title: "문법 집중 빈칸",
+                        titleVi: "Dien vao cho trong voi ngu phap",
+                        guide: "이직 고민 대화에서 이유, 가정, 양보 표현을 채워 보세요.",
+                        guideVi: "Hay dien cac cach noi ve ly do, gia dinh va nhuong bo trong hoi thoai ve viec chuyen cong ty."
+                    },
+                    clozeItems: [
+                        {
+                            sentence: "지난주말에도 늦게까지 회사에서 _____ 다른 일은 아무것도 못 했어.",
+                            sentenceVi: "Cuoi tuan truoc toi cung o cong ty den khuya vi _____ nen khong lam duoc viec gi khac.",
+                            blank: "일하느라고",
+                            hint: "-느라고",
+                            hintVi: "Ngu phap chi ly do gay can tro viec khac",
+                            explanation: "한 일 때문에 다른 일을 못 했다는 이유를 나타냅니다.",
+                            explanationVi: "Cach noi nay cho biet vi mot viec ma khong lam duoc viec khac."
+                        },
+                        {
+                            sentence: "만약 회사를 옮긴_____ 어떤 곳에서 일하고 싶어?",
+                            sentenceVi: "Neu chuyen cong ty _____ ban muon lam o noi nhu the nao?",
+                            blank: "다면",
+                            hint: "-다면",
+                            hintVi: "Ngu phap gia dinh",
+                            explanation: "아직 결정하지 않은 상황을 가정해서 묻는 표현입니다.",
+                            explanationVi: "Day la cach hoi bang mot gia dinh chua duoc quyet dinh."
+                        },
+                        {
+                            sentence: "아무리 휴가가 길어_____ 월급이 적으면 좋아하는 일을 할 수는 없잖아.",
+                            sentenceVi: "_____ nghi phep co dai den dau thi luong thap qua van khong the lam dieu minh thich.",
+                            blank: "도",
+                            hint: "아무리 ~도",
+                            hintVi: "Cau nhuong bo",
+                            explanation: "앞 조건이 좋아 보여도 뒤의 한계가 남는다는 뜻입니다.",
+                            explanationVi: "No cho thay du dieu kien truoc co tot den dau thi van con gioi han o ve sau."
+                        },
+                        {
+                            sentence: "_____ 같이 일하는 동료들이 마음에 들어.",
+                            sentenceVi: "_____ toi thich nhung dong nghiep lam viec cung.",
+                            blank: "무엇보다도",
+                            hint: "담화표지",
+                            hintVi: "Cach nhan manh diem quan trong nhat",
+                            explanation: "여러 장점 중 가장 중요한 점을 앞세울 때 쓰는 말입니다.",
+                            explanationVi: "Dung khi dua diem quan trong nhat len truoc trong nhieu uu diem."
+                        }
+                    ],
+                    speakingTask: {
+                        title: "말하기 출력",
+                        titleVi: "Dau ra noi",
+                        prompt: "친구의 이직 고민을 들은 뒤, 장점과 단점을 비교하며 조언하는 상황을 만들어 말해 보세요.",
+                        promptVi: "Hay tao mot tinh huong khuyen ban sau khi nghe noi ve viec chuyen cong ty, trong do em so sanh diem tot va diem bat tien.",
+                        placeholder: "예: 연봉은 좋지만 너무 바쁘니까, 지금 회사의 좋은 점도 다시 생각해 보는 게 어때?",
+                        placeholderVi: "Vi du: Luong thi tot nhung ban qua, hay thu nghi lai ve nhung diem tot cua cong ty hien tai xem sao.",
+                        tips: ["연봉은 좋지만", "만약 옮긴다면", "무엇보다", "다시 생각해 봐"],
+                        tipsVi: ["Luong thi tot nhung", "Neu chuyen viec thi", "Hon het", "Hay nghi lai xem"]
                     },
                     clarifications: [
                         {
@@ -322,6 +429,35 @@
                             typeVi: "Loi hua ngay luc noi",
                             note: "상대의 조언을 받아들여 스스로 행동을 바꿔 보겠다는 태도를 보여 줍니다.",
                             noteVi: "Cach noi nay cho thay nguoi noi tiep thu loi khuyen va se tu xem xet lai hanh dong cua minh."
+                        }
+                    ],
+                    tfSection: {
+                        title: "빠른 확인",
+                        titleVi: "Kiem tra nhanh",
+                        guide: "객관식 퀴즈 전에 핵심 사실을 O/X로 먼저 점검해 보세요.",
+                        guideVi: "Truoc bai trac nghiem, hay kiem tra nhanh cac thong tin chinh bang O/X."
+                    },
+                    tfQuestions: [
+                        {
+                            statement: "남자는 연봉이 낮아서 회사를 옮기고 싶어 한다.",
+                            statementVi: "Nguoi nam muon chuyen cong ty vi luong thap.",
+                            answer: false,
+                            explanation: "연봉은 마음에 들지만 너무 바빠서 고민한다고 했습니다.",
+                            explanationVi: "Anh ay noi luong van on, nhung do du vi qua ban."
+                        },
+                        {
+                            statement: "남자는 휴가가 길고 야근이 없는 회사를 원한다.",
+                            statementVi: "Nguoi nam muon mot cong ty co ky nghi dai va khong phai tang ca.",
+                            answer: true,
+                            explanation: "남자가 새 회사의 조건으로 직접 말한 내용입니다.",
+                            explanationVi: "Day la dieu kien nguoi nam noi truc tiep khi ta ve cong ty moi mong muon."
+                        },
+                        {
+                            statement: "현재 회사의 좋은 점으로는 동료와 상사가 있다는 이야기가 나온다.",
+                            statementVi: "Hoi thoai co nhac den dong nghiep va cap tren nhu la diem tot cua cong ty hien tai.",
+                            answer: true,
+                            explanation: "남자는 동료들이 마음에 들고 새로 온 상사도 잘해 준다고 말합니다.",
+                            explanationVi: "Nguoi nam noi anh ay thich dong nghiep va cap tren moi cung doi xu tot."
                         }
                     ],
                     quizTitle: "이해 점검",

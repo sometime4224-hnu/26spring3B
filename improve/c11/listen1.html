@@ -60,7 +60,7 @@
         window.LISTENING_WORKBOOK_CONFIG = {
             kicker: "Chapter 11 Listening Lab",
             title: "11과 듣기 1",
-            titleVi: "Luyen nghe bai 11 - Nghe 1",
+            titleVi: "Luyện nghe bài 11 - Nghe 1",
             description: "아웃도어 매장 첫 출근 상황을 바탕으로 지시 표현과 작업 순서를 익히는 듣기 워크북입니다. 장면 예측, 단계별 자막, 문장 반복, 딕토글로스, 노트 정리, 확인 퀴즈까지 한 흐름으로 연습할 수 있습니다.",
             descriptionVi: "Day la workbook nghe ve tinh huong ngay dau di lam o cua hang outdoor. Em se luyen du doan tinh huong, nghe theo tung buoc, lap lai tung cau, dictogloss, ghi chu va lam bai kiem tra hieu noi dung.",
             instructionLanguage: {
@@ -98,6 +98,15 @@
                     titleVi: "Nghe 1: Ngay dau o cua hang outdoor",
                     summary: "새 직원이 매장에서 처음으로 받은 지시를 순서대로 듣고, 마네킹 옷차림과 포스터 위치 같은 핵심 정보를 정리하는 활동입니다.",
                     summaryVi: "Em nghe cac chi dan ma nhan vien moi nhan duoc trong ngay dau di lam va sap xep lai thong tin quan trong nhu trang phuc cua ma-no-canh va vi tri dan poster.",
+                    grammarLink: {
+                        href: "grammar1.html",
+                        title: "문법 연결",
+                        titleVi: "Lien ket ngu phap",
+                        label: "-고 나서, -아/어 줄래요?",
+                        labelVi: "-go naseo, -a/eo jullae yo",
+                        description: "업무 지시의 순서 표현과 완곡한 부탁 표현을 문법 페이지에서 바로 이어서 복습해 보세요.",
+                        descriptionVi: "Hay on lai ngay cac cach noi ve thu tu cong viec va loi nho nhe nhang o trang ngu phap lien quan."
+                    },
                     activityImage: {
                         src: "litsen1pic.webp",
                         alt: "아웃도어 매장에서 새 직원이 지시를 듣는 장면",
@@ -143,12 +152,21 @@
                         {
                             speaker: "남",
                             text: "안녕하세요?",
+                            start: 6.87,
+                            end: 7.69,
                             vi: "Xin chao a?",
                             keywords: ["인사", "첫 만남"]
                         },
                         {
                             speaker: "여",
                             text: "어서 와요. 오늘은 첫날이니까 제가 하는 걸 보고 잘 따라하세요. 전에도 옷가게에서 일한 적이 있으니까 어렵지 않을 거예요.",
+                            start: 9.13,
+                            end: 18.53,
+                            chunks: [
+                                { text: "어서 와요.", start: 9.13, end: 9.93 },
+                                { text: "오늘은 첫날이니까 제가 하는 걸 보고 잘 따라하세요.", start: 10.59, end: 14.17 },
+                                { text: "전에도 옷가게에서 일한 적이 있으니까 어렵지 않을 거예요.", start: 14.89, end: 18.53 }
+                            ],
                             vi: "Chao mung ban. Hom nay la ngay dau nen hay nhin viec toi lam roi lam theo nhe. Vi truoc day ban da tung lam o cua hang quan ao nen chac se khong qua kho dau.",
                             keywords: ["첫날", "따라하세요", "옷가게 경험"],
                             highlights: [
@@ -159,12 +177,16 @@
                         {
                             speaker: "남",
                             text: "네, 열심히 하겠습니다.",
+                            start: 19.79,
+                            end: 21.09,
                             vi: "Vang, toi se co gang lam viec.",
                             keywords: ["다짐", "예의"]
                         },
                         {
                             speaker: "여",
                             text: "우선 마네킹이 입고 있는 옷을 벗기고 이 점퍼를 입혀 주세요.",
+                            start: 22.43,
+                            end: 26.91,
                             vi: "Truoc tien hay coi bo bo do ma no canh dang mac va mac chiec ao khoac nay cho no.",
                             keywords: ["우선", "마네킹", "점퍼"],
                             highlights: [
@@ -174,12 +196,20 @@
                         {
                             speaker: "남",
                             text: "네, 알겠습니다.",
+                            start: 27.99,
+                            end: 28.89,
                             vi: "Vang, toi hieu roi.",
                             keywords: ["확인", "응답"]
                         },
                         {
                             speaker: "여",
                             text: "옷을 다 입히고 나서 이 모자도 좀 씌워 줄래요? 신발은 이 등산화로 갈아 신겨 주세요.",
+                            start: 28.89,
+                            end: 37.25,
+                            chunks: [
+                                { text: "옷을 다 입히고 나서 이 모자도 좀 씌워 줄래요?", start: 28.89, end: 33.95 },
+                                { text: "신발은 이 등산화로 갈아 신겨 주세요.", start: 34.59, end: 37.25 }
+                            ],
                             vi: "Sau khi mac xong quan ao thi doi cho no ca chiec mu nay nua duoc khong? Con giay thi hay thay bang doi giay leo nui nay nhe.",
                             keywords: ["입히고 나서", "모자", "등산화"],
                             highlights: [
@@ -190,24 +220,32 @@
                         {
                             speaker: "남",
                             text: "네, 알겠습니다.",
+                            start: 38.09,
+                            end: 39.53,
                             vi: "Vang, toi ro roi.",
                             keywords: ["응답", "확인"]
                         },
                         {
                             speaker: "여",
                             text: "다 했으면 이 포스터를 잘 보이는 데에 붙여 주세요.",
+                            start: 40.73,
+                            end: 44.27,
                             vi: "Lam xong thi hay dan tam poster nay o cho de nhin thay nhe.",
                             keywords: ["포스터", "잘 보이는 데", "붙이다"]
                         },
                         {
                             speaker: "남",
                             text: "가게 문 앞쪽에 붙일까요?",
+                            start: 45.53,
+                            end: 47.21,
                             vi: "Dan o phia truoc cua cua hang co duoc khong a?",
                             keywords: ["문 앞", "확인 질문"]
                         },
                         {
                             speaker: "여",
                             text: "문보다는 저기 계산대 아래 붙이는 게 좋겠네요.",
+                            start: 48.37,
+                            end: 51.89,
                             vi: "Hon la dan o cua thi dan o duoi quay thu ngan dang kia co ve se tot hon.",
                             keywords: ["문보다는", "계산대 아래", "위치 수정"],
                             highlights: [
@@ -217,12 +255,16 @@
                         {
                             speaker: "남",
                             text: "네.",
+                            start: 53.27,
+                            end: 53.53,
                             vi: "Vang.",
                             keywords: ["짧은 응답"]
                         },
                         {
                             speaker: "여",
                             text: "저는 물건 가지러 창고에 좀 다녀올 테니까 무슨 일 생기면 연락하세요.",
+                            start: 53.53,
+                            end: 59.93,
                             vi: "Toi se di nha kho lay do mot luc, nen neu co viec gi xay ra thi hay lien lac voi toi nhe.",
                             keywords: ["창고", "다녀올 테니까", "연락하세요"],
                             highlights: [
@@ -232,6 +274,8 @@
                         {
                             speaker: "남",
                             text: "네, 걱정 마세요.",
+                            start: 60.53,
+                            end: 62.71,
                             vi: "Vang, xin dung lo.",
                             keywords: ["안심", "마무리"]
                         }
@@ -243,6 +287,24 @@
                         modelSummary: "오늘은 남자의 첫 출근날이다. 여자는 먼저 마네킹이 입고 있는 옷을 벗기고 점퍼를 입히라고 한다. 그다음 모자를 씌우고 신발을 등산화로 바꾸라고 말한다. 일이 끝나면 포스터를 계산대 아래에 붙이고, 여자는 창고에 다녀오는 동안 무슨 일이 생기면 연락하라고 한다.",
                         placeholder: "작업 순서가 드러나도록 4~5문장으로 정리해 보세요.",
                         placeholderVi: "Hay sap xep lai noi dung thanh 4 den 5 cau, lam ro thu tu cong viec."
+                    },
+                    sequenceTask: {
+                        title: "순서 배열",
+                        titleVi: "Sap xep thu tu",
+                        guide: "업무 지시가 나온 순서대로 항목을 다시 배열해 보세요.",
+                        guideVi: "Hay sap xep lai cac muc theo dung thu tu ma chi dan cong viec da xuat hien.",
+                        checkLabel: "순서 확인",
+                        checkLabelVi: "Kiem tra thu tu",
+                        resetLabel: "처음 순서로",
+                        resetLabelVi: "Ve thu tu dau",
+                        items: [
+                            { id: "hat", label: "마네킹에 모자 씌우기", labelVi: "Doi mu cho ma-no-canh" },
+                            { id: "poster", label: "포스터를 계산대 아래에 붙이기", labelVi: "Dan poster o duoi quay thu ngan" },
+                            { id: "jumper", label: "점퍼 입히기", labelVi: "Mac ao khoac cho ma-no-canh" },
+                            { id: "shoes", label: "등산화로 갈아 신기기", labelVi: "Thay bang giay leo nui" },
+                            { id: "remove", label: "마네킹 옷 벗기기", labelVi: "Coi bo do cua ma-no-canh" }
+                        ],
+                        answerOrder: ["remove", "jumper", "hat", "shoes", "poster"]
                     },
                     notePrompts: {
                         keywords: "인물 관계, 지시 순서, 장소 표현",
@@ -259,6 +321,51 @@
                         cue: "Ngay dau / ma-no-canh / poster / nha kho",
                         notes: "Ghi ngan gon noi dung chi dan theo dong tu",
                         summary: "Tom tat luong cong viec cua hoi thoai bang hai cau"
+                    },
+                    clozeSection: {
+                        title: "핵심 표현 빈칸",
+                        titleVi: "Dien vao cho trong voi bieu hien chinh",
+                        guide: "업무 지시에서 순서 표현과 위치 표현을 채워 보세요.",
+                        guideVi: "Hay dien cac cach noi ve thu tu cong viec va vi tri xuat hien trong loi chi dan."
+                    },
+                    clozeItems: [
+                        {
+                            sentence: "옷을 다 입히고 _____ 모자도 좀 씌워 줄래요?",
+                            sentenceVi: "Sau khi mac xong do thi hay doi them _____ cho ma-no-canh nhe?",
+                            blank: "나서",
+                            hint: "-고 나서",
+                            hintVi: "Ngu phap noi hanh dong sau khi viec truoc da xong",
+                            explanation: "앞의 일이 끝난 뒤 다음 행동을 이어서 말할 때 씁니다.",
+                            explanationVi: "Dung khi noi hanh dong tiep theo sau khi viec truoc da ket thuc."
+                        },
+                        {
+                            sentence: "신발은 등산화로 갈아 _____ 주세요.",
+                            sentenceVi: "Hay thay giay bang giay leo nui va _____ cho ma-no-canh nhe.",
+                            blank: "신겨",
+                            hint: "사동 표현",
+                            hintVi: "Cach noi lam cho doi tuong mang vao",
+                            explanation: "가게 직원이 마네킹에게 신발을 신기게 하는 말입니다.",
+                            explanationVi: "Day la cach noi cho thay nguoi nghe phai cho ma-no-canh mang giay vao."
+                        },
+                        {
+                            sentence: "포스터는 계산대 _____ 붙이는 게 좋겠어요.",
+                            sentenceVi: "Poster nen dan o _____ quay thu ngan thi se hop hon.",
+                            blank: "아래",
+                            hint: "위치 표현",
+                            hintVi: "Cach noi chi vi tri",
+                            explanation: "문 앞이 아니라 계산대 아래라는 위치가 정답을 가릅니다.",
+                            explanationVi: "Dap an duoc quyet dinh boi cach noi vi tri la duoi quay thu ngan, khong phai truoc cua."
+                        }
+                    ],
+                    speakingTask: {
+                        title: "말하기 출력",
+                        titleVi: "Dau ra noi",
+                        prompt: "매장 신입 직원이라고 생각하고, 오늘 받은 업무 지시를 동료에게 차례대로 설명해 보세요.",
+                        promptVi: "Hay dong vai nhan vien moi va giai thich lai cho dong nghiep cac chi dan ma hom nay em da nhan theo dung thu tu.",
+                        placeholder: "예: 먼저 마네킹 옷을 벗기고 점퍼를 입힌 다음에...",
+                        placeholderVi: "Vi du: Truoc tien coi bo do cua ma-no-canh, sau do mac ao khoac...",
+                        tips: ["먼저", "그리고 나서", "다 했으면", "계산대 아래"],
+                        tipsVi: ["Truoc tien", "Sau do", "Lam xong thi", "Duoi quay thu ngan"]
                     },
                     clarifications: [
                         {
@@ -325,6 +432,35 @@
                             typeVi: "Neu ly do roi dua ra chi dan",
                             note: "자신이 잠시 자리를 비운다는 이유를 먼저 말하고, 이어서 필요한 행동을 부탁합니다.",
                             noteVi: "Nguoi noi dua ra ly do minh tam vang mat truoc roi moi yeu cau hanh dong tiep theo."
+                        }
+                    ],
+                    tfSection: {
+                        title: "빠른 확인",
+                        titleVi: "Kiem tra nhanh",
+                        guide: "객관식 퀴즈에 들어가기 전에 핵심 사실을 O/X로 먼저 확인해 보세요.",
+                        guideVi: "Truoc khi vao bai trac nghiem, hay kiem tra nhanh cac thong tin chinh bang O/X."
+                    },
+                    tfQuestions: [
+                        {
+                            statement: "남자는 오늘 처음 매장에 출근했다.",
+                            statementVi: "Hom nay la ngay dau nguoi nam di lam o cua hang.",
+                            answer: true,
+                            explanation: "여자가 오늘은 첫날이라고 직접 말합니다.",
+                            explanationVi: "Nguoi nu noi truc tiep rang hom nay la ngay dau."
+                        },
+                        {
+                            statement: "마네킹에는 운동화를 신겨야 한다.",
+                            statementVi: "Ma-no-canh phai mang giay the thao.",
+                            answer: false,
+                            explanation: "대화에서는 운동화가 아니라 등산화로 갈아 신기라고 했습니다.",
+                            explanationVi: "Trong hoi thoai, nguoi nu bao thay bang giay leo nui, khong phai giay the thao."
+                        },
+                        {
+                            statement: "포스터는 계산대 아래에 붙이는 것이 좋다.",
+                            statementVi: "Poster nen duoc dan o duoi quay thu ngan.",
+                            answer: true,
+                            explanation: "남자가 문 앞쪽을 제안했지만, 여자가 계산대 아래가 더 좋다고 고쳤습니다.",
+                            explanationVi: "Nguoi nam de xuat dan o cua, nhung nguoi nu sua lai la nen dan o duoi quay thu ngan."
                         }
                     ],
                     quizTitle: "이해 점검",
