@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12과 듣기 1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared/listening-workbook.css?v=20260319-c12-listening">
+    <style>
+        body {
+            margin: 0;
+            font-family: "Noto Sans KR", sans-serif;
+            background: linear-gradient(180deg, #f0fdfa 0%, #f8fffd 42%, #f8fafc 100%);
+        }
+        .injected-global-nav {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #c7f5ec;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+        .injected-global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #0f766e;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .injected-global-nav a:hover {
+            color: #115e59;
+        }
+        .injected-global-nav .divider {
+            color: #cbd5e1;
+        }
+    </style>
+</head>
+<body>
+    <nav id="injected-global-nav" class="injected-global-nav">
+        <a href="../index.html"><i class="fa-solid fa-house"></i> 메인으로</a>
+        <span class="divider">|</span>
+        <a href="index.html"><i class="fa-solid fa-folder-open"></i> 12과 목록</a>
+    </nav>
+
+    <div id="listening-workbook-app"></div>
+
+    <script>
+        window.LISTENING_WORKBOOK_CONFIG = {
+            kicker: "Chapter 12 Listening Lab",
+            title: "12과 듣기 1",
+            titleVi: "Luyện nghe bài 12 - Nghe 1",
+            description: "건강 상담 방송을 바탕으로 몸 상태를 설명하는 표현과 생활 속 운동 조언을 듣고 정리하는 듣기 워크북입니다. 상황 예측, 단계별 자막, 문장 반복, 순서 배열, 딕토글로스, 노트, 확인 퀴즈까지 한 흐름으로 연습할 수 있습니다.",
+            descriptionVi: "Đây là workbook nghe dựa trên một chương trình tư vấn sức khỏe. Em sẽ nghe cách mô tả tình trạng cơ thể và những lời khuyên tập luyện trong đời sống qua dự đoán tình huống, phụ đề theo từng bước, luyện từng câu, sắp xếp thứ tự, dictogloss, ghi chú và bài kiểm tra.",
+            instructionLanguage: {
+                enabled: true,
+                default: "ko"
+            },
+            theme: {
+                accent: "#0f766e",
+                accentDark: "#115e59",
+                soft: "#ccfbf1",
+                surface: "rgba(255,255,255,0.94)",
+                pageBackground: "linear-gradient(180deg, #f0fdfa 0%, #f8fffd 42%, #f8fafc 100%)"
+            },
+            featureList: [
+                "상황 예측",
+                "단계별 자막",
+                "문장 반복과 shadowing",
+                "조언 순서 배열",
+                "딕토글로스",
+                "노트 정리",
+                "이해 점검"
+            ],
+            featureListVi: [
+                "Dự đoán tình huống",
+                "Phụ đề theo từng bước",
+                "Lặp lại từng câu và shadowing",
+                "Sắp xếp thứ tự lời khuyên",
+                "Dictogloss",
+                "Ghi chú",
+                "Kiểm tra mức độ hiểu"
+            ],
+            lessons: [
+                {
+                    id: "track30",
+                    label: "Track 30",
+                    title: "듣기 1: 건강 상담과 다리 통증",
+                    titleVi: "Nghe 1: Tư vấn sức khỏe và đau chân",
+                    summary: "백화점에서 오래 서서 일하는 시청자가 다리 통증을 상담하고, 진행자가 운동과 신발 선택에 대해 조언하는 내용을 듣는 활동입니다.",
+                    summaryVi: "Em nghe một khán giả làm việc đứng lâu ở bách hóa gọi đến hỏi về đau chân, và người tư vấn đưa ra lời khuyên về vận động cũng như cách chọn giày.",
+                    grammarLink: {
+                        href: "grammar1-2.html",
+                        title: "문법 연결",
+                        titleVi: "Liên kết ngữ pháp",
+                        label: "이유 표현과 조건 표현",
+                        labelVi: "Biểu hiện lý do và điều kiện",
+                        description: "멀어서, 아파서, 없다면처럼 몸 상태의 원인과 조언 조건을 말하는 표현을 문법 페이지에서 이어서 복습해 보세요.",
+                        descriptionVi: "Hãy ôn lại ở trang ngữ pháp các cách nói về nguyên nhân và điều kiện xuất hiện trong bài nghe, như 멀어서, 아파서, 없다면."
+                    },
+                    activityImage: {
+                        src: "listen1pic.webp",
+                        alt: "건강 상담 방송에서 다리 통증을 상담하는 장면",
+                        altVi: "Cảnh tư vấn về đau chân trong chương trình sức khỏe",
+                        pendingLabel: "듣기 1 그림을 준비 중입니다.",
+                        pendingLabelVi: "Đang chuẩn bị hình minh họa cho bài nghe 1.",
+                        pendingHint: "listen1pic.webp 파일을 추가하면 이 영역에 바로 표시됩니다.",
+                        pendingHintVi: "Khi thêm tệp listen1pic.webp, hình sẽ tự động hiện ở đây.",
+                        caption: "참고 그림: 다리 통증과 생활 습관을 설명하며 상담을 받는 상황입니다.",
+                        captionVi: "Hình tham khảo: tình huống mô tả đau chân và thói quen sinh hoạt để nhận tư vấn."
+                    },
+                    audioSrc: "track30.mp3",
+                    scene: {
+                        emoji: "🩺",
+                        title: "상황 그림: 건강 상담 진행자와 시청자의 전화 상담",
+                        titleVi: "Tình huống: cuộc tư vấn qua điện thoại giữa MC và khán giả",
+                        caption: "계속 서서 일해 생긴 증상, 운동 부족의 이유, 그리고 실천 가능한 조언이 차례대로 나오는 장면입니다.",
+                        captionVi: "Đây là cảnh lần lượt xuất hiện các triệu chứng do đứng làm việc lâu, lý do không thể tập luyện đều đặn và các lời khuyên có thể thực hiện ngay.",
+                        tags: ["건강 상담", "다리 통증", "스트레칭", "구두 굽"]
+                    },
+                    preListening: {
+                        vocab: [
+                            { ko: "퉁퉁 붓다", vi: "sưng phù lên", hint: "몸의 한 부분이 많이 부어 오르다" },
+                            { ko: "발목", vi: "cổ chân", hint: "다리와 발이 연결되는 부분" },
+                            { ko: "스트레칭", vi: "giãn cơ", hint: "근육을 가볍게 늘이는 운동" },
+                            { ko: "마사지", vi: "massage", hint: "아픈 부위를 문지르거나 눌러 주는 것" },
+                            { ko: "구두 굽", vi: "gót giày", hint: "구두 바닥 뒤쪽의 높이" }
+                        ],
+                        relationshipOptions: [
+                            { value: "host-viewer", label: "상담 진행자와 시청자" },
+                            { value: "doctor-patient", label: "병원의 의사와 환자" },
+                            { value: "friends", label: "친구 사이" }
+                        ],
+                        relationshipAnswer: "host-viewer",
+                        genreOptions: [
+                            { value: "health-advice", label: "건강 상담과 조언" },
+                            { value: "shopping", label: "물건 구매 대화" },
+                            { value: "interview", label: "취업 면접" }
+                        ],
+                        genreAnswer: "health-advice",
+                        predictionNote: "오래 서서 일하는 사람이 증상을 설명하고, 진행자가 일상에서 바로 실천할 수 있는 조언을 차례대로 제시하는 대화입니다.",
+                        predictionNoteVi: "Đây là đoạn hội thoại trong đó một người đứng làm việc lâu mô tả triệu chứng, và người tư vấn đưa ra từng lời khuyên có thể áp dụng ngay trong sinh hoạt hằng ngày.",
+                        backgroundPrompt: "오래 서서 일하면 몸에 어떤 증상이 생길 수 있는지, 또 집에서 할 수 있는 간단한 관리 방법은 무엇인지 먼저 적어 보세요.",
+                        backgroundPromptVi: "Hãy viết trước xem nếu đứng làm việc lâu thì cơ thể có thể có những triệu chứng nào, và ở nhà có thể chăm sóc bằng cách đơn giản gì."
+                    },
+                    transcript: [
+                        {
+                            speaker: "남",
+                            text: "여러분 안녕하십니까? 건강 상담 시간입니다. 먼저 시청자 한 분의 고민을 들어 보겠습니다.",
+                            vi: "Xin chào quý vị. Bây giờ là giờ tư vấn sức khỏe. Trước tiên chúng ta sẽ nghe nỗi lo của một khán giả.",
+                            keywords: ["건강 상담", "시청자", "고민"],
+                            highlights: [
+                                { term: "건강 상담", type: "대화 장르 제시" }
+                            ]
+                        },
+                        {
+                            speaker: "여",
+                            text: "안녕하세요? 저는 인천에 사는 이민지라고 합니다. 백화점에서 판매 일을 하고 있는데요. 계속 서서 일을 했더니 몸이 안 좋아졌어요. 아침에 일어나면 다리가 퉁퉁 붓고 무릎이 아파서 계단을 올라가기도 힘들어요.",
+                            vi: "Xin chào. Tôi là Lee Minji, đang sống ở Incheon. Tôi đang làm bán hàng ở bách hóa. Vì cứ đứng làm việc liên tục nên sức khỏe tôi xấu đi. Mỗi sáng ngủ dậy chân tôi sưng to và đau gối đến mức lên cầu thang cũng khó.",
+                            keywords: ["백화점", "계속 서다", "퉁퉁 붓다", "무릎"],
+                            highlights: [
+                                { term: "했더니", type: "원인 뒤 결과" },
+                                { term: "아파서", type: "이유 표현" }
+                            ]
+                        },
+                        {
+                            speaker: "남",
+                            text: "규칙적으로 운동은 하고 계십니까?",
+                            vi: "Chị có đang tập thể dục đều đặn không ạ?",
+                            keywords: ["규칙적으로", "운동"],
+                            highlights: [
+                                { term: "규칙적으로", type: "생활 습관 확인" }
+                            ]
+                        },
+                        {
+                            speaker: "여",
+                            text: "직장이 멀어서 집에 돌아오면 밤 10시가 넘어요. 운동할 시간이 없어요.",
+                            vi: "Vì nơi làm việc xa nên khi trở về nhà thì đã quá 10 giờ tối. Tôi không có thời gian để tập.",
+                            keywords: ["직장이 멀다", "밤 10시", "시간이 없다"],
+                            highlights: [
+                                { term: "멀어서", type: "이유 설명" }
+                            ]
+                        },
+                        {
+                            speaker: "남",
+                            text: "그래도 가장 좋은 방법은 운동입니다. 운동할 시간이 없다면 평소에 발목을 자주 움직여 주고 자기 전에는 누워서 다리를 위로 올리고 가볍게 스트레칭하세요. 다리가 심하게 아플 때는 뜨거운 수건으로 마사지하는 것도 좋습니다.",
+                            vi: "Dù vậy đi nữa thì cách tốt nhất vẫn là vận động. Nếu không có thời gian tập, chị hãy thường xuyên cử động cổ chân, và trước khi ngủ thì nằm xuống, đưa chân lên cao rồi giãn cơ nhẹ. Khi chân đau nhiều thì massage bằng khăn nóng cũng tốt.",
+                            keywords: ["가장 좋은 방법", "발목", "다리를 올리다", "스트레칭", "마사지"],
+                            highlights: [
+                                { term: "없다면", type: "조건 제시" },
+                                { term: "스트레칭하세요", type: "조언 표현" }
+                            ]
+                        },
+                        {
+                            speaker: "여",
+                            text: "감사합니다. 선생님, 굽이 높은 구두도 다리 건강에는 나쁘죠?",
+                            vi: "Cảm ơn thầy. Thưa thầy, giày gót cao cũng không tốt cho sức khỏe đôi chân, đúng không ạ?",
+                            keywords: ["구두", "굽이 높다", "다리 건강"],
+                            highlights: [
+                                { term: "나쁘죠?", type: "확인 질문" }
+                            ]
+                        },
+                        {
+                            speaker: "남",
+                            text: "물론입니다. 하지만 굽이 너무 낮은 구두도 안 좋습니다. 3센티미터 정도가 적당합니다.",
+                            vi: "Đúng vậy. Nhưng giày có gót quá thấp cũng không tốt. Khoảng 3 centimet là vừa phải.",
+                            keywords: ["물론입니다", "너무 낮다", "3센티미터"],
+                            highlights: [
+                                { term: "물론입니다", type: "강한 동의" },
+                                { term: "적당합니다", type: "기준 제시" }
+                            ]
+                        },
+                        {
+                            speaker: "여",
+                            text: "네, 잘 알겠습니다.",
+                            vi: "Vâng, tôi đã hiểu rõ rồi.",
+                            keywords: ["알겠습니다"]
+                        }
+                    ],
+                    dictogloss: {
+                        prompt: "상담자가 어떤 증상을 말했는지, 그리고 진행자가 어떤 순서로 조언했는지를 핵심어만 보고 다시 구성해 보세요.",
+                        promptVi: "Hãy nhìn từ khóa rồi viết lại xem người gọi điện đã nói những triệu chứng nào và người tư vấn đã đưa lời khuyên theo thứ tự ra sao.",
+                        keywords: ["백화점", "계속 서다", "퉁퉁 붓다", "밤 10시", "발목", "다리 올리기", "스트레칭", "마사지", "3센티미터"],
+                        modelSummary: "이민지는 백화점에서 오래 서서 일해서 다리가 붓고 무릎이 아프다. 직장이 멀어 집에 늦게 와서 운동할 시간도 없다. 진행자는 시간이 없더라도 발목을 자주 움직이고, 자기 전에 다리를 올린 뒤 스트레칭하라고 조언한다. 또 다리가 많이 아프면 뜨거운 수건으로 마사지하고, 구두 굽은 3센티미터 정도가 좋다고 말한다.",
+                        placeholder: "증상과 조언의 순서가 드러나도록 4~5문장으로 정리해 보세요.",
+                        placeholderVi: "Hãy tóm tắt thành 4 đến 5 câu, làm rõ thứ tự của triệu chứng và lời khuyên."
+                    },
+                    sequenceTask: {
+                        title: "조언 순서 배열",
+                        titleVi: "Sắp xếp thứ tự lời khuyên",
+                        guide: "진행자가 제안한 관리 방법을 대화에 나온 순서대로 배열해 보세요.",
+                        guideVi: "Hãy sắp xếp lại các cách chăm sóc mà người tư vấn đề nghị theo đúng thứ tự xuất hiện trong hội thoại.",
+                        checkLabel: "순서 확인",
+                        checkLabelVi: "Kiểm tra thứ tự",
+                        resetLabel: "처음 순서로",
+                        resetLabelVi: "Về thứ tự đầu",
+                        items: [
+                            { id: "massage", label: "뜨거운 수건으로 마사지하기", labelVi: "Massage bằng khăn nóng" },
+                            { id: "stretch", label: "가볍게 스트레칭하기", labelVi: "Giãn cơ nhẹ" },
+                            { id: "ankle", label: "발목을 자주 움직이기", labelVi: "Thường xuyên cử động cổ chân" },
+                            { id: "heels", label: "3센티미터 정도 구두 굽 고르기", labelVi: "Chọn gót giày khoảng 3 centimet" },
+                            { id: "legs-up", label: "자기 전에 다리를 위로 올리기", labelVi: "Trước khi ngủ đưa chân lên cao" }
+                        ],
+                        answerOrder: ["ankle", "legs-up", "stretch", "massage", "heels"]
+                    },
+                    notePrompts: {
+                        keywords: "증상, 이유, 조언, 신발 기준",
+                        details: "여자의 증상과 남자의 조언을 나누어 적기",
+                        questions: "왜 운동할 시간이 없는지, 어떤 조언이 가장 실천 가능한지 적기",
+                        cue: "백화점 / 밤 10시 / 발목 / 스트레칭 / 3센티미터",
+                        notes: "조언을 동사 중심으로 짧게 메모하기",
+                        summary: "다리 건강을 위한 핵심 조언을 두 문장으로 정리하기"
+                    },
+                    notePromptsVi: {
+                        keywords: "Triệu chứng, lý do, lời khuyên, tiêu chuẩn giày",
+                        details: "Ghi tách riêng triệu chứng của người nữ và lời khuyên của người nam",
+                        questions: "Ghi vì sao cô ấy không có thời gian tập và lời khuyên nào dễ thực hiện nhất",
+                        cue: "Bách hóa / 10 giờ tối / cổ chân / giãn cơ / 3 centimet",
+                        notes: "Ghi lời khuyên ngắn gọn xoay quanh động từ",
+                        summary: "Tóm tắt lời khuyên chính để giữ sức khỏe đôi chân bằng hai câu"
+                    },
+                    clozeSection: {
+                        title: "핵심 표현 빈칸",
+                        titleVi: "Điền vào chỗ trống với biểu hiện chính",
+                        guide: "증상의 원인과 조언 표현을 채워 보세요.",
+                        guideVi: "Hãy điền các biểu hiện nói về nguyên nhân của triệu chứng và lời khuyên."
+                    },
+                    clozeItems: [
+                        {
+                            sentence: "계속 서서 일을 _____ 몸이 안 좋아졌어요.",
+                            sentenceVi: "Vì cứ đứng làm việc liên tục _____ sức khỏe tôi xấu đi.",
+                            blank: "했더니",
+                            hint: "원인 뒤 결과",
+                            hintVi: "Cách nói sau nguyên nhân thì nói kết quả",
+                            explanation: "앞의 경험 때문에 뒤의 결과가 생겼다고 말할 때 씁니다.",
+                            explanationVi: "Dùng khi nói kết quả xuất hiện sau một trải nghiệm hay nguyên nhân ở vế trước."
+                        },
+                        {
+                            sentence: "운동할 시간이 없다_____ 평소에 발목을 자주 움직여 주세요.",
+                            sentenceVi: "Nếu không có thời gian tập _____ hãy thường xuyên cử động cổ chân.",
+                            blank: "면",
+                            hint: "-(으)면",
+                            hintVi: "Ngữ pháp điều kiện",
+                            explanation: "조건을 제시한 뒤 그 상황에서 가능한 조언을 이어서 말합니다.",
+                            explanationVi: "Sau khi đưa ra điều kiện, người nói nói tiếp lời khuyên có thể làm trong tình huống đó."
+                        },
+                        {
+                            sentence: "굽이 너무 낮은 구두도 안 좋습니다. 3센티미터 정도가 _____.",
+                            sentenceVi: "Giày có gót quá thấp cũng không tốt. Khoảng 3 centimet là _____.",
+                            blank: "적당합니다",
+                            hint: "기준 제시",
+                            hintVi: "Cách nói đưa ra mức độ vừa phải",
+                            explanation: "건강을 위해 어느 정도가 알맞은지 기준을 제시하는 표현입니다.",
+                            explanationVi: "Đây là cách nói đưa ra mức độ phù hợp cho sức khỏe."
+                        }
+                    ],
+                    speakingTask: {
+                        title: "말하기 출력",
+                        titleVi: "Đầu ra nói",
+                        prompt: "오래 서서 일하는 친구에게 다리 건강을 지키는 방법을 상담해 준다고 생각하고, 대화 속 조언을 차례대로 설명해 보세요.",
+                        promptVi: "Hãy đóng vai người tư vấn cho một người bạn phải đứng làm việc lâu và giải thích theo thứ tự các lời khuyên trong bài nghe.",
+                        placeholder: "예: 시간이 없더라도 평소에 발목을 자주 움직이고, 자기 전에는 다리를 올린 다음 스트레칭해야 해.",
+                        placeholderVi: "Ví dụ: Dù không có nhiều thời gian, bạn vẫn nên thường xuyên cử động cổ chân, trước khi ngủ thì đưa chân lên cao rồi giãn cơ.",
+                        tips: ["시간이 없다면", "평소에", "자기 전에는", "3센티미터 정도"],
+                        tipsVi: ["Nếu không có thời gian", "Bình thường", "Trước khi ngủ", "Khoảng 3 centimet"]
+                    },
+                    clarifications: [
+                        {
+                            ko: "다시 한 번 말씀해 주세요.",
+                            vi: "Xin nói lại một lần nữa.",
+                            use: "상담 조언 전체를 다시 듣고 싶을 때 쓰는 가장 기본 표현입니다.",
+                            useVi: "Đây là cách nói cơ bản nhất khi em muốn nghe lại toàn bộ lời khuyên."
+                        },
+                        {
+                            ko: "즉, 운동할 시간이 없으면 발목을 자주 움직이라는 말씀이죠?",
+                            vi: "Tức là nếu không có thời gian tập thì nên cử động cổ chân thường xuyên, đúng không ạ?",
+                            use: "핵심 조언을 한 문장으로 다시 확인할 때 좋습니다.",
+                            useVi: "Rất hợp khi em muốn xác nhận lại lời khuyên chính bằng một câu."
+                        },
+                        {
+                            ko: "다리를 위로 올린 다음에 스트레칭하면 되나요?",
+                            vi: "Sau khi đưa chân lên cao thì giãn cơ là được, đúng không ạ?",
+                            use: "행동 순서를 다시 확인할 때 자연스럽게 쓸 수 있습니다.",
+                            useVi: "Dùng tự nhiên khi em cần xác nhận lại thứ tự hành động."
+                        },
+                        {
+                            ko: "구두 굽은 3센티미터 정도가 적당하다는 말씀이군요.",
+                            vi: "Ý thầy là gót giày khoảng 3 centimet là phù hợp.",
+                            use: "기준 정보를 받아 적으며 되묻는 데 좋습니다.",
+                            useVi: "Phù hợp khi em muốn nhắc lại thông tin tiêu chuẩn trong lúc ghi chú."
+                        }
+                    ],
+                    clarificationPrompt: "증상과 조언을 다시 확인하는 표현을 골라 연습해 보세요.",
+                    clarificationPromptVi: "Hãy luyện các cách hỏi lại để xác nhận triệu chứng và lời khuyên.",
+                    clarifyScenario: "예: '즉, 다리가 아플 때는 뜨거운 수건으로 마사지하는 게 좋다는 말씀이죠?'처럼 조언을 확인하는 문장을 만들어 보세요.",
+                    clarifyScenarioVi: "Ví dụ: hãy tạo một câu xác nhận lời khuyên như 'Tức là khi chân đau thì nên massage bằng khăn nóng, đúng không ạ?'.",
+                    oralFeatures: [
+                        {
+                            term: "했더니",
+                            type: "원인 뒤 결과",
+                            typeVi: "Nói nguyên nhân rồi đến kết quả",
+                            note: "앞의 행동이나 상황 때문에 뒤의 결과가 생겼다는 흐름을 자연스럽게 보여 줍니다.",
+                            noteVi: "Cách nói này tự nhiên cho thấy kết quả xuất hiện vì hành động hay tình huống ở vế trước."
+                        },
+                        {
+                            term: "멀어서",
+                            type: "이유 설명",
+                            typeVi: "Giải thích lý do",
+                            note: "왜 운동할 시간이 없는지 이유를 짧고 분명하게 말하는 표현입니다.",
+                            noteVi: "Đây là cách nói ngắn gọn và rõ ràng để giải thích vì sao người nói không có thời gian tập."
+                        },
+                        {
+                            term: "없다면",
+                            type: "조건 제시",
+                            typeVi: "Nếu trong trường hợp đó",
+                            note: "현실적인 조건을 먼저 말하고, 그다음 가능한 대안을 제시합니다.",
+                            noteVi: "Người nói đưa ra điều kiện thực tế trước rồi mới đề xuất cách thay thế có thể làm được."
+                        },
+                        {
+                            term: "물론입니다",
+                            type: "강한 동의",
+                            typeVi: "Đồng ý rất rõ",
+                            note: "상대 질문에 확신 있게 답하면서 이어질 설명의 기준을 세워 줍니다.",
+                            noteVi: "Cách nói này vừa trả lời chắc chắn vừa mở ra tiêu chuẩn cho lời giải thích tiếp theo."
+                        },
+                        {
+                            term: "적당합니다",
+                            type: "기준 제시",
+                            typeVi: "Đưa ra mức độ phù hợp",
+                            note: "너무 높거나 낮지 않은 적절한 수준을 제안할 때 자주 쓰는 표현입니다.",
+                            noteVi: "Thường dùng khi đề xuất một mức độ vừa phải, không quá cao cũng không quá thấp."
+                        }
+                    ],
+                    tfSection: {
+                        title: "빠른 확인",
+                        titleVi: "Kiểm tra nhanh",
+                        guide: "객관식 퀴즈에 들어가기 전에 핵심 사실을 O/X로 먼저 확인해 보세요.",
+                        guideVi: "Trước khi vào bài trắc nghiệm, hãy kiểm tra nhanh các thông tin chính bằng O/X."
+                    },
+                    tfQuestions: [
+                        {
+                            statement: "여자는 백화점에서 판매 일을 한다.",
+                            statementVi: "Người nữ làm việc bán hàng ở bách hóa.",
+                            answer: true,
+                            explanation: "여자가 자기 일을 직접 설명합니다.",
+                            explanationVi: "Người nữ tự giới thiệu trực tiếp về công việc của mình."
+                        },
+                        {
+                            statement: "진행자는 굽이 없는 완전히 평평한 신발이 가장 좋다고 말한다.",
+                            statementVi: "Người tư vấn nói rằng giày dép hoàn toàn không có gót là tốt nhất.",
+                            answer: false,
+                            explanation: "진행자는 굽이 너무 낮은 구두도 안 좋고 3센티미터 정도가 적당하다고 말합니다.",
+                            explanationVi: "Người tư vấn nói giày gót quá thấp cũng không tốt, và khoảng 3 centimet mới là phù hợp."
+                        },
+                        {
+                            statement: "여자는 집에 돌아오면 밤 10시가 넘는다고 말한다.",
+                            statementVi: "Người nữ nói rằng khi trở về nhà thì đã quá 10 giờ tối.",
+                            answer: true,
+                            explanation: "직장이 멀어서 늦게 귀가한다고 설명합니다.",
+                            explanationVi: "Cô ấy giải thích rằng do nơi làm việc xa nên về nhà rất muộn."
+                        }
+                    ],
+                    quizTitle: "이해 점검",
+                    quizTitleVi: "Kiểm tra mức độ hiểu",
+                    quizGuideKo: "증상의 원인과 조언의 순서를 구분하면서 답해 보세요.",
+                    quizGuideVi: "Hãy trả lời trong khi phân biệt rõ nguyên nhân của triệu chứng và thứ tự của các lời khuyên.",
+                    questions: [
+                        {
+                            prompt: "여자는 어디에서 일하고 있습니까?",
+                            promptVi: "Người nữ đang làm việc ở đâu?",
+                            answer: "2",
+                            explanation: "여자는 백화점에서 판매 일을 하고 있다고 직접 말합니다.",
+                            explanationVi: "Người nữ nói rõ ràng rằng mình đang làm việc bán hàng ở bách hóa.",
+                            options: [
+                                { value: "1", label: "병원", labelVi: "Bệnh viện" },
+                                { value: "2", label: "백화점", labelVi: "Bách hóa" },
+                                { value: "3", label: "인천 시청", labelVi: "Ủy ban thành phố Incheon" },
+                                { value: "4", label: "구두 공장", labelVi: "Nhà máy giày" }
+                            ]
+                        },
+                        {
+                            prompt: "여자의 증상이 아닌 것은 무엇입니까?",
+                            promptVi: "Điều nào không phải là triệu chứng của người nữ?",
+                            answer: "4",
+                            explanation: "대화에서는 다리 붓기, 무릎 통증, 계단 오르기 어려움만 언급됩니다.",
+                            explanationVi: "Trong hội thoại chỉ nhắc đến chân bị sưng, đau gối và khó lên cầu thang.",
+                            options: [
+                                { value: "1", label: "다리가 퉁퉁 붓는다.", labelVi: "Chân sưng to." },
+                                { value: "2", label: "무릎이 아프다.", labelVi: "Đau gối." },
+                                { value: "3", label: "계단을 올라가기 힘들다.", labelVi: "Khó lên cầu thang." },
+                                { value: "4", label: "잠을 잘 잘 수 없다.", labelVi: "Không ngủ ngon được." }
+                            ]
+                        },
+                        {
+                            prompt: "여자가 운동을 규칙적으로 하지 못하는 이유는 무엇입니까?",
+                            promptVi: "Vì sao người nữ không thể tập thể dục đều đặn?",
+                            answer: "3",
+                            explanation: "직장이 멀어 집에 돌아오면 밤 10시가 넘어서 운동할 시간이 없다고 합니다.",
+                            explanationVi: "Cô ấy nói rằng nơi làm việc xa nên khi về nhà đã quá 10 giờ tối, vì thế không còn thời gian tập luyện.",
+                            options: [
+                                { value: "1", label: "운동을 싫어해서", labelVi: "Vì ghét vận động" },
+                                { value: "2", label: "집이 너무 멀어서", labelVi: "Vì nhà quá xa" },
+                                { value: "3", label: "퇴근 시간이 늦어서", labelVi: "Vì tan làm quá muộn" },
+                                { value: "4", label: "다리가 너무 아파서", labelVi: "Vì chân đau quá" }
+                            ]
+                        },
+                        {
+                            prompt: "남자가 권한 방법이 아닌 것은 무엇입니까?",
+                            promptVi: "Cách nào không phải là lời khuyên của người nam?",
+                            answer: "4",
+                            explanation: "진행자는 완전히 평평한 신발이 아니라 3센티미터 정도 굽이 적당하다고 말합니다.",
+                            explanationVi: "Người tư vấn không nói nên mang giày dép hoàn toàn bằng phẳng, mà nói gót khoảng 3 centimet mới phù hợp.",
+                            options: [
+                                { value: "1", label: "발목을 자주 움직인다.", labelVi: "Thường xuyên cử động cổ chân." },
+                                { value: "2", label: "자기 전에 다리를 올리고 스트레칭한다.", labelVi: "Trước khi ngủ đưa chân lên và giãn cơ." },
+                                { value: "3", label: "아플 때 뜨거운 수건으로 마사지한다.", labelVi: "Khi đau thì massage bằng khăn nóng." },
+                                { value: "4", label: "건강을 위해 굽이 없는 평평한 신발을 신는다.", labelVi: "Mang giày hoàn toàn bằng phẳng để tốt cho sức khỏe." }
+                            ]
+                        },
+                        {
+                            prompt: "다리 건강을 위해 가장 적당한 구두 굽의 높이는 얼마입니까?",
+                            promptVi: "Độ cao gót giày nào là phù hợp nhất cho sức khỏe đôi chân?",
+                            answer: "2",
+                            explanation: "남자는 3센티미터 정도가 적당하다고 분명하게 말합니다.",
+                            explanationVi: "Người nam nói rõ ràng rằng khoảng 3 centimet là vừa phải nhất.",
+                            options: [
+                                { value: "1", label: "1센티미터 정도", labelVi: "Khoảng 1 centimet" },
+                                { value: "2", label: "3센티미터 정도", labelVi: "Khoảng 3 centimet" },
+                                { value: "3", label: "5센티미터 정도", labelVi: "Khoảng 5 centimet" },
+                                { value: "4", label: "굽이 높을수록 좋다", labelVi: "Gót càng cao càng tốt" }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        };
+    </script>
+    <script src="../shared/listening-workbook.js?v=20260319-c12-listening"></script>
+    <script src="../shared/learning-enhancements.js?v=20260319-c12-listening"></script>
+</body>
+</html>

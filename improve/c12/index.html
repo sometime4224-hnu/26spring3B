@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12과 학습 활동</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { 
+            font-family: 'Noto Sans KR', sans-serif; 
+            background-color: #0f172a; 
+            color: #f8fafc; 
+            overflow-x: hidden; 
+        }
+        .glass-panel { 
+            background: rgba(30, 41, 59, 0.7); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px); 
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+        }
+        .glass-card {
+            background: linear-gradient(145deg, rgba(55, 65, 81, 0.4) 0%, rgba(31, 41, 55, 0.2) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+        .glass-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.3);
+            border-color: rgba(99, 102, 241, 0.5);
+            background: linear-gradient(145deg, rgba(79, 70, 229, 0.15) 0%, rgba(31, 41, 55, 0.4) 100%);
+        }
+        /* Background Glow Effects */
+        .glow-circle {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            animation: pulse-glow 10s ease-in-out infinite alternate;
+        }
+        .glow-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: rgba(79, 70, 229, 0.15); }
+        .glow-2 { bottom: -20%; right: -10%; width: 60vw; height: 60vw; background: rgba(56, 189, 248, 0.1); animation-delay: -5s; }
+        .glow-3 { top: 40%; left: 50%; transform: translate(-50%, -50%); width: 40vw; height: 40vw; background: rgba(139, 92, 246, 0.1); animation-duration: 15s; }
+
+        @keyframes pulse-glow {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.5; }
+            100% { transform: scale(1.1) translate(20px, 20px); opacity: 0.8; }
+        }
+        
+        .global-nav {
+            width: 100%;
+            background-color: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            height: 64px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .global-nav a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #818cf8;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            transition: color 0.2s;
+        }
+        .global-nav a:hover {
+            color: #a5b4fc;
+        }
+    </style>
+</head>
+<body class="min-h-screen relative selection:bg-indigo-500 selection:text-white flex flex-col items-center p-0 m-0">
+    <!-- Global Navigation -->
+    <nav class="global-nav w-full">
+        <a href="../index.html">
+            <i class="fa-solid fa-house"></i>
+            <span>메인으로</span>
+        </a>
+    </nav>
+    
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="glow-circle glow-1"></div>
+        <div class="glow-circle glow-2"></div>
+        <div class="glow-circle glow-3"></div>
+    </div>
+
+    <main class="relative z-10 w-full max-w-4xl glass-panel rounded-3xl p-8 sm:p-12 shadow-2xl border border-slate-700/50 flex flex-col mt-10 mb-10 mx-4">
+        <header class="text-center mb-12 relative">
+            <div class="inline-flex items-center justify-center p-3 sm:p-4 rounded-2xl bg-indigo-500/10 text-indigo-400 mb-6 shadow-[0_0_30px_rgba(99,102,241,0.2)] border border-indigo-500/20">
+                <i class="fa-solid fa-book-open-reader text-3xl sm:text-4xl"></i>
+            </div>
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-purple-400 mb-4 tracking-tight">
+                12과 학습 활동
+            </h1>
+            <p class="text-lg text-slate-400 font-light tracking-wide">12과 활동을 선택하세요</p>
+        </header>
+        
+        <div class="space-y-8">
+            <div class="mb-6"><h2 class="text-xl font-bold text-indigo-300 mb-4 pl-2 border-l-4 border-indigo-500">어휘</h2><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <a href="vocabulary.html" class="glass-card rounded-2xl p-6 flex flex-col items-start text-left group">
+                    
+                    <span class="text-lg font-bold text-slate-200 group-hover:text-white transition-colors">몸과 건강 상태</span>
+                </a>
+                <a href="vocabulary-context.html" class="glass-card rounded-2xl p-6 flex flex-col items-start text-left group">
+                    
+                    <span class="text-lg font-bold text-slate-200 group-hover:text-white transition-colors">주제 기반 문맥형 어휘</span>
+                </a></div></div>
+            <div class="mb-6"><h2 class="text-xl font-bold text-indigo-300 mb-4 pl-2 border-l-4 border-indigo-500">문법</h2><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <a href="grammar1.html" class="glass-card rounded-2xl p-6 flex flex-col items-start text-left group">
+                    
+                    <span class="text-lg font-bold text-slate-200 group-hover:text-white transition-colors">V-았더니/었더니</span>
+                </a>
+                <a href="grammar1-2.html" class="glass-card rounded-2xl p-6 flex flex-col items-start text-left group">
+                    
+                    <span class="text-lg font-bold text-slate-200 group-hover:text-white transition-colors">한국어 이유 문법</span>
+                </a>
+                <a href="grammar2.html" class="glass-card rounded-2xl p-6 flex flex-col items-start text-left group">
+                    
+                    <span class="text-lg font-bold text-slate-200 group-hover:text-white transition-colors">얼마나 -(으)ㄴ/는지 모르다</span>
+                </a>
+                <a href="grammar3.html" class="glass-card rounded-2xl p-6 flex flex-col items-start text-left group">
+                    
+                    <span class="text-lg font-bold text-slate-200 group-hover:text-white transition-colors">-(으)ㄴ/는 모양이다</span>
+                </a>
+                <a href="grammar4.html" class="glass-card rounded-2xl p-6 flex flex-col items-start text-left group">
+                    
+                    <span class="text-lg font-bold text-slate-200 group-hover:text-white transition-colors">-아야/어야</span>
+                </a></div></div>
+            <div class="mb-6"><h2 class="text-xl font-bold text-indigo-300 mb-4 pl-2 border-l-4 border-indigo-500">듣기</h2><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <a href="listen1.html" class="glass-card rounded-2xl p-6 flex flex-col items-start text-left group">
+                    
+                    <span class="text-lg font-bold text-slate-200 group-hover:text-white transition-colors">듣기 1 (Track 30)</span>
+                </a>
+                <a href="listen2.html" class="glass-card rounded-2xl p-6 flex flex-col items-start text-left group">
+                    
+                    <span class="text-lg font-bold text-slate-200 group-hover:text-white transition-colors">듣기 2 (Track 31)</span>
+                </a></div></div>
+            <div class="mb-6"><h2 class="text-xl font-bold text-indigo-300 mb-4 pl-2 border-l-4 border-indigo-500">말하기</h2><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <a href="speak.html" class="glass-card rounded-2xl p-6 flex flex-col items-start text-left group">
+                    
+                    <span class="text-lg font-bold text-slate-200 group-hover:text-white transition-colors">건강과 동작 말하기 연습</span>
+                </a>
+                <a href="conv1.html" class="glass-card rounded-2xl p-6 flex flex-col items-start text-left group">
+                    
+                    <span class="text-lg font-bold text-slate-200 group-hover:text-white transition-colors">친구에게 권유하기</span>
+                </a></div></div>
+        </div>
+    </main>
+</body>
+</html>

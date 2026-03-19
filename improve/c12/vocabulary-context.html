@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.getElementsByTagName(s)[0],dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NB76SV96');</script>
+    <!-- End Google Tag Manager -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12과 주제 기반 문맥형 어휘</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #163047;
+            --muted: #5f7082;
+            --panel: rgba(255,255,255,0.92);
+            --teal: #0f766e;
+            --teal-soft: #ccfbf1;
+            --orange: #c2410c;
+            --blue: #1d4ed8;
+            --blue-soft: #dbeafe;
+            --line: rgba(22,48,71,0.08);
+            --shadow: 0 18px 40px rgba(22,48,71,0.12);
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: "IBM Plex Sans KR", sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(255, 226, 168, 0.55), transparent 28%),
+                radial-gradient(circle at top right, rgba(45, 212, 191, 0.18), transparent 24%),
+                linear-gradient(180deg, #fff8e8 0%, #effcf7 100%);
+            min-height: 100vh;
+        }
+        body.modal-open { overflow: hidden; }
+        button { font: inherit; }
+        .c11-global-nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 16px;
+            background: rgba(255,255,255,0.92);
+            border-bottom: 1px solid #dbeafe;
+            backdrop-filter: blur(10px);
+        }
+        .c11-global-nav a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .c11-divider { color: #cbd5e1; font-weight: 700; }
+        main {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 24px 16px 72px;
+        }
+        .panel {
+            background: var(--panel);
+            border: 1px solid rgba(255,255,255,0.75);
+            border-radius: 28px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+        }
+        .hero, .context-grid, .detail-grid, .transfer-grid, .review-grid {
+            display: grid;
+            gap: 20px;
+        }
+        .hero { grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.9fr); padding: 24px; }
+        .context-grid { grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.85fr); margin-top: 20px; }
+        .detail-grid { grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); margin-top: 20px; }
+        .transfer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 20px; }
+        .review-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 20px; }
+        .pad { padding: 24px; }
+        .eyebrow {
+            margin: 0 0 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--teal);
+        }
+        h1, h2, h3, h4, p { margin-top: 0; }
+        h1 {
+            font-family: "Noto Serif KR", serif;
+            font-size: clamp(2rem, 3vw, 3rem);
+            line-height: 1.16;
+        }
+        h2 { font-size: 1.28rem; }
+        h3 { font-size: 1.02rem; }
+        p, ul { color: var(--muted); line-height: 1.75; }
+        ul { margin: 0; padding-left: 18px; }
+        li + li { margin-top: 6px; }
+        .row, .chips, .tabs, .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .chip, .badge, .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+        .badge { background: var(--teal-soft); color: var(--teal); }
+        .status { background: var(--blue-soft); color: var(--blue); }
+        .btn, .chip-btn, .tab-btn, .quiz-option {
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.95);
+            color: var(--ink);
+            cursor: pointer;
+            font-weight: 700;
+            border-radius: 999px;
+            padding: 10px 14px;
+            transition: transform 0.16s ease, box-shadow 0.16s ease;
+        }
+        .chip-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .chip-btn small {
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: rgba(29, 78, 216, 0.08);
+            color: var(--blue);
+            font-size: 0.74rem;
+        }
+        .chip-btn.active small {
+            background: rgba(255,255,255,0.18);
+            color: #fff;
+        }
+        .btn:hover, .chip-btn:hover, .tab-btn:hover, .quiz-option:hover { transform: translateY(-1px); }
+        .btn.active, .chip-btn.active, .tab-btn.active {
+            color: #fff;
+            border-color: transparent;
+            background: linear-gradient(135deg, var(--orange), #fb923c);
+            box-shadow: 0 10px 24px rgba(194, 65, 12, 0.2);
+        }
+        .primary {
+            border: 0;
+            color: #fff;
+            background: linear-gradient(135deg, var(--teal), #0891b2);
+        }
+        .card, .soft {
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            background: rgba(255,255,255,0.94);
+            padding: 18px;
+        }
+        .soft {
+            background: rgba(255, 237, 213, 0.68);
+            color: #7c2d12;
+        }
+        .context-word {
+            color: var(--ink);
+            background: rgba(15,118,110,0.12);
+            padding: 0 6px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        .answer-box {
+            display: none;
+            margin-top: 12px;
+            padding: 12px 14px;
+            border-radius: 18px;
+            background: rgba(204,251,241,0.72);
+            color: var(--ink);
+        }
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 2200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(22,48,71,0.48);
+            backdrop-filter: blur(6px);
+        }
+        .modal-backdrop.open { display: flex; }
+        .modal-panel {
+            width: min(920px, 100%);
+            max-height: min(88vh, 920px);
+            overflow: hidden;
+            border-radius: 28px;
+            background: rgba(255,255,255,0.98);
+            box-shadow: 0 24px 60px rgba(22,48,71,0.22);
+            border: 1px solid rgba(255,255,255,0.85);
+        }
+        .modal-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 22px 22px 14px;
+            border-bottom: 1px solid var(--line);
+            background: linear-gradient(180deg, rgba(219,234,254,0.72), rgba(255,255,255,0.94));
+        }
+        .modal-close {
+            flex: 0 0 auto;
+            min-width: 84px;
+        }
+        .modal-surface {
+            margin: 10px 0 0;
+            color: var(--teal);
+            font-weight: 700;
+        }
+        .modal-body {
+            overflow-y: auto;
+            max-height: calc(min(88vh, 920px) - 120px);
+            padding: 18px 22px 22px;
+        }
+        .modal-stack {
+            display: grid;
+            gap: 14px;
+        }
+        .modal-two {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+        .mini-chip {
+            display: inline-flex;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(15,118,110,0.08);
+            color: var(--teal);
+            font-weight: 700;
+        }
+        .tab-panel { display: none; margin-top: 16px; }
+        .tab-panel.active { display: block; }
+        .relation-grid, .bank-grid {
+            display: grid;
+            gap: 12px;
+        }
+        .relation-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .bank-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .relation-card, .word-row {
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            background: rgba(255,255,255,0.9);
+            padding: 14px;
+        }
+        .word-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 12px;
+        }
+        .word-row strong { color: var(--ink); }
+        .word-row span { text-align: right; color: var(--muted); }
+        .flashcard {
+            perspective: 1100px;
+            margin-top: 16px;
+        }
+        .flashcard-shell {
+            position: relative;
+            min-height: 260px;
+            border-radius: 24px;
+            cursor: pointer;
+        }
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            min-height: 260px;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flashcard-shell.flipped .flashcard-inner { transform: rotateY(180deg); }
+        .flashcard-face {
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 12px;
+            padding: 24px;
+        }
+        .flashcard-front { background: linear-gradient(135deg, #fff9eb, #ffffff); }
+        .flashcard-back {
+            background: linear-gradient(135deg, rgba(15,118,110,0.96), rgba(14,165,233,0.9));
+            color: #fff;
+            transform: rotateY(180deg);
+        }
+        .flashcard-face h3 { font-size: clamp(1.8rem, 2.2vw, 2.4rem); margin-bottom: 0; }
+        .flashcard-back p { color: rgba(255,255,255,0.92); }
+        .quiz-question {
+            padding: 16px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(15,118,110,0.08), rgba(255,255,255,0.96));
+            margin-top: 16px;
+        }
+        .quiz-options {
+            display: grid;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        .quiz-option {
+            width: 100%;
+            text-align: left;
+            padding: 14px 16px;
+        }
+        .quiz-option.correct {
+            background: rgba(204,251,241,0.9);
+            border-color: rgba(15,118,110,0.4);
+            color: #115e59;
+        }
+        .quiz-option.wrong {
+            background: rgba(254,226,226,0.9);
+            border-color: rgba(220,38,38,0.35);
+            color: #991b1b;
+        }
+        .quiz-feedback { margin-top: 12px; min-height: 24px; font-weight: 700; }
+        .quiz-feedback.correct { color: #0f766e; }
+        .quiz-feedback.wrong { color: #b91c1c; }
+        .saved-score {
+            margin-top: 14px;
+            padding: 12px 14px;
+            border-radius: 18px;
+            background: rgba(237,233,254,0.7);
+            color: #4c1d95;
+        }
+        @media (max-width: 1080px) {
+            .hero, .context-grid, .detail-grid, .transfer-grid, .review-grid, .bank-grid, .relation-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 720px) {
+            main { padding: 16px 12px 56px; }
+            .hero, .pad { padding: 18px; }
+            .modal-backdrop { padding: 12px; }
+            .modal-head, .modal-body { padding-left: 16px; padding-right: 16px; }
+            .modal-two { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="c11-global-nav" aria-label="상단 이동">
+        <a href="../index.html">메인</a>
+        <span class="c11-divider">|</span>
+        <a href="index.html">12과 목록</a>
+    </nav>
+
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NB76SV96"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <main>
+        <section class="panel hero">
+            <div>
+                <p class="eyebrow">Context First Vocabulary</p>
+                <h1>12과 어휘를 몸과 건강 상태 중심의 문맥형 페이지로 정리했습니다.</h1>
+                <p>이 페이지는 먼저 운동 전후의 짧은 상황을 읽고, 그다음에 몸 상태 표현, 증상, 회복 표현, 스트레칭 동작을 뜻과 예문으로 확인하게 구성했습니다. 단어 카드보다 먼저 문맥에서 느낌을 잡고, 마지막에 복습 카드와 회상 퀴즈로 다시 떠올리도록 만들었습니다.</p>
+                <div class="row">
+                    <span class="badge">건강 · 운동 주제</span>
+                    <span class="badge">상태 표현 + 동작 표현</span>
+                    <span class="badge">문맥 → 사용 → 복습</span>
+                </div>
+                <div class="row" style="margin-top:16px;">
+                    <button class="btn active lang-btn" type="button" data-lang="korean">한국어 설명</button>
+                    <button class="btn lang-btn" type="button" data-lang="vietnamese">베트남어</button>
+                    <button class="btn lang-btn" type="button" data-lang="japanese">일본어</button>
+                    <button class="btn lang-btn" type="button" data-lang="chinese">중국어</button>
+                </div>
+            </div>
+            <div class="card">
+                <h2>학습 흐름</h2>
+                <ul>
+                    <li>운동 전후의 짧은 문맥에서 몸 상태와 동작을 먼저 만납니다.</li>
+                    <li>아래 패널에서 뜻, 같이 쓰는 말, 조사, 비슷한 형태를 확인합니다.</li>
+                    <li>말하기·쓰기 질문으로 내 몸 상태를 직접 설명해 봅니다.</li>
+                    <li>맨 아래 복습 카드와 퀴즈로 회상합니다.</li>
+                </ul>
+                <div class="soft">동작 표현은 조사까지 같이 보고, 상태 표현은 반대말과 함께 기억하면 더 오래 남습니다.</div>
+            </div>
+        </section>
+
+        <section class="context-grid">
+            <div class="panel pad">
+                <p class="eyebrow">Step 1</p>
+                <h2>문맥으로 먼저 만나기</h2>
+                <p>색이 들어간 말을 누르면 기본형, 뜻, 예문, 같이 쓰는 말을 팝업으로 바로 볼 수 있습니다.</p>
+                <div class="card">
+                    <h3>상황 A. 운동 전에 몸 풀기</h3>
+                    <p>
+                        유나 씨는 운동을 시작하기 전에 먼저 <span class="context-word" data-focus="(손을 허리에) 대다">손을 허리에 대고</span>
+                        <span class="context-word" data-focus="(목을) 돌리다">목을 천천히 돌립니다</span>.
+                        그다음에는 <span class="context-word" data-focus="(팔을) 뻗다">팔을 길게 뻗고</span>,
+                        <span class="context-word" data-focus="(옆구리를) 굽히다">옆구리를 굽히며</span>,
+                        <span class="context-word" data-focus="(가슴을) 펴다">가슴을 펴서</span> 호흡을 고릅니다.
+                        마지막에는 <span class="context-word" data-focus="(몸을) 젖히다">몸을 조금 젖히고</span>,
+                        <span class="context-word" data-focus="(다리를) 벌리다">다리를 벌린 뒤</span>
+                        <span class="context-word" data-focus="(발뒤꿈치를) 들다">발뒤꿈치를 들며</span> 균형을 잡습니다.
+                        코치는 이렇게 해야 <span class="context-word" data-focus="자세가 좋다/나쁘다">자세가 더 좋아지고</span>
+                        몸에 무리가 덜 간다고 말합니다.
+                    </p>
+                </div>
+                <div class="card" style="margin-top:14px;">
+                    <h3>상황 B. 운동 후 몸 상태 말하기</h3>
+                    <p>
+                        처음 운동을 시작했을 때 유나 씨는 조금만 뛰어도 <span class="context-word" data-focus="숨이 차다">숨이 찼고</span>,
+                        금방 <span class="context-word" data-focus="땀이 나다">땀이 났으며</span>, 다리에 <span class="context-word" data-focus="쥐가 나다">쥐가 나는</span> 날도 있었습니다.
+                        그래서 운동이 끝나면 바로 <span class="context-word" data-focus="지치다">지쳤고</span>
+                        <span class="context-word" data-focus="몸이 무겁다/가볍다">몸이 무겁다</span>고 느꼈습니다.
+                        하지만 꾸준히 하다 보니 예전보다 <span class="context-word" data-focus="힘이 세다/약하다">힘이 세졌고</span>,
+                        운동 뒤에는 오히려 <span class="context-word" data-focus="기분이 상쾌하다">기분이 상쾌해지고</span>
+                        <span class="context-word" data-focus="기운이 나다">기운도 납니다</span>.
+                        최근에는 <span class="context-word" data-focus="몸이 좋아지다">몸이 좋아졌다는</span> 말을 자주 듣고,
+                        팔과 다리에도 조금씩 <span class="context-word" data-focus="근육이 생기다">근육이 생기고</span> 있습니다.
+                        유나 씨는 식습관도 함께 조절해서 예전보다 <span class="context-word" data-focus="살이 찌다/빠지다">살이 조금 빠졌다</span>고 말합니다.
+                    </p>
+                </div>
+                <div class="card" style="margin-top:14px;">
+                    <h3>뜻 생각하기</h3>
+                    <ul>
+                        <li>코치는 왜 운동 전에 여러 동작을 천천히 하라고 했을까요?</li>
+                        <li>유나 씨는 운동을 시작한 뒤 어떤 몸 상태 변화를 느꼈을까요?</li>
+                        <li>문맥에서 반대 의미로 함께 보면 좋은 표현은 무엇일까요?</li>
+                    </ul>
+                    <button class="btn reveal-btn" type="button" data-answer="운동 전에 몸을 풀면 자세가 더 안정되고 몸에 갑작스러운 무리가 덜 갑니다. 유나 씨는 처음에는 숨이 차고 쉽게 지쳤지만, 꾸준히 운동한 뒤에는 힘이 세지고 몸이 좋아졌으며 기분도 상쾌해졌습니다. 살이 찌다/빠지다, 힘이 세다/약하다, 자세가 좋다/나쁘다, 몸이 무겁다/가볍다처럼 반대 표현을 함께 보면 뜻 차이를 더 잘 기억할 수 있습니다.">정답 보기</button>
+                    <div class="answer-box"></div>
+                </div>
+            </div>
+
+            <aside class="panel pad">
+                <p class="eyebrow">Visible Strategy</p>
+                <h2>전략 버튼</h2>
+                <div class="row" id="strategy-row"></div>
+                <div class="card" id="strategy-box" style="margin-top:14px;"></div>
+                <div class="soft">동작은 조사까지 같이 보세요: 목을 돌리다, 손을 허리에 대다, 발뒤꿈치를 들다.</div>
+            </aside>
+        </section>
+
+        <section class="panel pad" style="margin-top:20px;">
+            <p class="eyebrow">Step 2</p>
+            <h2>중요한 말 더 보기</h2>
+            <p>아래 말은 뜻, 같이 쓰는 말, 비슷한 형태, 예문을 한 번에 볼 수 있습니다.</p>
+            <div class="row" id="focus-filters"></div>
+            <div class="chips" id="focus-chips" style="margin-top:14px;"></div>
+        </section>
+
+        <section class="detail-grid">
+            <div class="panel pad">
+                <span class="status" id="detail-status"></span>
+                <h2 id="detail-word" style="margin-top:12px;"></h2>
+                <p id="detail-translation" style="color:var(--orange); font-weight:700; margin-bottom:8px;"></p>
+                <p id="detail-definition"></p>
+
+                <div class="card" style="margin-top:14px;">
+                    <h3>연어</h3>
+                    <div class="chips" id="detail-collocations"></div>
+                </div>
+
+                <div class="card" style="margin-top:14px;">
+                    <h3>자주 쓰는 문장 · 조사</h3>
+                    <ul id="detail-patterns"></ul>
+                    <ul id="detail-particles" style="margin-top:10px;"></ul>
+                </div>
+
+                <div class="card" style="margin-top:14px;">
+                    <h3>예문 미리 보기</h3>
+                    <div id="detail-preview"></div>
+                    <div class="controls" style="margin-top:14px;">
+                        <button class="btn" type="button" id="preview-toggle">예문 더 보기</button>
+                        <button class="btn" type="button" id="jump-review">복습 카드로 보내기</button>
+                    </div>
+                </div>
+
+                <div class="soft" id="detail-strategy"></div>
+            </div>
+
+            <div class="panel pad">
+                <div class="tabs" id="detail-tabs"></div>
+                <div class="tab-panel active" data-tab="network">
+                    <div class="relation-grid" id="network-grid"></div>
+                </div>
+                <div class="tab-panel" data-tab="form">
+                    <div class="card">
+                        <h3>비슷한 형태</h3>
+                        <ul id="form-list"></ul>
+                    </div>
+                    <div class="card" style="margin-top:14px;">
+                        <h3>뜻 넓히기</h3>
+                        <ul id="extension-list"></ul>
+                    </div>
+                </div>
+                <div class="tab-panel" data-tab="examples">
+                    <div class="card">
+                        <h3>예문</h3>
+                        <ul id="example-list"></ul>
+                        <div class="soft" id="frame-box"></div>
+                    </div>
+                    <div class="card" style="margin-top:14px;">
+                        <h3>말하기·쓰기 질문</h3>
+                        <p id="prompt-box"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel pad" style="margin-top:20px;">
+            <p class="eyebrow">Theme Bank</p>
+            <h2>전체 어휘 20개를 주제별로 보기</h2>
+            <p>같은 범주의 말을 한곳에 모았습니다. 언어 버튼을 바꾸면 뜻도 같이 바뀝니다.</p>
+            <div class="bank-grid" id="full-bank"></div>
+        </section>
+
+        <section class="transfer-grid">
+            <div class="panel card">
+                <p class="eyebrow">Transfer</p>
+                <h2>말하기</h2>
+                <ul>
+                    <li>운동 전과 후의 몸 상태를 두 문장으로 비교해 보세요.</li>
+                    <li>숨이 차다, 지치다, 기분이 상쾌하다 중 지금 내 상태에 맞는 말을 골라 말해 보세요.</li>
+                </ul>
+            </div>
+            <div class="panel card">
+                <p class="eyebrow">Transfer</p>
+                <h2>자기 관리 쓰기</h2>
+                <ul>
+                    <li>몸이 좋아지기 위해 하고 있는 습관을 세 문장으로 써 보세요.</li>
+                    <li>살이 찌다/빠지다, 힘이 세다/약하다를 넣어 내 몸 변화를 짧게 정리해 보세요.</li>
+                </ul>
+            </div>
+            <div class="panel card">
+                <p class="eyebrow">Transfer</p>
+                <h2>조사 점검</h2>
+                <ul>
+                    <li>목을 돌리다 / 팔을 뻗다</li>
+                    <li>손을 허리에 대다 / 발뒤꿈치를 들다</li>
+                    <li>숨이 차다 / 땀이 나다 / 쥐가 나다</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="review-grid">
+            <section class="panel pad">
+                <p class="eyebrow">Step 3</p>
+                <h2>복습 카드</h2>
+                <p>본 학습이 끝난 뒤에만 카드형으로 빠르게 회상하세요. 현재 언어 설정이 그대로 반영됩니다.</p>
+                <div class="card">
+                    <div class="controls">
+                        <span class="status" id="review-progress"></span>
+                        <button class="btn" type="button" id="review-shuffle">섞기</button>
+                        <button class="btn" type="button" id="review-reset">처음으로</button>
+                    </div>
+                    <div class="flashcard">
+                        <div class="flashcard-shell" id="flashcard-shell" tabindex="0" role="button" aria-label="복습 카드 뒤집기">
+                            <div class="flashcard-inner">
+                                <div class="flashcard-face flashcard-front">
+                                    <span class="status" id="review-front-category"></span>
+                                    <h3 id="review-front-word"></h3>
+                                    <p id="review-front-hint"></p>
+                                </div>
+                                <div class="flashcard-face flashcard-back">
+                                    <span class="status" id="review-back-category" style="background:rgba(255,255,255,0.18); color:#fff;"></span>
+                                    <h3 id="review-back-word"></h3>
+                                    <p id="review-back-meaning"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="controls" style="margin-top:16px;">
+                        <button class="btn" type="button" id="review-prev">이전</button>
+                        <button class="btn" type="button" id="review-flip">뒤집기</button>
+                        <button class="btn primary" type="button" id="review-next">다음</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel pad">
+                <p class="eyebrow">Recall Quiz</p>
+                <h2>회상 퀴즈</h2>
+                <p>이 퀴즈는 맨 마지막 복습용입니다. 지금 고른 언어로 뜻이나 설명을 확인할 수 있습니다.</p>
+                <div class="card">
+                    <div class="controls">
+                        <span class="status" id="quiz-progress"></span>
+                        <button class="btn" type="button" id="quiz-restart">새 퀴즈</button>
+                    </div>
+                    <div class="quiz-question">
+                        <h3 id="quiz-word"></h3>
+                        <p id="quiz-guide"></p>
+                        <div class="quiz-options" id="quiz-options"></div>
+                        <div class="quiz-feedback" id="quiz-feedback" aria-live="polite"></div>
+                    </div>
+                    <div class="controls" style="margin-top:16px;">
+                        <button class="btn primary" type="button" id="quiz-next" style="display:none;">다음 문제</button>
+                    </div>
+                    <div class="saved-score" id="saved-score"></div>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <div class="modal-backdrop" id="context-modal" hidden>
+        <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="context-modal-word">
+            <div class="modal-head">
+                <div>
+                    <span class="status" id="context-modal-status"></span>
+                    <h2 id="context-modal-word" style="margin:12px 0 0;"></h2>
+                    <p class="modal-surface" id="context-modal-surface"></p>
+                    <p id="context-modal-translation" style="color:var(--orange); font-weight:700; margin-bottom:8px;"></p>
+                    <p id="context-modal-definition"></p>
+                </div>
+                <button class="btn modal-close" type="button" id="context-modal-close">닫기</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-stack">
+                    <div class="card">
+                        <h3>연어</h3>
+                        <div class="chips" id="context-modal-collocations"></div>
+                    </div>
+                    <div class="card">
+                        <h3>자주 쓰는 문장 · 조사</h3>
+                        <ul id="context-modal-patterns"></ul>
+                        <ul id="context-modal-particles" style="margin-top:10px;"></ul>
+                    </div>
+                    <div class="relation-grid" id="context-modal-network"></div>
+                    <div class="modal-two">
+                        <div class="card">
+                            <h3>비슷한 형태</h3>
+                            <ul id="context-modal-forms"></ul>
+                        </div>
+                        <div class="card">
+                            <h3>뜻 넓히기</h3>
+                            <ul id="context-modal-extension"></ul>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>예문</h3>
+                        <ul id="context-modal-examples"></ul>
+                        <div class="soft" id="context-modal-frame" style="margin-top:14px;"></div>
+                    </div>
+                    <div class="card">
+                        <h3>말하기·쓰기 질문</h3>
+                        <p id="context-modal-prompt"></p>
+                    </div>
+                    <div class="soft" id="context-modal-strategy"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const strategies = {
+                cluster: {
+                    label: "상태와 동작 묶기",
+                    text: "숨이 차다, 지치다 같은 상태 표현과 목을 돌리다, 팔을 뻗다 같은 동작 표현을 한 흐름으로 보면 운동 장면이 더 잘 떠오릅니다."
+                },
+                contrast: {
+                    label: "반대 표현 함께 보기",
+                    text: "살이 찌다/빠지다, 힘이 세다/약하다, 자세가 좋다/나쁘다처럼 반대 의미를 같이 보면 차이가 더 선명해집니다."
+                },
+                sentence: {
+                    label: "내 몸 상태 문장 만들기",
+                    text: "오늘은 몸이 무겁다, 운동 뒤에는 기운이 난다처럼 내 상태를 말하는 짧은 대표 문장을 만들어 자주 말해 보세요."
+                },
+                particle: {
+                    label: "조사 확인하기",
+                    text: "동작 표현은 조사까지 같이 외워야 문장이 됩니다. 목을 돌리다, 손을 허리에 대다, 발뒤꿈치를 들다처럼 통째로 보세요."
+                }
+            };
+            const categoryMeta = {
+                state: "몸 상태 변화",
+                symptom: "증상과 느낌",
+                recovery: "회복과 운동 효과",
+                action: "스트레칭 동작"
+            };
+            const languageLabel = {
+                korean: "한국어 설명",
+                vietnamese: "베트남어",
+                japanese: "일본어",
+                chinese: "중국어"
+            };
+            const allWords = [
+                { word: "살이 찌다/빠지다", category: "state", tier: "핵심", ko: "체중이 늘거나 줄다.", vi: "tăng cân / giảm cân", ja: "太る/痩せる", zh: "长胖 / 变瘦" },
+                { word: "힘이 세다/약하다", category: "state", tier: "핵심", ko: "몸의 힘이 강하거나 약하다.", vi: "mạnh / yếu", ja: "力が強い/弱い", zh: "力气大 / 力气小" },
+                { word: "자세가 좋다/나쁘다", category: "state", tier: "핵심", ko: "몸의 모양과 태도가 바르거나 바르지 않다.", vi: "tư thế tốt / xấu", ja: "姿勢が良い/悪い", zh: "姿势好 / 不好" },
+                { word: "몸이 무겁다/가볍다", category: "state", tier: "확장", ko: "몸이 둔하고 피곤하거나 상쾌하고 가볍다.", vi: "cơ thể nặng nề / nhẹ nhõm", ja: "体が重い/軽い", zh: "身体沉重 / 轻快" },
+                { word: "숨이 차다", category: "symptom", tier: "핵심", ko: "호흡이 가쁘고 힘들다.", vi: "hụt hơi, khó thở", ja: "息が切れる", zh: "喘气" },
+                { word: "땀이 나다", category: "symptom", tier: "핵심", ko: "피부에서 땀이 나오다.", vi: "ra mồ hôi", ja: "汗が出る", zh: "出汗" },
+                { word: "쥐가 나다", category: "symptom", tier: "확장", ko: "근육이 갑자기 수축해 아프다.", vi: "bị chuột rút", ja: "足がつる", zh: "抽筋" },
+                { word: "지치다", category: "symptom", tier: "핵심", ko: "힘이 빠져 피곤해지다.", vi: "mệt mỏi, kiệt sức", ja: "疲れる", zh: "累" },
+                { word: "기분이 상쾌하다", category: "recovery", tier: "핵심", ko: "느낌이 시원하고 개운하다.", vi: "tâm trạng sảng khoái", ja: "気分が爽快だ", zh: "心情舒畅" },
+                { word: "기운이 나다", category: "recovery", tier: "핵심", ko: "몸에 다시 힘이 생기다.", vi: "lấy lại sức, thấy khỏe hơn", ja: "元気が出る", zh: "有精神" },
+                { word: "몸이 좋아지다", category: "recovery", tier: "핵심", ko: "건강 상태가 회복되다.", vi: "sức khỏe tốt lên", ja: "体調が良くなる", zh: "身体变好" },
+                { word: "근육이 생기다", category: "recovery", tier: "확장", ko: "운동으로 근육이 발달하다.", vi: "có cơ bắp, lên cơ", ja: "筋肉がつく", zh: "长肌肉" },
+                { word: "(목을) 돌리다", category: "action", tier: "핵심", ko: "목을 원을 그리며 움직이다.", vi: "xoay cổ", ja: "首を回す", zh: "转动(脖子)" },
+                { word: "(옆구리를) 굽히다", category: "action", tier: "핵심", ko: "몸의 옆부분을 구부리다.", vi: "gập người sang bên", ja: "脇腹を曲げる", zh: "弯(腰侧)" },
+                { word: "(가슴을) 펴다", category: "action", tier: "핵심", ko: "가슴을 넓게 벌리다.", vi: "ưỡn ngực", ja: "胸を張る", zh: "挺(胸)" },
+                { word: "(몸을) 젖히다", category: "action", tier: "확장", ko: "몸을 뒤로 기울이다.", vi: "ngả người ra sau", ja: "体を反らす", zh: "后仰(身体)" },
+                { word: "(손을 허리에) 대다", category: "action", tier: "확장", ko: "손을 허리 부분에 올려놓다.", vi: "chống tay lên hông", ja: "腰に手を当てる", zh: "手放在腰上" },
+                { word: "(팔을) 뻗다", category: "action", tier: "핵심", ko: "팔을 길게 늘이다.", vi: "duỗi tay", ja: "腕を伸ばす", zh: "伸(胳膊)" },
+                { word: "(다리를) 벌리다", category: "action", tier: "핵심", ko: "두 다리 사이를 넓히다.", vi: "dạng chân", ja: "足を開く", zh: "岔开(腿)" },
+                { word: "(발뒤꿈치를) 들다", category: "action", tier: "확장", ko: "발의 뒷부분을 위로 올리다.", vi: "nhấc gót chân lên", ja: "かかとを上げる", zh: "踮起脚跟" }
+            ];
+            const wordMeta = {
+                "살이 찌다/빠지다": { network: { nearby: ["체중이 늘다", "체중이 줄다"], contrast: ["몸무게가 그대로다"], group: ["몸 상태 변화"], related: ["운동", "식사", "체중 관리"] }, collocations: ["살이 찌다", "살이 빠지다", "체중이 변하다"], examples: ["요즘 야식을 줄여서 살이 조금 빠졌어요.", "운동을 쉬면 금방 살이 찌는 편이에요."], frame: "저는 [이유] 때문에 최근에 살이 [찌었어요/빠졌어요].", prompt: "살이 찌거나 빠졌을 때 무엇을 가장 먼저 조절하는지 말해 보세요.", strategy: "식사, 운동, 체중이라는 말과 함께 묶어 기억하세요." },
+                "힘이 세다/약하다": { network: { nearby: ["기운이 있다", "버틸 수 있다"], contrast: ["쉽게 지치다"], group: ["몸 능력"], related: ["운동", "근육", "체력"] }, collocations: ["힘이 세다", "힘이 약하다", "힘을 기르다"], examples: ["계단을 오를 때 다리 힘이 약하다고 느꼈어요.", "계속 운동하니까 전보다 팔 힘이 세졌어요."], frame: "저는 [부위] 힘이 [세요/약해요].", prompt: "어떤 운동이 힘을 기르는 데 도움이 되는지 말해 보세요.", strategy: "힘이 세다와 기운이 나다를 비교하며 외우면 더 정확해집니다." },
+                "자세가 좋다/나쁘다": { network: { nearby: ["바르게 서다", "반듯하다"], contrast: ["구부정하다"], group: ["몸 사용 습관"], related: ["허리", "목", "스트레칭"] }, collocations: ["자세가 좋다", "자세가 나쁘다", "자세를 고치다"], examples: ["오래 앉아 있으면 자세가 나빠지기 쉬워요.", "스트레칭을 하면 자세가 조금씩 좋아져요."], frame: "저는 [상황]일 때 자세가 [좋아요/나빠요].", prompt: "좋은 자세를 유지하려면 무엇을 조심해야 하는지 말해 보세요.", strategy: "목, 허리, 어깨와 같이 외우면 실제 장면이 잘 떠오릅니다." },
+                "몸이 무겁다/가볍다": { network: { nearby: ["몸이 개운하다", "몸이 피곤하다"], contrast: ["몸이 편안하다"], group: ["몸 느낌"], related: ["잠", "식사", "운동 후"] }, collocations: ["몸이 무겁다", "몸이 가볍다", "몸이 개운하다"], examples: ["잠을 못 자면 아침에 몸이 무겁게 느껴져요.", "샤워하고 스트레칭을 하면 몸이 가벼워져요."], frame: "오늘은 [이유] 때문에 몸이 [무거워요/가벼워요].", prompt: "몸이 무겁게 느껴질 때 먼저 하는 일을 말해 보세요.", strategy: "지치다, 기운이 나다와 연결해서 흐름으로 기억하세요." },
+                "숨이 차다": { network: { nearby: ["호흡이 가쁘다", "헉헉거리다"], contrast: ["숨이 고르다"], group: ["운동 중 증상"], related: ["달리기", "계단", "휴식"] }, collocations: ["숨이 차다", "숨을 고르다", "숨이 찰 정도로 뛰다"], examples: ["오랜만에 뛰었더니 금방 숨이 찼어요.", "숨이 차면 속도를 줄이고 호흡을 고르세요."], frame: "저는 [상황]에서 쉽게 숨이 차요.", prompt: "숨이 찰 때 어떻게 조절하는지 말해 보세요.", strategy: "달리기, 계단, 호흡과 함께 묶으면 기억이 쉽습니다." },
+                "땀이 나다": { network: { nearby: ["땀이 흐르다", "젖다"], contrast: ["땀이 마르다"], group: ["몸 반응"], related: ["운동", "더위", "체온"] }, collocations: ["땀이 나다", "땀이 많이 나다", "땀을 닦다"], examples: ["날씨가 더워서 가만히 있어도 땀이 났어요.", "운동을 조금만 해도 땀이 많이 나는 편입니다."], frame: "저는 [상황]에서 금방 땀이 나요.", prompt: "땀이 많이 날 때 꼭 챙기는 것을 말해 보세요.", strategy: "더위, 운동, 물이라는 말과 함께 떠올리세요." },
+                "쥐가 나다": { network: { nearby: ["근육이 뭉치다", "다리가 당기다"], contrast: ["근육이 풀리다"], group: ["운동 중 통증"], related: ["종아리", "스트레칭", "수분"] }, collocations: ["쥐가 나다", "다리에 쥐가 나다", "쥐가 풀리다"], examples: ["준비 운동을 안 했더니 종아리에 쥐가 났어요.", "쥐가 나면 바로 멈추고 천천히 스트레칭해야 해요."], frame: "저는 [부위]에 쥐가 나면 바로 쉬어요.", prompt: "쥐가 나지 않게 하려면 무엇을 해야 하는지 말해 보세요.", strategy: "스트레칭, 수분, 종아리와 함께 기억하면 실제 상황이 선명합니다." },
+                "지치다": { network: { nearby: ["피곤하다", "힘들다"], contrast: ["기운이 나다"], group: ["컨디션 저하"], related: ["휴식", "잠", "일정"] }, collocations: ["쉽게 지치다", "금방 지치다", "지친 몸"], examples: ["잠을 못 자면 조금만 움직여도 지쳐요.", "예전에는 계단만 올라가도 금방 지쳤어요."], frame: "저는 [상황]이면 쉽게 지쳐요.", prompt: "지칠 때 가장 먼저 쉬는 방법을 말해 보세요.", strategy: "지치다와 기운이 나다를 한 쌍으로 보면 회복 흐름이 잡힙니다." },
+                "기분이 상쾌하다": { network: { nearby: ["개운하다", "산뜻하다"], contrast: ["답답하다"], group: ["운동 후 느낌"], related: ["아침", "샤워", "산책"] }, collocations: ["기분이 상쾌하다", "상쾌한 아침", "기분이 개운하다"], examples: ["아침에 가볍게 걷고 나니 기분이 상쾌했어요.", "창문을 열고 스트레칭하면 기분이 더 상쾌해져요."], frame: "저는 [활동] 뒤에 기분이 상쾌해져요.", prompt: "기분이 상쾌해지는 순간을 한 가지 말해 보세요.", strategy: "몸이 가볍다, 기운이 나다와 나란히 외우면 회복 표현이 잘 정리됩니다." },
+                "기운이 나다": { network: { nearby: ["힘이 생기다", "살아나다"], contrast: ["기운이 없다"], group: ["회복 표현"], related: ["잠", "식사", "휴식"] }, collocations: ["기운이 나다", "다시 기운이 나다", "기운을 차리다"], examples: ["따뜻한 국을 먹고 나니 기운이 났어요.", "잠깐 쉬었더니 다시 기운이 나서 걸을 수 있었어요."], frame: "저는 [방법]을 하면 다시 기운이 나요.", prompt: "기운이 날 때와 없을 때 차이를 말해 보세요.", strategy: "지치다와 반대로 비교하면 뜻이 더 오래 남습니다." },
+                "몸이 좋아지다": { network: { nearby: ["회복되다", "나아지다"], contrast: ["몸이 안 좋아지다"], group: ["건강 변화"], related: ["꾸준히", "운동", "습관"] }, collocations: ["몸이 좋아지다", "몸 상태가 좋아지다", "조금씩 좋아지다"], examples: ["매일 걷고 나서 몸이 조금씩 좋아졌어요.", "식습관을 바꾼 뒤 몸 상태가 더 좋아졌습니다."], frame: "저는 [습관] 덕분에 몸이 좋아졌어요.", prompt: "몸이 좋아졌다고 느낀 경험을 말해 보세요.", strategy: "꾸준히 하다, 회복되다와 함께 보면서 장기 변화를 떠올리세요." },
+                "근육이 생기다": { network: { nearby: ["근육이 붙다", "단단해지다"], contrast: ["근육이 빠지다"], group: ["운동 효과"], related: ["힘", "단백질", "반복 운동"] }, collocations: ["근육이 생기다", "팔에 근육이 생기다", "근육을 만들다"], examples: ["스쿼트를 꾸준히 하니까 다리에 근육이 생겼어요.", "처음에는 힘들었지만 팔에 근육이 조금씩 생기는 게 보여요."], frame: "저는 [운동]을 하면서 [부위]에 근육이 생기고 있어요.", prompt: "근육이 생기면 생활에서 어떤 점이 편해지는지 말해 보세요.", strategy: "힘이 세다와 이어서 보면 운동 효과를 더 잘 설명할 수 있습니다." },
+                "(목을) 돌리다": { network: { nearby: ["목 스트레칭을 하다", "고개를 천천히 움직이다"], contrast: ["목을 고정하다"], group: ["상체 준비 동작"], related: ["어깨", "호흡", "자세"] }, collocations: ["목을 돌리다", "천천히 목을 돌리다", "목을 크게 돌리다"], examples: ["오래 앉아 있었더니 먼저 목을 돌려야 했어요.", "운동 전에는 목을 천천히 돌리면서 호흡을 맞춰요."], frame: "저는 운동 전에 먼저 목을 [어떻게] 돌립니다.", prompt: "목을 돌릴 때 무엇을 조심해야 하는지 말해 보세요.", strategy: "목을, 천천히, 준비 운동과 같이 묶어 외우세요." },
+                "(옆구리를) 굽히다": { network: { nearby: ["옆으로 늘이다", "허리를 기울이다"], contrast: ["몸을 곧게 세우다"], group: ["옆선 스트레칭"], related: ["허리", "갈비뼈", "호흡"] }, collocations: ["옆구리를 굽히다", "천천히 옆구리를 굽히다", "양쪽 옆구리를 굽히다"], examples: ["허리가 뻣뻣하면 옆구리를 천천히 굽혀 보세요.", "양쪽 옆구리를 번갈아 굽히면 몸이 풀려요."], frame: "저는 [횟수]번 정도 옆구리를 굽혀요.", prompt: "옆구리를 굽히는 동작이 필요한 순간을 말해 보세요.", strategy: "좌우, 허리, 기울이다와 같이 보면 동작이 더 잘 남습니다." },
+                "(가슴을) 펴다": { network: { nearby: ["어깨를 펴다", "몸을 활짝 열다"], contrast: ["어깨를 웅크리다"], group: ["자세 교정 동작"], related: ["호흡", "등", "바른 자세"] }, collocations: ["가슴을 펴다", "크게 가슴을 펴다", "가슴을 펴고 서다"], examples: ["컴퓨터를 오래 본 뒤에는 가슴을 펴는 동작이 필요해요.", "가슴을 펴고 호흡하면 숨이 조금 편해집니다."], frame: "저는 [상황]일 때 가슴을 펴려고 해요.", prompt: "가슴을 펴면 몸에서 어떤 변화가 느껴지는지 말해 보세요.", strategy: "호흡, 자세, 어깨와 함께 묶으면 활용이 빨라집니다." },
+                "(몸을) 젖히다": { network: { nearby: ["뒤로 기대다", "허리를 펴다"], contrast: ["몸을 앞으로 숙이다"], group: ["상체 늘이기"], related: ["복부", "허리", "균형"] }, collocations: ["몸을 젖히다", "조금 몸을 젖히다", "뒤로 몸을 젖히다"], examples: ["허리가 아프면 몸을 너무 많이 젖히지 않는 게 좋아요.", "천천히 몸을 젖히며 앞쪽 근육을 늘여 보세요."], frame: "저는 [정도]만 몸을 젖혀서 스트레칭해요.", prompt: "몸을 젖힐 때 특히 조심해야 할 부위를 말해 보세요.", strategy: "뒤로, 허리, 천천히를 같이 떠올리면 안전한 느낌까지 연결됩니다." },
+                "(손을 허리에) 대다": { network: { nearby: ["손을 올리다", "허리를 짚다"], contrast: ["손을 내리다"], group: ["기본 준비 자세"], related: ["허리", "균형", "호흡"] }, collocations: ["손을 허리에 대다", "양손을 허리에 대다", "허리에 손을 얹다"], examples: ["코치는 먼저 손을 허리에 대고 자세를 바로잡으라고 했어요.", "양손을 허리에 대면 균형을 잡기 쉬워요."], frame: "저는 [동작] 전에 손을 허리에 대요.", prompt: "손을 허리에 대는 자세를 언제 많이 하는지 말해 보세요.", strategy: "손을, 허리에, 대다를 통째로 익혀야 자연스럽게 말할 수 있습니다." },
+                "(팔을) 뻗다": { network: { nearby: ["팔을 올리다", "팔을 길게 펴다"], contrast: ["팔을 접다"], group: ["상체 스트레칭"], related: ["어깨", "가슴", "균형"] }, collocations: ["팔을 뻗다", "양팔을 뻗다", "앞으로 팔을 뻗다"], examples: ["아침에 일어나면 먼저 팔을 크게 뻗어요.", "어깨가 굳었을 때는 양팔을 위로 뻗어 보세요."], frame: "저는 [방향]으로 팔을 뻗어 스트레칭합니다.", prompt: "팔을 뻗는 동작이 필요한 운동을 말해 보세요.", strategy: "팔을, 위로, 크게라는 말과 묶으면 입에서 바로 나옵니다." },
+                "(다리를) 벌리다": { network: { nearby: ["발 간격을 넓히다", "넓게 서다"], contrast: ["다리를 모으다"], group: ["하체 준비 동작"], related: ["균형", "허벅지", "무릎"] }, collocations: ["다리를 벌리다", "넓게 다리를 벌리다", "다리를 조금 벌리다"], examples: ["운동을 시작하기 전에 다리를 어깨너비로 벌리세요.", "다리를 조금 벌리면 균형 잡기가 쉬워요."], frame: "저는 [기준]만큼 다리를 벌리고 서요.", prompt: "다리를 벌리는 동작이 왜 중요한지 말해 보세요.", strategy: "어깨너비, 균형, 서다와 함께 보면 실제 자세가 떠오릅니다." },
+                "(발뒤꿈치를) 들다": { network: { nearby: ["까치발을 하다", "발끝으로 서다"], contrast: ["발뒤꿈치를 내리다"], group: ["균형 동작"], related: ["종아리", "균형", "발목"] }, collocations: ["발뒤꿈치를 들다", "천천히 발뒤꿈치를 들다", "발뒤꿈치를 들고 버티다"], examples: ["발뒤꿈치를 들고 5초 정도 버티면 종아리에 자극이 와요.", "균형 운동을 할 때는 천천히 발뒤꿈치를 들어야 해요."], frame: "저는 [횟수]번 발뒤꿈치를 들었다가 내려요.", prompt: "발뒤꿈치를 드는 동작이 어떤 부위에 도움이 되는지 말해 보세요.", strategy: "균형, 종아리, 천천히와 같이 떠올리면 동작이 훨씬 구체적으로 기억됩니다." }
+            };
+            function buildParticles(item, meta) {
+                if (item.category === "action") return meta.collocations.slice(0, 2);
+                return [item.word, meta.collocations[0]];
+            }
+            function buildForms(item) {
+                if (item.category === "action") return [item.word.replace(/[()]/g, ""), "스트레칭 표현", "동작 설명"];
+                return [item.word, categoryMeta[item.category], "몸 상태 표현"];
+            }
+            function buildExtension(item) {
+                if (item.category === "action") return [`기본 의미: ${item.ko}`, "확장 의미: 준비 운동이나 자세 설명에서 자주 쓴다"];
+                if (item.category === "recovery") return [`기본 의미: ${item.ko}`, "확장 의미: 운동 뒤 좋아진 상태를 말할 때 자주 쓴다"];
+                if (item.category === "symptom") return [`기본 의미: ${item.ko}`, "확장 의미: 몸이 보내는 신호를 설명할 때 자주 쓴다"];
+                return [`기본 의미: ${item.ko}`, "확장 의미: 몸의 변화를 비교할 때 자주 쓴다"];
+            }
+            const focusData = Object.fromEntries(
+                allWords.map((item) => {
+                    const meta = wordMeta[item.word];
+                    return [item.word, {
+                        ...item,
+                        ...meta,
+                        patterns: meta.collocations.slice(0, 2),
+                        particles: buildParticles(item, meta),
+                        forms: buildForms(item),
+                        extension: buildExtension(item)
+                    }];
+                })
+            );
+
+            let currentLang = "korean";
+            let currentCategory = "all";
+            let selectedWord = Object.keys(focusData)[0];
+            let activeTab = "network";
+            let previewExpanded = false;
+            let reviewDeck = [...allWords];
+            let reviewIndex = 0;
+            let quizQuestions = [];
+            let quizIndex = 0;
+            let quizScore = 0;
+            let quizLocked = false;
+            let popupWord = null;
+            let popupSurface = "";
+            let popupTrigger = null;
+
+            const langButtons = document.querySelectorAll(".lang-btn");
+            const focusFilters = document.getElementById("focus-filters");
+            const focusChips = document.getElementById("focus-chips");
+            const detailStatus = document.getElementById("detail-status");
+            const detailTranslation = document.getElementById("detail-translation");
+            const detailDefinition = document.getElementById("detail-definition");
+            const detailWord = document.getElementById("detail-word");
+            const detailCollocations = document.getElementById("detail-collocations");
+            const detailPatterns = document.getElementById("detail-patterns");
+            const detailParticles = document.getElementById("detail-particles");
+            const detailPreview = document.getElementById("detail-preview");
+            const detailStrategy = document.getElementById("detail-strategy");
+            const detailTabs = document.getElementById("detail-tabs");
+            const networkGrid = document.getElementById("network-grid");
+            const formList = document.getElementById("form-list");
+            const extensionList = document.getElementById("extension-list");
+            const exampleList = document.getElementById("example-list");
+            const frameBox = document.getElementById("frame-box");
+            const promptBox = document.getElementById("prompt-box");
+            const fullBank = document.getElementById("full-bank");
+            const strategyRow = document.getElementById("strategy-row");
+            const strategyBox = document.getElementById("strategy-box");
+            const reviewShell = document.getElementById("flashcard-shell");
+            const reviewProgress = document.getElementById("review-progress");
+            const reviewFrontCategory = document.getElementById("review-front-category");
+            const reviewFrontWord = document.getElementById("review-front-word");
+            const reviewFrontHint = document.getElementById("review-front-hint");
+            const reviewBackCategory = document.getElementById("review-back-category");
+            const reviewBackWord = document.getElementById("review-back-word");
+            const reviewBackMeaning = document.getElementById("review-back-meaning");
+            const quizProgress = document.getElementById("quiz-progress");
+            const quizWord = document.getElementById("quiz-word");
+            const quizGuide = document.getElementById("quiz-guide");
+            const quizOptions = document.getElementById("quiz-options");
+            const quizFeedback = document.getElementById("quiz-feedback");
+            const quizNext = document.getElementById("quiz-next");
+            const savedScore = document.getElementById("saved-score");
+            const contextModal = document.getElementById("context-modal");
+            const contextModalClose = document.getElementById("context-modal-close");
+            const contextModalStatus = document.getElementById("context-modal-status");
+            const contextModalWord = document.getElementById("context-modal-word");
+            const contextModalSurface = document.getElementById("context-modal-surface");
+            const contextModalTranslation = document.getElementById("context-modal-translation");
+            const contextModalDefinition = document.getElementById("context-modal-definition");
+            const contextModalCollocations = document.getElementById("context-modal-collocations");
+            const contextModalPatterns = document.getElementById("context-modal-patterns");
+            const contextModalParticles = document.getElementById("context-modal-particles");
+            const contextModalNetwork = document.getElementById("context-modal-network");
+            const contextModalForms = document.getElementById("context-modal-forms");
+            const contextModalExtension = document.getElementById("context-modal-extension");
+            const contextModalExamples = document.getElementById("context-modal-examples");
+            const contextModalFrame = document.getElementById("context-modal-frame");
+            const contextModalPrompt = document.getElementById("context-modal-prompt");
+            const contextModalStrategy = document.getElementById("context-modal-strategy");
+
+            function shuffle(array) {
+                const copy = [...array];
+                for (let i = copy.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [copy[i], copy[j]] = [copy[j], copy[i]];
+                }
+                return copy;
+            }
+
+            function getMeaning(item) {
+                if (currentLang === "korean") return item.ko;
+                if (currentLang === "japanese") return item.ja;
+                if (currentLang === "chinese") return item.zh;
+                return item.vi;
+            }
+
+            function getWordBundle(word) {
+                return {
+                    info: focusData[word],
+                    wordBase: allWords.find((item) => item.word === word)
+                };
+            }
+
+            function buildRelationCards(network) {
+                return [
+                    ["nearby", "가까운 말"],
+                    ["contrast", "대조 표현"],
+                    ["group", "큰 범주"],
+                    ["related", "관련어"]
+                ].map(([key, label]) => `
+                    <div class="relation-card">
+                        <h4>${label}</h4>
+                        <div class="chips">${network[key].map((item) => `<span class="mini-chip">${item}</span>`).join("")}</div>
+                    </div>
+                `).join("");
+            }
+
+            function renderContextModal() {
+                if (!popupWord) return;
+                const { info, wordBase } = getWordBundle(popupWord);
+                if (!info || !wordBase) return;
+                contextModalStatus.textContent = `${categoryMeta[info.category]} · ${info.tier}`;
+                contextModalWord.textContent = popupWord;
+                contextModalSurface.textContent = popupSurface && popupSurface !== popupWord
+                    ? `문맥 속 표현: ${popupSurface}`
+                    : "문맥 속 표현과 기본형이 같습니다.";
+                contextModalTranslation.textContent = getMeaning(wordBase);
+                contextModalDefinition.textContent = wordBase.ko;
+                contextModalCollocations.innerHTML = info.collocations.map((item) => `<span class="mini-chip">${item}</span>`).join("");
+                contextModalPatterns.innerHTML = info.patterns.map((item) => `<li>${item}</li>`).join("");
+                contextModalParticles.innerHTML = info.particles.map((item) => `<li>${item}</li>`).join("");
+                contextModalNetwork.innerHTML = buildRelationCards(info.network);
+                contextModalForms.innerHTML = info.forms.map((item) => `<li>${item}</li>`).join("");
+                contextModalExtension.innerHTML = info.extension.map((item) => `<li>${item}</li>`).join("");
+                contextModalExamples.innerHTML = info.examples.map((item) => `<li>${item}</li>`).join("");
+                contextModalFrame.textContent = `문장 틀: ${info.frame}`;
+                contextModalPrompt.textContent = info.prompt;
+                contextModalStrategy.textContent = info.strategy;
+            }
+
+            function openContextModal(word, surface, trigger) {
+                popupWord = word;
+                popupSurface = surface;
+                popupTrigger = trigger;
+                renderContextModal();
+                contextModal.hidden = false;
+                contextModal.classList.add("open");
+                document.body.classList.add("modal-open");
+                contextModalClose.focus();
+            }
+
+            function closeContextModal() {
+                contextModal.classList.remove("open");
+                contextModal.hidden = true;
+                document.body.classList.remove("modal-open");
+                if (popupTrigger) popupTrigger.focus();
+                popupWord = null;
+                popupSurface = "";
+                popupTrigger = null;
+            }
+
+            function renderStrategies() {
+                strategyRow.innerHTML = "";
+                Object.entries(strategies).forEach(([key, value], index) => {
+                    const button = document.createElement("button");
+                    button.type = "button";
+                    button.className = "btn" + (index === 0 ? " active" : "");
+                    button.dataset.strategy = key;
+                    button.textContent = value.label;
+                    strategyRow.appendChild(button);
+                });
+                strategyBox.textContent = strategies.cluster.text;
+            }
+
+            function renderFilters() {
+                const filters = [
+                    { key: "all", label: "전체" },
+                    { key: "recruit", label: "채용 정보" },
+                    { key: "competency", label: "사람의 장점" },
+                    { key: "structure", label: "회사 사람들" },
+                    { key: "condition", label: "회사 조건" }
+                ];
+                focusFilters.innerHTML = "";
+                filters.forEach((filter) => {
+                    const button = document.createElement("button");
+                    button.type = "button";
+                    button.className = "btn" + (filter.key === currentCategory ? " active" : "");
+                    button.dataset.category = filter.key;
+                    button.textContent = filter.label;
+                    focusFilters.appendChild(button);
+                });
+            }
+
+            function renderFocusChips() {
+                const entries = Object.entries(focusData).filter(([, info]) => currentCategory === "all" || info.category === currentCategory);
+                if (!entries.some(([word]) => word === selectedWord)) {
+                    selectedWord = entries[0][0];
+                }
+                focusChips.innerHTML = "";
+                entries.forEach(([word, info]) => {
+                    const button = document.createElement("button");
+                    button.type = "button";
+                    button.className = "chip-btn" + (word === selectedWord ? " active" : "");
+                    button.dataset.word = word;
+                    button.innerHTML = `<span>${word}</span><small>${info.tier}</small>`;
+                    focusChips.appendChild(button);
+                });
+            }
+
+            function renderDetail() {
+                const { info, wordBase } = getWordBundle(selectedWord);
+                detailStatus.textContent = `${categoryMeta[info.category]} · ${info.tier}`;
+                detailWord.textContent = selectedWord;
+                detailTranslation.textContent = getMeaning(wordBase);
+                detailDefinition.textContent = wordBase.ko;
+                detailStrategy.textContent = info.strategy;
+                detailCollocations.innerHTML = info.collocations.map((item) => `<span class="mini-chip">${item}</span>`).join("");
+                detailPatterns.innerHTML = info.patterns.map((item) => `<li>${item}</li>`).join("");
+                detailParticles.innerHTML = info.particles.map((item) => `<li>${item}</li>`).join("");
+                const previewItems = previewExpanded ? info.examples : info.examples.slice(0, 1);
+                detailPreview.innerHTML = previewItems.map((item) => `<p>${item}</p>`).join("");
+                networkGrid.innerHTML = buildRelationCards(info.network);
+                formList.innerHTML = info.forms.map((item) => `<li>${item}</li>`).join("");
+                extensionList.innerHTML = info.extension.map((item) => `<li>${item}</li>`).join("");
+                exampleList.innerHTML = info.examples.map((item) => `<li>${item}</li>`).join("");
+                frameBox.textContent = `문장 틀: ${info.frame}`;
+                promptBox.textContent = info.prompt;
+            }
+
+            function renderTabs() {
+                const tabs = [
+                    { key: "network", label: "의미망" },
+                    { key: "form", label: "형태 · 확장" },
+                    { key: "examples", label: "예문 · 말하기" }
+                ];
+                detailTabs.innerHTML = "";
+                tabs.forEach((tab) => {
+                    const button = document.createElement("button");
+                    button.type = "button";
+                    button.className = "tab-btn" + (tab.key === activeTab ? " active" : "");
+                    button.dataset.tab = tab.key;
+                    button.textContent = tab.label;
+                    detailTabs.appendChild(button);
+                });
+                document.querySelectorAll(".tab-panel").forEach((panel) => {
+                    panel.classList.toggle("active", panel.dataset.tab === activeTab);
+                });
+            }
+
+            function renderFullBank() {
+                fullBank.innerHTML = Object.entries(categoryMeta).map(([key, label]) => {
+                    const items = allWords.filter((item) => item.category === key);
+                    return `
+                        <div class="card">
+                            <h3>${label}</h3>
+                            ${items.map((item) => `
+                                <div class="word-row">
+                                    <strong>${item.word}</strong>
+                                    <span>${getMeaning(item)}</span>
+                                </div>
+                            `).join("")}
+                        </div>
+                    `;
+                }).join("");
+            }
+
+            function renderReviewCard() {
+                if (reviewIndex >= reviewDeck.length) reviewIndex = 0;
+                const item = reviewDeck[reviewIndex];
+                reviewShell.classList.remove("flipped");
+                reviewProgress.textContent = `${reviewIndex + 1} / ${reviewDeck.length}`;
+                reviewFrontCategory.textContent = categoryMeta[item.category];
+                reviewFrontWord.textContent = item.word;
+                reviewFrontHint.textContent = currentLang === "korean" ? "뜻과 함께 연어를 떠올려 보세요." : `${languageLabel[currentLang]} 뜻을 먼저 말해 보세요.`;
+                reviewBackCategory.textContent = categoryMeta[item.category];
+                reviewBackWord.textContent = item.word;
+                reviewBackMeaning.textContent = getMeaning(item);
+            }
+
+            function buildQuiz() {
+                const source = currentCategory === "all"
+                    ? allWords
+                    : allWords.filter((item) => item.category === currentCategory);
+                const picked = shuffle(source.length >= 4 ? source : allWords).slice(0, 6);
+                quizQuestions = picked.map((item) => {
+                    const answer = getMeaning(item);
+                    const poolBase = source.length >= 4 ? source : allWords;
+                    const pool = shuffle(poolBase.filter((candidate) => candidate.word !== item.word))
+                        .map((candidate) => getMeaning(candidate))
+                        .filter((value, index, self) => self.indexOf(value) === index)
+                        .slice(0, 3);
+                    return { word: item.word, answer, options: shuffle([answer, ...pool]) };
+                });
+                quizIndex = 0;
+                quizScore = 0;
+                renderQuiz();
+            }
+
+            function renderQuiz() {
+                if (quizIndex >= quizQuestions.length) {
+                    quizProgress.textContent = `${quizQuestions.length} / ${quizQuestions.length}`;
+                    quizWord.textContent = `퀴즈 완료: ${quizScore} / ${quizQuestions.length}`;
+                    quizGuide.textContent = "새 퀴즈를 시작해 다시 풀 수 있습니다.";
+                    quizOptions.innerHTML = "";
+                    quizFeedback.className = "quiz-feedback";
+                    quizFeedback.textContent = "복습이 끝났습니다.";
+                    quizNext.style.display = "none";
+                localStorage.setItem(`c12_context_${currentLang}`, JSON.stringify({
+                        score: quizScore,
+                        total: quizQuestions.length,
+                        date: new Date().toLocaleDateString("ko-KR")
+                    }));
+                    renderSavedScore();
+                    return;
+                }
+
+                const current = quizQuestions[quizIndex];
+                quizLocked = false;
+                quizProgress.textContent = `${quizIndex + 1} / ${quizQuestions.length}`;
+                quizWord.textContent = current.word;
+                quizGuide.textContent = currentLang === "korean"
+                    ? "가장 가까운 한국어 설명을 고르세요."
+                    : `${languageLabel[currentLang]} 뜻을 고르세요.`;
+                quizOptions.innerHTML = "";
+                quizFeedback.className = "quiz-feedback";
+                quizFeedback.textContent = "";
+                quizNext.style.display = "none";
+                current.options.forEach((option) => {
+                    const button = document.createElement("button");
+                    button.type = "button";
+                    button.className = "quiz-option";
+                    button.textContent = option;
+                    button.addEventListener("click", () => {
+                        if (quizLocked) return;
+                        quizLocked = true;
+                        Array.from(quizOptions.children).forEach((btn) => {
+                            btn.disabled = true;
+                            if (btn.textContent === current.answer) btn.classList.add("correct");
+                        });
+                        if (option === current.answer) {
+                            button.classList.add("correct");
+                            quizScore += 1;
+                            quizFeedback.className = "quiz-feedback correct";
+                            quizFeedback.textContent = "정답입니다.";
+                        } else {
+                            button.classList.add("wrong");
+                            quizFeedback.className = "quiz-feedback wrong";
+                            quizFeedback.textContent = `정답은 "${current.answer}"입니다.`;
+                        }
+                        quizNext.style.display = "inline-flex";
+                    });
+                    quizOptions.appendChild(button);
+                });
+            }
+
+            function renderSavedScore() {
+                const raw = localStorage.getItem(`c12_context_${currentLang}`);
+                if (!raw) {
+                    savedScore.textContent = "아직 저장된 최근 점수가 없습니다.";
+                    return;
+                }
+                const saved = JSON.parse(raw);
+                savedScore.textContent = `최근 점수: ${saved.score} / ${saved.total} (${saved.date})`;
+            }
+
+            function renderAll() {
+                langButtons.forEach((button) => {
+                    button.classList.toggle("active", button.dataset.lang === currentLang);
+                });
+                reviewDeck = currentCategory === "all"
+                    ? [...allWords]
+                    : allWords.filter((item) => item.category === currentCategory);
+                if (reviewIndex >= reviewDeck.length) {
+                    reviewIndex = 0;
+                }
+                renderFilters();
+                renderFocusChips();
+                renderTabs();
+                renderDetail();
+                if (popupWord) renderContextModal();
+                renderFullBank();
+                renderReviewCard();
+                renderSavedScore();
+            }
+
+            function flipCard() {
+                reviewShell.classList.toggle("flipped");
+            }
+
+            renderStrategies();
+            renderAll();
+            buildQuiz();
+
+            langButtons.forEach((button) => {
+                button.addEventListener("click", () => {
+                    currentLang = button.dataset.lang;
+                    renderAll();
+                    buildQuiz();
+                });
+            });
+
+            strategyRow.addEventListener("click", (event) => {
+                const button = event.target.closest(".btn");
+                if (!button || !button.dataset.strategy) return;
+                Array.from(strategyRow.children).forEach((item) => item.classList.remove("active"));
+                button.classList.add("active");
+                strategyBox.textContent = strategies[button.dataset.strategy].text;
+            });
+
+            focusFilters.addEventListener("click", (event) => {
+                const button = event.target.closest(".btn");
+                if (!button || !button.dataset.category) return;
+                currentCategory = button.dataset.category;
+                previewExpanded = false;
+                document.getElementById("preview-toggle").textContent = "예문 더 보기";
+                renderAll();
+                buildQuiz();
+            });
+
+            focusChips.addEventListener("click", (event) => {
+                const button = event.target.closest(".chip-btn");
+                if (!button) return;
+                selectedWord = button.dataset.word;
+                previewExpanded = false;
+                document.getElementById("preview-toggle").textContent = "예문 더 보기";
+                renderAll();
+            });
+
+            document.querySelectorAll("[data-focus]").forEach((node) => {
+                const baseForm = node.dataset.focus;
+                node.title = `기본형 보기: ${baseForm}`;
+                node.setAttribute("aria-label", `${node.textContent.trim()} 기본형 ${baseForm} 보기`);
+                node.setAttribute("role", "button");
+                node.setAttribute("tabindex", "0");
+                const openFromContext = () => {
+                    if (!focusData[node.dataset.focus]) return;
+                    openContextModal(node.dataset.focus, node.textContent.trim(), node);
+                };
+                node.addEventListener("click", openFromContext);
+                node.addEventListener("keydown", (event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        openFromContext();
+                    }
+                });
+            });
+
+            contextModalClose.addEventListener("click", closeContextModal);
+            contextModal.addEventListener("click", (event) => {
+                if (event.target === contextModal) closeContextModal();
+            });
+            document.addEventListener("keydown", (event) => {
+                if (event.key === "Escape" && contextModal.classList.contains("open")) {
+                    closeContextModal();
+                }
+            });
+
+            document.querySelector(".reveal-btn").addEventListener("click", (event) => {
+                const answerBox = event.target.nextElementSibling;
+                const opened = answerBox.style.display === "block";
+                answerBox.style.display = opened ? "none" : "block";
+                answerBox.textContent = event.target.dataset.answer;
+                event.target.textContent = opened ? "정답 보기" : "정답 숨기기";
+            });
+
+            document.getElementById("preview-toggle").addEventListener("click", () => {
+                previewExpanded = !previewExpanded;
+                renderDetail();
+                document.getElementById("preview-toggle").textContent = previewExpanded ? "예문 접기" : "예문 더 보기";
+            });
+
+            document.getElementById("jump-review").addEventListener("click", () => {
+                const foundIndex = reviewDeck.findIndex((item) => item.word === selectedWord);
+                if (foundIndex >= 0) {
+                    reviewIndex = foundIndex;
+                    renderReviewCard();
+                }
+                document.querySelector(".review-grid").scrollIntoView({ behavior: "smooth", block: "start" });
+            });
+
+            detailTabs.addEventListener("click", (event) => {
+                const button = event.target.closest(".tab-btn");
+                if (!button) return;
+                activeTab = button.dataset.tab;
+                renderTabs();
+            });
+
+            reviewShell.addEventListener("click", flipCard);
+            reviewShell.addEventListener("keydown", (event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    flipCard();
+                }
+            });
+
+            document.getElementById("review-flip").addEventListener("click", flipCard);
+            document.getElementById("review-prev").addEventListener("click", () => {
+                reviewIndex = (reviewIndex - 1 + reviewDeck.length) % reviewDeck.length;
+                renderReviewCard();
+            });
+            document.getElementById("review-next").addEventListener("click", () => {
+                reviewIndex = (reviewIndex + 1) % reviewDeck.length;
+                renderReviewCard();
+            });
+            document.getElementById("review-reset").addEventListener("click", () => {
+                reviewIndex = 0;
+                renderReviewCard();
+            });
+            document.getElementById("review-shuffle").addEventListener("click", () => {
+                reviewDeck = shuffle(reviewDeck);
+                reviewIndex = 0;
+                renderReviewCard();
+            });
+
+            quizNext.addEventListener("click", () => {
+                quizIndex += 1;
+                renderQuiz();
+            });
+
+            document.getElementById("quiz-restart").addEventListener("click", buildQuiz);
+        });
+    </script>
+    <script src="../shared/learning-enhancements.js"></script>
+</body>
+</html>

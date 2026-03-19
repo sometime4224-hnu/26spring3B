@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>12과 문법2 업그레이드 | 얼마나 -(으)ㄴ/는지 모르다</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --bg-a: #fff7ed;
+            --bg-b: #fffaf5;
+            --accent: #d97706;
+            --accent-soft: #fef3c7;
+            --accent-line: #fcd34d;
+        }
+        body {
+            margin: 0;
+            font-family: 'Noto Sans KR', sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(251, 191, 36, 0.18), transparent 32%),
+                radial-gradient(circle at bottom right, rgba(249, 115, 22, 0.12), transparent 30%),
+                linear-gradient(180deg, var(--bg-a) 0%, var(--bg-b) 100%);
+            color: #1f2937;
+        }
+        .c12-nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: 58px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 16px;
+            box-sizing: border-box;
+            background: rgba(255, 251, 245, 0.92);
+            border-bottom: 1px solid #fed7aa;
+            backdrop-filter: blur(10px);
+        }
+        .c12-nav a {
+            color: #c2410c;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .c12-divider {
+            color: #fdba74;
+            font-weight: 700;
+        }
+        .safe {
+            word-break: keep-all;
+            overflow-wrap: break-word;
+        }
+        .vi-text {
+            display: none;
+        }
+        .vi-on .vi-text {
+            display: block;
+        }
+        .tab-btn.active {
+            background: var(--accent-soft);
+            color: #9a3412;
+            border-color: var(--accent-line);
+        }
+        .option-btn {
+            min-height: 54px;
+        }
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: #fff7ed;
+            border: 1px solid #fdba74;
+            color: #c2410c;
+            font-size: 11px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <nav class="c12-nav" aria-label="상단 이동">
+        <a href="../index.html">메인</a>
+        <span class="c12-divider">|</span>
+        <a href="index.html">12과 목록</a>
+        <span class="c12-divider">|</span>
+        <a href="grammar2.html">원본 보기</a>
+    </nav>
+
+    <main id="page" class="max-w-md mx-auto px-4 py-4 pb-12">
+        <section class="rounded-[28px] border border-amber-200 bg-white/90 p-5 shadow-[0_18px_40px_rgba(217,119,6,0.08)]">
+            <div class="flex items-start justify-between gap-3">
+                <div>
+                    <p class="text-xs font-black tracking-[0.14em] text-amber-700">GRAMMAR 2 UPGRADED</p>
+                    <h1 class="mt-2 text-2xl font-black text-slate-900 safe">얼마나 -(으)ㄴ/는지 모르다</h1>
+                    <p class="mt-2 text-sm text-slate-700 safe">정도나 감정을 강하게 강조할 때 쓰는 표현</p>
+                    <p class="vi-text mt-1 text-xs text-orange-700 safe">Mẫu diễn tả mức độ hoặc cảm xúc rất mạnh: “không biết là … đến mức nào”.</p>
+                </div>
+                <button id="viToggle" class="shrink-0 rounded-xl border border-amber-300 bg-white px-3 py-2 text-xs font-bold text-amber-800">
+                    Tiếng Việt OFF
+                </button>
+            </div>
+
+            <div class="mt-4 flex flex-wrap gap-2">
+                <span class="chip">강한 정도</span>
+                <span class="chip">놀람</span>
+                <span class="chip">감동</span>
+                <span class="chip">힘듦</span>
+            </div>
+
+            <div class="mt-4 grid grid-cols-2 gap-2">
+                <button id="tabLearn" class="tab-btn active rounded-2xl border border-amber-300 px-4 py-3 text-sm font-bold" type="button">학습</button>
+                <button id="tabPractice" class="tab-btn rounded-2xl border border-slate-200 px-4 py-3 text-sm font-bold text-slate-600" type="button">연습</button>
+            </div>
+        </section>
+
+        <section id="learnPanel" class="mt-4 space-y-3">
+            <article class="rounded-3xl border border-white/80 bg-white/90 p-4 shadow-sm">
+                <h2 class="text-base font-black text-slate-900">핵심 개념</h2>
+                <p class="mt-2 text-sm text-slate-700 safe">어떤 대상의 정도가 예상보다 훨씬 크다고 느낄 때, 그 놀라움이나 감정을 강조하면서 말합니다.</p>
+                <p class="mt-2 text-sm text-slate-700 safe">예) 한국어 공부가 얼마나 어려운지 몰라요. / 아기가 얼마나 예쁜지 몰라요.</p>
+                <p class="vi-text mt-2 text-xs text-orange-700 safe">Dùng khi muốn nhấn mạnh mức độ vượt xa dự đoán, thường kèm sắc thái ngạc nhiên, cảm động hoặc vất vả.</p>
+            </article>
+
+            <article class="rounded-3xl border border-white/80 bg-white/90 p-4 shadow-sm">
+                <h2 class="text-base font-black text-slate-900">형태 규칙</h2>
+                <div class="mt-3 space-y-2 text-sm text-slate-700">
+                    <p><b>동사</b>: <span class="font-black text-amber-700">-는지 모르다</span></p>
+                    <p>예: 좋아하다 → 좋아하는지 모르다</p>
+                    <p><b>형용사</b>: <span class="font-black text-amber-700">-(으)ㄴ지 모르다</span></p>
+                    <p>예: 크다 → 큰지 모르다 / 예쁘다 → 예쁜지 모르다</p>
+                    <p><b>있다/없다</b>: <span class="font-black text-amber-700">-는지 모르다</span></p>
+                    <p>예: 맛있다 → 맛있는지 모르다</p>
+                    <p><b>과거</b>: <span class="font-black text-amber-700">-았/었는지 모르다</span></p>
+                    <p><b>명사</b>: <span class="font-black text-amber-700">-(이)ㄴ지 모르다</span></p>
+                </div>
+                <p class="vi-text mt-2 text-xs text-orange-700 safe">Động từ dùng -는지, tính từ dùng -(으)ㄴ지, 있다/없다 dùng -는지, danh từ dùng -(이)ㄴ지.</p>
+            </article>
+
+            <article class="rounded-3xl border border-amber-200 bg-amber-50 p-4 shadow-sm">
+                <h2 class="text-base font-black text-amber-900">헷갈림 비교</h2>
+                <div class="mt-3 space-y-3">
+                    <div>
+                        <p class="text-sm font-bold text-slate-800">`얼마나 ... 모르다` vs `정말/너무`</p>
+                        <p class="text-sm text-slate-700 safe">`정말/너무`는 단순 강조도 가능하지만, `얼마나 ... 모르다`는 화자의 감정이 더 크게 드러납니다.</p>
+                        <p class="vi-text mt-1 text-xs text-orange-700 safe">`정말/너무` chỉ nhấn mạnh đơn thuần, còn `얼마나 ... 모르다` thể hiện cảm xúc mạnh hơn.</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-800">의문문 `얼마나`와 다름</p>
+                        <p class="text-sm text-slate-700 safe">`얼마나 어려워요?`는 질문이고, `얼마나 어려운지 몰라요.`는 감탄에 가깝습니다.</p>
+                        <p class="vi-text mt-1 text-xs text-orange-700 safe">`얼마나 어려워요?` là câu hỏi, còn `얼마나 어려운지 몰라요` gần với cảm thán.</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-800">형태 주의</p>
+                        <p class="text-sm text-slate-700 safe">`맛있다`, `재미있다`, `좋아하다`처럼 헷갈리는 단어는 각각 `맛있는지`, `재미있는지`, `좋아하는지`가 됩니다.</p>
+                        <p class="vi-text mt-1 text-xs text-orange-700 safe">Cần chú ý các dạng dễ nhầm như `맛있는지`, `재미있는지`, `좋아하는지`.</p>
+                    </div>
+                </div>
+            </article>
+
+            <article class="rounded-3xl border border-white/80 bg-white/90 p-4 shadow-sm">
+                <h2 class="text-base font-black text-slate-900">예문</h2>
+                <div class="mt-3 space-y-3">
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+                        <p class="text-sm text-slate-800 safe">요즘 일이 얼마나 많은지 몰라요.</p>
+                        <p class="vi-text mt-1 text-xs text-orange-700 safe">Dạo này tôi không biết công việc nhiều đến mức nào.</p>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+                        <p class="text-sm text-slate-800 safe">그 배우가 무대에서 얼마나 멋있는지 몰라요.</p>
+                        <p class="vi-text mt-1 text-xs text-orange-700 safe">Không biết diễn viên đó trên sân khấu ngầu đến mức nào.</p>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+                        <p class="text-sm text-slate-800 safe">어제 등산하고 얼마나 피곤했는지 몰라요.</p>
+                        <p class="vi-text mt-1 text-xs text-orange-700 safe">Sau khi leo núi hôm qua, tôi mệt vô cùng.</p>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <section id="practicePanel" class="mt-4 hidden">
+            <article class="rounded-3xl border border-white/80 bg-white/90 p-4 shadow-sm">
+                <div class="flex items-center justify-between text-xs">
+                    <span id="progress" class="font-black text-amber-700"></span>
+                    <span class="text-slate-500">즉시 피드백</span>
+                </div>
+                <div class="mt-3 h-2 overflow-hidden rounded-full bg-amber-100">
+                    <div id="progressBar" class="h-full rounded-full bg-amber-500 transition-all duration-300"></div>
+                </div>
+                <p id="qGrammar" class="mt-3 text-[11px] font-black uppercase tracking-[0.14em] text-orange-700"></p>
+                <p id="qText" class="mt-2 text-base font-black text-slate-900 safe"></p>
+                <p id="qHintKo" class="mt-2 text-xs text-slate-600 safe"></p>
+                <p id="qHintVi" class="vi-text mt-1 text-xs text-orange-700 safe"></p>
+
+                <div id="choices" class="mt-4 space-y-2"></div>
+                <div id="shortWrap" class="mt-4 hidden">
+                    <input id="shortInput" type="text" class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="정답 입력" />
+                    <button id="checkShortBtn" class="mt-2 w-full rounded-2xl bg-amber-600 py-3 text-sm font-black text-white" type="button">정답 확인</button>
+                </div>
+
+                <div id="feedbackBox" class="mt-4 hidden rounded-2xl border p-4"></div>
+                <button id="nextBtn" class="mt-3 hidden w-full rounded-2xl bg-slate-900 py-3 text-sm font-black text-white" type="button">다음 문제</button>
+            </article>
+
+            <article id="resultPanel" class="mt-3 hidden rounded-3xl border border-white/80 bg-white/90 p-4 shadow-sm"></article>
+        </section>
+    </main>
+
+    <script>
+        const page = document.getElementById('page');
+        const viToggle = document.getElementById('viToggle');
+        const tabLearn = document.getElementById('tabLearn');
+        const tabPractice = document.getElementById('tabPractice');
+        const learnPanel = document.getElementById('learnPanel');
+        const practicePanel = document.getElementById('practicePanel');
+
+        const quiz = [
+            {
+                type: 'mcq',
+                grammar: '형용사 있다/없다',
+                q: '이 케이크가 얼마나 _______ 몰라요. (맛있다)',
+                hintKo: '`있다/없다`가 들어간 형용사예요.',
+                hintVi: 'Tính từ có `있다/없다` dùng dạng đặc biệt.',
+                options: ['맛있은지', '맛있는지', '맛있던지', '맛있을지'],
+                answer: '맛있는지',
+                explainKo: '`맛있다`는 `있다`형이라 `맛있는지`가 됩니다.',
+                explainVi: '`맛있다` thuộc nhóm `있다`, nên dùng `맛있는지`.'
+            },
+            {
+                type: 'mcq',
+                grammar: '형용사 ㅂ 불규칙',
+                q: '한국어 공부가 얼마나 _______ 몰라요. (어렵다)',
+                hintKo: 'ㅂ 불규칙을 떠올리세요.',
+                hintVi: 'Hãy nhớ quy tắc bất quy tắc ㅂ.',
+                options: ['어려운지', '어렵는지', '어렵은지', '어려웠는지'],
+                answer: '어려운지',
+                explainKo: '`어렵다`는 ㅂ 불규칙이라 `어려운지`가 맞습니다.',
+                explainVi: '`어렵다` là tính từ bất quy tắc ㅂ nên thành `어려운지`.'
+            },
+            {
+                type: 'mcq',
+                grammar: '동사',
+                q: '친구가 선물을 받고 얼마나 _______ 몰라요. (좋아하다)',
+                hintKo: '동사는 항상 `-는지`예요.',
+                hintVi: 'Động từ luôn dùng `-는지`.',
+                options: ['좋아한지', '좋아하는지', '좋아할지', '좋아했는지'],
+                answer: '좋아하는지',
+                explainKo: '동사 `좋아하다`는 `좋아하는지`가 됩니다.',
+                explainVi: 'Động từ `좋아하다` dùng dạng `좋아하는지`.'
+            },
+            {
+                type: 'mcq',
+                grammar: '과거형',
+                q: '어제 이사해서 몸이 얼마나 _______ 몰라요. (피곤하다)',
+                hintKo: '과거의 상태를 강조해요.',
+                hintVi: 'Nhấn mạnh trạng thái trong quá khứ.',
+                options: ['피곤한지', '피곤했는지', '피곤하는지', '피곤할지'],
+                answer: '피곤했는지',
+                explainKo: '과거 상태이므로 `-았/었는지`를 써서 `피곤했는지`가 맞습니다.',
+                explainVi: 'Vì là trạng thái quá khứ nên dùng `-았/었는지`: `피곤했는지`.'
+            },
+            {
+                type: 'short',
+                grammar: '형용사 ㅂ 불규칙',
+                q: '제주도 바다가 얼마나 ____ 몰라요. (아름답다)',
+                hintKo: 'ㅂ 불규칙 형용사예요.',
+                hintVi: 'Đây là tính từ bất quy tắc ㅂ.',
+                answers: ['아름다운지'],
+                explainKo: '`아름답다`는 ㅂ 불규칙이라 `아름다운지`가 됩니다.',
+                explainVi: '`아름답다` là bất quy tắc ㅂ nên thành `아름다운지`.'
+            },
+            {
+                type: 'mcq',
+                grammar: '명사',
+                q: '그분이 얼마나 친절한 _______ 몰라요. (사람이다)',
+                hintKo: '명사 + 이다 형태예요.',
+                hintVi: 'Dạng danh từ + 이다.',
+                options: ['사람인지', '사람는지', '사람은지', '사람일지'],
+                answer: '사람인지',
+                explainKo: '명사 뒤에는 `-(이)ㄴ지`를 붙여 `사람인지`가 됩니다.',
+                explainVi: 'Sau danh từ dùng `-(이)ㄴ지`, nên là `사람인지`.'
+            },
+            {
+                type: 'mcq',
+                grammar: '형용사 기본',
+                q: '아기가 얼마나 _______ 몰라요. (예쁘다)',
+                hintKo: '받침 없는 형용사예요.',
+                hintVi: 'Tính từ không có phụ âm cuối (받침).',
+                options: ['예쁘는지', '예쁜지', '예쁘은지', '예뻤는지'],
+                answer: '예쁜지',
+                explainKo: '형용사 `예쁘다`는 `예쁜지`가 맞습니다.',
+                explainVi: 'Tính từ `예쁘다` dùng dạng `예쁜지`.'
+            },
+            {
+                type: 'short',
+                grammar: '의미 확인',
+                q: '“요즘 일이 얼마나 많은지 몰라요.”와 비슷한 느낌의 짧은 표현을 쓰세요. (2음절)',
+                hintKo: '`정말`과 비슷한 강조예요.',
+                hintVi: 'Sắc thái nhấn mạnh gần với `thật là`.',
+                answers: ['너무', '정말'],
+                explainKo: '이 표현은 강한 정도를 강조하므로 `너무`, `정말` 같은 말과 비슷한 느낌이 납니다.',
+                explainVi: 'Mẫu này nhấn mạnh mức độ mạnh nên gần với `너무`, `정말`.'
+            }
+        ];
+
+        const progress = document.getElementById('progress');
+        const progressBar = document.getElementById('progressBar');
+        const qGrammar = document.getElementById('qGrammar');
+        const qText = document.getElementById('qText');
+        const qHintKo = document.getElementById('qHintKo');
+        const qHintVi = document.getElementById('qHintVi');
+        const choices = document.getElementById('choices');
+        const shortWrap = document.getElementById('shortWrap');
+        const shortInput = document.getElementById('shortInput');
+        const checkShortBtn = document.getElementById('checkShortBtn');
+        const feedbackBox = document.getElementById('feedbackBox');
+        const nextBtn = document.getElementById('nextBtn');
+        const resultPanel = document.getElementById('resultPanel');
+
+        const state = {
+            viOn: false,
+            idx: 0,
+            score: 0,
+            answered: false,
+            logs: []
+        };
+
+        function esc(text) {
+            return String(text == null ? '' : text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function normalize(text) {
+            return String(text || '').toLowerCase().replace(/[\s.,!?~]/g, '');
+        }
+
+        function showTab(name) {
+            const learn = name === 'learn';
+            learnPanel.classList.toggle('hidden', !learn);
+            practicePanel.classList.toggle('hidden', learn);
+            tabLearn.classList.toggle('active', learn);
+            tabPractice.classList.toggle('active', !learn);
+            tabLearn.classList.toggle('text-slate-600', !learn);
+            tabPractice.classList.toggle('text-slate-600', learn);
+            if (!learn) {
+                renderQuestion();
+            }
+        }
+
+        function toggleVi() {
+            state.viOn = !state.viOn;
+            page.classList.toggle('vi-on', state.viOn);
+            viToggle.textContent = state.viOn ? 'Tiếng Việt ON' : 'Tiếng Việt OFF';
+        }
+
+        function renderQuestion() {
+            if (state.idx >= quiz.length) {
+                renderResult();
+                return;
+            }
+
+            const q = quiz[state.idx];
+            state.answered = false;
+            progress.textContent = (state.idx + 1) + ' / ' + quiz.length;
+            progressBar.style.width = Math.round(((state.idx + 1) / quiz.length) * 100) + '%';
+            qGrammar.textContent = q.grammar;
+            qText.textContent = q.q;
+            qHintKo.textContent = '상황: ' + q.hintKo;
+            qHintVi.textContent = 'Tình huống: ' + q.hintVi;
+            choices.innerHTML = '';
+            feedbackBox.classList.add('hidden');
+            feedbackBox.innerHTML = '';
+            nextBtn.classList.add('hidden');
+            resultPanel.classList.add('hidden');
+            shortWrap.classList.add('hidden');
+            shortInput.value = '';
+            shortInput.disabled = false;
+            checkShortBtn.disabled = false;
+
+            if (q.type === 'mcq') {
+                q.options.forEach(function (option) {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'option-btn w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-left text-sm font-bold text-slate-800 transition hover:border-amber-400 hover:bg-amber-50';
+                    btn.textContent = option;
+                    btn.addEventListener('click', function () {
+                        answerQuestion(option);
+                    });
+                    choices.appendChild(btn);
+                });
+            } else {
+                shortWrap.classList.remove('hidden');
+            }
+        }
+
+        function lockInputs() {
+            Array.from(choices.querySelectorAll('button')).forEach(function (btn) {
+                btn.disabled = true;
+            });
+            shortInput.disabled = true;
+            checkShortBtn.disabled = true;
+        }
+
+        function feedbackHtml(ok, user, correct, q) {
+            const toneClass = ok ? 'text-emerald-700' : 'text-rose-700';
+            const boxClass = ok ? 'bg-emerald-50 border-emerald-200' : 'bg-rose-50 border-rose-200';
+            feedbackBox.className = 'mt-4 rounded-2xl border p-4 ' + boxClass;
+            return '' +
+                '<p class="text-sm font-black ' + toneClass + '">' + (ok ? '정답입니다.' : '오답입니다.') + ' <span class="text-xs">(' + (ok ? 'Đúng' : 'Sai') + ')</span></p>' +
+                '<p class="mt-2 text-xs text-slate-700"><b>내 답:</b> ' + esc(user || '(무응답)') + '</p>' +
+                '<p class="mt-1 text-xs text-slate-700"><b>정답:</b> <span class="font-black">' + esc(correct) + '</span></p>' +
+                '<p class="mt-2 text-xs text-slate-700 safe"><b>설명(KO):</b> ' + esc(q.explainKo) + '</p>' +
+                '<p class="vi-text mt-1 text-xs text-orange-700 safe"><b>Giải thích (VI):</b> ' + esc(q.explainVi) + '</p>';
+        }
+
+        function answerQuestion(user) {
+            if (state.answered) {
+                return;
+            }
+            const q = quiz[state.idx];
+            let ok = false;
+            const correct = q.type === 'mcq' ? q.answer : q.answers[0];
+
+            if (q.type === 'mcq') {
+                ok = user === q.answer;
+            } else {
+                const value = normalize(user);
+                ok = q.answers.some(function (answer) {
+                    return normalize(answer) === value;
+                });
+            }
+
+            state.answered = true;
+            if (ok) {
+                state.score += 1;
+            }
+            state.logs.push({
+                ok: ok,
+                q: q.q,
+                user: user,
+                correct: correct,
+                explainKo: q.explainKo,
+                explainVi: q.explainVi
+            });
+
+            feedbackBox.classList.remove('hidden');
+            feedbackBox.innerHTML = feedbackHtml(ok, user, correct, q);
+            nextBtn.classList.remove('hidden');
+            lockInputs();
+        }
+
+        function renderResult() {
+            const wrong = state.logs.filter(function (item) {
+                return !item.ok;
+            });
+            const percent = Math.round((state.score / quiz.length) * 100);
+
+            let wrongHtml = '';
+            if (!wrong.length) {
+                wrongHtml = '' +
+                    '<p class="text-sm text-emerald-700">모든 문항을 정확히 풀었습니다.</p>' +
+                    '<p class="vi-text mt-1 text-xs text-orange-700">Bạn đã làm đúng toàn bộ câu hỏi.</p>';
+            } else {
+                wrongHtml = wrong.map(function (item, index) {
+                    return '' +
+                        '<article class="rounded-2xl border border-rose-200 bg-rose-50 p-3">' +
+                        '<p class="text-xs font-black text-rose-700">오답 ' + (index + 1) + '</p>' +
+                        '<p class="mt-1 text-sm text-slate-800 safe">' + esc(item.q) + '</p>' +
+                        '<p class="mt-2 text-xs text-slate-700"><b>내 답:</b> ' + esc(item.user || '(무응답)') + '</p>' +
+                        '<p class="mt-1 text-xs text-slate-700"><b>정답:</b> <span class="font-black">' + esc(item.correct) + '</span></p>' +
+                        '<p class="mt-2 text-xs text-rose-700 safe"><b>설명(KO):</b> ' + esc(item.explainKo) + '</p>' +
+                        '<p class="vi-text mt-1 text-xs text-orange-700 safe"><b>Giải thích (VI):</b> ' + esc(item.explainVi) + '</p>' +
+                        '</article>';
+                }).join('');
+            }
+
+            resultPanel.innerHTML = '' +
+                '<div class="rounded-3xl border border-amber-200 bg-amber-50 p-4 text-center">' +
+                '<p class="text-xs font-black tracking-[0.14em] text-amber-700">PRACTICE COMPLETE</p>' +
+                '<h3 class="mt-2 text-3xl font-black text-slate-900">' + state.score + ' / ' + quiz.length + '</h3>' +
+                '<p class="mt-1 text-sm text-slate-600">정답률 ' + percent + '%</p>' +
+                '<button id="restartBtn" class="mt-4 rounded-2xl bg-slate-900 px-4 py-2 text-sm font-black text-white" type="button">다시 풀기</button>' +
+                '</div>' +
+                '<div class="mt-3 space-y-2">' + wrongHtml + '</div>';
+
+            resultPanel.classList.remove('hidden');
+            document.getElementById('restartBtn').addEventListener('click', function () {
+                state.idx = 0;
+                state.score = 0;
+                state.answered = false;
+                state.logs = [];
+                renderQuestion();
+            });
+        }
+
+        tabLearn.addEventListener('click', function () { showTab('learn'); });
+        tabPractice.addEventListener('click', function () { showTab('practice'); });
+        viToggle.addEventListener('click', toggleVi);
+        checkShortBtn.addEventListener('click', function () {
+            const value = shortInput.value.trim();
+            if (!value) {
+                return;
+            }
+            answerQuestion(value);
+        });
+        shortInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter' && !state.answered) {
+                event.preventDefault();
+                checkShortBtn.click();
+            }
+        });
+        nextBtn.addEventListener('click', function () {
+            state.idx += 1;
+            renderQuestion();
+        });
+
+        showTab('learn');
+    </script>
+    <script src="../shared/learning-enhancements.js"></script>
+</body>
+</html>

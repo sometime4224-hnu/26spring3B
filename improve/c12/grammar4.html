@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>12과 문법4 업그레이드 | -아야/어야</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --bg-a: #f0fdf4;
+            --bg-b: #f8fafc;
+            --accent: #15803d;
+            --accent-soft: #dcfce7;
+            --accent-line: #86efac;
+        }
+        body {
+            margin: 0;
+            font-family: 'Noto Sans KR', sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(34, 197, 94, 0.16), transparent 30%),
+                radial-gradient(circle at bottom right, rgba(16, 185, 129, 0.10), transparent 28%),
+                linear-gradient(180deg, var(--bg-a) 0%, var(--bg-b) 100%);
+            color: #1f2937;
+        }
+        .c12-nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: 58px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 16px;
+            box-sizing: border-box;
+            background: rgba(248, 255, 250, 0.92);
+            border-bottom: 1px solid #bbf7d0;
+            backdrop-filter: blur(10px);
+        }
+        .c12-nav a {
+            color: #15803d;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .c12-divider {
+            color: #86efac;
+            font-weight: 700;
+        }
+        .safe {
+            word-break: keep-all;
+            overflow-wrap: break-word;
+        }
+        .vi-text {
+            display: none;
+        }
+        .vi-on .vi-text {
+            display: block;
+        }
+        .tab-btn.active {
+            background: var(--accent-soft);
+            color: #166534;
+            border-color: var(--accent-line);
+        }
+        .option-btn {
+            min-height: 54px;
+        }
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: #f0fdf4;
+            border: 1px solid #86efac;
+            color: #166534;
+            font-size: 11px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <nav class="c12-nav" aria-label="상단 이동">
+        <a href="../index.html">메인</a>
+        <span class="c12-divider">|</span>
+        <a href="index.html">12과 목록</a>
+        <span class="c12-divider">|</span>
+        <a href="grammar4.html">원본 보기</a>
+    </nav>
+
+    <main id="page" class="max-w-md mx-auto px-4 py-4 pb-12">
+        <section class="rounded-[28px] border border-green-200 bg-white/90 p-5 shadow-[0_18px_40px_rgba(21,128,61,0.08)]">
+            <div class="flex items-start justify-between gap-3">
+                <div>
+                    <p class="text-xs font-black tracking-[0.14em] text-green-700">GRAMMAR 4 UPGRADED</p>
+                    <h1 class="mt-2 text-2xl font-black text-slate-900 safe">-아야/어야</h1>
+                    <p class="mt-2 text-sm text-slate-700 safe">어떤 결과가 가능해지기 위한 필수 조건을 말할 때</p>
+                    <p class="vi-text mt-1 text-xs text-green-700 safe">Dùng để nói điều kiện bắt buộc cần có thì kết quả mới xảy ra được.</p>
+                </div>
+                <button id="viToggle" class="shrink-0 rounded-xl border border-green-300 bg-white px-3 py-2 text-xs font-bold text-green-800">
+                    Tiếng Việt OFF
+                </button>
+            </div>
+
+            <div class="mt-4 flex flex-wrap gap-2">
+                <span class="chip">필수 조건</span>
+                <span class="chip">가능 조건</span>
+                <span class="chip">의무와 구별</span>
+                <span class="chip">명사 연결</span>
+            </div>
+
+            <div class="mt-4 grid grid-cols-2 gap-2">
+                <button id="tabLearn" class="tab-btn active rounded-2xl border border-green-300 px-4 py-3 text-sm font-bold" type="button">학습</button>
+                <button id="tabPractice" class="tab-btn rounded-2xl border border-slate-200 px-4 py-3 text-sm font-bold text-slate-600" type="button">연습</button>
+            </div>
+        </section>
+
+        <section id="learnPanel" class="mt-4 space-y-3">
+            <article class="rounded-3xl border border-white/80 bg-white/90 p-4 shadow-sm">
+                <h2 class="text-base font-black text-slate-900">핵심 개념</h2>
+                <p class="mt-2 text-sm text-slate-700 safe">A가 이루어져야 B가 가능하다는 뜻입니다. 즉, B를 위해 꼭 필요한 조건을 말합니다.</p>
+                <p class="mt-2 text-sm text-slate-700 safe">예) 이 영화를 보려면 스무 살 이상이어야 해요.</p>
+                <p class="vi-text mt-2 text-xs text-green-700 safe">Mẫu này diễn tả: phải có điều kiện A thì mới có thể có kết quả B.</p>
+            </article>
+
+            <article class="rounded-3xl border border-white/80 bg-white/90 p-4 shadow-sm">
+                <h2 class="text-base font-black text-slate-900">형태 규칙</h2>
+                <div class="mt-3 space-y-2 text-sm text-slate-700">
+                    <p><b>ㅏ, ㅗ</b> → <span class="font-black text-green-700">-아야</span></p>
+                    <p>예: 맞다 → 맞아야</p>
+                    <p><b>그 밖의 모음</b> → <span class="font-black text-green-700">-어야</span></p>
+                    <p>예: 먹다 → 먹어야 / 맞추다 → 맞춰야</p>
+                    <p><b>하다</b> → <span class="font-black text-green-700">해야</span></p>
+                    <p><b>명사</b> → <span class="font-black text-green-700">(이)어야 / 여야</span></p>
+                    <p>예: 학생 → 학생이어야 / 의사 → 의사여야</p>
+                </div>
+                <p class="vi-text mt-2 text-xs text-green-700 safe">Với ㅏ, ㅗ dùng -아야; các nguyên âm khác dùng -어야; 하다 thành 해야; danh từ dùng (이)어야/여야.</p>
+            </article>
+
+            <article class="rounded-3xl border border-green-200 bg-green-50 p-4 shadow-sm">
+                <h2 class="text-base font-black text-green-900">헷갈림 비교</h2>
+                <div class="mt-3 space-y-3">
+                    <div>
+                        <p class="text-sm font-bold text-slate-800">`-아/어야 하다`와 비교</p>
+                        <p class="text-sm text-slate-700 safe">`-아/어야 하다`는 의무가 중심이고, `-아야/어야`는 결과를 위한 조건이 중심입니다.</p>
+                        <p class="vi-text mt-1 text-xs text-green-700 safe">`-아/어야 하다` nhấn mạnh nghĩa vụ; `-아야/어야` nhấn mạnh điều kiện để có kết quả.</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-800">`-(으)려면`과 비교</p>
+                        <p class="text-sm text-slate-700 safe">둘 다 조건을 말하지만, `-아야/어야`가 더 필수 조건처럼 들립니다.</p>
+                        <p class="vi-text mt-1 text-xs text-green-700 safe">Cả hai đều là điều kiện, nhưng `-아야/어야` nghe như điều kiện bắt buộc hơn.</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-800">형태 주의</p>
+                        <p class="text-sm text-slate-700 safe">`하다`는 `해야`, 받침 있는 명사는 `이어야`로 바뀝니다.</p>
+                        <p class="vi-text mt-1 text-xs text-green-700 safe">`하다` đổi thành `해야`, danh từ có phụ âm cuối (받침) dùng `이어야`.</p>
+                    </div>
+                </div>
+            </article>
+
+            <article class="rounded-3xl border border-white/80 bg-white/90 p-4 shadow-sm">
+                <h2 class="text-base font-black text-slate-900">예문</h2>
+                <div class="mt-3 space-y-3">
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+                        <p class="text-sm text-slate-800 safe">외국어를 잘하려면 꾸준히 공부해야 해요.</p>
+                        <p class="vi-text mt-1 text-xs text-green-700 safe">Muốn giỏi ngoại ngữ thì phải học đều đặn.</p>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+                        <p class="text-sm text-slate-800 safe">옷을 사려면 몸에 잘 맞아야 해요.</p>
+                        <p class="vi-text mt-1 text-xs text-green-700 safe">Muốn mua quần áo thì quần áo phải vừa người.</p>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+                        <p class="text-sm text-slate-800 safe">도서관에 들어가려면 우리 학교 학생이어야 해요.</p>
+                        <p class="vi-text mt-1 text-xs text-green-700 safe">Muốn vào thư viện thì phải là học sinh của trường chúng ta.</p>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <section id="practicePanel" class="mt-4 hidden">
+            <article class="rounded-3xl border border-white/80 bg-white/90 p-4 shadow-sm">
+                <div class="flex items-center justify-between text-xs">
+                    <span id="progress" class="font-black text-green-700"></span>
+                    <span class="text-slate-500">즉시 피드백</span>
+                </div>
+                <div class="mt-3 h-2 overflow-hidden rounded-full bg-green-100">
+                    <div id="progressBar" class="h-full rounded-full bg-green-500 transition-all duration-300"></div>
+                </div>
+                <p id="qGrammar" class="mt-3 text-[11px] font-black uppercase tracking-[0.14em] text-green-700"></p>
+                <p id="qText" class="mt-2 text-base font-black text-slate-900 safe"></p>
+                <p id="qHintKo" class="mt-2 text-xs text-slate-600 safe"></p>
+                <p id="qHintVi" class="vi-text mt-1 text-xs text-green-700 safe"></p>
+
+                <div id="choices" class="mt-4 space-y-2"></div>
+                <div id="shortWrap" class="mt-4 hidden">
+                    <input id="shortInput" type="text" class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="정답 입력" />
+                    <button id="checkShortBtn" class="mt-2 w-full rounded-2xl bg-green-600 py-3 text-sm font-black text-white" type="button">정답 확인</button>
+                </div>
+
+                <div id="feedbackBox" class="mt-4 hidden rounded-2xl border p-4"></div>
+                <button id="nextBtn" class="mt-3 hidden w-full rounded-2xl bg-slate-900 py-3 text-sm font-black text-white" type="button">다음 문제</button>
+            </article>
+
+            <article id="resultPanel" class="mt-3 hidden rounded-3xl border border-white/80 bg-white/90 p-4 shadow-sm"></article>
+        </section>
+    </main>
+
+    <script>
+        const page = document.getElementById('page');
+        const viToggle = document.getElementById('viToggle');
+        const tabLearn = document.getElementById('tabLearn');
+        const tabPractice = document.getElementById('tabPractice');
+        const learnPanel = document.getElementById('learnPanel');
+        const practicePanel = document.getElementById('practicePanel');
+
+        const quiz = [
+            {
+                type: 'mcq',
+                grammar: '하다 동사',
+                q: '외국어를 잘하려면 꾸준히 _______ 해요.',
+                hintKo: '`하다` 동사의 연결형이에요.',
+                hintVi: 'Đây là dạng nối của động từ `하다`.',
+                options: ['하여야', '해야', '하아야', '하야'],
+                answer: '해야',
+                explainKo: '`하다`는 줄어서 `해야`가 됩니다.',
+                explainVi: '`하다` rút gọn thành `해야`.'
+            },
+            {
+                type: 'mcq',
+                grammar: '동사',
+                q: '면접을 잘 보려면 자신감을 _______ 해요. (가지다)',
+                hintKo: '`가지다`의 활용형이에요.',
+                hintVi: 'Dạng chia của `가지다`.',
+                options: ['가져야', '가지어야', '가지야', '가저야'],
+                answer: '가져야',
+                explainKo: '`가지다 + 어야`는 `가져야`로 줄어듭니다.',
+                explainVi: '`가지다 + 어야` rút gọn thành `가져야`.'
+            },
+            {
+                type: 'mcq',
+                grammar: 'ㅏ 모음',
+                q: '옷을 사려면 옷이 몸에 _______ 해요. (맞다)',
+                hintKo: '모음 ㅏ를 확인하세요.',
+                hintVi: 'Hãy chú ý nguyên âm ㅏ.',
+                options: ['맞아야', '맞어야', '마자야', '맞야'],
+                answer: '맞아야',
+                explainKo: '`맞다`는 ㅏ 모음이므로 `맞아야`가 됩니다.',
+                explainVi: '`맞다` có nguyên âm ㅏ nên dùng `맞아야`.'
+            },
+            {
+                type: 'short',
+                grammar: '형용사',
+                q: '과일은 ____ 맛이 좋아요. (신선하다)',
+                hintKo: '`하다` 형용사예요.',
+                hintVi: 'Đây là tính từ kết thúc bằng `하다`.',
+                answers: ['신선해야'],
+                explainKo: '`신선하다`는 `신선해야`가 맞습니다.',
+                explainVi: '`신선하다` đổi thành `신선해야`.'
+            },
+            {
+                type: 'short',
+                grammar: '동사 축약',
+                q: '물을 잘 ____ 라면이 맛있어요. (맞추다)',
+                hintKo: '`추다 + 어야` 축약형이에요.',
+                hintVi: 'Dạng rút gọn của `맞추다 + 어야`.',
+                answers: ['맞춰야', '맞추어야'],
+                explainKo: '`맞추다 + 어야`는 `맞춰야`로 줄어듭니다.',
+                explainVi: '`맞추다 + 어야` rút gọn thành `맞춰야`.'
+            },
+            {
+                type: 'mcq',
+                grammar: '명사',
+                q: '도서관에 들어가려면 우리 학교 _______ 해요.',
+                hintKo: '받침 있는 명사예요. (학생)',
+                hintVi: 'Đây là danh từ có phụ âm cuối (받침). (학생)',
+                options: ['학생여야', '학생이어야', '학생아야', '학생해야'],
+                answer: '학생이어야',
+                explainKo: '받침 있는 명사는 `이어야`를 붙여 `학생이어야`가 됩니다.',
+                explainVi: 'Danh từ có phụ âm cuối (받침) dùng `이어야`, nên là `학생이어야`.'
+            },
+            {
+                type: 'mcq',
+                grammar: '의미 구별',
+                q: '`-아야/어야`의 핵심 의미는?',
+                hintKo: '의무보다 결과 조건에 초점이 있어요.',
+                hintVi: 'Trọng tâm là điều kiện của kết quả, không chỉ là nghĩa vụ.',
+                options: ['단순 명령', '필수 조건', '과거 회상', '공손 표현'],
+                answer: '필수 조건',
+                explainKo: '`-아야/어야`는 어떤 결과가 가능해지기 위한 필수 조건을 말합니다.',
+                explainVi: '`-아야/어야` diễn tả điều kiện bắt buộc để kết quả xảy ra.'
+            },
+            {
+                type: 'short',
+                grammar: '비교',
+                q: '`공부해야 해요`와 다르게, 결과 조건을 말하는 오늘의 문법 이름을 쓰세요.',
+                hintKo: '제목을 떠올리세요.',
+                hintVi: 'Hãy nhớ lại tên ngữ pháp hôm nay.',
+                answers: ['-아야/어야', '아야/어야'],
+                explainKo: '`-아야/어야`는 결과를 위한 조건을 말할 때 중심이 되는 표현입니다.',
+                explainVi: '`-아야/어야` là mẫu trọng tâm để nói điều kiện cho kết quả.'
+            }
+        ];
+
+        const progress = document.getElementById('progress');
+        const progressBar = document.getElementById('progressBar');
+        const qGrammar = document.getElementById('qGrammar');
+        const qText = document.getElementById('qText');
+        const qHintKo = document.getElementById('qHintKo');
+        const qHintVi = document.getElementById('qHintVi');
+        const choices = document.getElementById('choices');
+        const shortWrap = document.getElementById('shortWrap');
+        const shortInput = document.getElementById('shortInput');
+        const checkShortBtn = document.getElementById('checkShortBtn');
+        const feedbackBox = document.getElementById('feedbackBox');
+        const nextBtn = document.getElementById('nextBtn');
+        const resultPanel = document.getElementById('resultPanel');
+
+        const state = {
+            viOn: false,
+            idx: 0,
+            score: 0,
+            answered: false,
+            logs: []
+        };
+
+        function esc(text) {
+            return String(text == null ? '' : text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function normalize(text) {
+            return String(text || '').toLowerCase().replace(/[\s.,!?~]/g, '');
+        }
+
+        function showTab(name) {
+            const learn = name === 'learn';
+            learnPanel.classList.toggle('hidden', !learn);
+            practicePanel.classList.toggle('hidden', learn);
+            tabLearn.classList.toggle('active', learn);
+            tabPractice.classList.toggle('active', !learn);
+            tabLearn.classList.toggle('text-slate-600', !learn);
+            tabPractice.classList.toggle('text-slate-600', learn);
+            if (!learn) {
+                renderQuestion();
+            }
+        }
+
+        function toggleVi() {
+            state.viOn = !state.viOn;
+            page.classList.toggle('vi-on', state.viOn);
+            viToggle.textContent = state.viOn ? 'Tiếng Việt ON' : 'Tiếng Việt OFF';
+        }
+
+        function renderQuestion() {
+            if (state.idx >= quiz.length) {
+                renderResult();
+                return;
+            }
+
+            const q = quiz[state.idx];
+            state.answered = false;
+            progress.textContent = (state.idx + 1) + ' / ' + quiz.length;
+            progressBar.style.width = Math.round(((state.idx + 1) / quiz.length) * 100) + '%';
+            qGrammar.textContent = q.grammar;
+            qText.textContent = q.q;
+            qHintKo.textContent = '상황: ' + q.hintKo;
+            qHintVi.textContent = 'Tình huống: ' + q.hintVi;
+            choices.innerHTML = '';
+            feedbackBox.classList.add('hidden');
+            feedbackBox.innerHTML = '';
+            nextBtn.classList.add('hidden');
+            resultPanel.classList.add('hidden');
+            shortWrap.classList.add('hidden');
+            shortInput.value = '';
+            shortInput.disabled = false;
+            checkShortBtn.disabled = false;
+
+            if (q.type === 'mcq') {
+                q.options.forEach(function (option) {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'option-btn w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-left text-sm font-bold text-slate-800 transition hover:border-green-400 hover:bg-green-50';
+                    btn.textContent = option;
+                    btn.addEventListener('click', function () {
+                        answerQuestion(option);
+                    });
+                    choices.appendChild(btn);
+                });
+            } else {
+                shortWrap.classList.remove('hidden');
+            }
+        }
+
+        function lockInputs() {
+            Array.from(choices.querySelectorAll('button')).forEach(function (btn) {
+                btn.disabled = true;
+            });
+            shortInput.disabled = true;
+            checkShortBtn.disabled = true;
+        }
+
+        function feedbackHtml(ok, user, correct, q) {
+            const toneClass = ok ? 'text-emerald-700' : 'text-rose-700';
+            const boxClass = ok ? 'bg-emerald-50 border-emerald-200' : 'bg-rose-50 border-rose-200';
+            feedbackBox.className = 'mt-4 rounded-2xl border p-4 ' + boxClass;
+            return '' +
+                '<p class="text-sm font-black ' + toneClass + '">' + (ok ? '정답입니다.' : '오답입니다.') + ' <span class="text-xs">(' + (ok ? 'Đúng' : 'Sai') + ')</span></p>' +
+                '<p class="mt-2 text-xs text-slate-700"><b>내 답:</b> ' + esc(user || '(무응답)') + '</p>' +
+                '<p class="mt-1 text-xs text-slate-700"><b>정답:</b> <span class="font-black">' + esc(correct) + '</span></p>' +
+                '<p class="mt-2 text-xs text-slate-700 safe"><b>설명(KO):</b> ' + esc(q.explainKo) + '</p>' +
+                '<p class="vi-text mt-1 text-xs text-green-700 safe"><b>Giải thích (VI):</b> ' + esc(q.explainVi) + '</p>';
+        }
+
+        function answerQuestion(user) {
+            if (state.answered) {
+                return;
+            }
+            const q = quiz[state.idx];
+            let ok = false;
+            const correct = q.type === 'mcq' ? q.answer : q.answers[0];
+
+            if (q.type === 'mcq') {
+                ok = user === q.answer;
+            } else {
+                const value = normalize(user);
+                ok = q.answers.some(function (answer) {
+                    return normalize(answer) === value;
+                });
+            }
+
+            state.answered = true;
+            if (ok) {
+                state.score += 1;
+            }
+            state.logs.push({
+                ok: ok,
+                q: q.q,
+                user: user,
+                correct: correct,
+                explainKo: q.explainKo,
+                explainVi: q.explainVi
+            });
+
+            feedbackBox.classList.remove('hidden');
+            feedbackBox.innerHTML = feedbackHtml(ok, user, correct, q);
+            nextBtn.classList.remove('hidden');
+            lockInputs();
+        }
+
+        function renderResult() {
+            const wrong = state.logs.filter(function (item) {
+                return !item.ok;
+            });
+            const percent = Math.round((state.score / quiz.length) * 100);
+
+            let wrongHtml = '';
+            if (!wrong.length) {
+                wrongHtml = '' +
+                    '<p class="text-sm text-emerald-700">모든 문항을 정확히 풀었습니다.</p>' +
+                    '<p class="vi-text mt-1 text-xs text-green-700">Bạn đã làm đúng toàn bộ câu hỏi.</p>';
+            } else {
+                wrongHtml = wrong.map(function (item, index) {
+                    return '' +
+                        '<article class="rounded-2xl border border-rose-200 bg-rose-50 p-3">' +
+                        '<p class="text-xs font-black text-rose-700">오답 ' + (index + 1) + '</p>' +
+                        '<p class="mt-1 text-sm text-slate-800 safe">' + esc(item.q) + '</p>' +
+                        '<p class="mt-2 text-xs text-slate-700"><b>내 답:</b> ' + esc(item.user || '(무응답)') + '</p>' +
+                        '<p class="mt-1 text-xs text-slate-700"><b>정답:</b> <span class="font-black">' + esc(item.correct) + '</span></p>' +
+                        '<p class="mt-2 text-xs text-rose-700 safe"><b>설명(KO):</b> ' + esc(item.explainKo) + '</p>' +
+                        '<p class="vi-text mt-1 text-xs text-green-700 safe"><b>Giải thích (VI):</b> ' + esc(item.explainVi) + '</p>' +
+                        '</article>';
+                }).join('');
+            }
+
+            resultPanel.innerHTML = '' +
+                '<div class="rounded-3xl border border-green-200 bg-green-50 p-4 text-center">' +
+                '<p class="text-xs font-black tracking-[0.14em] text-green-700">PRACTICE COMPLETE</p>' +
+                '<h3 class="mt-2 text-3xl font-black text-slate-900">' + state.score + ' / ' + quiz.length + '</h3>' +
+                '<p class="mt-1 text-sm text-slate-600">정답률 ' + percent + '%</p>' +
+                '<button id="restartBtn" class="mt-4 rounded-2xl bg-slate-900 px-4 py-2 text-sm font-black text-white" type="button">다시 풀기</button>' +
+                '</div>' +
+                '<div class="mt-3 space-y-2">' + wrongHtml + '</div>';
+
+            resultPanel.classList.remove('hidden');
+            document.getElementById('restartBtn').addEventListener('click', function () {
+                state.idx = 0;
+                state.score = 0;
+                state.answered = false;
+                state.logs = [];
+                renderQuestion();
+            });
+        }
+
+        tabLearn.addEventListener('click', function () { showTab('learn'); });
+        tabPractice.addEventListener('click', function () { showTab('practice'); });
+        viToggle.addEventListener('click', toggleVi);
+        checkShortBtn.addEventListener('click', function () {
+            const value = shortInput.value.trim();
+            if (!value) {
+                return;
+            }
+            answerQuestion(value);
+        });
+        shortInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter' && !state.answered) {
+                event.preventDefault();
+                checkShortBtn.click();
+            }
+        });
+        nextBtn.addEventListener('click', function () {
+            state.idx += 1;
+            renderQuestion();
+        });
+
+        showTab('learn');
+    </script>
+    <script src="../shared/learning-enhancements.js"></script>
+</body>
+</html>

@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>12과 문법1-2 업그레이드 | 이유 표현 브라우저</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-a: #f6f7ef;
+            --bg-b: #fffdf7;
+            --ink: #1f2937;
+            --muted: #5b6473;
+            --line: #d9d6c8;
+            --accent: #0f766e;
+            --accent-soft: #d7f3ef;
+            --accent-2: #a16207;
+        }
+        body {
+            margin: 0;
+            font-family: "Noto Sans KR", "Manrope", sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(15, 118, 110, 0.15), transparent 28%),
+                radial-gradient(circle at top right, rgba(161, 98, 7, 0.11), transparent 30%),
+                linear-gradient(180deg, var(--bg-a), var(--bg-b));
+        }
+        .safe { word-break: keep-all; overflow-wrap: break-word; }
+        .vi-help { display: none; font-size: 12px; line-height: 1.55; color: #0b5f58; }
+        .vi-on .vi-help { display: block; }
+        .chip.active { background: var(--accent-soft); border-color: rgba(15,118,110,.3); color: #115e59; }
+        .card.selected { border-color: rgba(15,118,110,.7); box-shadow: 0 0 0 2px rgba(15,118,110,.15), 0 18px 30px rgba(15,118,110,.08); background: linear-gradient(180deg, rgba(244,253,251,.98), rgba(234,250,246,.96)); }
+        .compare-bar { transform: translateY(140%); transition: transform .22s ease; }
+        .compare-bar.show { transform: translateY(0); }
+        .overlay { background: rgba(15,23,42,.56); backdrop-filter: blur(8px); }
+        .toast { opacity: 0; transform: translate(-50%, 16px); transition: opacity .2s ease, transform .2s ease; }
+        .toast.show { opacity: 1; transform: translate(-50%, 0); }
+        .compare-track { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(280px, 82vw); gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; }
+        .compare-card { scroll-snap-align: start; }
+    </style>
+</head>
+<body>
+    <nav class="sticky top-0 z-40 flex items-center gap-3 border-b border-amber-100 bg-[rgba(255,253,246,.92)] px-4 py-3 backdrop-blur">
+        <a class="text-sm font-extrabold text-teal-800 no-underline" href="../index.html">메인</a>
+        <span class="text-slate-400">|</span>
+        <a class="text-sm font-extrabold text-teal-800 no-underline" href="index.html">12과 목록</a>
+        <span class="text-slate-400">|</span>
+        <a class="text-sm font-extrabold text-teal-800 no-underline" href="grammar1-2.html">원본 보기</a>
+    </nav>
+
+    <main class="mx-auto w-[min(1080px,calc(100vw-16px))] px-0 py-4 pb-28">
+        <section class="rounded-[28px] border border-white/80 bg-white/90 p-5 shadow-[0_20px_50px_rgba(17,24,39,.08)]">
+            <p class="font-['Manrope'] text-xs font-extrabold tracking-[0.18em] text-teal-700">C12 GRAMMAR 1-2 UPGRADED</p>
+            <div class="mt-3 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                <div>
+                    <h1 class="safe text-[30px] font-black leading-tight tracking-[-0.04em] text-slate-900 md:text-[40px]">이유 표현 탐색 브라우저</h1>
+                    <p class="safe mt-3 text-sm leading-7 text-slate-600">문법1-2는 한 문법씩 읽는 방식보다, 비슷한 이유 표현을 묶어서 비교하며 보는 방식이 더 효과적입니다. 그래서 원본의 검색·비교·상세보기 흐름을 살린 업그레이드본으로 구성했습니다.</p>
+                    <p class="vi-help safe mt-2">File ngữ pháp 1 phù hợp hơn với cách học theo cụm và so sánh các mẫu lý do giống nhau. Vì vậy bản nâng cấp này giữ cấu trúc tìm kiếm, so sánh và xem chi tiết của bản gốc.</p>
+                </div>
+                <button id="viToggle" class="shrink-0 rounded-full border border-teal-200 bg-white px-4 py-3 text-xs font-extrabold text-teal-800" type="button">Tiếng Việt OFF</button>
+            </div>
+
+            <div class="mt-5 grid gap-3 md:grid-cols-3">
+                <article class="rounded-[22px] border border-slate-200 bg-slate-50 p-4">
+                    <p class="font-bold text-slate-900">1. 기본 이유 4개 먼저</p>
+                    <p class="safe mt-2 text-sm leading-6 text-slate-600">-아/어서, -(으)니까, -기 때문에, -(으)므로를 먼저 묶어 보면 격식과 명령문 가능 여부가 빨리 정리됩니다.</p>
+                    <p class="vi-help safe mt-2">Hãy học trước 4 mẫu lý do cơ bản. Khi đặt cạnh nhau, mức độ trang trọng và việc có dùng với câu mệnh lệnh hay không sẽ hiện ra rất rõ.</p>
+                </article>
+                <article class="rounded-[22px] border border-slate-200 bg-slate-50 p-4">
+                    <p class="font-bold text-slate-900">2. 부정 결과 4개 대조</p>
+                    <p class="safe mt-2 text-sm leading-6 text-slate-600">-느라고, -는 바람에, -는 통에, -(으)ㄴ/는 탓에는 모두 나쁜 결과이지만 원인의 성격이 다릅니다.</p>
+                    <p class="vi-help safe mt-2">Bốn mẫu này đều dẫn đến kết quả tiêu cực, nhưng bản chất nguyên nhân khác nhau: do mình mải làm, do sự cố bất ngờ, do hoàn cảnh xung quanh hay do sắc thái trách móc.</p>
+                </article>
+                <article class="rounded-[22px] border border-slate-200 bg-slate-50 p-4">
+                    <p class="font-bold text-slate-900">3. 발견과 평가 분리</p>
+                    <p class="safe mt-2 text-sm leading-6 text-slate-600">-았/었더니, -다 보니는 과정의 발견이고, -고 해서, -(으)ㄴ/는 덕분에는 이유를 말하는 태도와 방향이 핵심입니다.</p>
+                    <p class="vi-help safe mt-2">-았/었더니 và -다 보니 là nhóm phát hiện trong quá trình. Còn -고 해서 và -(으)ㄴ/는 덕분에 quan trọng ở thái độ nêu lý do và hướng cảm xúc.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="mt-4 rounded-[28px] border border-white/80 bg-white/90 p-5 shadow-[0_20px_50px_rgba(17,24,39,.08)]">
+            <div class="grid gap-3 md:grid-cols-[1fr_auto] md:items-end">
+                <label class="block">
+                    <span class="font-['Manrope'] text-xs font-extrabold tracking-[0.16em] text-teal-800">SEARCH</span>
+                    <input id="searchInput" class="mt-2 h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm" type="text" placeholder="문법, 의미, 예문으로 검색해 보세요">
+                </label>
+                <button id="compareModeBtn" class="rounded-full border border-slate-300 bg-white px-4 py-3 text-sm font-bold text-slate-700" type="button">비교 모드 OFF</button>
+            </div>
+
+            <div class="mt-4">
+                <p class="text-sm font-black text-slate-900">필터</p>
+                <p class="safe mt-1 text-xs text-slate-500">지금 집중할 묶음만 골라서 보세요.</p>
+                <p class="vi-help safe mt-1">Chỉ chọn đúng nhóm bạn muốn tập trung lúc này.</p>
+                <div id="filterRow" class="mt-3 flex flex-wrap gap-2"></div>
+            </div>
+
+            <div class="mt-4 border-t border-slate-200 pt-4">
+                <p class="text-sm font-black text-slate-900">추천 비교</p>
+                <p class="safe mt-1 text-xs text-slate-500">한 번에 눌러서 바로 비교 화면으로 들어갑니다.</p>
+                <p class="vi-help safe mt-1">Chạm một lần để mở ngay màn hình so sánh.</p>
+                <div id="pairRow" class="mt-3 flex flex-wrap gap-2"></div>
+            </div>
+
+            <div id="recentWrap" class="mt-4 hidden border-t border-slate-200 pt-4">
+                <p class="text-sm font-black text-slate-900">최근 본 문법</p>
+                <p class="safe mt-1 text-xs text-slate-500">방금 본 문법을 다시 열어 복습할 수 있습니다.</p>
+                <p class="vi-help safe mt-1">Bạn có thể mở lại nhanh những mẫu vừa xem để ôn lại.</p>
+                <div id="recentRow" class="mt-3 flex flex-wrap gap-2"></div>
+            </div>
+        </section>
+
+        <section class="mt-4 rounded-[28px] border border-white/80 bg-white/90 p-5 shadow-[0_20px_50px_rgba(17,24,39,.08)]">
+            <div class="flex items-start justify-between gap-3">
+                <div>
+                    <h2 class="text-xl font-black text-slate-900">문법 카드</h2>
+                    <p id="resultCount" class="safe mt-1 text-sm text-slate-500">12개 문법을 표시하고 있습니다.</p>
+                    <p class="vi-help safe mt-1">Đang hiển thị 12 mẫu ngữ pháp.</p>
+                </div>
+            </div>
+            <div id="cardGrid" class="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3"></div>
+        </section>
+    </main>
+
+    <div id="compareBar" class="compare-bar fixed bottom-3 left-3 right-3 z-50 rounded-[22px] bg-slate-900 p-4 text-white shadow-[0_24px_50px_rgba(15,23,42,.28)]">
+        <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div>
+                <p id="compareTitle" class="text-sm font-black">비교 모드가 켜졌습니다.</p>
+                <p id="compareSubtitle" class="mt-1 text-xs leading-5 text-white/75">카드를 눌러 2~3개를 선택하세요.</p>
+            </div>
+            <div class="flex gap-2">
+                <button id="clearSelectionBtn" class="flex-1 rounded-full border border-white/20 bg-white/10 px-4 py-3 text-sm font-bold text-white" type="button">초기화</button>
+                <button id="openCompareBtn" class="flex-1 rounded-full bg-teal-600 px-4 py-3 text-sm font-black text-white disabled:opacity-40" type="button" disabled>비교 보기</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="detailModal" class="overlay fixed inset-0 z-[70] hidden items-end justify-center p-3 md:items-center">
+        <div class="max-h-[92vh] w-full max-w-4xl overflow-hidden rounded-[28px] bg-[#fffef9] shadow-2xl">
+            <div class="flex items-start justify-between gap-3 border-b border-slate-200 bg-white/95 px-5 py-4">
+                <div>
+                    <h3 id="detailTitle" class="text-[28px] font-black leading-tight text-slate-900"></h3>
+                    <p id="detailFormula" class="mt-2 font-['Manrope'] text-xs font-extrabold tracking-[0.03em] text-amber-700"></p>
+                    <div id="detailBadges" class="mt-3 flex flex-wrap gap-2"></div>
+                </div>
+                <button id="closeDetailBtn" class="h-10 w-10 shrink-0 rounded-full border border-slate-200 bg-white text-xl text-slate-600" type="button" aria-label="닫기">×</button>
+            </div>
+            <div id="detailBody" class="max-h-[calc(92vh-110px)] overflow-y-auto px-5 py-5"></div>
+        </div>
+    </div>
+
+    <div id="compareModal" class="overlay fixed inset-0 z-[70] hidden items-end justify-center p-3 md:items-center">
+        <div class="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[28px] bg-[#fffef9] shadow-2xl">
+            <div class="flex items-start justify-between gap-3 border-b border-slate-200 bg-white/95 px-5 py-4">
+                <div>
+                    <h3 class="text-[26px] font-black leading-tight text-slate-900">선택한 문법 비교</h3>
+                    <p class="safe mt-2 text-sm text-slate-500">모바일에서는 카드를 좌우로 넘기며 비교하면 가장 편합니다.</p>
+                    <p class="vi-help safe mt-1">Trên điện thoại, cách dễ nhất là vuốt sang trái phải để so sánh từng thẻ.</p>
+                </div>
+                <button id="closeCompareBtn" class="h-10 w-10 shrink-0 rounded-full border border-slate-200 bg-white text-xl text-slate-600" type="button" aria-label="닫기">×</button>
+            </div>
+            <div class="max-h-[calc(92vh-108px)] overflow-y-auto px-5 py-5">
+                <div id="compareTrack" class="compare-track"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast fixed bottom-24 left-1/2 z-[90] rounded-full bg-slate-900 px-4 py-3 text-sm font-bold text-white"></div>
+
+    <script>
+        const STORAGE_KEYS = {
+            vi: 'c12-grammar1-upgraded-vi',
+            recent: 'c12-grammar1-upgraded-recent'
+        };
+
+        const FILTERS = [
+            { id: 'all', label: '전체' },
+            { id: 'basic', label: '기본 이유' },
+            { id: 'formal', label: '격식' },
+            { id: 'negative', label: '부정 결과' },
+            { id: 'discovery', label: '발견/과정' },
+            { id: 'positive', label: '긍정 결과' }
+        ];
+
+        const QUICK_PAIRS = [
+            { label: '-아/어서 vs -(으)니까', ids: ['-아/어서', '-(으)니까'] },
+            { label: '-기 때문에 vs -(으)므로', ids: ['-기 때문에', '-(으)므로'] },
+            { label: '-느라고 vs -는 바람에', ids: ['-느라고', '-는 바람에'] },
+            { label: '-는 통에 vs -(으)ㄴ/는 탓에', ids: ['-는 통에', '-(으)ㄴ/는 탓에'] },
+            { label: '-았/었더니 vs -다 보니', ids: ['-았/었더니', '-다 보니'] },
+            { label: '-(으)ㄴ/는 탓에 vs -(으)ㄴ/는 덕분에', ids: ['-(으)ㄴ/는 탓에', '-(으)ㄴ/는 덕분에'] }
+        ];
+
+        const GRAMMARS = [
+            {
+                id: '-아/어서',
+                formula: 'V/A + -아/어서',
+                tags: ['basic'],
+                group: '기본 이유',
+                tone: '중립',
+                result: '중립',
+                focusKo: '왜?에 답하는 가장 기본 표현',
+                focusVi: 'Mẫu lý do cơ bản nhất để trả lời “Tại sao?”',
+                coreKo: '가장 기본적인 이유 표현으로 일상 대화에서 자연스럽게 씁니다.',
+                coreVi: 'Đây là mẫu lý do cơ bản nhất và rất tự nhiên trong hội thoại hằng ngày.',
+                whenKo: '자연스러운 원인이나 이유를 부드럽게 설명할 때 가장 무난합니다.',
+                whenVi: 'Dùng rất tự nhiên khi giải thích nguyên nhân một cách mềm và trung tính.',
+                cautionKo: '명령문, 청유문과는 보통 잘 어울리지 않습니다.',
+                cautionVi: 'Thường không hợp với câu mệnh lệnh hay câu rủ rê.',
+                compareKo: '-(으)니까는 화자의 판단이 더 강하고 뒤에 명령문도 올 수 있습니다.',
+                compareVi: '-(으)니까 mang sắc thái phán đoán mạnh hơn và có thể đi với câu mệnh lệnh.',
+                examples: [
+                    { ko: '날씨가 추워서 창문을 닫았어요.', vi: 'Vì trời lạnh nên tôi đóng cửa sổ.' },
+                    { ko: '늦어서 죄송합니다.', vi: 'Tôi xin lỗi vì đến muộn.' }
+                ]
+            },
+            {
+                id: '-(으)니까',
+                formula: 'V/A + -(으)니까',
+                tags: ['basic'],
+                group: '기본 이유',
+                tone: '회화 중심',
+                result: '중립',
+                focusKo: '판단이 들어간 이유 + 명령/권유 가능',
+                focusVi: 'Lý do có kèm phán đoán, dùng được với mệnh lệnh/rủ rê',
+                coreKo: '말하는 사람의 판단이나 확인을 바탕으로 이유를 말할 때 자주 씁니다.',
+                coreVi: 'Mẫu này thường nêu lý do dựa trên phán đoán hay sự xác nhận của người nói.',
+                whenKo: '조언, 명령, 권유와 자연스럽게 이어질 때 특히 많이 씁니다.',
+                whenVi: 'Đặc biệt hay dùng khi nối sang lời khuyên, mệnh lệnh hay lời rủ rê.',
+                cautionKo: '객관적 설명보다 화자의 시각이 더 살아 있습니다.',
+                cautionVi: 'So với cách giải thích khách quan, góc nhìn của người nói hiện rõ hơn.',
+                compareKo: '-아/어서는 명령문이 어렵지만, -(으)니까는 “가져가세요”, “갑시다”와 잘 이어집니다.',
+                compareVi: '-아/어서 khó đi với câu mệnh lệnh, còn -(으)니까 nối tự nhiên với “hãy...” hay “chúng ta...”.',
+                examples: [
+                    { ko: '비가 오니까 우산을 가져가세요.', vi: 'Vì trời mưa nên hãy mang ô đi.' },
+                    { ko: '시간이 없으니까 빨리 갑시다.', vi: 'Vì không có thời gian nên chúng ta đi nhanh thôi.' }
+                ]
+            },
+            {
+                id: '-기 때문에',
+                formula: 'V/A + -기 때문에',
+                tags: ['basic', 'formal'],
+                group: '기본 이유',
+                tone: '설명적',
+                result: '중립',
+                focusKo: '객관적이고 설명적인 이유',
+                focusVi: 'Lý do mang tính giải thích và khách quan',
+                coreKo: '객관적인 사실이나 분명한 원인을 설명할 때 많이 쓰는 표현입니다.',
+                coreVi: 'Mẫu này thường dùng khi giải thích sự thật khách quan hay nguyên nhân rõ ràng.',
+                whenKo: '안내문, 발표, 설명문처럼 차분하게 이유를 제시할 때 잘 맞습니다.',
+                whenVi: 'Phù hợp với thông báo, bài trình bày và lời giải thích điềm tĩnh.',
+                cautionKo: '명령문, 청유문과는 보통 잘 어울리지 않습니다.',
+                cautionVi: 'Thường không hợp với câu mệnh lệnh hay câu rủ rê.',
+                compareKo: '-(으)므로보다 덜 딱딱하고, -(으)니까보다 객관적인 느낌입니다.',
+                compareVi: 'Mẫu này bớt cứng hơn -(으)므로 và khách quan hơn -(으)니까.',
+                examples: [
+                    { ko: '교통이 많이 막히기 때문에 일찍 출발해야 합니다.', vi: 'Vì giao thông tắc nhiều nên phải xuất phát sớm.' },
+                    { ko: '건강이 중요하기 때문에 규칙적으로 운동합니다.', vi: 'Vì sức khỏe quan trọng nên tôi tập thể dục đều đặn.' }
+                ]
+            },
+            {
+                id: '-(으)므로',
+                formula: 'V/A + -(으)므로',
+                tags: ['formal'],
+                group: '격식 이유',
+                tone: '매우 격식',
+                result: '중립',
+                focusKo: '공식 문어체에서 쓰는 이유',
+                focusVi: 'Mẫu lý do dùng trong văn viết rất trang trọng',
+                coreKo: '매우 격식적인 이유 표현으로 공지문, 보고서, 공식 발표에서 자연스럽습니다.',
+                coreVi: 'Đây là mẫu lý do rất trang trọng, tự nhiên trong thông báo, báo cáo và phát biểu chính thức.',
+                whenKo: '문어체 문장이나 공식적인 안내 문맥에서 쓰면 좋습니다.',
+                whenVi: 'Hợp với câu văn viết và bối cảnh thông báo chính thức.',
+                cautionKo: '일상 대화에서 쓰면 지나치게 딱딱하게 들릴 수 있습니다.',
+                cautionVi: 'Nếu dùng trong hội thoại hằng ngày, câu dễ nghe quá cứng.',
+                compareKo: '-기 때문에와 뜻은 비슷하지만 격식 수준이 훨씬 높습니다.',
+                compareVi: 'Nghĩa gần với -기 때문에 nhưng mức độ trang trọng cao hơn nhiều.',
+                examples: [
+                    { ko: '자료가 모두 준비되었으므로 회의를 시작하겠습니다.', vi: 'Vì tài liệu đã chuẩn bị xong nên chúng tôi xin bắt đầu cuộc họp.' },
+                    { ko: '본 건은 중요하므로 신중히 검토해야 합니다.', vi: 'Vì việc này quan trọng nên cần xem xét cẩn thận.' }
+                ]
+            },
+            {
+                id: '-느라고',
+                formula: 'V + -느라고',
+                tags: ['negative'],
+                group: '부정 결과',
+                tone: '몰두',
+                result: '부정',
+                focusKo: '앞일에 매달리다가 뒤일을 못 함',
+                focusVi: 'Mải làm việc trước nên không làm được việc sau',
+                coreKo: '앞의 행동에 집중하느라 뒤의 행동을 못 했거나 좋지 않은 결과가 생겼음을 말합니다.',
+                coreVi: 'Mẫu này diễn tả việc mải tập trung vào hành động trước nên không làm được việc sau hoặc dẫn đến kết quả xấu.',
+                whenKo: '같은 사람이 두 행동을 할 때 앞행동 때문에 뒤행동이 막혔음을 말합니다.',
+                whenVi: 'Dùng khi cùng một người có hai hành động và hành động trước cản trở hành động sau.',
+                cautionKo: '앞절과 뒤절의 주어가 같아야 하고 보통 부정 결과가 옵니다.',
+                cautionVi: 'Chủ ngữ hai vế phải giống nhau và phía sau thường là kết quả tiêu cực.',
+                compareKo: '-는 바람에는 뜻밖의 사건이 원인이지만, -느라고는 내가 하던 행동이 원인입니다.',
+                compareVi: '-는 바람에 là do sự việc bất ngờ, còn -느라고 là do chính hành động mình đang làm.',
+                examples: [
+                    { ko: '숙제를 하느라고 전화를 못 받았어요.', vi: 'Vì mải làm bài tập nên tôi không nghe điện thoại được.' },
+                    { ko: '게임을 하느라고 밤을 새웠어요.', vi: 'Vì mải chơi game nên tôi thức trắng đêm.' }
+                ]
+            },
+            {
+                id: '-는 바람에',
+                formula: 'V + -는 바람에',
+                tags: ['negative'],
+                group: '부정 결과',
+                tone: '돌발',
+                result: '부정',
+                focusKo: '갑작스러운 사건 때문에 생긴 나쁜 결과',
+                focusVi: 'Kết quả xấu do sự việc bất ngờ gây ra',
+                coreKo: '예상하지 못한 일이 갑자기 생겨서 좋지 않은 결과가 나왔을 때 씁니다.',
+                coreVi: 'Mẫu này dùng khi có một sự việc bất ngờ xảy ra và kéo theo kết quả không tốt.',
+                whenKo: '갑자기 비가 오거나 버스를 놓치는 등 돌발적 원인에 잘 맞습니다.',
+                whenVi: 'Rất hợp với nguyên nhân bất ngờ như trời đột nhiên mưa hay lỡ xe buýt.',
+                cautionKo: '대체로 부정적인 결과와 함께 쓰고 과거 상황에서 특히 자연스럽습니다.',
+                cautionVi: 'Thường đi với kết quả tiêu cực và rất tự nhiên khi kể lại chuyện quá khứ.',
+                compareKo: '-는 통에는 어수선한 상황이 계속되는 느낌이 더 강합니다.',
+                compareVi: '-는 통에 nhấn mạnh hơn cảm giác hoàn cảnh rối rắm kéo dài.',
+                examples: [
+                    { ko: '갑자기 비가 오는 바람에 운동을 못 했어요.', vi: 'Vì trời đột nhiên mưa nên tôi không tập thể dục được.' },
+                    { ko: '버스를 놓치는 바람에 지각했어요.', vi: 'Vì lỡ xe buýt nên tôi bị muộn.' }
+                ]
+            },
+            {
+                id: '-는 통에',
+                formula: 'V + -는 통에',
+                tags: ['negative'],
+                group: '부정 결과',
+                tone: '상황 방해',
+                result: '부정',
+                focusKo: '시끄럽고 복잡한 상황 때문에 생긴 나쁜 결과',
+                focusVi: 'Kết quả xấu do hoàn cảnh xung quanh gây cản trở',
+                coreKo: '주변 환경이 시끄럽거나 복잡해서 방해를 받는 상황을 말할 때 자주 씁니다.',
+                coreVi: 'Mẫu này thường dùng khi hoàn cảnh xung quanh ồn ào hay phức tạp làm cản trở mình.',
+                whenKo: '공사 소음, 사람 많은 곳, 복잡한 주변 상황 때문에 문제가 생겼을 때 자연스럽습니다.',
+                whenVi: 'Tự nhiên khi có vấn đề do tiếng ồn công trình, nơi quá đông người hay hoàn cảnh hỗn độn.',
+                cautionKo: '주변 환경의 방해가 중심일 때 더 자연스럽고 긍정 결과와는 거의 안 씁니다.',
+                cautionVi: 'Tự nhiên nhất khi trọng tâm là sự cản trở từ môi trường xung quanh và hầu như không dùng với kết quả tích cực.',
+                compareKo: '-는 바람에보다 더 지속적이거나 어수선한 상황을 떠올리게 합니다.',
+                compareVi: 'So với -는 바람에, mẫu này gợi hoàn cảnh kéo dài hoặc hỗn độn hơn.',
+                examples: [
+                    { ko: '옆집 공사하는 통에 잠을 못 잤어요.', vi: 'Vì nhà bên cạnh đang thi công ồn ào nên tôi không ngủ được.' },
+                    { ko: '사람이 너무 많은 통에 길을 잃었어요.', vi: 'Vì đông người quá nên tôi bị lạc đường.' }
+                ]
+            },
+            {
+                id: '-(으)ㄴ/는 탓에',
+                formula: 'V/A + -(으)ㄴ/는 탓에',
+                tags: ['negative'],
+                group: '부정 결과',
+                tone: '비난/원망',
+                result: '부정',
+                focusKo: '원인을 탓하는 느낌의 이유',
+                focusVi: 'Mẫu lý do mang sắc thái trách móc',
+                coreKo: '좋지 않은 결과의 원인을 지적하거나 원망하는 느낌이 있는 표현입니다.',
+                coreVi: 'Mẫu này có cảm giác chỉ ra hay trách móc nguyên nhân của kết quả xấu.',
+                whenKo: '누군가의 실수나 상황 때문에 안 좋은 일이 생겼다고 말할 때 자주 씁니다.',
+                whenVi: 'Thường dùng khi nói rằng vì lỗi của ai đó hay vì một tình huống nào đó mà chuyện xấu xảy ra.',
+                cautionKo: '긍정 결과에는 쓰지 않고, 말투가 강하게 들릴 수 있습니다.',
+                cautionVi: 'Không dùng với kết quả tích cực và sắc thái có thể nghe khá mạnh.',
+                compareKo: '-(으)ㄴ/는 덕분에와는 방향이 완전히 반대입니다.',
+                compareVi: 'Mẫu này hoàn toàn đối lập về hướng cảm xúc với -(으)ㄴ/는 덕분에.',
+                examples: [
+                    { ko: '네가 늦게 온 탓에 회의를 늦게 시작했어요.', vi: 'Vì bạn đến muộn nên cuộc họp đã bắt đầu chậm.' },
+                    { ko: '비가 많이 온 탓에 길이 막혔어요.', vi: 'Vì mưa nhiều nên đường bị tắc.' }
+                ]
+            },
+            {
+                id: '-았/었더니',
+                formula: 'V + -았/었더니',
+                tags: ['discovery'],
+                group: '발견/결과',
+                tone: '직접 경험',
+                result: '발견',
+                focusKo: '직접 해 보니 결과를 알게 됨',
+                focusVi: 'Sau khi tự làm mới biết được kết quả hay sự thật',
+                coreKo: '내가 직접 어떤 행동을 한 뒤 그 결과를 보거나 새로운 사실을 알게 되었음을 말합니다.',
+                coreVi: 'Mẫu này diễn tả việc sau khi chính mình làm một hành động, mình thấy kết quả hoặc biết thêm sự thật mới.',
+                whenKo: '직접 해 본 뒤 알게 된 결과나 즉각적인 변화를 말할 때 자연스럽습니다.',
+                whenVi: 'Tự nhiên khi nói về kết quả hay thay đổi thấy được sau khi tự mình thử làm.',
+                cautionKo: '앞절은 보통 화자의 직접 경험이어야 합니다.',
+                cautionVi: 'Vế trước thường phải là trải nghiệm trực tiếp của người nói.',
+                compareKo: '-다 보니는 반복 과정이 중요하지만, -았/었더니는 한 번 해 본 뒤에도 쓸 수 있습니다.',
+                compareVi: '-다 보니 nhấn mạnh quá trình lặp lại, còn -았/었더니 dùng được cả sau một lần trực tiếp thử làm.',
+                examples: [
+                    { ko: '창문을 열었더니 바람이 시원하게 들어왔어요.', vi: 'Tôi mở cửa sổ ra thì gió mát ùa vào.' },
+                    { ko: '약을 먹었더니 좀 나아졌어요.', vi: 'Uống thuốc xong thì tôi thấy đỡ hơn một chút.' }
+                ]
+            },
+            {
+                id: '-다 보니',
+                formula: 'V + -다 보니',
+                tags: ['discovery'],
+                group: '발견/과정',
+                tone: '반복 과정',
+                result: '발견',
+                focusKo: '계속하다가 깨닫게 되는 변화',
+                focusVi: 'Sự thay đổi hay phát hiện xuất hiện trong quá trình tiếp tục làm',
+                coreKo: '어떤 행동을 계속하거나 반복하는 과정에서 새로운 사실을 알게 되거나 상태가 바뀌었음을 말합니다.',
+                coreVi: 'Mẫu này nói về việc trong quá trình cứ tiếp tục làm hay lặp lại, mình phát hiện điều mới hoặc trạng thái thay đổi.',
+                whenKo: '오래 살다, 자주 연습하다처럼 반복과 지속이 있을 때 잘 맞습니다.',
+                whenVi: 'Rất hợp khi có sự lặp lại hay kéo dài như sống lâu hay luyện tập thường xuyên.',
+                cautionKo: '한 번의 행동보다 반복·지속 행동에 더 자연스럽습니다.',
+                cautionVi: 'Mẫu này tự nhiên hơn với hành động lặp lại hay kéo dài hơn là hành động một lần.',
+                compareKo: '-았/었더니가 즉각적 체험이라면, -다 보니는 누적된 과정의 결과입니다.',
+                compareVi: 'Nếu -았/었더니 là trải nghiệm khá tức thời thì -다 보니 là kết quả của một quá trình tích lũy.',
+                examples: [
+                    { ko: '한국에서 오래 살다 보니 매운 음식이 괜찮아졌어요.', vi: 'Sống ở Hàn lâu rồi nên tôi dần ăn được đồ cay.' },
+                    { ko: '매일 연습하다 보니 발음이 좋아졌어요.', vi: 'Vì luyện tập mỗi ngày nên phát âm của tôi tốt lên.' }
+                ]
+            },
+            {
+                id: '-고 해서',
+                formula: 'V/A + -고 해서',
+                tags: ['basic', 'discovery'],
+                group: '회화 이유',
+                tone: '가벼운 제시',
+                result: '중립',
+                focusKo: '여러 이유 중 하나를 편하게 제시',
+                focusVi: 'Nêu một lý do tiêu biểu một cách nhẹ nhàng',
+                coreKo: '여러 이유 중 하나를 대표로 가볍게 제시할 때 자주 쓰는 회화 표현입니다.',
+                coreVi: 'Đây là mẫu hội thoại thường dùng khi nêu ra nhẹ nhàng một lý do tiêu biểu trong nhiều lý do.',
+                whenKo: '어디에 간 이유나 어떤 선택을 한 이유를 편하게 설명할 때 자연스럽습니다.',
+                whenVi: 'Tự nhiên khi giải thích thoải mái lý do đi đâu đó hay chọn một phương án nào đó.',
+                cautionKo: '딱 하나의 이유만 말할 때보다 여러 사정이 섞여 있을 때 더 자연스럽습니다.',
+                cautionVi: 'Mẫu này tự nhiên hơn khi có nhiều lý do đan xen chứ không chỉ một lý do duy nhất.',
+                compareKo: '-아/어서보다 덜 단정적이고 “이런 사정도 있고 해서”의 느낌이 납니다.',
+                compareVi: 'So với -아/어서, mẫu này bớt trực tiếp hơn và có cảm giác “cũng vì có mấy lý do như vậy”.',
+                examples: [
+                    { ko: '친구도 보고 해서 부산에 갔어요.', vi: 'Tôi đi Busan cũng vì muốn gặp bạn bè nữa.' },
+                    { ko: '일도 끝났고 해서 일찍 집에 왔어요.', vi: 'Công việc cũng xong rồi nên tôi về nhà sớm.' }
+                ]
+            },
+            {
+                id: '-(으)ㄴ/는 덕분에',
+                formula: 'V/A + -(으)ㄴ/는 덕분에',
+                tags: ['positive'],
+                group: '긍정 결과',
+                tone: '감사/긍정',
+                result: '긍정',
+                focusKo: '좋은 원인 덕에 좋은 결과가 생김',
+                focusVi: 'Nhờ nguyên nhân tốt mà có kết quả tốt',
+                coreKo: '좋은 원인 때문에 좋은 결과가 생겼음을 말하며 감사나 긍정 평가가 들어갑니다.',
+                coreVi: 'Mẫu này nói rằng nhờ một nguyên nhân tốt mà có kết quả tốt, kèm sắc thái biết ơn hay đánh giá tích cực.',
+                whenKo: '도움, 좋은 환경, 좋은 조건 덕에 잘된 결과를 말할 때 자연스럽습니다.',
+                whenVi: 'Tự nhiên khi nói về kết quả tốt nhờ sự giúp đỡ, môi trường tốt hay điều kiện thuận lợi.',
+                cautionKo: '부정적인 결과에는 쓰지 않습니다.',
+                cautionVi: 'Không dùng cho kết quả tiêu cực.',
+                compareKo: '-(으)ㄴ/는 탓에가 비난이라면, -(으)ㄴ/는 덕분에는 감사의 방향입니다.',
+                compareVi: 'Nếu -(으)ㄴ/는 탓에 mang hướng trách móc thì -(으)ㄴ/는 덕분에 đi theo hướng biết ơn.',
+                examples: [
+                    { ko: '선생님 덕분에 한국어 실력이 많이 늘었어요.', vi: 'Nhờ thầy cô mà khả năng tiếng Hàn của tôi tiến bộ nhiều.' },
+                    { ko: '날씨가 좋아진 덕분에 산책을 즐겁게 했어요.', vi: 'Nhờ thời tiết đẹp lên nên tôi đã đi dạo rất vui.' }
+                ]
+            }
+        ];
+
+        const state = {
+            filter: 'all',
+            query: '',
+            compareMode: false,
+            selected: [],
+            recent: readJson(STORAGE_KEYS.recent, []),
+            viOn: readJson(STORAGE_KEYS.vi, false)
+        };
+
+        const body = document.body;
+        const viToggle = document.getElementById('viToggle');
+        const searchInput = document.getElementById('searchInput');
+        const filterRow = document.getElementById('filterRow');
+        const pairRow = document.getElementById('pairRow');
+        const recentWrap = document.getElementById('recentWrap');
+        const recentRow = document.getElementById('recentRow');
+        const cardGrid = document.getElementById('cardGrid');
+        const resultCount = document.getElementById('resultCount');
+        const compareModeBtn = document.getElementById('compareModeBtn');
+        const compareBar = document.getElementById('compareBar');
+        const compareTitle = document.getElementById('compareTitle');
+        const compareSubtitle = document.getElementById('compareSubtitle');
+        const clearSelectionBtn = document.getElementById('clearSelectionBtn');
+        const openCompareBtn = document.getElementById('openCompareBtn');
+        const detailModal = document.getElementById('detailModal');
+        const compareModal = document.getElementById('compareModal');
+        const detailTitle = document.getElementById('detailTitle');
+        const detailFormula = document.getElementById('detailFormula');
+        const detailBadges = document.getElementById('detailBadges');
+        const detailBody = document.getElementById('detailBody');
+        const compareTrack = document.getElementById('compareTrack');
+        const toast = document.getElementById('toast');
+
+        function readJson(key, fallback) {
+            try {
+                const saved = localStorage.getItem(key);
+                return saved ? JSON.parse(saved) : fallback;
+            } catch (error) {
+                return fallback;
+            }
+        }
+
+        function saveJson(key, value) {
+            try {
+                localStorage.setItem(key, JSON.stringify(value));
+            } catch (error) {
+                return;
+            }
+        }
+
+        function findGrammar(id) {
+            return GRAMMARS.find(function (item) {
+                return item.id === id;
+            });
+        }
+
+        function setViState(value) {
+            state.viOn = value;
+            body.classList.toggle('vi-on', value);
+            viToggle.textContent = value ? 'Tiếng Việt ON' : 'Tiếng Việt OFF';
+            saveJson(STORAGE_KEYS.vi, value);
+        }
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(showToast.timer);
+            showToast.timer = setTimeout(function () {
+                toast.classList.remove('show');
+            }, 1900);
+        }
+
+        function copyText(text, successMessage) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(function () {
+                    showToast(successMessage);
+                }).catch(function () {
+                    fallbackCopy(text, successMessage);
+                });
+                return;
+            }
+            fallbackCopy(text, successMessage);
+        }
+
+        function fallbackCopy(text, successMessage) {
+            const temp = document.createElement('textarea');
+            temp.value = text;
+            document.body.appendChild(temp);
+            temp.select();
+            try {
+                document.execCommand('copy');
+                showToast(successMessage);
+            } catch (error) {
+                showToast('복사에 실패했어요.');
+            }
+            document.body.removeChild(temp);
+        }
+
+        function speakText(text) {
+            if (!('speechSynthesis' in window)) {
+                showToast('이 브라우저에서는 음성 읽기가 지원되지 않아요.');
+                return;
+            }
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'ko-KR';
+            utterance.rate = 0.92;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function showOverlay(target) {
+            target.classList.remove('hidden');
+            target.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideOverlay(target) {
+            target.classList.add('hidden');
+            target.classList.remove('flex');
+            document.body.style.overflow = '';
+        }
+
+        function rememberRecent(id) {
+            const next = state.recent.filter(function (item) { return item !== id; });
+            next.unshift(id);
+            state.recent = next.slice(0, 5);
+            saveJson(STORAGE_KEYS.recent, state.recent);
+            renderRecent();
+        }
+
+        function renderFilters() {
+            filterRow.innerHTML = FILTERS.map(function (item) {
+                const active = state.filter === item.id ? ' active' : '';
+                return '<button class="chip rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700' + active + '" data-filter="' + item.id + '" type="button">' + item.label + '</button>';
+            }).join('');
+
+            filterRow.querySelectorAll('[data-filter]').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    state.filter = button.dataset.filter;
+                    renderFilters();
+                    renderCards();
+                });
+            });
+        }
+
+        function renderPairs() {
+            pairRow.innerHTML = QUICK_PAIRS.map(function (pair, index) {
+                return '<button class="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700" data-pair-index="' + index + '" type="button">' + pair.label + '</button>';
+            }).join('');
+
+            pairRow.querySelectorAll('[data-pair-index]').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    openCompareWithIds(QUICK_PAIRS[Number(button.dataset.pairIndex)].ids);
+                });
+            });
+        }
+
+        function renderRecent() {
+            if (!state.recent.length) {
+                recentWrap.classList.add('hidden');
+                recentRow.innerHTML = '';
+                return;
+            }
+
+            recentWrap.classList.remove('hidden');
+            recentRow.innerHTML = state.recent.map(function (id) {
+                return '<button class="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700" data-recent-id="' + id + '" type="button">' + id + '</button>';
+            }).join('');
+
+            recentRow.querySelectorAll('[data-recent-id]').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    openDetail(button.dataset.recentId);
+                });
+            });
+        }
+
+        function matchesQuery(grammar) {
+            const needle = state.query.trim().toLowerCase();
+            if (!needle) {
+                return true;
+            }
+            const haystack = [
+                grammar.id,
+                grammar.formula,
+                grammar.group,
+                grammar.tone,
+                grammar.result,
+                grammar.focusKo,
+                grammar.focusVi,
+                grammar.coreKo,
+                grammar.coreVi,
+                grammar.whenKo,
+                grammar.whenVi,
+                grammar.cautionKo,
+                grammar.cautionVi,
+                grammar.compareKo,
+                grammar.compareVi
+            ].concat(grammar.examples.map(function (item) {
+                return item.ko + ' ' + item.vi;
+            })).join(' ').toLowerCase();
+
+            return haystack.indexOf(needle) !== -1;
+        }
+
+        function getVisibleGrammars() {
+            return GRAMMARS.filter(function (grammar) {
+                const matchesFilter = state.filter === 'all' || grammar.tags.indexOf(state.filter) !== -1;
+                return matchesFilter && matchesQuery(grammar);
+            });
+        }
+
+        function renderCards() {
+            const visible = getVisibleGrammars();
+            resultCount.textContent = visible.length + '개 문법을 표시하고 있습니다.';
+
+            if (!visible.length) {
+                cardGrid.innerHTML = '<div class="safe rounded-[24px] border border-dashed border-slate-300 bg-slate-50 px-5 py-8 text-center text-sm leading-7 text-slate-500">검색어나 필터를 조금 넓혀 보세요.<br><span class="vi-help">Hãy nới rộng từ khóa tìm kiếm hoặc bộ lọc một chút.</span></div>';
+                return;
+            }
+
+            cardGrid.innerHTML = visible.map(function (grammar) {
+                const selected = state.selected.indexOf(grammar.id) !== -1;
+                return [
+                    '<article class="card ' + (selected ? 'selected ' : '') + 'rounded-[24px] border border-slate-200 bg-white/95 p-5 shadow-sm" data-id="' + grammar.id + '">',
+                    '<div class="flex flex-wrap gap-2">',
+                    '<span class="rounded-full bg-teal-50 px-3 py-1 text-[11px] font-black text-teal-800">' + grammar.group + '</span>',
+                    '<span class="rounded-full border border-slate-200 px-3 py-1 text-[11px] font-black text-slate-600">' + grammar.tone + '</span>',
+                    '<span class="rounded-full border border-slate-200 px-3 py-1 text-[11px] font-black text-slate-600">' + grammar.result + '</span>',
+                    '</div>',
+                    '<div class="mt-3 flex items-start justify-between gap-3">',
+                    '<div>',
+                    '<h3 class="safe text-[26px] font-black leading-tight tracking-[-.03em] text-slate-900">' + grammar.id + '</h3>',
+                    '<p class="mt-2 font-[Manrope] text-xs font-extrabold tracking-[.03em] text-amber-700">' + grammar.formula + '</p>',
+                    '</div>',
+                    (selected ? '<span class="rounded-full bg-teal-100 px-3 py-1 text-[11px] font-black text-teal-800">선택됨</span>' : ''),
+                    '</div>',
+                    '<p class="safe mt-3 text-sm leading-7 text-slate-700">' + grammar.coreKo + '</p>',
+                    '<p class="vi-help safe mt-2">' + grammar.coreVi + '</p>',
+                    '<div class="mt-3 flex flex-wrap gap-2">',
+                    '<span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-bold text-slate-600">' + grammar.focusKo + '</span>',
+                    '</div>',
+                    '<p class="safe mt-3 text-xs leading-6 text-slate-500">주의: ' + grammar.cautionKo + '</p>',
+                    '<p class="vi-help safe mt-1">' + grammar.cautionVi + '</p>',
+                    '</article>'
+                ].join('');
+            }).join('');
+
+            cardGrid.querySelectorAll('[data-id]').forEach(function (card) {
+                card.addEventListener('click', function () {
+                    const id = card.dataset.id;
+                    if (state.compareMode) {
+                        toggleSelection(id);
+                    } else {
+                        openDetail(id);
+                    }
+                });
+            });
+        }
+
+        function openDetail(id) {
+            const grammar = findGrammar(id);
+            if (!grammar) {
+                return;
+            }
+
+            rememberRecent(id);
+            detailTitle.textContent = grammar.id;
+            detailFormula.textContent = grammar.formula;
+            detailBadges.innerHTML = [
+                '<span class="rounded-full bg-teal-50 px-3 py-1 text-[11px] font-black text-teal-800">' + grammar.group + '</span>',
+                '<span class="rounded-full border border-slate-200 px-3 py-1 text-[11px] font-black text-slate-600">' + grammar.tone + '</span>',
+                '<span class="rounded-full border border-slate-200 px-3 py-1 text-[11px] font-black text-slate-600">' + grammar.result + '</span>'
+            ].join('');
+
+            detailBody.innerHTML = [
+                '<div class="grid gap-4">',
+                '<section class="rounded-[22px] border border-slate-200 bg-white p-4">',
+                '<h4 class="text-base font-black text-slate-900">핵심 뜻</h4>',
+                '<p class="safe mt-3 text-sm leading-7 text-slate-700">' + grammar.coreKo + '</p>',
+                '<p class="vi-help safe mt-2">' + grammar.coreVi + '</p>',
+                '</section>',
+                '<section class="rounded-[22px] border border-slate-200 bg-white p-4">',
+                '<h4 class="text-base font-black text-slate-900">언제 쓰나요?</h4>',
+                '<p class="safe mt-3 text-sm leading-7 text-slate-700">' + grammar.whenKo + '</p>',
+                '<p class="vi-help safe mt-2">' + grammar.whenVi + '</p>',
+                '</section>',
+                '<section class="rounded-[22px] border border-slate-200 bg-white p-4">',
+                '<h4 class="text-base font-black text-slate-900">주의할 점</h4>',
+                '<p class="safe mt-3 text-sm leading-7 text-slate-700">' + grammar.cautionKo + '</p>',
+                '<p class="vi-help safe mt-2">' + grammar.cautionVi + '</p>',
+                '</section>',
+                '<section class="rounded-[22px] border border-amber-200 bg-amber-50 p-4">',
+                '<h4 class="text-base font-black text-amber-900">헷갈림 비교</h4>',
+                '<p class="safe mt-3 text-sm leading-7 text-slate-700">' + grammar.compareKo + '</p>',
+                '<p class="vi-help safe mt-2">' + grammar.compareVi + '</p>',
+                '</section>',
+                '<section class="rounded-[22px] border border-slate-200 bg-white p-4">',
+                '<h4 class="text-base font-black text-slate-900">대표 예문</h4>',
+                grammar.examples.map(function (item, index) {
+                    return [
+                        '<div class="mt-' + (index === 0 ? '3' : '4') + ' rounded-[18px] border border-slate-200 bg-slate-50 p-4">',
+                        '<div class="flex items-start justify-between gap-3">',
+                        '<div>',
+                        '<p class="safe text-sm leading-7 text-slate-800">' + item.ko + '</p>',
+                        '<p class="vi-help safe mt-2">' + item.vi + '</p>',
+                        '</div>',
+                        '<div class="flex shrink-0 gap-2">',
+                        '<button class="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700" data-speak="' + index + '" type="button">듣기</button>',
+                        '<button class="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700" data-copy="' + index + '" type="button">복사</button>',
+                        '</div>',
+                        '</div>',
+                        '</div>'
+                    ].join('');
+                }).join(''),
+                '</section>',
+                '</div>'
+            ].join('');
+
+            detailBody.querySelectorAll('[data-copy]').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    copyText(grammar.examples[Number(button.dataset.copy)].ko, '예문을 복사했어요.');
+                });
+            });
+
+            detailBody.querySelectorAll('[data-speak]').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    speakText(grammar.examples[Number(button.dataset.speak)].ko);
+                });
+            });
+
+            showOverlay(detailModal);
+        }
+
+        function toggleCompareMode() {
+            state.compareMode = !state.compareMode;
+            if (!state.compareMode) {
+                state.selected = [];
+            }
+            compareModeBtn.textContent = state.compareMode ? '비교 모드 ON' : '비교 모드 OFF';
+            compareModeBtn.style.borderColor = state.compareMode ? 'rgba(15,118,110,.3)' : '';
+            compareModeBtn.style.background = state.compareMode ? 'var(--accent-soft)' : '';
+            compareModeBtn.style.color = state.compareMode ? '#115e59' : '';
+            updateCompareBar();
+            renderCards();
+        }
+
+        function toggleSelection(id) {
+            const index = state.selected.indexOf(id);
+            if (index !== -1) {
+                state.selected.splice(index, 1);
+            } else {
+                if (state.selected.length >= 3) {
+                    showToast('비교는 최대 3개까지 선택할 수 있어요.');
+                    return;
+                }
+                state.selected.push(id);
+            }
+            updateCompareBar();
+            renderCards();
+        }
+
+        function updateCompareBar() {
+            if (!state.compareMode) {
+                compareBar.classList.remove('show');
+                return;
+            }
+
+            compareBar.classList.add('show');
+            compareTitle.textContent = state.selected.length ? '선택한 문법 ' + state.selected.length + '개' : '비교 모드가 켜졌습니다.';
+            compareSubtitle.textContent = state.selected.length >= 2 ? state.selected.join(' / ') : '카드를 눌러 2~3개를 선택하세요.';
+            openCompareBtn.disabled = state.selected.length < 2;
+        }
+
+        function openCompareWithIds(ids) {
+            const items = ids.map(findGrammar).filter(Boolean).slice(0, 3);
+            if (items.length < 2) {
+                showToast('비교할 문법을 2개 이상 선택해 주세요.');
+                return;
+            }
+
+            compareTrack.innerHTML = items.map(function (grammar) {
+                return [
+                    '<article class="compare-card rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">',
+                    '<div class="flex flex-wrap gap-2">',
+                    '<span class="rounded-full bg-teal-50 px-3 py-1 text-[11px] font-black text-teal-800">' + grammar.group + '</span>',
+                    '<span class="rounded-full border border-slate-200 px-3 py-1 text-[11px] font-black text-slate-600">' + grammar.tone + '</span>',
+                    '<span class="rounded-full border border-slate-200 px-3 py-1 text-[11px] font-black text-slate-600">' + grammar.result + '</span>',
+                    '</div>',
+                    '<h4 class="safe mt-3 text-[26px] font-black leading-tight tracking-[-.03em] text-slate-900">' + grammar.id + '</h4>',
+                    '<p class="mt-2 font-[Manrope] text-xs font-extrabold tracking-[.03em] text-amber-700">' + grammar.formula + '</p>',
+                    '<section class="mt-4 border-t border-slate-200 pt-4">',
+                    '<p class="text-sm font-black text-slate-900">핵심 뜻</p>',
+                    '<p class="safe mt-2 text-sm leading-7 text-slate-700">' + grammar.coreKo + '</p>',
+                    '<p class="vi-help safe mt-2">' + grammar.coreVi + '</p>',
+                    '</section>',
+                    '<section class="mt-4 border-t border-slate-200 pt-4">',
+                    '<p class="text-sm font-black text-slate-900">주의할 점</p>',
+                    '<p class="safe mt-2 text-sm leading-7 text-slate-700">' + grammar.cautionKo + '</p>',
+                    '<p class="vi-help safe mt-2">' + grammar.cautionVi + '</p>',
+                    '</section>',
+                    '<section class="mt-4 border-t border-slate-200 pt-4">',
+                    '<p class="text-sm font-black text-slate-900">헷갈림 비교</p>',
+                    '<p class="safe mt-2 text-sm leading-7 text-slate-700">' + grammar.compareKo + '</p>',
+                    '<p class="vi-help safe mt-2">' + grammar.compareVi + '</p>',
+                    '</section>',
+                    '<section class="mt-4 border-t border-slate-200 pt-4">',
+                    '<p class="text-sm font-black text-slate-900">대표 예문</p>',
+                    grammar.examples.map(function (item) {
+                        return '<div class="mt-3 rounded-[18px] border border-slate-200 bg-slate-50 p-3"><p class="safe text-sm leading-7 text-slate-800">' + item.ko + '</p><p class="vi-help safe mt-2">' + item.vi + '</p></div>';
+                    }).join(''),
+                    '</section>',
+                    '</article>'
+                ].join('');
+            }).join('');
+
+            showOverlay(compareModal);
+        }
+
+        viToggle.addEventListener('click', function () {
+            setViState(!state.viOn);
+        });
+
+        searchInput.addEventListener('input', function () {
+            state.query = searchInput.value;
+            renderCards();
+        });
+
+        compareModeBtn.addEventListener('click', toggleCompareMode);
+
+        clearSelectionBtn.addEventListener('click', function () {
+            state.selected = [];
+            updateCompareBar();
+            renderCards();
+        });
+
+        openCompareBtn.addEventListener('click', function () {
+            openCompareWithIds(state.selected);
+        });
+
+        document.getElementById('closeDetailBtn').addEventListener('click', function () {
+            hideOverlay(detailModal);
+        });
+
+        document.getElementById('closeCompareBtn').addEventListener('click', function () {
+            hideOverlay(compareModal);
+        });
+
+        [detailModal, compareModal].forEach(function (overlay) {
+            overlay.addEventListener('click', function (event) {
+                if (event.target === overlay) {
+                    hideOverlay(overlay);
+                }
+            });
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                hideOverlay(detailModal);
+                hideOverlay(compareModal);
+            }
+        });
+
+        setViState(Boolean(state.viOn));
+        renderFilters();
+        renderPairs();
+        renderRecent();
+        renderCards();
+        updateCompareBar();
+    </script>
+</body>
+</html>
