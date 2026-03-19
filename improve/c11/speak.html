@@ -640,48 +640,74 @@ function toggleRecording() {
 function startRecording() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) return;
-    recognition = new SR();
-    recognition.lang = 'ko-KR';
-    recognition.interimResults = true;
-    recognition.maxAlternatives = 3;
 
-    recognition.onstart = () => {
-        isRecording = true;
-        document.getElementById('micBtn').className =
-            'w-20 h-20 rounded-full bg-red-500 text-white text-3xl flex items-center justify-center transition-all shadow-xl relative mic-pulse';
-        document.getElementById('micIcon').className = 'fa-solid fa-stop';
-        document.getElementById('recStatus').innerHTML =
-            '<span class="text-red-500 font-bold">● 녹음 중</span>' +
-            '<span class="vi-guide block text-red-400">Đang ghi âm... Hãy nói to!</span>';
-        const wf = document.getElementById('waveform');
-        wf.classList.remove('hidden'); wf.style.display = 'flex';
-        const box = document.getElementById('recognizedBox');
-        box.className = 'min-h-12 rounded-xl px-4 py-3 text-center text-sm mb-3 rec-status-active';
-        document.getElementById('recognizedText').textContent = '인식 중... / Đang nhận dạng...';
-    };
+    let finalReceived = false;
+    let restartCount = 0;
+    const MAX_RESTARTS = 5;
 
-    recognition.onresult = (e) => {
-        let interim = '', final = '';
-        for (let i = e.resultIndex; i < e.results.length; i++) {
-            const t = e.results[i][0].transcript;
-            if (e.results[i].isFinal) final += t; else interim += t;
-        }
-        document.getElementById('recognizedText').textContent = final || interim || '—';
-        if (final) { stopRecording(); analyzeResult(final.trim()); }
-    };
+    // iOS에서 onstart가 늦게 발생하므로 UI를 즉시 활성화
+    isRecording = true;
+    document.getElementById('micBtn').className =
+        'w-20 h-20 rounded-full bg-red-500 text-white text-3xl flex items-center justify-center transition-all shadow-xl relative mic-pulse';
+    document.getElementById('micIcon').className = 'fa-solid fa-stop';
+    document.getElementById('recStatus').innerHTML =
+        '<span class="text-red-500 font-bold">● 녹음 중</span>' +
+        '<span class="vi-guide block text-red-400">Đang ghi âm... Hãy nói to!</span>';
+    const wf = document.getElementById('waveform');
+    wf.classList.remove('hidden'); wf.style.display = 'flex';
+    const box = document.getElementById('recognizedBox');
+    box.className = 'min-h-12 rounded-xl px-4 py-3 text-center text-sm mb-3 rec-status-active';
+    document.getElementById('recognizedText').textContent = '인식 중... / Đang nhận dạng...';
 
-    recognition.onerror = (e) => {
-        const msgs = {
-            'not-allowed': '마이크 권한이 필요합니다.\nBạn cần cho phép dùng microphone.',
-            'no-speech':   '음성이 감지되지 않았습니다.\nKhông nghe thấy giọng nói. Hãy nói to hơn!'
+    function startSR() {
+        recognition = new SR();
+        recognition.lang = 'ko-KR';
+        recognition.interimResults = true;
+        recognition.maxAlternatives = 3;
+
+        recognition.onstart = () => { isRecording = true; };
+
+        recognition.onresult = (e) => {
+            let interim = '', final = '';
+            for (let i = e.resultIndex; i < e.results.length; i++) {
+                const t = e.results[i][0].transcript;
+                if (e.results[i].isFinal) final += t; else interim += t;
+            }
+            document.getElementById('recognizedText').textContent = final || interim || '—';
+            if (final) { finalReceived = true; stopRecording(); analyzeResult(final.trim()); }
         };
-        document.getElementById('recStatus').innerHTML =
-            '<span class="text-orange-500">' + (msgs[e.error] || '오류: ' + e.error).replace('\n', '<br>') + '</span>';
-        stopRecording();
-    };
 
-    recognition.onend = () => { if (isRecording) stopRecording(); };
-    recognition.start();
+        recognition.onerror = (e) => {
+            // iOS에서 no-speech는 자동 재시작 (말하기 전에 타임아웃 발생)
+            if (e.error === 'no-speech' && isRecording && restartCount < MAX_RESTARTS) {
+                restartCount++;
+                setTimeout(() => { if (isRecording) startSR(); }, 200);
+                return;
+            }
+            const msgs = {
+                'not-allowed': '마이크 권한이 필요합니다.\nBạn cần cho phép dùng microphone.',
+                'no-speech':   '음성이 감지되지 않았습니다.\nKhông nghe thấy giọng nói. Hãy nói to hơn!'
+            };
+            document.getElementById('recStatus').innerHTML =
+                '<span class="text-orange-500">' + (msgs[e.error] || '오류: ' + e.error).replace('\n', '<br>') + '</span>';
+            stopRecording();
+        };
+
+        recognition.onend = () => {
+            if (!isRecording) return; // 사용자가 직접 중지함
+            if (!finalReceived && restartCount < MAX_RESTARTS) {
+                // iOS에서 결과 없이 onend 발생 시 자동 재시작
+                restartCount++;
+                setTimeout(() => { if (isRecording) startSR(); }, 200);
+            } else {
+                stopRecording();
+            }
+        };
+
+        try { recognition.start(); } catch(e) { stopRecording(); }
+    }
+
+    startSR();
 }
 
 function stopRecording() {
