@@ -668,13 +668,23 @@ function startRecording() {
         recognition.onstart = () => { isRecording = true; };
 
         recognition.onresult = (e) => {
-            let interim = '', final = '';
+            let interim = '', finalSpoken = '';
             for (let i = e.resultIndex; i < e.results.length; i++) {
-                const t = e.results[i][0].transcript;
-                if (e.results[i].isFinal) final += t; else interim += t;
+                if (e.results[i].isFinal) {
+                    // 여러 인식 후보 중 목표 문장과 가장 유사한 것 선택
+                    const tgt = norm(DIALOGUES[currentIdx].target);
+                    let bestAlt = e.results[i][0].transcript;
+                    let bestSc = jamoAnalyze(norm(bestAlt), tgt).score;
+                    for (let a = 1; a < e.results[i].length; a++) {
+                        const altTxt = e.results[i][a].transcript;
+                        const s = jamoAnalyze(norm(altTxt), tgt).score;
+                        if (s > bestSc) { bestSc = s; bestAlt = altTxt; }
+                    }
+                    finalSpoken += bestAlt;
+                } else { interim += e.results[i][0].transcript; }
             }
-            document.getElementById('recognizedText').textContent = final || interim || '—';
-            if (final) { finalReceived = true; stopRecording(); analyzeResult(final.trim()); }
+            document.getElementById('recognizedText').textContent = finalSpoken || interim || '—';
+            if (finalSpoken) { finalReceived = true; stopRecording(); analyzeResult(finalSpoken.trim()); }
         };
 
         recognition.onerror = (e) => {
@@ -726,7 +736,7 @@ function stopRecording() {
         '<span class="vi-guide block text-green-500">Xong! Đang phân tích...</span>';
 }
 
-// ─── 분석 ───────────────────────────────────────────────────────────────────
+// ─── 분석 엔진 ───────────────────────────────────────────────────────────────
 function norm(s) { return s.replace(/[\s.,!?。]/g, ''); }
 function lcs(a, b) {
     const m = a.length, n = b.length;
@@ -737,14 +747,89 @@ function lcs(a, b) {
     return dp[m][n];
 }
 
+// 한글 → 자모 분해 (초성·중성·종성)
+function decomposeHangul(str) {
+    const CHO  = 'ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ';
+    const JUNG = 'ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ';
+    const JONG = ['','ㄱ','ㄲ','ㄳ','ㄴ','ㄵ','ㄶ','ㄷ','ㄹ','ㄺ','ㄻ','ㄼ','ㄽ','ㄾ','ㄿ','ㅀ','ㅁ','ㅂ','ㅄ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+    let out = '';
+    for (const ch of str) {
+        const c = ch.charCodeAt(0);
+        if (c >= 0xAC00 && c <= 0xD7A3) {
+            const off = c - 0xAC00, j = off % 28;
+            const jg = ((off - j) / 28) % 21;
+            const c2 = Math.floor((off - j) / 28 / 21);
+            out += CHO[c2] + JUNG[jg] + (j ? JONG[j] : '');
+        } else { out += ch; }
+    }
+    return out;
+}
+
+// 자모 단위 유사도 분석 → { accuracy, completeness, score }
+function jamoAnalyze(spokenN, target) {
+    const jt = decomposeHangul(target), js = decomposeHangul(spokenN);
+    const m = jt.length, n = js.length;
+    if (!m) return { accuracy: 0, completeness: 0, score: 0 };
+    const lcsLen = lcs(jt, js);
+    const accuracy     = Math.round(lcsLen / m * 100);
+    const completeness = Math.round(lcsLen / Math.max(m, n || 1) * 100);
+    const score        = Math.round(accuracy * 0.65 + completeness * 0.35);
+    return { accuracy, completeness, score };
+}
+
+// 음절 1개 자모 유사도 (0~1)
+function syllableSim(tc, sc) {
+    if (!sc) return 0;
+    if (tc === sc) return 1;
+    const jt = decomposeHangul(tc), js = decomposeHangul(sc);
+    return jt.length ? lcs(jt, js) / jt.length : 0;
+}
+
+// 음절별 비교 블록 HTML
+function buildSyllableBlocks(target, spoken) {
+    const tArr = [...target], sArr = [...spoken];
+    let html = '<div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center">';
+    for (let i = 0; i < tArr.length; i++) {
+        const tc = tArr[i], sc = sArr[i] || '';
+        const sim = syllableSim(tc, sc);
+        let bg, border, icon, sub = '';
+        if (!sc)        { bg='#f1f5f9'; border='#cbd5e1'; icon='🔇'; }
+        else if (sim >= 0.99) { bg='#dcfce7'; border='#86efac'; icon='✅'; }
+        else if (sim >= 0.55) {
+            bg='#fef9c3'; border='#fde047'; icon='⚠️';
+            sub = `<span style="font-size:10px;color:#92400e;background:#fffbeb;border-radius:4px;padding:0 3px">${sc}</span>`;
+        } else {
+            bg='#fee2e2'; border='#fca5a5'; icon='❌';
+            if (sc) sub = `<span style="font-size:10px;color:#991b1b;background:#fff1f2;border-radius:4px;padding:0 3px">${sc}</span>`;
+        }
+        html += `<div style="min-width:48px;padding:7px 5px;border-radius:12px;text-align:center;background:${bg};border:2px solid ${border};display:flex;flex-direction:column;align-items:center;gap:2px">
+            <span style="font-size:13px">${icon}</span>
+            <span style="font-size:21px;font-weight:900;line-height:1.1">${tc}</span>
+            ${sub}
+        </div>`;
+    }
+    // 여분 음절
+    for (let i = tArr.length; i < sArr.length; i++) {
+        html += `<div style="min-width:48px;padding:7px 5px;border-radius:12px;text-align:center;background:#eff6ff;border:2px dashed #93c5fd;display:flex;flex-direction:column;align-items:center;gap:2px">
+            <span style="font-size:13px">➕</span>
+            <span style="font-size:21px;font-weight:900;line-height:1.1;color:#3b82f6">${sArr[i]}</span>
+        </div>`;
+    }
+    html += '</div>';
+    return html;
+}
+
+// 별점 (5단계)
+function scoreStars(score) {
+    const n = score >= 92 ? 5 : score >= 78 ? 4 : score >= 62 ? 3 : score >= 42 ? 2 : 1;
+    return '⭐'.repeat(n) + '<span style="opacity:0.2">⭐</span>'.repeat(5 - n);
+}
+
 function analyzeResult(spoken) {
     const d = DIALOGUES[currentIdx];
-    const target = norm(d.target);
+    const target  = norm(d.target);
     const spokenN = norm(spoken);
-    const lcsLen = lcs(target, spokenN);
-    const accuracy = target.length ? Math.round(lcsLen / target.length * 100) : 0;
-    const completeness = Math.round(lcsLen / Math.max(target.length, spokenN.length) * 100);
-    const score = Math.round(accuracy * 0.65 + completeness * 0.35);
+    const { accuracy, completeness, score } = jamoAnalyze(spokenN, target);
     sessionScores.push(score);
     sessionLog.push({
         no: sessionLog.length + 1,
@@ -760,36 +845,27 @@ function analyzeResult(spoken) {
 
 // ─── 단계 3: 결과 패널 ───────────────────────────────────────────────────────
 function showResult(d, spokenRaw, target, spoken, accuracy, completeness, score) {
-    const color = score >= 80 ? '#16a34a' : score >= 60 ? '#d97706' : '#dc2626';
+    const color   = score >= 80 ? '#16a34a' : score >= 60 ? '#d97706' : '#dc2626';
+    const bgColor = score >= 80 ? '#f0fdf4' : score >= 60 ? '#fffbeb' : '#fef2f2';
+    const bdColor = score >= 80 ? '#86efac' : score >= 60 ? '#fcd34d' : '#fca5a5';
 
-    // 점수별 메시지 (한국어 + 베트남어)
     const msgs = score >= 80
         ? { ko: '훌륭합니다! 발음이 매우 정확해요. 🌟', vi: 'Xuất sắc! Phát âm của bạn rất chính xác.' }
         : score >= 60
         ? { ko: '잘 했어요! 조금 더 연습해 보세요. 👍', vi: 'Khá tốt! Hãy luyện thêm một chút nữa.' }
         : { ko: '계속 연습해 보세요. 천천히 따라 말해 보세요. 💪', vi: 'Hãy tiếp tục luyện tập. Nghe chậm và bắt chước từng âm nhé.' };
 
-    // 개선 팁 (베트남어)
     const improveTip = score < 60
         ? '"B 천천히 듣기" 버튼으로 천천히 들은 후 다시 말해 보세요.\nNhấn "B 천천히" để nghe chậm, rồi nói lại.'
         : score < 80
         ? '발음 체크포인트를 확인하고 한 번 더 도전해 보세요.\nXem lại điểm phát âm và thử một lần nữa!'
         : '다음 문장으로 넘어가도 좋습니다.\nBạn có thể tiếp tục câu tiếp theo!';
 
-    // 글자 비교
-    const maxLen = Math.max(target.length, spoken.length);
-    let tHtml = '', sHtml = '';
-    for (let i = 0; i < maxLen; i++) {
-        const tc = target[i] || '', sc = spoken[i] || '';
-        if (i < target.length) tHtml += tc === sc ? `<span class="ch-ok">${tc}</span>` : `<span class="ch-err">${tc}</span>`;
-        if (i < spoken.length)
-            sHtml += i >= target.length ? `<span class="ch-ext">${sc}</span>`
-                   : sc === tc ? `<span class="ch-ok">${sc}</span>` : `<span class="ch-err">${sc}</span>`;
-    }
-
-    const circ = 251.3;
+    const circ   = 251.3;
     const offset = circ - (score / 100) * circ;
     const isLast = currentIdx === DIALOGUES.length - 1;
+    const stars  = scoreStars(score);
+    const syllableBlocks = buildSyllableBlocks(target, spoken);
 
     document.getElementById('resultPanel').classList.remove('hidden');
     document.getElementById('stepPanel').classList.add('hidden');
@@ -797,9 +873,12 @@ function showResult(d, spokenRaw, target, spoken, accuracy, completeness, score)
     document.getElementById('resultPanel').innerHTML = `
     <div class="scene-card p-5 mb-4" id="resultCard">
         <h2 class="text-center font-black text-slate-800 text-lg mb-1">발음 분석 결과</h2>
-        <p class="vi-guide text-center mb-4">Kết quả phân tích phát âm</p>
+        <p class="vi-guide text-center mb-3">Kết quả phân tích phát âm</p>
 
-        <!-- 점수 + 바 -->
+        <!-- 별점 -->
+        <div style="text-align:center;font-size:28px;letter-spacing:3px;margin-bottom:14px">${stars}</div>
+
+        <!-- 점수 원형 + 바 -->
         <div class="flex items-center gap-5 mb-5">
             <div class="relative flex-shrink-0">
                 <svg width="90" height="90" viewBox="0 0 90 90">
@@ -809,7 +888,7 @@ function showResult(d, spokenRaw, target, spoken, accuracy, completeness, score)
                         transform="rotate(-90 45 45)" class="score-svg"/>
                 </svg>
                 <div class="absolute inset-0 flex flex-col items-center justify-center">
-                    <span class="text-2xl font-black" style="color:${color}">${score}</span>
+                    <span class="text-2xl font-black" style="color:${color}" id="scoreNum">0</span>
                     <span class="text-xs text-slate-400">점</span>
                 </div>
             </div>
@@ -820,7 +899,7 @@ function showResult(d, spokenRaw, target, spoken, accuracy, completeness, score)
                         <span class="font-bold text-slate-700">${accuracy}%</span>
                     </div>
                     <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
-                        <div class="h-full bg-green-400 rounded-full" style="width:${accuracy}%"></div>
+                        <div class="h-full bg-green-400 rounded-full progress-fill" id="accBar" style="width:0%"></div>
                     </div>
                 </div>
                 <div>
@@ -829,56 +908,26 @@ function showResult(d, spokenRaw, target, spoken, accuracy, completeness, score)
                         <span class="font-bold text-slate-700">${completeness}%</span>
                     </div>
                     <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
-                        <div class="h-full bg-blue-400 rounded-full" style="width:${completeness}%"></div>
+                        <div class="h-full bg-blue-400 rounded-full progress-fill" id="compBar" style="width:0%"></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 점수 설명 (베트남어) -->
-        <div class="step-guide mb-4">
-            <p class="text-xs font-bold text-indigo-700 mb-1.5 flex items-center gap-1">
-                <span class="vi-badge">🇻🇳 VI</span> Giải thích điểm số
+        <!-- 음절별 발음 체크 -->
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:14px;margin-bottom:16px">
+            <p style="font-size:11.5px;font-weight:700;color:#475569;margin-bottom:10px;text-align:center">
+                📊 음절별 발음 체크
+                <span class="vi-guide" style="font-weight:400"> / Kiểm tra từng âm tiết</span>
             </p>
-            <div class="grid grid-cols-3 gap-2 text-center text-xs">
-                <div class="rounded-lg p-2 ${score >= 80 ? 'bg-green-100 border border-green-200' : 'bg-slate-50 border border-slate-200'}">
-                    <p class="font-bold text-green-700">80~100</p>
-                    <p class="vi-guide text-green-600">Xuất sắc</p>
-                </div>
-                <div class="rounded-lg p-2 ${score>=60 && score<80 ? 'bg-yellow-100 border border-yellow-200' : 'bg-slate-50 border border-slate-200'}">
-                    <p class="font-bold text-yellow-700">60~79</p>
-                    <p class="vi-guide text-yellow-600">Khá tốt</p>
-                </div>
-                <div class="rounded-lg p-2 ${score<60 ? 'bg-red-100 border border-red-200' : 'bg-slate-50 border border-slate-200'}">
-                    <p class="font-bold text-red-700">0~59</p>
-                    <p class="vi-guide text-red-600">Cần luyện</p>
-                </div>
+            ${syllableBlocks}
+            <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px;font-size:10px;color:#64748b">
+                <span>✅ 정확</span><span>⚠️ 유사</span><span>❌ 오류</span><span>🔇 누락</span><span>➕ 여분</span>
             </div>
-        </div>
-
-        <!-- 글자 비교 -->
-        <div class="rounded-xl bg-slate-50 border border-slate-200 px-4 py-3 mb-2 text-sm">
-            <p class="text-xs text-slate-500 mb-2">
-                글자별 비교
-                <span class="vi-guide">/ So sánh từng chữ</span>
-            </p>
-            <div class="mb-1.5">
-                <span class="text-xs text-slate-400 mr-2">목표<span class="vi-guide">/Mục tiêu</span></span>
-                <span class="tracking-wide">${tHtml}</span>
-            </div>
-            <div>
-                <span class="text-xs text-slate-400 mr-2">발음<span class="vi-guide">/Phát âm</span></span>
-                <span class="tracking-wide">${sHtml || '<span class="text-slate-400 text-xs">인식된 텍스트 없음 / Không nhận dạng được</span>'}</span>
-            </div>
-        </div>
-        <div class="flex gap-4 justify-center text-xs text-slate-400 mb-4">
-            <span><span class="ch-ok">■</span> 정확 / Đúng</span>
-            <span><span class="ch-err">■</span> 오류 / Sai</span>
-            <span><span class="ch-ext">■</span> 여분 / Thừa</span>
         </div>
 
         <!-- 피드백 -->
-        <div class="rounded-xl px-4 py-3 mb-4" style="background:${score>=80?'#f0fdf4':score>=60?'#fffbeb':'#fef2f2'}; border:1px solid ${score>=80?'#86efac':score>=60?'#fcd34d':'#fca5a5'}">
+        <div class="rounded-xl px-4 py-3 mb-4" style="background:${bgColor};border:1px solid ${bdColor}">
             <p class="text-sm font-bold safe" style="color:${color}">${msgs.ko}</p>
             <p class="vi-guide mt-1 safe" style="color:${color}">${msgs.vi}</p>
         </div>
@@ -909,7 +958,22 @@ function showResult(d, spokenRaw, target, spoken, accuracy, completeness, score)
                 : '<i class="fa-solid fa-arrow-right mr-2"></i>다음 문장 / Câu tiếp theo'}
         </button>
     </div>`;
+
+    // 애니메이션: 점수 카운트업 + 바 슬라이드인
     _scrollToResult();
+    setTimeout(() => {
+        const ab = document.getElementById('accBar');
+        const cb = document.getElementById('compBar');
+        if (ab) ab.style.width = accuracy + '%';
+        if (cb) cb.style.width = completeness + '%';
+        let cur = 0;
+        const tick = setInterval(() => {
+            cur = Math.min(cur + Math.ceil(score / 20), score);
+            const el = document.getElementById('scoreNum');
+            if (el) el.textContent = cur;
+            if (cur >= score) clearInterval(tick);
+        }, 40);
+    }, 100);
 }
 
 function _scrollToResult() {
