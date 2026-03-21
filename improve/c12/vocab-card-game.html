@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NB76SV96');</script>
+    <!-- End Google Tag Manager -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>12과 그림 카드 조합 게임</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: linear-gradient(150deg, #eff6ff 0%, #dbeafe 45%, #e0e7ff 100%);
+            min-height: 100vh;
+            margin: 0;
+            color: #1e3a5f;
+            overflow-x: hidden;
+        }
+
+        /* ── Navigation ── */
+        .top-nav {
+            position: sticky; top: 0; z-index: 200;
+            display: flex; align-items: center; gap: 10px;
+            padding: 0 16px; height: 54px;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #bfdbfe;
+        }
+        .top-nav a {
+            color: #2563eb; font-weight: 700; font-size: 13px; text-decoration: none;
+        }
+        .top-nav .div { color: #cbd5e1; font-weight: 700; }
+        .top-nav .title { color: #374151; font-weight: 700; font-size: 13px; }
+
+        /* ── Screens ── */
+        .screen { display: none; }
+        .screen.active { display: block; }
+
+        /* ── Vocab Card (choice) ── */
+        .choice-card {
+            background: white;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.10);
+            cursor: pointer;
+            user-select: none;
+            border: 3px solid transparent;
+            transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+            position: relative;
+        }
+        .choice-card:active { transform: scale(0.93); }
+        .choice-card.selected {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.25), 0 3px 10px rgba(0,0,0,0.12);
+            transform: translateY(-3px);
+        }
+        .choice-card.correct-flash {
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22,163,74,0.3);
+            animation: correctPop 0.45s ease;
+        }
+        .choice-card.wrong-flash {
+            border-color: #dc2626;
+            box-shadow: 0 0 0 3px rgba(220,38,38,0.25);
+            animation: wrongShake 0.4s ease;
+        }
+        .choice-card.reveal-correct {
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22,163,74,0.35);
+        }
+        .choice-card.dimmed { opacity: 0.38; pointer-events: none; }
+
+        /* ── Formula Slot ── */
+        .formula-slot {
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.13);
+            flex: 1;
+            min-width: 0;
+        }
+        .formula-slot.blank-slot {
+            /* 카테고리별 색상은 JS에서 CSS 변수로 주입 */
+            border: 3px dashed var(--blank-b1, #60a5fa);
+            background: var(--blank-bg, rgba(239,246,255,0.85));
+            animation: blinkBorder 1.8s ease-in-out infinite;
+        }
+        .formula-slot.answered-correct {
+            border: 3px solid #16a34a;
+            box-shadow: 0 0 0 3px rgba(22,163,74,0.2);
+            animation: none;
+        }
+        .formula-slot.answered-wrong {
+            border: 3px solid #dc2626;
+            box-shadow: 0 0 0 3px rgba(220,38,38,0.15);
+            animation: none;
+        }
+
+        /* card image / emoji zone inside a slot or choice */
+        .card-img-zone {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            display: flex; align-items: center; justify-content: center;
+            background: #dbeafe;
+            overflow: hidden;
+        }
+        .card-img-zone img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+        .card-emoji-zone {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            display: flex; align-items: center; justify-content: center;
+            font-size: clamp(1.6rem, 6vw, 2.4rem);
+        }
+
+        .card-label {
+            background: white;
+            text-align: center;
+            font-weight: 700;
+            font-size: clamp(0.6rem, 2.5vw, 0.72rem);
+            padding: 4px 3px;
+            word-break: keep-all;
+            line-height: 1.25;
+            color: #1e3a5f;
+        }
+
+        /* blank slot inner */
+        .blank-inner {
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 2px;
+            padding: 8px;
+            min-height: 80px;
+        }
+        .blank-cat { font-size: clamp(1.4rem, 6vw, 2rem); line-height: 1; }
+        .blank-q { font-size: clamp(1.6rem, 7vw, 2.4rem); font-weight: 900; color: #93c5fd; line-height: 1; }
+
+        /* operator */
+        .formula-op {
+            font-size: clamp(1.4rem, 5vw, 2rem);
+            font-weight: 900;
+            color: #3b82f6;
+            flex-shrink: 0;
+            padding: 0 2px;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* ── Progress bar ── */
+        .prog-track { background: #dbeafe; border-radius: 9999px; height: 8px; overflow: hidden; }
+        .prog-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 9999px; transition: width 0.45s ease; }
+
+        /* ── Mode buttons ── */
+        .mode-btn {
+            padding: 8px 18px; border-radius: 12px; font-weight: 700;
+            font-size: 13px; cursor: pointer; border: 2px solid transparent;
+            transition: all 0.15s;
+        }
+        .mode-btn.on { background: #2563eb; color: white; border-color: #2563eb; }
+        .mode-btn.off { background: #dbeafe; color: #2563eb; border-color: #bfdbfe; }
+
+        /* ── Next button ── */
+        .next-btn {
+            width: 100%; padding: 14px;
+            background: linear-gradient(135deg, #2563eb, #4f46e5);
+            color: white; font-size: 1rem; font-weight: 900;
+            border-radius: 16px; border: none; cursor: pointer;
+            box-shadow: 0 6px 20px rgba(37,99,235,0.35);
+            transition: transform 0.12s, box-shadow 0.12s;
+            letter-spacing: 0.02em;
+        }
+        .next-btn:active { transform: scale(0.96); box-shadow: 0 2px 8px rgba(37,99,235,0.2); }
+
+        /* ── Start button ── */
+        .start-btn {
+            width: 100%; padding: 16px;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white; font-size: 1.1rem; font-weight: 900;
+            border-radius: 18px; border: none; cursor: pointer;
+            box-shadow: 0 8px 24px rgba(37,99,235,0.35);
+            letter-spacing: 0.04em;
+            transition: transform 0.12s;
+        }
+        .start-btn:active { transform: scale(0.97); }
+
+        /* ── Stars ── */
+        .star-full { color: #fbbf24; }
+        .star-empty { color: #d1d5db; }
+
+        /* ── Feedback overlay ── */
+        #fb-overlay {
+            position: fixed; inset: 0; z-index: 999;
+            display: flex; align-items: center; justify-content: center;
+            pointer-events: none;
+        }
+        #fb-emoji {
+            font-size: clamp(4rem, 20vw, 7rem);
+            opacity: 0;
+            transition: none;
+        }
+
+        /* ── Streak badge ── */
+        .streak-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            background: linear-gradient(135deg, #f97316, #ef4444);
+            color: white; font-weight: 900; font-size: 0.8rem;
+            padding: 3px 12px; border-radius: 9999px;
+            box-shadow: 0 3px 10px rgba(239,68,68,0.35);
+        }
+
+        /* ── Result detail row ── */
+        .result-row {
+            display: flex; align-items: flex-start; gap: 8px;
+            padding: 8px 0; border-bottom: 1px solid #f1f5f9;
+            font-size: 0.78rem;
+        }
+        .result-row:last-child { border-bottom: none; }
+
+        /* ── Confetti particle ── */
+        .confetti-particle {
+            position: fixed;
+            width: 10px; height: 10px;
+            border-radius: 2px;
+            z-index: 9999;
+            pointer-events: none;
+            animation: confettiFall var(--dur) ease-in forwards;
+        }
+
+        /* ── Animations ── */
+        @keyframes blinkBorder {
+            0%, 100% { border-color: var(--blank-b1, #60a5fa); box-shadow: 0 0 0 0 transparent; }
+            50%       { border-color: var(--blank-b2, #2563eb); box-shadow: 0 0 14px rgba(37,99,235,0.2); }
+        }
+        @keyframes correctPop {
+            0% { transform: scale(1); }
+            30% { transform: scale(1.13); }
+            60% { transform: scale(0.96); }
+            100% { transform: scale(1); }
+        }
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-7px); }
+            40% { transform: translateX(7px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fbPop {
+            0% { opacity: 0; transform: scale(0.4); }
+            35% { opacity: 1; transform: scale(1.15); }
+            65% { opacity: 1; transform: scale(1.0); }
+            100% { opacity: 0; transform: scale(0.85); }
+        }
+        @keyframes confettiFall {
+            0% { opacity: 1; transform: translateY(-20px) rotate(0deg); }
+            100% { opacity: 0; transform: translateY(100vh) rotate(520deg); }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .anim-fade { animation: fadeInUp 0.35s ease; }
+        .anim-slide { animation: slideUp 0.3s ease; }
+
+        /* ═══════════════════════════════════
+           PC 모드 가로형 레이아웃
+           좌: 수식+피드백+다음버튼 / 우: 선택카드
+        ═══════════════════════════════════ */
+
+        /* 기본(모바일): game-layout은 일반 블록 */
+        .game-layout { display: block; }
+        .game-left   { display: block; }
+        .game-right  { display: block; }
+
+        /* PC 모드: 가로 배치 */
+        body.pc-mode #screen-game {
+            max-width: 100% !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        body.pc-mode .game-layout {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 24px;
+        }
+        body.pc-mode .game-left {
+            flex: 1 1 0;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        body.pc-mode .game-right {
+            flex: 1 1 0;
+            min-width: 0;
+        }
+        /* PC 모드: 선택지 2열 유지 */
+        body.pc-mode #choices-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        /* PC 모드: 수식 슬롯 높이 자동 조정 (선택지 높이와 어울리게) */
+        body.pc-mode .formula-slot {
+            flex: 1;
+        }
+        /* PC 모드: 시작/결과 화면도 전체 너비 */
+        body.pc-mode #screen-start,
+        body.pc-mode #screen-result {
+            max-width: 720px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+    </style>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NB76SV96"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<!-- Feedback Overlay -->
+<div id="fb-overlay" aria-hidden="true">
+    <div id="fb-emoji"></div>
+</div>
+
+<!-- Navigation -->
+<nav class="top-nav">
+    <a href="../index.html"><i class="fa-solid fa-house fa-sm"></i> 메인</a>
+    <span class="div">|</span>
+    <a href="index.html">12과</a>
+    <span class="div">|</span>
+    <span class="title">그림 카드 조합 게임</span>
+</nav>
+
+<!-- ══════════════════════════════════
+     START SCREEN
+══════════════════════════════════ -->
+<div id="screen-start" class="screen active max-w-lg mx-auto px-4 py-6 pb-10 anim-fade">
+    <div class="text-center mb-6">
+        <div class="text-6xl mb-3">🃏</div>
+        <h1 class="text-2xl font-black text-blue-700 mb-1">그림 카드 조합 게임</h1>
+        <p class="text-gray-500 text-sm">12과 어휘 · A + B = C</p>
+    </div>
+
+    <!-- Rules -->
+    <div class="bg-white rounded-2xl p-5 mb-4 shadow-sm border border-blue-100">
+        <p class="font-bold text-gray-700 text-sm mb-3">📖 게임 방법</p>
+        <ul class="space-y-2 text-sm text-gray-600">
+            <li class="flex items-start gap-2">
+                <span class="mt-0.5">🔲</span>
+                <span><b>A + B = C</b> 형식의 수식에서 <b>빈칸</b>이 나타납니다.</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <span class="mt-0.5">🃏</span>
+                <span>아래 그림 카드 4장 중 빈칸에 맞는 카드를 고르세요.</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <span class="mt-0.5">⭐</span>
+                <span>정답 시 10점, 연속 정답이면 보너스 점수!</span>
+            </li>
+        </ul>
+        <!-- Example -->
+        <div class="mt-4 bg-blue-50 rounded-xl p-3 text-center">
+            <p class="text-xs font-bold text-blue-500 mb-1.5 uppercase tracking-wider">예시</p>
+            <div class="flex items-center justify-center gap-2 text-sm font-bold text-blue-800">
+                <span class="bg-white rounded-lg px-2 py-1 shadow-sm">몸이 무겁다</span>
+                <span class="text-blue-400">+</span>
+                <span class="bg-blue-200 rounded-lg px-2 py-1 text-blue-700 border-2 border-dashed border-blue-400">?</span>
+                <span class="text-blue-400">=</span>
+                <span class="bg-white rounded-lg px-2 py-1 shadow-sm">몸이 좋아지다</span>
+            </div>
+            <p class="text-xs text-blue-500 mt-2">→ 정답: <b>푹 쉬다</b> 🛌</p>
+        </div>
+    </div>
+
+    <!-- Question count selector -->
+    <div class="bg-white rounded-2xl p-4 mb-5 shadow-sm border border-blue-100">
+        <p class="font-bold text-gray-700 text-sm mb-3">⚙️ 문제 수 선택</p>
+        <div class="flex gap-2 justify-center" id="mode-btns">
+            <button class="mode-btn off" data-count="5" onclick="selectMode(5)">5문제</button>
+            <button class="mode-btn on" data-count="10" onclick="selectMode(10)">10문제</button>
+            <button class="mode-btn off" data-count="99" onclick="selectMode(99)">전체</button>
+        </div>
+    </div>
+
+    <button class="start-btn" onclick="startGame()">🎮 게임 시작!</button>
+</div>
+
+<!-- ══════════════════════════════════
+     GAME SCREEN
+══════════════════════════════════ -->
+<div id="screen-game" class="screen max-w-lg mx-auto px-4 py-4 pb-10">
+
+    <!-- Progress / Score bar -->
+    <div class="flex justify-between items-center mb-2">
+        <span id="q-counter" class="text-sm font-bold text-blue-600">Q 1 / 10</span>
+        <div id="streak-area" class="hidden">
+            <span class="streak-badge"><i class="fa-solid fa-fire-flame-curved fa-sm"></i> <span id="streak-num">0</span>연속!</span>
+        </div>
+        <span id="score-display" class="text-sm font-bold text-amber-500">⭐ 0점</span>
+    </div>
+    <div class="prog-track mb-5">
+        <div id="prog-fill" class="prog-fill" style="width:0%"></div>
+    </div>
+
+    <!-- Game layout: 모바일=세로 / PC모드=가로(좌:수식, 우:선택지) -->
+    <div class="game-layout">
+
+        <!-- ◀ 좌측: 수식 + 피드백 + 다음 버튼 -->
+        <div class="game-left">
+            <div class="mb-1">
+                <p class="text-center text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">수식을 완성하세요</p>
+                <div class="flex items-stretch gap-1 sm:gap-2">
+                    <div id="slot-a" class="formula-slot"></div>
+                    <div class="formula-op">+</div>
+                    <div id="slot-b" class="formula-slot"></div>
+                    <div class="formula-op">=</div>
+                    <div id="slot-c" class="formula-slot"></div>
+                </div>
+            </div>
+            <div id="feedback-text" class="text-center font-bold text-sm py-2 h-9"></div>
+            <button id="next-btn" class="next-btn hidden" onclick="nextQuestion()">
+                다음 문제 →
+            </button>
+        </div>
+
+        <!-- ▶ 우측: 선택 카드 -->
+        <div class="game-right">
+            <p class="text-center text-xs font-bold text-gray-400 mb-2">아래 카드 중 하나를 선택하세요</p>
+            <div id="choices-grid" class="grid grid-cols-2 gap-3"></div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ══════════════════════════════════
+     RESULT SCREEN
+══════════════════════════════════ -->
+<div id="screen-result" class="screen max-w-lg mx-auto px-4 py-6 pb-10 anim-fade">
+    <div class="text-center mb-4">
+        <div id="result-emoji" class="text-6xl mb-3">🎉</div>
+        <h2 class="text-2xl font-black text-blue-700 mb-1">게임 완료!</h2>
+        <div id="star-row" class="text-3xl mb-1"></div>
+    </div>
+
+    <div class="bg-white rounded-2xl p-5 mb-4 shadow-sm border border-blue-100">
+        <div class="text-center mb-4">
+            <p id="result-score" class="text-4xl font-black text-blue-700"></p>
+            <p id="result-sub" class="text-gray-500 text-sm mt-1"></p>
+        </div>
+        <div id="result-list" class="max-h-64 overflow-y-auto pr-1"></div>
+    </div>
+
+    <div class="flex gap-3">
+        <button onclick="restartGame()"
+            class="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl shadow transition-colors">
+            🔄 다시 하기
+        </button>
+        <button onclick="goHome()"
+            class="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-2xl shadow transition-colors">
+            🏠 처음으로
+        </button>
+    </div>
+</div>
+
+
+<script>
+/* ═══════════════════════════════════════
+   DATA
+═══════════════════════════════════════ */
+const IMG = '../c12img/split_variants_35_webp/full/';
+
+// Vocabulary pool
+// img: filename (under IMG base path) | emoji+color: fallback for future temp vocab
+const VOCAB = {
+    // ── C12 core – images confirmed ──
+    n01a: { label: '살이 찌다',         img: 'n01a.webp' },
+    n01b: { label: '살이 빠지다',        img: 'n01b.webp' },
+    n02a: { label: '힘이 세다',          img: 'n02a.webp' },
+    n02b: { label: '힘이 약하다',        img: 'n02b.webp' },
+    n03a: { label: '자세가 좋다',        img: 'n03a.webp' },
+    n03b: { label: '자세가 나쁘다',      img: 'n03b.webp' },
+    n04a: { label: '몸이 무겁다',        img: 'n04a.webp' },
+    n04b: { label: '몸이 가볍다',        img: 'n04b.webp' },
+    n05:  { label: '숨이 차다',          img: 'n05.webp'  },
+    n06:  { label: '땀이 나다',          img: 'n06.webp'  },
+    n07:  { label: '쥐가 나다',          img: 'n07.webp'  },
+    n08:  { label: '지치다',             img: 'n08.webp'  },
+    n09:  { label: '기분이 상쾌하다',    img: 'n09.webp'  },
+    n10:  { label: '기운이 나다',        img: 'n10.webp'  },
+    n11:  { label: '몸이 좋아지다',      img: 'n11.webp'  },
+    n12:  { label: '근육이 생기다',      img: 'n12.webp'  },
+    n13:  { label: '목을 돌리다',        img: 'n13.webp'  },
+    n14:  { label: '옆구리를 굽히다',    img: 'n14.webp'  },
+    n15:  { label: '가슴을 펴다',        img: 'n15.webp'  },
+    n16:  { label: '몸을 젖히다',        img: 'n16.webp'  },
+    n17:  { label: '손을 허리에 대다',   img: 'n17.webp'  },
+    n18:  { label: '팔을 뻗다',          img: 'n18.webp'  },
+    n19:  { label: '다리를 벌리다',      img: 'n19.webp'  },
+    n20:  { label: '발뒤꿈치를 들다',    img: 'n20.webp'  },
+
+    // ── Extended vocabulary – images confirmed (n21~n31) ──
+    v01: { label: '기운이 없다',      img: 'n21.webp' },
+    v02: { label: '스트레스를 받다',  img: 'n22.webp' },
+    v03: { label: '스트레칭을 하다',  img: 'n24.webp' },
+    v04: { label: '푹 쉬다',          img: 'n23.webp' },
+    v05: { label: '운동을 하다',      img: 'n25.webp' },
+    v06: { label: '물을 마시다',      img: 'n26.webp' },
+    v07: { label: '약을 먹다',        img: 'n28.webp' },
+    v08: { label: '일찍 자다',        img: 'n27.webp' },
+    v09: { label: '계단을 이용하다',  img: 'n30.webp' },
+    v10: { label: '채소를 먹다',      img: 'n29.webp' },
+    v11: { label: '매일 걷다',        img: 'n31.webp' },
+};
+
+// ── Semantic sets for also-correct logic ──
+const NEG_STATES = new Set(['v01','v02','n04a','n08']);       // 부정적 건강 상태
+const ACT_REM    = new Set(['v03','v05','v09','v11']);        // 운동성 처방 (스트레칭/운동/계단/걷기)
+const REMEDIES   = new Set(['v03','v04','v05','v06','v07','v08','v09','v10','v11']); // 모든 처방
+const WELLNESS   = new Set(['n09','n10','n11']);              // 웰니스 결과 (상쾌/기운/좋아지다)
+const BODY_POS   = new Set(['n01b','n04b','n12']);            // 신체 변화 결과 (살빠짐/가볍다/근육)
+
+/**
+ * 빈칸 정답 ID를 받아 카테고리별 시각 메타를 반환한다.
+ *   bg: 빈칸 배경색 | b1/b2: 테두리 색 (점멸) | emoji: 힌트 이모지
+ */
+function getBlankMeta(id) {
+    if (NEG_STATES.has(id)) return { bg:'rgba(254,242,242,0.9)',  b1:'#fca5a5', b2:'#ef4444', emoji:'😔' };
+    if (REMEDIES.has(id))   return { bg:'rgba(239,246,255,0.85)', b1:'#60a5fa', b2:'#2563eb', emoji:'💊' };
+    if (WELLNESS.has(id))   return { bg:'rgba(240,253,244,0.9)',  b1:'#86efac', b2:'#22c55e', emoji:'😊' };
+    if (BODY_POS.has(id))   return { bg:'rgba(240,253,250,0.9)',  b1:'#5eead4', b2:'#14b8a6', emoji:'💪' };
+    return { bg:'rgba(239,246,255,0.85)', b1:'#60a5fa', b2:'#2563eb', emoji:'❓' };
+}
+
+/**
+ * 빈칸 위치별로 정답으로 인정 가능한 추가 어휘 ID 목록을 반환한다.
+ *   blankIdx 0=A, 1=B, 2=C
+ *
+ * 규칙:
+ *   A 빈칸: A가 부정 건강상태 → 같은 그룹 교환 가능
+ *           A가 운동성 처방   → 같은 그룹 교환 가능
+ *   B 빈칸: B가 어떤 처방이든 → 다른 모든 처방 교환 가능
+ *   C 빈칸: C가 웰니스 결과  → 웰니스 결과끼리 교환 가능
+ *           C가 신체 변화    → 신체 변화끼리 교환 가능
+ */
+function getAlsoCorrect(eq, blankIdx) {
+    const slots    = [eq.a, eq.b, eq.c];
+    const targetId = slots[blankIdx];
+    const eqSet    = new Set([eq.a, eq.b, eq.c]);
+    // 수식에 이미 등장한 어휘는 제외
+    const ok = (set) => [...set].filter(id => !eqSet.has(id));
+
+    if (blankIdx === 0) {                        // ── Blank A ──
+        if (NEG_STATES.has(targetId)) return ok(NEG_STATES);
+        if (ACT_REM.has(targetId))    return ok(ACT_REM);
+    }
+    if (blankIdx === 1) {                        // ── Blank B ──
+        if (REMEDIES.has(targetId))   return ok(REMEDIES);
+    }
+    if (blankIdx === 2) {                        // ── Blank C ──
+        if (WELLNESS.has(targetId))   return ok(WELLNESS);
+        if (BODY_POS.has(targetId))   return ok(BODY_POS);
+    }
+    return [];
+}
+
+// Equation pool  ─ each entry: { a, b, c }
+// Logic: a + b → c  (cause/action + action = result)
+const EQUATIONS = [
+    { a:'n04a', b:'v04',  c:'n11'  },  // 몸이 무겁다  + 푹 쉬다          = 몸이 좋아지다
+    { a:'v01',  b:'v08',  c:'n09'  },  // 기운이 없다  + 일찍 자다         = 기분이 상쾌하다
+    { a:'v01',  b:'v07',  c:'n10'  },  // 기운이 없다  + 약을 먹다          = 기운이 나다
+    { a:'v02',  b:'v05',  c:'n09'  },  // 스트레스를 받다 + 운동을 하다     = 기분이 상쾌하다
+    { a:'v02',  b:'v04',  c:'n11'  },  // 스트레스를 받다 + 푹 쉬다         = 몸이 좋아지다
+    { a:'n08',  b:'v08',  c:'n10'  },  // 지치다       + 일찍 자다          = 기운이 나다
+    { a:'v10',  b:'v06',  c:'n04b' },  // 채소를 먹다  + 물을 마시다        = 몸이 가볍다
+    { a:'v05',  b:'v11',  c:'n12'  },  // 운동을 하다  + 매일 걷다          = 근육이 생기다
+    { a:'v11',  b:'v09',  c:'n01b' },  // 매일 걷다    + 계단을 이용하다    = 살이 빠지다
+    { a:'v03',  b:'v05',  c:'n09'  },  // 스트레칭을 하다 + 운동을 하다     = 기분이 상쾌하다
+    { a:'v06',  b:'v10',  c:'n10'  },  // 물을 마시다  + 채소를 먹다        = 기운이 나다
+    { a:'n08',  b:'v03',  c:'n09'  },  // 지치다       + 스트레칭을 하다    = 기분이 상쾌하다
+    { a:'v02',  b:'v08',  c:'n11'  },  // 스트레스를 받다 + 일찍 자다       = 몸이 좋아지다
+    { a:'v05',  b:'v09',  c:'n01b' },  // 운동을 하다  + 계단을 이용하다    = 살이 빠지다
+    { a:'v01',  b:'v04',  c:'n11'  },  // 기운이 없다  + 푹 쉬다            = 몸이 좋아지다
+];
+
+/* ═══════════════════════════════════════
+   STATE
+═══════════════════════════════════════ */
+let state = {
+    questionCount: 10,
+    questions: [],
+    current: 0,
+    score: 0,
+    streak: 0,
+    maxStreak: 0,
+    results: [],
+    answered: false,
+};
+
+/* ═══════════════════════════════════════
+   UTILITIES
+═══════════════════════════════════════ */
+function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+function $(id) { return document.getElementById(id); }
+
+function showScreen(name) {
+    ['start','game','result'].forEach(s => {
+        const el = $('screen-' + s);
+        el.classList.toggle('active', s === name);
+    });
+}
+
+/* ═══════════════════════════════════════
+   CARD HTML BUILDER
+═══════════════════════════════════════ */
+function cardHTML(id, size = 'normal') {
+    const v = VOCAB[id];
+    const labelSize = size === 'formula' ? '0.6rem' : '0.72rem';
+    const labelPad  = size === 'formula' ? '3px 2px' : '5px 4px';
+
+    let mediaZone;
+    if (v.img) {
+        mediaZone = `
+            <div class="card-img-zone">
+                <img src="${IMG}${v.img}" alt="${v.label}" loading="lazy">
+            </div>`;
+    } else {
+        mediaZone = `
+            <div class="card-emoji-zone" style="background:${v.color};">
+                ${v.emoji}
+            </div>`;
+    }
+
+    return `
+        ${mediaZone}
+        <div class="card-label" style="font-size:${labelSize};padding:${labelPad};">${v.label}</div>
+    `;
+}
+
+function blankHTML(meta) {
+    const emoji = meta ? meta.emoji : '❓';
+    const qColor = meta ? meta.b2 : '#93c5fd';
+    return `<div class="blank-inner">
+        <div class="blank-cat">${emoji}</div>
+        <div class="blank-q" style="color:${qColor};">?</div>
+    </div>`;
+}
+
+/* ═══════════════════════════════════════
+   MODE SELECTOR
+═══════════════════════════════════════ */
+function selectMode(n) {
+    state.questionCount = n;
+    document.querySelectorAll('.mode-btn').forEach(b => {
+        const on = Number(b.dataset.count) === n;
+        b.classList.toggle('on', on);
+        b.classList.toggle('off', !on);
+    });
+}
+
+/* ═══════════════════════════════════════
+   BUILD QUESTIONS
+═══════════════════════════════════════ */
+function buildQuestions() {
+    const shuffled = shuffle(EQUATIONS);
+    const count = Math.min(
+        state.questionCount >= 99 ? EQUATIONS.length : state.questionCount,
+        EQUATIONS.length
+    );
+    const selected = shuffled.slice(0, count);
+
+    return selected.map(eq => {
+        const blankIdx    = Math.floor(Math.random() * 3); // 0=A 1=B 2=C
+        const slots       = [eq.a, eq.b, eq.c];
+        const correctId   = slots[blankIdx];
+        const alsoCorrect = getAlsoCorrect(eq, blankIdx); // 추가 정답 ID 목록
+
+        // Distractors: exclude all three eq IDs + also-correct IDs so they can
+        // appear as choices and be correctly accepted when selected.
+        // (We do NOT exclude alsoCorrect from the pool — they may appear as choices.)
+        const strictExclude = new Set([eq.a, eq.b, eq.c]);
+        const pool = Object.keys(VOCAB).filter(id => !strictExclude.has(id));
+        const distractors = shuffle(pool).slice(0, 3);
+        const choices = shuffle([correctId, ...distractors]);
+
+        return { eq, blankIdx, correctId, alsoCorrect, choices };
+    });
+}
+
+/* ═══════════════════════════════════════
+   START / RESTART
+═══════════════════════════════════════ */
+function startGame() {
+    state.questions = buildQuestions();
+    state.current   = 0;
+    state.score     = 0;
+    state.streak    = 0;
+    state.maxStreak = 0;
+    state.results   = [];
+    state.answered  = false;
+    showScreen('game');
+    renderQuestion();
+}
+
+function restartGame() { startGame(); }
+function goHome() { showScreen('start'); }
+
+/* ═══════════════════════════════════════
+   RENDER QUESTION
+═══════════════════════════════════════ */
+function renderQuestion() {
+    state.answered = false;
+    const q = state.questions[state.current];
+    const total = state.questions.length;
+
+    // Progress
+    $('q-counter').textContent = `Q ${state.current + 1} / ${total}`;
+    $('score-display').textContent = `⭐ ${state.score}점`;
+    $('prog-fill').style.width = `${(state.current / total) * 100}%`;
+
+    // Streak
+    updateStreakUI();
+
+    // Feedback / next button reset
+    $('feedback-text').textContent = '';
+    $('feedback-text').className = 'text-center font-bold text-sm py-2 h-9';
+    $('next-btn').classList.add('hidden');
+
+    // Formula slots
+    const slots = ['a','b','c'];
+    const ids   = [q.eq.a, q.eq.b, q.eq.c];
+    slots.forEach((name, i) => {
+        const el = $('slot-' + name);
+        el.className = 'formula-slot';
+        el.removeAttribute('style'); // 이전 CSS 변수 초기화
+        if (i === q.blankIdx) {
+            const meta = getBlankMeta(q.correctId);
+            el.classList.add('blank-slot');
+            el.style.setProperty('--blank-b1', meta.b1);
+            el.style.setProperty('--blank-b2', meta.b2);
+            el.style.setProperty('--blank-bg', meta.bg);
+            el.innerHTML = blankHTML(meta);
+        } else {
+            el.innerHTML = cardHTML(ids[i], 'formula');
+        }
+    });
+
+    // Choices
+    const grid = $('choices-grid');
+    grid.innerHTML = '';
+    q.choices.forEach(id => {
+        const card = document.createElement('div');
+        card.className = 'choice-card anim-slide';
+        card.id = 'choice-' + id;
+        card.innerHTML = cardHTML(id);
+        card.addEventListener('click', () => handleChoice(id));
+        grid.appendChild(card);
+    });
+}
+
+/* ═══════════════════════════════════════
+   HANDLE CHOICE
+═══════════════════════════════════════ */
+function handleChoice(selectedId) {
+    if (state.answered) return;
+    state.answered = true;
+
+    const q = state.questions[state.current];
+    const isPrimary    = selectedId === q.correctId;
+    const isAlso       = !isPrimary && (q.alsoCorrect || []).includes(selectedId);
+    const isCorrect    = isPrimary || isAlso;
+    const slotName     = ['a','b','c'][q.blankIdx];
+    const slotEl       = $('slot-' + slotName);
+    const allCorrectIds = new Set([q.correctId, ...(q.alsoCorrect || [])]);
+
+    // Dim all choices that are neither selected nor any valid correct answer
+    q.choices.forEach(id => {
+        const el = $('choice-' + id);
+        if (el && !allCorrectIds.has(id) && id !== selectedId) {
+            el.classList.add('dimmed');
+        }
+    });
+
+    const selectedEl = $('choice-' + selectedId);
+    const primaryEl  = $('choice-' + q.correctId);
+
+    if (isCorrect) {
+        // ── CORRECT (primary or also-correct) ──
+        const bonus = Math.max(0, state.streak) * 2;
+        const pts   = 10 + bonus;
+        state.score  += pts;
+        state.streak += 1;
+        state.maxStreak = Math.max(state.maxStreak, state.streak);
+
+        // Fill blank with the selected card
+        slotEl.className = 'formula-slot answered-correct';
+        slotEl.innerHTML = cardHTML(selectedId, 'formula');
+
+        if (selectedEl) selectedEl.classList.add('correct-flash');
+
+        // If also-correct (not primary), highlight primary card as reference
+        if (isAlso && primaryEl) {
+            setTimeout(() => primaryEl.classList.add('reveal-correct'), 250);
+        }
+
+        const fb = $('feedback-text');
+        if (isAlso) {
+            fb.textContent = bonus > 0
+                ? `🔥 정답! (기준 정답: ${VOCAB[q.correctId].label}) +${pts}점`
+                : `⭕ 정답! (기준 정답: ${VOCAB[q.correctId].label})  +${pts}점`;
+        } else {
+            fb.textContent = bonus > 0
+                ? `🔥 연속 정답 보너스! +${pts}점`
+                : `⭕ 정답! +${pts}점`;
+        }
+        fb.className = 'text-center font-bold text-sm py-2 h-9 text-green-600';
+
+        showFbOverlay('⭕');
+        updateStreakUI();
+        $('score-display').textContent = `⭐ ${state.score}점`;
+
+    } else {
+        // ── WRONG ──
+        state.streak = 0;
+
+        if (selectedEl) selectedEl.classList.add('wrong-flash');
+
+        // Show wrong card briefly, then swap to primary correct
+        slotEl.className = 'formula-slot answered-wrong';
+        slotEl.innerHTML = cardHTML(selectedId, 'formula');
+
+        setTimeout(() => {
+            slotEl.className = 'formula-slot answered-correct';
+            slotEl.innerHTML = cardHTML(q.correctId, 'formula');
+            if (primaryEl) primaryEl.classList.add('reveal-correct');
+        }, 500);
+
+        const fb = $('feedback-text');
+        fb.textContent = `❌ 틀렸어요. 정답: ${VOCAB[q.correctId].label}`;
+        fb.className = 'text-center font-bold text-sm py-2 h-9 text-red-500';
+
+        showFbOverlay('❌');
+        updateStreakUI();
+    }
+
+    state.results.push({ q, isCorrect, isAlso, selectedId });
+
+    // Show next button after brief delay
+    setTimeout(() => {
+        $('next-btn').classList.remove('hidden');
+        $('next-btn').textContent =
+            state.current + 1 >= state.questions.length
+                ? '결과 보기 →'
+                : '다음 문제 →';
+    }, 700);
+}
+
+/* ═══════════════════════════════════════
+   NEXT QUESTION
+═══════════════════════════════════════ */
+function nextQuestion() {
+    state.current++;
+    if (state.current >= state.questions.length) {
+        showResult();
+    } else {
+        // Fade transition
+        const gs = $('screen-game');
+        gs.style.opacity = '0';
+        gs.style.transition = 'opacity 0.18s';
+        setTimeout(() => {
+            renderQuestion();
+            gs.style.opacity = '1';
+        }, 180);
+    }
+}
+
+/* ═══════════════════════════════════════
+   STREAK UI
+═══════════════════════════════════════ */
+function updateStreakUI() {
+    const area = $('streak-area');
+    if (state.streak >= 2) {
+        $('streak-num').textContent = state.streak;
+        area.classList.remove('hidden');
+    } else {
+        area.classList.add('hidden');
+    }
+}
+
+/* ═══════════════════════════════════════
+   FEEDBACK OVERLAY
+═══════════════════════════════════════ */
+function showFbOverlay(emoji) {
+    const el = $('fb-emoji');
+    el.textContent = emoji;
+    el.style.animation = 'none';
+    el.offsetWidth; // reflow
+    el.style.animation = 'fbPop 0.7s ease forwards';
+}
+
+/* ═══════════════════════════════════════
+   CONFETTI
+═══════════════════════════════════════ */
+function launchConfetti() {
+    const colors = ['#3b82f6','#6366f1','#22c55e','#f59e0b','#ec4899','#06b6d4'];
+    for (let i = 0; i < 55; i++) {
+        const p = document.createElement('div');
+        p.className = 'confetti-particle';
+        p.style.cssText = `
+            left: ${Math.random() * 100}vw;
+            top: -20px;
+            background: ${colors[Math.floor(Math.random() * colors.length)]};
+            width: ${6 + Math.random() * 8}px;
+            height: ${6 + Math.random() * 8}px;
+            border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+            --dur: ${1.2 + Math.random() * 1.8}s;
+            animation-delay: ${Math.random() * 0.6}s;
+        `;
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 3200);
+    }
+}
+
+/* ═══════════════════════════════════════
+   RESULT SCREEN
+═══════════════════════════════════════ */
+function showResult() {
+    showScreen('result');
+
+    const total   = state.results.length;
+    const correct = state.results.filter(r => r.isCorrect).length;
+    const pct     = Math.round((correct / total) * 100);
+
+    // Emoji
+    let emoji = '😢';
+    if      (pct === 100) emoji = '🏆';
+    else if (pct >= 80)   emoji = '🎉';
+    else if (pct >= 60)   emoji = '😊';
+    else if (pct >= 40)   emoji = '😅';
+    $('result-emoji').textContent = emoji;
+
+    // Stars (out of 5)
+    const starCount = pct === 100 ? 5 : pct >= 80 ? 4 : pct >= 60 ? 3 : pct >= 40 ? 2 : pct >= 20 ? 1 : 0;
+    $('star-row').innerHTML =
+        Array.from({length:5}, (_,i) =>
+            `<span class="${i < starCount ? 'star-full' : 'star-empty'}">★</span>`
+        ).join('');
+
+    // Score
+    $('result-score').textContent = `${state.score}점`;
+    $('result-sub').textContent   =
+        `${total}문제 중 ${correct}개 정답 (${pct}%) · 최고 연속 ${state.maxStreak}회`;
+
+    // Detail list
+    const list = $('result-list');
+    list.innerHTML = state.results.map(r => {
+        const { eq } = r.q;
+        // 기준 수식 라인
+        const line = `${VOCAB[eq.a].label} + ${VOCAB[eq.b].label} = ${VOCAB[eq.c].label}`;
+        const icon = r.isCorrect ? '✅' : '❌';
+
+        let note = '';
+        if (!r.isCorrect) {
+            note = ` <span class="text-red-400">(선택: ${VOCAB[r.selectedId].label})</span>`;
+        } else if (r.isAlso) {
+            // 추가 정답으로 맞힌 경우 — 학생이 고른 카드 표시
+            note = ` <span class="text-blue-400 text-xs">(선택: ${VOCAB[r.selectedId].label} ✓ 도 정답)</span>`;
+        }
+        return `<div class="result-row">
+            <span class="flex-shrink-0 mt-0.5">${icon}</span>
+            <span class="text-gray-700 leading-snug">${line}${note}</span>
+        </div>`;
+    }).join('');
+
+    // Confetti for good scores
+    if (pct >= 70) launchConfetti();
+}
+</script>
+    <script src="../shared/pc-mode.js"></script>
+</body>
+</html>

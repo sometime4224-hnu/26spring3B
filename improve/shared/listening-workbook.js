@@ -488,6 +488,10 @@
         return INSTRUCTION_UI_TEXT[getInstructionLanguage()];
     }
 
+    function usesAudioInPreLayout(config = pageConfig) {
+        return Boolean(config && config.layoutVariant === "audio-in-pre");
+    }
+
     function chooseLocalizedText(koValue, viValue, fallback = "") {
         const base = koValue == null ? fallback : koValue;
         if (getInstructionLanguage() === "vi" && viValue != null && viValue !== "") {
@@ -1187,11 +1191,19 @@
             "화자 관계와 담화 유형을 고르고, 왜 그렇게 생각했는지 짧게 정리해 보세요.",
             "Hay chon quan he giua nguoi noi va loai hoi thoai, sau do ghi ngan gon vi sao em du doan nhu vay."
         );
+        const topClusterMarkup = usesAudioInPreLayout()
+            ? `
+                <div class="lw-pre-top-grid">
+                    ${buildScene(lesson.scene || {})}
+                    ${buildEmbeddedAudioSection(lesson)}
+                </div>
+            `
+            : buildScene(lesson.scene || {});
         return `
             <section class="lw-section lw-progress-target lw-pre-section" id="pre-section-${escapeHtml(lesson.id)}">
                 <h3>${escapeHtml(uiText.preListeningTitle)}</h3>
                 <p class="lw-section-copy">${escapeHtml(uiText.preListeningCopy)}</p>
-                ${buildScene(lesson.scene || {})}
+                ${topClusterMarkup}
 
                 <div class="lw-pre-layout">
                     <div class="lw-pre-card">
@@ -1226,10 +1238,14 @@
         `;
     }
 
-    function buildAudioSection(lesson) {
+    function buildAudioPlayerMarkup(lesson, options = {}) {
+        const { compact = false } = options;
         const state = getState(lesson.id);
         const uiText = getInstructionText();
-        const playerMarkup = lesson.audioSrc
+        const actionSpacing = compact ? "" : ' style="margin-top: 12px;"';
+        const fallbackHelpClass = compact ? "lw-help-box lw-help-box--compact" : "lw-help-box";
+
+        return lesson.audioSrc
             ? `
                 <div class="lw-audio-wrap">
                     <strong>${escapeHtml(uiText.originalAudio)}</strong>
@@ -1238,24 +1254,55 @@
                         ${escapeHtml(uiText.audioUnsupported)}
                     </audio>
                 </div>
-                <div class="lw-inline-actions" style="margin-top: 12px;">
+                <div class="lw-inline-actions"${actionSpacing}>
                     <button type="button" class="lw-button-secondary lw-button" data-action="toggle-loop" data-lesson-id="${escapeHtml(lesson.id)}">${escapeHtml(state.loop ? uiText.loopOn : uiText.loopOff)}</button>
                     <button type="button" class="lw-button-secondary lw-button" data-action="stop-speech" data-lesson-id="${escapeHtml(lesson.id)}">${escapeHtml(uiText.stopLineSpeech)}</button>
                 </div>
             `
             : `
-                <div class="lw-help-box">${escapeHtml(uiText.noAudioSupport)}</div>
-                <div class="lw-inline-actions" style="margin-top: 12px;">
+                <div class="${fallbackHelpClass}">${escapeHtml(uiText.noAudioSupport)}</div>
+                <div class="lw-inline-actions"${actionSpacing}>
                     <button type="button" class="lw-button" data-action="play-dialogue" data-lesson-id="${escapeHtml(lesson.id)}">${escapeHtml(uiText.playDialogue)}</button>
                     <button type="button" class="lw-button-secondary lw-button" data-action="stop-speech" data-lesson-id="${escapeHtml(lesson.id)}">${escapeHtml(uiText.stopAudio)}</button>
                 </div>
             `;
+    }
+
+    function buildEmbeddedAudioSection(lesson) {
+        const state = getState(lesson.id);
+        const uiText = getInstructionText();
+
+        return `
+            <section class="lw-pre-card lw-pre-card--audio lw-progress-target" id="audio-section-${escapeHtml(lesson.id)}">
+                <div class="lw-pre-card__header lw-pre-card__header--audio">
+                    <span class="lw-pre-card__eyebrow">${escapeHtml(uiText.audioTitle)}</span>
+                    <p>${escapeHtml(uiText.audioCopy)}</p>
+                </div>
+                <div class="lw-audio-panel__surface">
+                    ${buildAudioPlayerMarkup(lesson, { compact: true })}
+                    <div class="lw-audio-panel__meta">
+                        <div class="lw-speed-row">
+                            ${[0.8, 1.0, 1.2].map((speed) => `
+                                <button type="button" class="lw-speed-button${state.speed === speed ? " is-active" : ""}" data-action="set-speed" data-lesson-id="${escapeHtml(lesson.id)}" data-speed="${speed.toFixed(1)}">${speed.toFixed(1)}배</button>
+                            `).join("")}
+                        </div>
+                        <div id="listen-status-${escapeHtml(lesson.id)}" class="lw-status lw-status--compact" data-tone="info">${escapeHtml(uiText.listenCount(state.listens))}</div>
+                    </div>
+                    <div class="lw-help-box lw-help-box--compact">${escapeHtml(uiText.subtitleHelp)}</div>
+                </div>
+            </section>
+        `;
+    }
+
+    function buildAudioSection(lesson) {
+        const state = getState(lesson.id);
+        const uiText = getInstructionText();
 
         return `
             <section class="lw-section lw-progress-target" id="audio-section-${escapeHtml(lesson.id)}">
                 <h3>${escapeHtml(uiText.audioTitle)}</h3>
                 <p class="lw-section-copy">${escapeHtml(uiText.audioCopy)}</p>
-                ${playerMarkup}
+                ${buildAudioPlayerMarkup(lesson)}
                 <div class="lw-speed-row" style="margin-top: 14px;">
                     ${[0.8, 1.0, 1.2].map((speed) => `
                         <button type="button" class="lw-speed-button${state.speed === speed ? " is-active" : ""}" data-action="set-speed" data-lesson-id="${escapeHtml(lesson.id)}" data-speed="${speed.toFixed(1)}">${speed.toFixed(1)}배</button>
@@ -1557,9 +1604,15 @@
         if (!lesson.activityImage || !lesson.activityImage.src) return "";
 
         const caption = getLocalizedField(lesson.activityImage, "caption", "");
+        const pendingLabel = getLocalizedField(lesson.activityImage, "pendingLabel", "이미지를 준비 중입니다.");
+        const pendingHint = getLocalizedField(lesson.activityImage, "pendingHint", "이미지 파일을 추가하면 이 영역에 자동으로 표시됩니다.");
         return `
-            <figure class="lw-lesson-visual">
-                <img src="${escapeHtml(lesson.activityImage.src)}" alt="${escapeHtml(getLocalizedField(lesson.activityImage, "alt", lesson.title || "학습 그림"))}" loading="lazy" decoding="async">
+            <figure class="lw-lesson-visual" data-image-status="ready">
+                <img src="${escapeHtml(lesson.activityImage.src)}" alt="${escapeHtml(getLocalizedField(lesson.activityImage, "alt", lesson.title || "학습 그림"))}" loading="lazy" decoding="async" onerror="const figure=this.closest('.lw-lesson-visual'); if(figure){figure.setAttribute('data-image-status','missing');} this.remove();">
+                <div class="lw-lesson-visual-placeholder" aria-live="polite">
+                    <strong>${escapeHtml(pendingLabel)}</strong>
+                    <span>${escapeHtml(pendingHint)}</span>
+                </div>
                 ${caption ? `<figcaption>${escapeHtml(caption)}</figcaption>` : ""}
             </figure>
         `;
@@ -1807,6 +1860,14 @@
     function buildLesson(lesson, index) {
         const state = getState(lesson.id);
         syncState(lesson.id);
+        const introMarkup = usesAudioInPreLayout()
+            ? buildPreListening(lesson)
+            : `
+                <div class="lw-grid-2">
+                    ${buildPreListening(lesson)}
+                    ${buildAudioSection(lesson)}
+                </div>
+            `;
         return `
             <section class="lw-lesson" id="lesson-${escapeHtml(lesson.id)}">
                 <div class="lw-lesson-header">
@@ -1820,10 +1881,7 @@
                 ${buildLessonProgress(lesson)}
                 ${buildGrammarLinkSection(lesson)}
                 ${buildLessonVisual(lesson)}
-                <div class="lw-grid-2">
-                    ${buildPreListening(lesson)}
-                    ${buildAudioSection(lesson)}
-                </div>
+                ${introMarkup}
                 <div class="lw-grid" style="margin-top: 18px;">
                     ${buildSubtitleSection(lesson)}
                     ${buildSentenceTrainer(lesson)}

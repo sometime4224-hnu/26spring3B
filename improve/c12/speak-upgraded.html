@@ -130,6 +130,183 @@
         @keyframes glow-next  { 0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.75)} 50%{box-shadow:0 0 0 13px rgba(37,99,235,0)} }
         @keyframes scale-up   { 0%,100%{transform:scale(1)} 50%{transform:scale(1.035)} }
         .anim-next { animation: glow-next .9s ease-in-out 4, scale-up .9s ease-in-out 4; }
+
+        .feedback-shell {
+            background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+            border: 1px solid #dbeafe;
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 18px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+        }
+        .feedback-card {
+            border-radius: 16px;
+            padding: 14px 15px;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+        }
+        .feedback-card + .feedback-card { margin-top: 10px; }
+        .feedback-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            margin-bottom: 10px;
+        }
+        .feedback-label-target {
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+        }
+        .feedback-label-student {
+            background: #eef2ff;
+            color: #5b21b6;
+            border: 1px solid #c7d2fe;
+        }
+        .feedback-sentence {
+            margin: 0;
+            font-size: 19px;
+            line-height: 1.75;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+        }
+        .feedback-sentence-target { color: #0f172a; }
+        .feedback-sentence-student { color: #312e81; }
+        .feedback-summary {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 14px 0 12px;
+        }
+        .feedback-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            border: 1px solid transparent;
+        }
+        .feedback-chip-ok {
+            background: #dcfce7;
+            color: #166534;
+            border-color: #86efac;
+        }
+        .feedback-chip-close {
+            background: #fef3c7;
+            color: #92400e;
+            border-color: #fcd34d;
+        }
+        .feedback-chip-wrong {
+            background: #fee2e2;
+            color: #b91c1c;
+            border-color: #fca5a5;
+        }
+        .feedback-chip-missing {
+            background: #e2e8f0;
+            color: #475569;
+            border-color: #cbd5e1;
+        }
+        .feedback-chip-extra {
+            background: #dbeafe;
+            color: #1d4ed8;
+            border-color: #93c5fd;
+        }
+        .feedback-inline {
+            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 14px;
+        }
+        .feedback-inline-title {
+            margin: 0 0 10px;
+            font-size: 12px;
+            font-weight: 800;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .feedback-inline-row {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .feedback-inline-row + .feedback-inline-row { margin-top: 10px; }
+        .feedback-inline-tag {
+            width: 28px;
+            height: 28px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 12px;
+        }
+        .feedback-inline-tag-target {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+        .feedback-inline-tag-student {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+        .feedback-inline-track {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            min-height: 30px;
+            align-items: center;
+        }
+        .feedback-char {
+            min-width: 1.35em;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.18em 0.34em;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 900;
+            line-height: 1.1;
+            border: 1px solid transparent;
+        }
+        .feedback-char-ok {
+            background: #dcfce7;
+            color: #166534;
+            border-color: #86efac;
+        }
+        .feedback-char-close {
+            background: #fef3c7;
+            color: #92400e;
+            border-color: #fcd34d;
+        }
+        .feedback-char-wrong {
+            background: #fee2e2;
+            color: #b91c1c;
+            border-color: #fca5a5;
+        }
+        .feedback-char-missing {
+            background: #e2e8f0;
+            color: #64748b;
+            border-color: #cbd5e1;
+            text-decoration: line-through;
+        }
+        .feedback-char-extra {
+            background: #dbeafe;
+            color: #1d4ed8;
+            border-color: #93c5fd;
+        }
+        .feedback-note {
+            margin: 12px 0 0;
+            font-size: 11.5px;
+            line-height: 1.6;
+            color: #475569;
+        }
     </style>
 </head>
 <body>
@@ -343,6 +520,10 @@ let recognition = null;
 let isRecording = false;
 let sessionScores = [];
 let sessionLog = []; // { dialogueId, scene, target, spoken, score, ts }
+let recordingState = null;
+const MAX_RESTARTS = 5;
+const MIC_IDLE_CLASS = 'w-20 h-20 rounded-full bg-indigo-500 hover:bg-indigo-600 text-white text-3xl flex items-center justify-center transition-all shadow-xl';
+const MIC_ACTIVE_CLASS = 'w-20 h-20 rounded-full bg-red-500 text-white text-3xl flex items-center justify-center transition-all shadow-xl relative mic-pulse';
 
 // ─── 초기화 ─────────────────────────────────────────────────────────────────
 window.onload = () => { checkSupport(); renderDialogue(); };
@@ -598,10 +779,10 @@ function goToRecord() {
 }
 
 function goToListen() {
+    if (isRecording || recordingState) stopRecording({ reason: 'navigate', shouldEvaluate: false, keepRecognizedText: false });
     step = 'listen';
     setDots('listen');
     document.getElementById('stepPanel').innerHTML = renderListenPanel(DIALOGUES[currentIdx]);
-    if (isRecording) stopRecording();
 }
 
 function setDots(s) {
@@ -634,106 +815,281 @@ function speakText(text, rate) {
 
 // ─── STT ────────────────────────────────────────────────────────────────────
 function toggleRecording() {
-    isRecording ? stopRecording() : startRecording();
+    isRecording ? stopRecording({ reason: 'manual', shouldEvaluate: true }) : startRecording();
+}
+
+function clearRecognitionHandlers(instance) {
+    if (!instance) return;
+    instance.onstart = null;
+    instance.onresult = null;
+    instance.onerror = null;
+    instance.onend = null;
+}
+
+function setRecognizedText(text) {
+    const el = document.getElementById('recognizedText');
+    if (el) el.textContent = text || '—';
+}
+
+function setRecordingVisualState(mode, statusHtml) {
+    const btn = document.getElementById('micBtn');
+    const icon = document.getElementById('micIcon');
+    const wf = document.getElementById('waveform');
+    const box = document.getElementById('recognizedBox');
+    const boxClass = mode === 'active'
+        ? 'rec-status-active'
+        : mode === 'processing'
+        ? 'rec-status-done'
+        : 'rec-status-idle';
+
+    if (btn) btn.className = mode === 'active' ? MIC_ACTIVE_CLASS : MIC_IDLE_CLASS;
+    if (icon) icon.className = mode === 'active' ? 'fa-solid fa-stop' : 'fa-solid fa-microphone';
+    if (wf) {
+        if (mode === 'active') {
+            wf.classList.remove('hidden');
+            wf.style.display = 'flex';
+        } else {
+            wf.style.display = 'none';
+        }
+    }
+    if (box) box.className = 'min-h-12 rounded-xl px-4 py-3 text-center text-sm mb-3 ' + boxClass;
+    const rs = document.getElementById('recStatus');
+    if (rs && statusHtml) rs.innerHTML = statusHtml;
+}
+
+function pickBestRecognitionAlternative(result, targetNorm) {
+    let bestAlt = result[0].transcript;
+    let bestScore = jamoAnalyze(norm(bestAlt), targetNorm).score;
+    for (let a = 1; a < result.length; a++) {
+        const altTxt = result[a].transcript;
+        const score = jamoAnalyze(norm(altTxt), targetNorm).score;
+        if (score > bestScore) {
+            bestScore = score;
+            bestAlt = altTxt;
+        }
+    }
+    return bestAlt;
+}
+
+function collectRecognitionTranscript(results, targetNorm) {
+    let finalText = '';
+    let interimText = '';
+    for (let i = 0; i < results.length; i++) {
+        if (results[i].isFinal) finalText += pickBestRecognitionAlternative(results[i], targetNorm);
+        else interimText += results[i][0].transcript;
+    }
+    return { finalText: finalText.trim(), interimText: interimText.trim() };
+}
+
+function scheduleRecognitionRestart(state, startSR) {
+    if (!state || state.pendingRestart || state.restartCount >= MAX_RESTARTS) return;
+    state.restartCount++;
+    state.pendingRestart = true;
+    setTimeout(() => {
+        if (recordingState !== state) return;
+        state.pendingRestart = false;
+        if (isRecording && !state.manualStopRequested && !state.analysisTriggered) startSR();
+    }, 220);
+}
+
+function queueAnalysisFromRecording(state, spokenOverride) {
+    if (!state || state.analysisTriggered) return true;
+    const spoken = (spokenOverride || state.finalTranscript || state.interimTranscript || '').trim();
+    if (!spoken) return false;
+
+    state.analysisTriggered = true;
+    state.ignoreEnd = true;
+    isRecording = false;
+    setRecordingVisualState('processing',
+        '<span class="text-green-600 font-bold">분석 중...</span>' +
+        '<span class="vi-guide block text-green-500">발음 결과를 정리하고 있어요.</span>');
+
+    if (recognition) {
+        clearRecognitionHandlers(recognition);
+        try { recognition.stop(); } catch(e) {}
+        recognition = null;
+    }
+
+    recordingState = null;
+    setTimeout(() => analyzeResult(spoken), 180);
+    return true;
 }
 
 function startRecording() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) return;
 
-    let finalReceived = false;
-    let restartCount = 0;
-    const MAX_RESTARTS = 5;
+    if (recordingState || recognition) {
+        stopRecording({ reason: 'reset', shouldEvaluate: false, keepRecognizedText: false });
+    }
 
-    // iOS에서 onstart가 늦게 발생하므로 UI를 즉시 활성화
+    const state = {
+        restartCount: 0,
+        finalReceived: false,
+        finalTranscript: '',
+        interimTranscript: '',
+        analysisTriggered: false,
+        manualStopRequested: false,
+        ignoreEnd: false,
+        pendingRestart: false
+    };
+    const targetNorm = norm(DIALOGUES[currentIdx].target);
+    recordingState = state;
+
     isRecording = true;
-    document.getElementById('micBtn').className =
-        'w-20 h-20 rounded-full bg-red-500 text-white text-3xl flex items-center justify-center transition-all shadow-xl relative mic-pulse';
-    document.getElementById('micIcon').className = 'fa-solid fa-stop';
-    document.getElementById('recStatus').innerHTML =
+    setRecordingVisualState('active',
         '<span class="text-red-500 font-bold">● 녹음 중</span>' +
-        '<span class="vi-guide block text-red-400">Đang ghi âm... Hãy nói to!</span>';
-    const wf = document.getElementById('waveform');
-    wf.classList.remove('hidden'); wf.style.display = 'flex';
-    const box = document.getElementById('recognizedBox');
-    box.className = 'min-h-12 rounded-xl px-4 py-3 text-center text-sm mb-3 rec-status-active';
-    document.getElementById('recognizedText').textContent = '인식 중... / Đang nhận dạng...';
+        '<span class="vi-guide block text-red-400">Đang ghi âm... Hãy nói to!</span>');
+    setRecognizedText('인식 중... / Đang nhận dạng...');
 
     function startSR() {
+        if (recordingState !== state || state.manualStopRequested || state.analysisTriggered) return;
+
         recognition = new SR();
         recognition.lang = 'ko-KR';
         recognition.interimResults = true;
         recognition.maxAlternatives = 3;
 
-        recognition.onstart = () => { isRecording = true; };
+        recognition.onstart = () => {
+            if (recordingState === state) {
+                isRecording = true;
+                state.pendingRestart = false;
+            }
+        };
 
         recognition.onresult = (e) => {
-            let interim = '', finalSpoken = '';
-            for (let i = e.resultIndex; i < e.results.length; i++) {
-                if (e.results[i].isFinal) {
-                    // 여러 인식 후보 중 목표 문장과 가장 유사한 것 선택
-                    const tgt = norm(DIALOGUES[currentIdx].target);
-                    let bestAlt = e.results[i][0].transcript;
-                    let bestSc = jamoAnalyze(norm(bestAlt), tgt).score;
-                    for (let a = 1; a < e.results[i].length; a++) {
-                        const altTxt = e.results[i][a].transcript;
-                        const s = jamoAnalyze(norm(altTxt), tgt).score;
-                        if (s > bestSc) { bestSc = s; bestAlt = altTxt; }
-                    }
-                    finalSpoken += bestAlt;
-                } else { interim += e.results[i][0].transcript; }
+            if (recordingState !== state) return;
+            const { finalText, interimText } = collectRecognitionTranscript(e.results, targetNorm);
+            state.finalTranscript = finalText;
+            state.interimTranscript = interimText;
+            setRecognizedText(finalText || interimText || '—');
+
+            if (finalText) {
+                state.finalReceived = true;
+                queueAnalysisFromRecording(state, finalText);
             }
-            document.getElementById('recognizedText').textContent = finalSpoken || interim || '—';
-            if (finalSpoken) { finalReceived = true; stopRecording(); analyzeResult(finalSpoken.trim()); }
         };
 
         recognition.onerror = (e) => {
-            // iOS에서 no-speech는 자동 재시작 (말하기 전에 타임아웃 발생)
-            if (e.error === 'no-speech' && isRecording && restartCount < MAX_RESTARTS) {
-                restartCount++;
-                setTimeout(() => { if (isRecording) startSR(); }, 200);
+            if (recordingState !== state || state.ignoreEnd || state.analysisTriggered) return;
+
+            if (state.manualStopRequested && (e.error === 'aborted' || e.error === 'no-speech')) {
                 return;
             }
+
+            if (e.error === 'no-speech' && isRecording && !state.manualStopRequested && state.restartCount < MAX_RESTARTS) {
+                scheduleRecognitionRestart(state, startSR);
+                return;
+            }
+
             const msgs = {
                 'not-allowed': '마이크 권한이 필요합니다.\nBạn cần cho phép dùng microphone.',
                 'no-speech':   '음성이 감지되지 않았습니다.\nKhông nghe thấy giọng nói. Hãy nói to hơn!'
             };
-            document.getElementById('recStatus').innerHTML =
-                '<span class="text-orange-500">' + (msgs[e.error] || '오류: ' + e.error).replace('\n', '<br>') + '</span>';
-            stopRecording();
+            stopRecording({
+                reason: 'error',
+                shouldEvaluate: false,
+                statusHtml:
+                    '<span class="text-orange-500">' +
+                    (msgs[e.error] || ('오류: ' + e.error)).replace('\n', '<br>') +
+                    '</span>'
+            });
         };
 
         recognition.onend = () => {
-            if (!isRecording) return; // 사용자가 직접 중지함
-            if (!finalReceived && restartCount < MAX_RESTARTS) {
-                // iOS에서 결과 없이 onend 발생 시 자동 재시작
-                restartCount++;
-                setTimeout(() => { if (isRecording) startSR(); }, 200);
-            } else {
-                stopRecording();
+            if (recordingState !== state || state.ignoreEnd || state.analysisTriggered) return;
+            if (state.pendingRestart) return;
+
+            if (state.manualStopRequested) {
+                if (!queueAnalysisFromRecording(state)) {
+                    recordingState = null;
+                    setRecordingVisualState('idle',
+                        '<span class="text-orange-500">인식된 문장이 없어요.</span>' +
+                        '<span class="vi-guide block text-orange-400">한 번 더 또렷하게 말해 주세요.</span>');
+                }
+                return;
+            }
+
+            if (isRecording && !state.finalReceived && state.restartCount < MAX_RESTARTS) {
+                scheduleRecognitionRestart(state, startSR);
+                return;
+            }
+
+            if (!queueAnalysisFromRecording(state)) {
+                recordingState = null;
+                setRecordingVisualState('idle',
+                    '<span class="text-orange-500">음성이 감지되지 않았습니다.</span>' +
+                    '<span class="vi-guide block text-orange-400">한 번 더 천천히 말해 주세요.</span>');
             }
         };
 
-        try { recognition.start(); } catch(e) { stopRecording(); }
+        try {
+            recognition.start();
+        } catch(e) {
+            stopRecording({
+                reason: 'start-failed',
+                shouldEvaluate: false,
+                keepRecognizedText: false,
+                statusHtml:
+                    '<span class="text-orange-500">녹음을 시작하지 못했습니다.</span>' +
+                    '<span class="vi-guide block text-orange-400">브라우저 권한을 확인해 주세요.</span>'
+            });
+        }
     }
 
     startSR();
 }
 
-function stopRecording() {
+function stopRecording(options = {}) {
+    const {
+        reason = 'manual',
+        shouldEvaluate = false,
+        keepRecognizedText = true,
+        statusHtml = shouldEvaluate
+            ? '<span class="text-indigo-600 font-bold">마무리 중...</span>' +
+              '<span class="vi-guide block text-indigo-500">말한 내용을 정리해서 바로 평가할게요.</span>'
+            : '<span class="text-slate-400">준비 완료</span>' +
+              '<span class="vi-guide block">Sẵn sàng - nhấn mic để bắt đầu.</span>'
+    } = options;
+
+    const state = recordingState;
     isRecording = false;
-    if (recognition) { try { recognition.stop(); } catch(e) {} }
-    const btn = document.getElementById('micBtn');
-    if (btn) {
-        btn.className = 'w-20 h-20 rounded-full bg-indigo-500 hover:bg-indigo-600 text-white text-3xl flex items-center justify-center transition-all shadow-xl';
-        document.getElementById('micIcon').className = 'fa-solid fa-microphone';
+
+    if (state) {
+        state.manualStopRequested = reason === 'manual';
+        state.ignoreEnd = !shouldEvaluate;
     }
-    const wf = document.getElementById('waveform');
-    if (wf) wf.style.display = 'none';
-    const rs = document.getElementById('recStatus');
-    if (rs) rs.innerHTML =
-        '<span class="text-green-600 font-bold">완료!</span>' +
-        '<span class="vi-guide block text-green-500">Xong! Đang phân tích...</span>';
+
+    setRecordingVisualState(shouldEvaluate ? 'processing' : 'idle', statusHtml);
+    if (!keepRecognizedText) setRecognizedText('—');
+
+    if (!shouldEvaluate) {
+        if (recognition) {
+            clearRecognitionHandlers(recognition);
+            try { recognition.stop(); } catch(e) {}
+            recognition = null;
+        }
+        recordingState = null;
+        return;
+    }
+
+    if (recognition) {
+        try {
+            recognition.stop();
+        } catch(e) {
+            if (!queueAnalysisFromRecording(state)) {
+                recordingState = null;
+                setRecordingVisualState('idle',
+                    '<span class="text-orange-500">인식된 문장이 없어요.</span>' +
+                    '<span class="vi-guide block text-orange-400">한 번 더 또렷하게 말해 주세요.</span>');
+            }
+        }
+    } else if (!queueAnalysisFromRecording(state)) {
+        recordingState = null;
+        setRecordingVisualState('idle',
+            '<span class="text-orange-500">인식된 문장이 없어요.</span>' +
+            '<span class="vi-guide block text-orange-400">한 번 더 또렷하게 말해 주세요.</span>');
+    }
 }
 
 // ─── 분석 엔진 ───────────────────────────────────────────────────────────────
@@ -825,6 +1181,96 @@ function scoreStars(score) {
     return '⭐'.repeat(n) + '<span style="opacity:0.2">⭐</span>'.repeat(5 - n);
 }
 
+function escapeHtml(str) {
+    return String(str || '').replace(/[&<>"']/g, ch => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    }[ch]));
+}
+
+function buildSentenceFeedbackPanel(targetRaw, spokenRaw, targetNorm, spokenNorm) {
+    const targetChars = [...targetNorm];
+    const spokenChars = [...spokenNorm];
+    const counts = {
+        ok: 0,
+        close: 0,
+        wrong: 0,
+        missing: 0,
+        extra: Math.max(spokenChars.length - targetChars.length, 0)
+    };
+
+    const comparisons = targetChars.map((targetChar, idx) => {
+        const spokenChar = spokenChars[idx] || '';
+        let kind = 'missing';
+        if (spokenChar) {
+            const sim = syllableSim(targetChar, spokenChar);
+            kind = sim >= 0.99 ? 'ok' : sim >= 0.55 ? 'close' : 'wrong';
+        }
+        counts[kind]++;
+        return { targetChar, spokenChar, kind };
+    });
+
+    const studentFlow = spokenChars.length
+        ? spokenChars.map((spokenChar, idx) => {
+            const kind = idx >= targetChars.length ? 'extra' : comparisons[idx].kind;
+            return `<span class="feedback-char feedback-char-${kind}">${escapeHtml(spokenChar)}</span>`;
+        }).join('')
+        : '<span class="text-slate-400">인식된 문장이 없어요.</span>';
+
+    const chips = [
+        ['ok', '정확', counts.ok],
+        ['close', '비슷', counts.close],
+        ['wrong', '수정', counts.wrong],
+        ['missing', '누락', counts.missing],
+        ['extra', '추가', counts.extra]
+    ].map(([kind, label, value]) => `<span class="feedback-chip feedback-chip-${kind}"><i class="fa-solid fa-circle"></i>${label} ${value}</span>`).join('');
+
+    const focusPairs = comparisons
+        .filter(item => item.kind === 'close' || item.kind === 'wrong')
+        .slice(0, 4)
+        .map(item => `${escapeHtml(item.targetChar)}→${escapeHtml(item.spokenChar)}`)
+        .join(' · ');
+
+    const noteText = focusPairs
+        ? `집중해서 들어볼 부분: ${focusPairs}`
+        : counts.missing || counts.extra
+        ? `문장 길이는 비슷한데 일부 음절이 빠지거나 더 들어갔어요.`
+        : `문장 흐름이 자연스럽게 이어졌어요.`;
+
+    const spokenSentence = spokenRaw && spokenRaw.trim()
+        ? escapeHtml(spokenRaw)
+        : '인식된 문장이 없습니다.';
+
+    return `
+        <div class="feedback-shell">
+            <div class="feedback-card">
+                <div class="feedback-label feedback-label-student">
+                    <i class="fa-solid fa-microphone-lines"></i>
+                    <span>학생 음성 결과</span>
+                </div>
+                <p class="feedback-sentence feedback-sentence-student safe">${spokenSentence}</p>
+            </div>
+            <div class="feedback-summary">${chips}</div>
+            <div class="feedback-inline">
+                <p class="feedback-inline-title">
+                    <i class="fa-solid fa-wave-square"></i>
+                    <span>학생 발화 포인트</span>
+                </div>
+                <div class="feedback-inline-row">
+                    <span class="feedback-inline-tag feedback-inline-tag-student">
+                        <i class="fa-solid fa-headset"></i>
+                    </span>
+                    <div class="feedback-inline-track">${studentFlow}</div>
+                </div>
+                <p class="feedback-note">색상은 정답 문장과 비교한 결과예요.</p>
+                <p class="feedback-note">${noteText}</p>
+            </div>
+        </div>`;
+}
+
 function analyzeResult(spoken) {
     const d = DIALOGUES[currentIdx];
     const target  = norm(d.target);
@@ -865,7 +1311,7 @@ function showResult(d, spokenRaw, target, spoken, accuracy, completeness, score)
     const offset = circ - (score / 100) * circ;
     const isLast = currentIdx === DIALOGUES.length - 1;
     const stars  = scoreStars(score);
-    const syllableBlocks = buildSyllableBlocks(target, spoken);
+    const syllableBlocks = buildSentenceFeedbackPanel(d.target, spokenRaw, target, spoken);
 
     document.getElementById('resultPanel').classList.remove('hidden');
     document.getElementById('stepPanel').classList.add('hidden');
