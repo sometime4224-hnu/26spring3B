@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NB76SV96');</script>
+    <!-- End Google Tag Manager -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>10~12과 통합 어휘 퀴즈</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --nav-height: 56px;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100dvh;
+            font-family: 'Noto Sans KR', sans-serif;
+            background: linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%);
+            color: #0f172a;
+        }
+
+        .top-nav {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 16px;
+            background: rgba(255, 255, 255, 0.92);
+            border-bottom: 1px solid #dbeafe;
+            backdrop-filter: blur(10px);
+        }
+
+        .top-nav a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 14px;
+        }
+
+        .divider {
+            color: #cbd5e1;
+            font-weight: 700;
+        }
+
+        .shell {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 18px 16px 56px;
+        }
+
+        #app {
+            min-height: calc(100dvh - var(--nav-height) - 40px);
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid #dbeafe;
+            border-radius: 24px;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+        }
+
+        .question-screen {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-height: calc(100dvh - var(--nav-height) - 40px);
+        }
+
+        .quiz-body {
+            flex: 1;
+        }
+
+        .eyebrow {
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            color: #2563eb;
+            text-transform: uppercase;
+        }
+
+        .stage-chip {
+            border-radius: 999px;
+            padding: 8px 12px;
+            border: 1px solid #dbeafe;
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .stage-chip.active {
+            background: #dbeafe;
+            border-color: #93c5fd;
+            color: #1d4ed8;
+        }
+
+        .stage-chip.done {
+            background: #dcfce7;
+            border-color: #86efac;
+            color: #166534;
+        }
+
+        .option-btn {
+            width: 100%;
+            text-align: left;
+            border-radius: 18px;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+            padding: 14px 15px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #0f172a;
+            transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            border-color: #93c5fd;
+            background: #f8fbff;
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .option-btn.correct {
+            background: #dcfce7;
+            border-color: #86efac;
+            color: #166534;
+        }
+
+        .option-btn.wrong {
+            background: #fee2e2;
+            border-color: #fca5a5;
+            color: #991b1b;
+        }
+
+        .option-btn.dimmed {
+            opacity: 0.55;
+        }
+
+        .next-btn {
+            width: 100%;
+            border: none;
+            border-radius: 18px;
+            background: #2563eb;
+            color: #fff;
+            padding: 14px 16px;
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        .ghost-btn {
+            width: 100%;
+            border-radius: 18px;
+            border: 1px solid #cbd5e1;
+            background: #fff;
+            color: #334155;
+            padding: 14px 16px;
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .feedback-box {
+            border-radius: 18px;
+            padding: 16px;
+            font-size: 15px;
+            line-height: 1.75;
+            font-weight: 700;
+        }
+
+        .feedback-box.ok {
+            background: #dcfce7;
+            border: 1px solid #86efac;
+            color: #166534;
+        }
+
+        .feedback-box.no {
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            color: #991b1b;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #2563eb 0%, #22c55e 100%);
+            transition: width 0.35s ease;
+        }
+
+        .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .metric-chip {
+            min-width: 108px;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+            padding: 10px 12px;
+        }
+
+        .metric-chip span {
+            display: block;
+            font-size: 11px;
+            font-weight: 800;
+            color: #64748b;
+        }
+
+        .metric-chip strong {
+            display: block;
+            margin-top: 4px;
+            font-size: 18px;
+            line-height: 1;
+            color: #0f172a;
+        }
+
+        .metric-chip.live {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+        }
+
+        .metric-chip.streak-hot {
+            background: #eff6ff;
+            border-color: #93c5fd;
+            animation: chipPulse 1.8s ease-in-out infinite;
+        }
+
+        .question-card {
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .question-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .question-card.reward::before,
+        .question-card.reward::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            width: 50%;
+            height: 120px;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 0;
+        }
+
+        .question-card.reward::before {
+            left: 2%;
+            background-image:
+                radial-gradient(circle, rgba(96, 165, 250, 0.92) 0 3px, transparent 3.5px),
+                radial-gradient(circle, rgba(34, 197, 94, 0.9) 0 3px, transparent 3.5px),
+                radial-gradient(circle, rgba(250, 204, 21, 0.92) 0 3px, transparent 3.5px),
+                radial-gradient(circle, rgba(251, 146, 60, 0.9) 0 2.5px, transparent 3px),
+                radial-gradient(circle, rgba(167, 139, 250, 0.9) 0 3px, transparent 3.5px),
+                radial-gradient(circle, rgba(244, 114, 182, 0.9) 0 2.5px, transparent 3px);
+            background-size: 18px 18px, 18px 18px, 18px 18px, 16px 16px, 18px 18px, 16px 16px;
+            background-position: 6% 10%, 28% 0%, 47% 16%, 68% 2%, 82% 12%, 94% 4%;
+            background-repeat: no-repeat;
+            animation: confettiLeft 0.85s ease-out;
+        }
+
+        .question-card.reward::after {
+            right: 2%;
+            background-image:
+                radial-gradient(circle, rgba(59, 130, 246, 0.9) 0 3px, transparent 3.5px),
+                radial-gradient(circle, rgba(16, 185, 129, 0.9) 0 3px, transparent 3.5px),
+                radial-gradient(circle, rgba(250, 204, 21, 0.92) 0 2.5px, transparent 3px),
+                radial-gradient(circle, rgba(248, 113, 113, 0.88) 0 2.5px, transparent 3px),
+                radial-gradient(circle, rgba(192, 132, 252, 0.88) 0 3px, transparent 3.5px),
+                radial-gradient(circle, rgba(45, 212, 191, 0.9) 0 2.5px, transparent 3px);
+            background-size: 18px 18px, 18px 18px, 16px 16px, 16px 16px, 18px 18px, 16px 16px;
+            background-position: 8% 4%, 24% 16%, 42% 2%, 62% 14%, 78% 0%, 92% 12%;
+            background-repeat: no-repeat;
+            animation: confettiRight 0.85s ease-out;
+        }
+
+        .reaction-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 999px;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: -0.01em;
+        }
+
+        .reaction-pill.ok {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #166534;
+        }
+
+        .reaction-pill.no {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+        }
+
+        .reaction-pill i {
+            font-size: 12px;
+        }
+
+        .feedback-title {
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        .feedback-sub {
+            margin-top: 4px;
+            font-size: 14px;
+            line-height: 1.65;
+        }
+
+        .insight-note {
+            margin-top: 12px;
+            border-radius: 16px;
+            border: 1px solid #dbeafe;
+            background: #f8fbff;
+            padding: 11px 13px;
+            font-size: 13px;
+            line-height: 1.6;
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .score-card {
+            border-radius: 20px;
+            padding: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .score-card.blue {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+        }
+
+        .score-card.slate {
+            background: #f8fafc;
+            border-color: #e2e8f0;
+        }
+
+        .score-card.green {
+            background: #ecfdf5;
+            border-color: #a7f3d0;
+        }
+
+        @keyframes confettiLeft {
+            0% {
+                opacity: 0;
+                transform: translateY(-12px) rotate(-10deg);
+            }
+            20% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(82px) rotate(10deg);
+            }
+        }
+
+        @keyframes confettiRight {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px) rotate(10deg);
+            }
+            20% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(86px) rotate(-8deg);
+            }
+        }
+
+        @keyframes chipPulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.06);
+            }
+            50% {
+                box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.12);
+            }
+        }
+
+        @media (max-width: 640px) {
+            :root {
+                --nav-height: 48px;
+            }
+
+            .top-nav {
+                height: var(--nav-height);
+                gap: 8px;
+                padding: 0 12px;
+            }
+
+            .top-nav a,
+            .top-nav .text-sm {
+                font-size: 13px;
+            }
+
+            .shell {
+                padding: 10px 10px 16px;
+            }
+
+            #app,
+            .question-screen {
+                min-height: calc(100dvh - var(--nav-height) - 18px);
+            }
+
+            .question-screen {
+                gap: 10px;
+            }
+
+            .panel {
+                border-radius: 18px;
+                box-shadow: 0 14px 28px rgba(15, 23, 42, 0.05);
+            }
+
+            .quiz-head {
+                padding: 12px !important;
+                margin-bottom: 0 !important;
+            }
+
+            .quiz-body,
+            .result-screen {
+                padding: 14px !important;
+            }
+
+            .quiz-body {
+                min-height: 0;
+                overflow: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .result-screen {
+                min-height: calc(100dvh - var(--nav-height) - 18px);
+                overflow: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .eyebrow {
+                font-size: 10px;
+            }
+
+            .stage-chip {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+
+            .meta-row {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 8px;
+                margin-top: 10px;
+            }
+
+            .metric-chip {
+                min-width: 0;
+                border-radius: 14px;
+                padding: 8px 8px;
+            }
+
+            .metric-chip span {
+                font-size: 10px;
+            }
+
+            .metric-chip strong {
+                margin-top: 3px;
+                font-size: 15px;
+            }
+
+            .stage-badge {
+                margin-top: 10px !important;
+                padding: 6px 10px !important;
+                font-size: 11px !important;
+            }
+
+            .question-text {
+                margin-top: 12px !important;
+                font-size: 20px !important;
+                line-height: 1.35 !important;
+            }
+
+            .question-translation {
+                margin-top: 6px !important;
+                font-size: 12px !important;
+                line-height: 1.45 !important;
+            }
+
+            .option-list {
+                display: grid;
+                margin-top: 12px !important;
+                gap: 8px !important;
+            }
+
+            .option-btn {
+                border-radius: 14px;
+                padding: 11px 12px;
+                font-size: 14px;
+            }
+
+            .reaction-wrap {
+                margin-top: 12px !important;
+            }
+
+            .reaction-pill {
+                width: 100%;
+                justify-content: center;
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            .feedback-box {
+                margin-top: 10px !important;
+                border-radius: 14px;
+                padding: 12px 13px;
+                font-size: 14px;
+                line-height: 1.55;
+            }
+
+            .feedback-title {
+                font-size: 16px;
+            }
+
+            .feedback-sub {
+                font-size: 13px;
+                line-height: 1.5;
+            }
+
+            .insight-note {
+                margin-top: 10px;
+                border-radius: 14px;
+                padding: 10px 11px;
+                font-size: 12px;
+                line-height: 1.5;
+            }
+
+            .next-btn,
+            .ghost-btn {
+                border-radius: 14px;
+                padding: 12px 14px;
+                font-size: 15px;
+            }
+
+            .score-grid {
+                gap: 8px !important;
+            }
+
+            .score-card {
+                border-radius: 16px;
+                padding: 12px 8px;
+            }
+
+            .score-card .text-3xl {
+                font-size: 1.5rem !important;
+                line-height: 1.1 !important;
+            }
+        }
+
+        @media (max-width: 640px) and (max-height: 780px) {
+            .quiz-head .text-2xl,
+            .result-screen .text-2xl {
+                font-size: 1.35rem !important;
+            }
+
+            .quiz-head .mt-4,
+            .result-screen .mt-5,
+            .result-screen .mt-6 {
+                margin-top: 0.75rem !important;
+            }
+
+            .question-text {
+                font-size: 18px !important;
+            }
+
+            .option-btn {
+                padding: 10px 11px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <a href="index.html">메인</a>
+        <span class="divider">|</span>
+        <span class="text-sm font-bold text-slate-600">10~12과 통합 어휘 퀴즈</span>
+    </nav>
+
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NB76SV96"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <main class="shell">
+        <div id="app"></div>
+    </main>
+
+    <script>
+        const STAGES = [
+            {
+                key: 'blank',
+                title: '1단계 · 빈칸에 알맞은 말 고르기',
+                desc: '문맥을 보고 가장 알맞은 어휘를 고르세요.',
+                questions: [
+                    { ch: '10과', p: '소개로 처음 만나는 자리는 보통 ____.', v: 'Buổi gặp đầu tiên do người khác giới thiệu thường gọi là ____.', o: ['고백하다', '소개팅하다', '사귀다', '연애하다'], a: '소개팅하다' },
+                    { ch: '10과', p: '좋아하는 사람에게 마음을 말하면 ____.', v: 'Nếu nói ra tình cảm với người mình thích thì đó là ____.', o: ['고백하다', '첫눈에 반하다', '인상이 좋다', '손을 잡다'], a: '고백하다' },
+                    { ch: '10과', p: '서로 좋아해서 만나면 ____.', v: 'Nếu hai người thích nhau và bắt đầu gặp gỡ thì là ____.', o: ['사귀다', '선보다', '어깨에 기대다', '얼굴이 빨개지다'], a: '사귀다' },
+                    { ch: '10과', p: '처음 보자마자 좋아지면 ____.', v: 'Nếu vừa gặp đã thích ngay thì là ____.', o: ['매력이 있다', '첫눈에 반하다', '나란히 앉다', '조건이 맞다'], a: '첫눈에 반하다' },
+                    { ch: '11과', p: '한 시간 일하고 받는 돈은 ____.', v: 'Tiền nhận được sau khi làm 1 giờ là ____.', o: ['시급', '연령', '성별', '연봉이 높다'], a: '시급' },
+                    { ch: '11과', p: '회사에 새로 들어온 직원은 ____.', v: 'Nhân viên mới vào công ty là ____.', o: ['동료', '신입 사원', '직장 상사', '부하 직원'], a: '신입 사원' },
+                    { ch: '11과', p: '작은 것까지 잘 살피면 ____.', v: 'Nếu chú ý kỹ đến cả những chi tiết nhỏ thì là ____.', o: ['성실하다', '꼼꼼하다', '실력이 있다', '이해가 빠르다'], a: '꼼꼼하다' },
+                    { ch: '11과', p: '직급이 올라갈 기회가 많으면 ____.', v: 'Nếu có nhiều cơ hội được lên chức thì là ____.', o: ['휴가가 길다', '출퇴근 시간이 자유롭다', '연봉이 높다', '승진 기회가 많다'], a: '승진 기회가 많다' },
+                    { ch: '12과', p: '계단을 빨리 올라가면 ____.', v: 'Nếu leo cầu thang nhanh thì sẽ ____.', o: ['숨이 차다', '기운이 나다', '몸이 좋아지다', '기분이 상쾌하다'], a: '숨이 차다' },
+                    { ch: '12과', p: '하루 종일 걸었더니 너무 ____.', v: 'Đi bộ cả ngày nên rất ____.', o: ['지치다', '쥐가 나다', '근육이 생기다', '땀이 나다'], a: '지치다' },
+                    { ch: '12과', p: '가슴을 크게 열려면 먼저 ____.', v: 'Muốn mở rộng ngực thì trước tiên hãy ____.', o: ['(가슴을) 펴다', '(몸을) 젖히다', '(다리를) 벌리다', '(발뒤꿈치를) 들다'], a: '(가슴을) 펴다' },
+                    { ch: '12과', p: '운동을 계속했더니 몸에 ____.', v: 'Tập thể dục đều nên cơ thể ____.', o: ['몸이 좋아지다', '근육이 생기다', '기운이 나다', '땀이 나다'], a: '근육이 생기다' }
+                ]
+            },
+            {
+                key: 'similar',
+                title: '2단계 · 비슷한 뜻 찾기',
+                desc: '설명과 가장 가까운 어휘를 고르세요.',
+                questions: [
+                    { ch: '10과', p: '처음 봤을 때 느낌이 좋아 보이면?', v: 'Nếu ấn tượng ban đầu nhìn có vẻ tốt thì dùng từ nào?', o: ['인상이 좋다', '마음씨가 착하다', '매력이 있다', '조건이 맞다'], a: '인상이 좋다' },
+                    { ch: '10과', p: '서로 이야기와 생각이 잘 맞으면?', v: 'Nếu nói chuyện và suy nghĩ hợp nhau thì dùng từ nào?', o: ['사랑에 빠지다', '말(생각)이 잘 통하다', '성격(마음)이 잘 맞다', '나란히 앉다'], a: '말(생각)이 잘 통하다' },
+                    { ch: '10과', p: '다른 사람 팔에 내 팔을 걸면?', v: 'Nếu khoác tay người khác thì dùng từ nào?', o: ['손을 잡다', '팔짱을 끼다', '어깨에 기대다', '나란히 앉다'], a: '팔짱을 끼다' },
+                    { ch: '10과', p: '좋아하거나 놀라서 심장이 빨리 뛰면?', v: 'Nếu vì thích hoặc hồi hộp mà tim đập nhanh thì dùng từ nào?', o: ['가슴이 두근거리다', '얼굴이 빨개지다', '매력이 있다', '인상이 좋다'], a: '가슴이 두근거리다' },
+                    { ch: '11과', p: '직장에서 맡아서 하는 일은?', v: 'Công việc mình đảm nhận ở chỗ làm là gì?', o: ['업무', '동료', '대리', '성별'], a: '업무' },
+                    { ch: '11과', p: '사람들과 잘 지내는 성격이면?', v: 'Nếu có tính cách hòa hợp tốt với mọi người thì dùng từ nào?', o: ['성실하다', '대인 관계가 원만하다', '실력이 있다', '꼼꼼하다'], a: '대인 관계가 원만하다' },
+                    { ch: '11과', p: '일을 잘할 수 있는 능력이 있으면?', v: 'Nếu có khả năng làm việc tốt thì dùng từ nào?', o: ['경험이 많다', '실력이 있다', '최선을 다하다', '이해가 빠르다'], a: '실력이 있다' },
+                    { ch: '11과', p: '회사에 가는 시간과 퇴근 시간을 내가 정할 수 있으면?', v: 'Nếu có thể tự chọn giờ đi làm và tan làm thì dùng từ nào?', o: ['근무 시간', '휴가가 길다', '승진 기회가 많다', '출퇴근 시간이 자유롭다'], a: '출퇴근 시간이 자유롭다' },
+                    { ch: '12과', p: '몸에 힘이 다시 생기면?', v: 'Nếu cơ thể lấy lại sức thì dùng từ nào?', o: ['기운이 나다', '지치다', '기분이 상쾌하다', '몸이 좋아지다'], a: '기운이 나다' },
+                    { ch: '12과', p: '발뒤꿈치를 위로 올리면?', v: 'Nếu nhấc gót chân lên thì dùng từ nào?', o: ['(팔을) 뻗다', '(몸을) 젖히다', '(발뒤꿈치를) 들다', '(다리를) 벌리다'], a: '(발뒤꿈치를) 들다' },
+                    { ch: '12과', p: '몸을 뒤로 기울이면?', v: 'Nếu ngả người ra sau thì dùng từ nào?', o: ['(몸을) 젖히다', '(목을) 돌리다', '(옆구리를) 굽히다', '(가슴을) 펴다'], a: '(몸을) 젖히다' },
+                    { ch: '12과', p: '느낌이 시원하고 개운하면?', v: 'Nếu cảm thấy sảng khoái và nhẹ nhõm thì dùng từ nào?', o: ['몸이 무겁다', '기분이 상쾌하다', '지치다', '쥐가 나다'], a: '기분이 상쾌하다' }
+                ]
+            },
+            {
+                key: 'contrast',
+                title: '3단계 · 반대/대조 표현 찾기',
+                desc: '가장 반대되거나 대조적인 표현을 고르세요.',
+                questions: [
+                    { ch: '10과', p: "'첫눈에 반하다'와 다르게, 조건을 보는 말은?", v: "Khác với 'yêu từ cái nhìn đầu tiên', từ nào nói về việc xem điều kiện phù hợp?", o: ['조건이 맞다', '첫눈에 반하다', '매력이 있다', '사랑에 빠지다'], a: '조건이 맞다' },
+                    { ch: '10과', p: "'사귀다'보다 더 처음 단계인 말은?", v: "Từ nào là giai đoạn sớm hơn 'hẹn hò'?", o: ['소개팅하다', '연애하다', '손을 잡다', '고백하다'], a: '소개팅하다' },
+                    { ch: '10과', p: "'가슴이 두근거리다'와 다르게, 얼굴에 바로 나타나는 반응은?", v: "Khác với tim đập nhanh, phản ứng nào hiện ra ngay trên mặt?", o: ['가슴이 두근거리다', '얼굴이 빨개지다', '인상이 좋다', '손을 잡다'], a: '얼굴이 빨개지다' },
+                    { ch: '10과', p: "'선보다'보다 더 관계가 진행된 말은?", v: "Từ nào là giai đoạn tiến xa hơn 'đi xem mắt'?", o: ['연애하다', '선보다', '소개팅하다', '고백하다'], a: '연애하다' },
+                    { ch: '11과', p: "'신입 사원'과 반대쪽 위치에 있는 사람은?", v: "Ai ở vị trí đối lập với 'nhân viên mới'?", o: ['신입 사원', '동료', '직장 상사', '부하 직원'], a: '직장 상사' },
+                    { ch: '11과', p: "'대기업'과 반대되는 말은?", v: "Từ trái ngược với 'công ty lớn' là gì?", o: ['중소기업', '대기업', '부장', '대리'], a: '중소기업' },
+                    { ch: '11과', p: "'출퇴근 시간이 자유롭다'와 다르게, 시간이 정해진 쪽에 가까운 말은?", v: "Khác với 'giờ đi làm linh hoạt', từ nào gần với ý thời gian đã được cố định?", o: ['근무 시간', '휴가가 길다', '승진 기회가 많다', '연봉이 높다'], a: '근무 시간' },
+                    { ch: '11과', p: "'대인 관계가 원만하다'와 다르게, 사람보다 문서 쓰기에 가까운 말은?", v: "Khác với 'quan hệ xã hội tốt', từ nào gần với việc viết giấy tờ hơn?", o: ['대인 관계가 원만하다', '보고서 작성을 잘하다', '동료', '과장'], a: '보고서 작성을 잘하다' },
+                    { ch: '12과', p: "'몸이 무겁다'와 반대되는 말은?", v: "Từ trái nghĩa với 'cơ thể nặng nề' là gì?", o: ['몸이 무겁다', '몸이 가볍다', '지치다', '숨이 차다'], a: '몸이 가볍다' },
+                    { ch: '12과', p: "'힘이 세다'와 반대되는 말은?", v: "Từ trái nghĩa với 'khỏe, mạnh' là gì?", o: ['힘이 약하다', '힘이 세다', '근육이 생기다', '기운이 나다'], a: '힘이 약하다' },
+                    { ch: '12과', p: "'자세가 나쁘다'와 반대되는 말은?", v: "Từ trái nghĩa với 'tư thế xấu' là gì?", o: ['자세가 좋다', '자세가 나쁘다', '(몸을) 젖히다', '(가슴을) 펴다'], a: '자세가 좋다' },
+                    { ch: '12과', p: "'살이 찌다'와 반대되는 말은?", v: "Từ trái nghĩa với 'tăng cân' là gì?", o: ['살이 찌다', '살이 빠지다', '땀이 나다', '기분이 상쾌하다'], a: '살이 빠지다' }
+                ]
+            }
+        ];
+
+        const state = {
+            runStages: [],
+            stageIndex: 0,
+            questionIndex: 0,
+            answered: false,
+            selected: '',
+            lastCorrect: false,
+            streak: 0,
+            bestStreak: 0,
+            totalCorrect: 0,
+            stageScores: [],
+            masteredWords: new Set()
+        };
+
+        const app = document.getElementById('app');
+
+        restartQuiz();
+
+        function restartQuiz() {
+            state.runStages = STAGES.map((stage) => ({
+                ...stage,
+                questions: shuffle(stage.questions.map((question) => ({
+                    ...question,
+                    o: shuffle([...question.o])
+                })))
+            }));
+            state.stageIndex = 0;
+            state.questionIndex = 0;
+            state.answered = false;
+            state.selected = '';
+            state.lastCorrect = false;
+            state.streak = 0;
+            state.bestStreak = 0;
+            state.totalCorrect = 0;
+            state.stageScores = STAGES.map(() => 0);
+            state.masteredWords = new Set();
+            render();
+        }
+
+        function render() {
+            if (state.stageIndex >= state.runStages.length) {
+                renderFinal();
+                return;
+            }
+
+            const stage = currentStage();
+            if (state.questionIndex >= stage.questions.length) {
+                renderStageSummary();
+                return;
+            }
+
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const stage = currentStage();
+            const question = currentQuestion();
+            const progress = ((state.questionIndex + 1) / stage.questions.length) * 100;
+            const overallCurrent = currentQuestionNumber();
+            const feedback = state.answered ? feedbackCopy(question) : null;
+
+            app.innerHTML = `
+                <div class="question-screen">
+                    <section class="panel p-5 sm:p-6 mb-4 quiz-head">
+                        <p class="eyebrow">10~12과 통합 퀴즈</p>
+                        <div class="flex flex-wrap gap-2 mt-3">${renderStageChips()}</div>
+                        <h1 class="text-2xl sm:text-3xl font-black mt-4">${escapeHtml(stage.title)}</h1>
+                        <p class="text-sm text-slate-500 mt-2">${escapeHtml(stage.desc)}</p>
+                        <div class="meta-row">
+                            <div class="metric-chip live">
+                                <span>전체 복습</span>
+                                <strong>${overallCurrent} / ${totalQuestionCount()}</strong>
+                            </div>
+                            <div class="metric-chip ${state.streak >= 3 ? 'streak-hot' : ''}">
+                                <span>연속 정답</span>
+                                <strong>${state.streak}</strong>
+                            </div>
+                            <div class="metric-chip">
+                                <span>익힌 표현</span>
+                                <strong>${state.masteredWords.size}</strong>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="panel p-5 sm:p-6 question-card quiz-body ${state.answered && state.lastCorrect ? 'reward' : ''}">
+                        <div class="flex items-center justify-between gap-3 text-sm text-slate-500">
+                            <span>${state.questionIndex + 1} / ${stage.questions.length}</span>
+                            <span>${escapeHtml(question.ch)}</span>
+                        </div>
+                        <div class="mt-2 h-2 rounded-full bg-slate-100 overflow-hidden">
+                            <div class="progress-fill h-full rounded-full bg-blue-500" style="width:${progress}%"></div>
+                        </div>
+
+                        <div class="stage-badge mt-5 inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-100 px-3 py-1 text-xs font-bold text-blue-700">
+                            <i class="fa-solid fa-layer-group"></i>${escapeHtml(stage.title.split('·')[1].trim())}
+                        </div>
+
+                        <p class="question-text mt-4 text-xl sm:text-2xl font-black leading-snug">${escapeHtml(question.p)}</p>
+                        <p class="question-translation mt-2 text-sm leading-6 text-slate-500">${escapeHtml(question.v || '')}</p>
+
+                        <div class="option-list mt-5 space-y-3">
+                            ${question.o.map((option, index) => `
+                                <button type="button" class="option-btn ${optionState(option, question)}" ${state.answered ? 'disabled' : ''} onclick="chooseOption(${index})">
+                                    ${escapeHtml(option)}
+                                </button>
+                            `).join('')}
+                        </div>
+
+                        ${state.answered ? `
+                            <div class="reaction-wrap mt-5">
+                                ${reactionMarkup()}
+                            </div>
+                            <div class="feedback-box ${state.lastCorrect ? 'ok' : 'no'} mt-5">
+                                <p class="feedback-title">${escapeHtml(feedback.title)}</p>
+                                <p class="feedback-sub">${escapeHtml(feedback.body)}</p>
+                            </div>
+                            <div class="insight-note">${escapeHtml(stageTip(stage.key, state.lastCorrect))}</div>
+                            <button type="button" class="next-btn mt-4" onclick="goNext()">
+                                ${state.questionIndex === stage.questions.length - 1 ? '이 단계 마무리하기' : '다음 문제'}
+                            </button>
+                        ` : ''}
+                    </section>
+                </div>
+            `;
+        }
+
+        function renderStageSummary() {
+            const stage = currentStage();
+            const score = state.stageScores[state.stageIndex];
+            const total = stage.questions.length;
+            const isLast = state.stageIndex === state.runStages.length - 1;
+
+            app.innerHTML = `
+                <section class="panel p-6 text-center result-screen">
+                    <p class="eyebrow">단계 완료</p>
+                    <div class="flex flex-wrap justify-center gap-2 mt-3">${renderStageChips(true)}</div>
+                    <h2 class="text-2xl sm:text-3xl font-black mt-5">${escapeHtml(stage.title)} 완료</h2>
+                    <p class="text-slate-500 mt-2">${total}문항 중 ${score}문항 정답</p>
+                    <p class="text-sm font-bold text-blue-700 mt-3">${escapeHtml(stageSummaryMessage(score, total))}</p>
+                    <div class="score-grid grid grid-cols-3 gap-3 mt-6">
+                        <div class="score-card blue">
+                            <p class="text-xs font-bold text-blue-700">정답 수</p>
+                            <p class="text-3xl font-black text-blue-700 mt-2">${score}</p>
+                        </div>
+                        <div class="score-card slate">
+                            <p class="text-xs font-bold text-slate-600">정확도</p>
+                            <p class="text-3xl font-black text-slate-800 mt-2">${Math.round((score / total) * 100)}%</p>
+                        </div>
+                        <div class="score-card green">
+                            <p class="text-xs font-bold text-emerald-700">최고 연속</p>
+                            <p class="text-3xl font-black text-emerald-700 mt-2">${state.bestStreak}</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-600 mt-4">지금까지 익힌 표현 ${state.masteredWords.size}개</p>
+                    <button type="button" class="next-btn mt-6" onclick="${isLast ? 'finishQuiz()' : 'nextStage()'}">
+                        ${isLast ? '최종 결과 보기' : '다음 단계 시작'}
+                    </button>
+                </section>
+            `;
+        }
+
+        function renderFinal() {
+            const totalQuestions = state.runStages.reduce((sum, stage) => sum + stage.questions.length, 0);
+            app.innerHTML = `
+                <section class="panel p-6 text-center result-screen">
+                    <p class="eyebrow">퀴즈 완료</p>
+                    <h1 class="text-2xl sm:text-3xl font-black mt-3">10~12과 통합 복습 끝!</h1>
+                    <p class="text-slate-500 mt-2">총 ${totalQuestions}문항 중 ${state.totalCorrect}문항 정답</p>
+                    <p class="text-sm font-bold text-blue-700 mt-3">${escapeHtml(finalSummaryMessage(totalQuestions))}</p>
+
+                    <div class="score-grid grid grid-cols-3 gap-3 mt-6">
+                        <div class="score-card blue">
+                            <p class="text-xs font-bold text-blue-700">전체 정확도</p>
+                            <p class="text-3xl font-black text-blue-700 mt-2">${Math.round((state.totalCorrect / totalQuestions) * 100)}%</p>
+                        </div>
+                        <div class="score-card green">
+                            <p class="text-xs font-bold text-emerald-700">익힌 표현</p>
+                            <p class="text-3xl font-black text-emerald-700 mt-2">${state.masteredWords.size}</p>
+                        </div>
+                        <div class="score-card slate">
+                            <p class="text-xs font-bold text-slate-600">최고 연속</p>
+                            <p class="text-3xl font-black text-slate-800 mt-2">${state.bestStreak}</p>
+                        </div>
+                    </div>
+
+                    <div class="grid gap-3 mt-6">
+                        ${state.runStages.map((stage, index) => `
+                            <div class="panel p-4 bg-slate-50 border-slate-200 shadow-none text-left">
+                                <p class="text-xs font-bold text-blue-700">${escapeHtml(stage.title)}</p>
+                                <p class="text-lg font-black text-slate-800 mt-2">${state.stageScores[index]} / ${stage.questions.length}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="grid gap-3 mt-6">
+                        <button type="button" class="next-btn" onclick="restartQuiz()">다시 풀기</button>
+                        <a href="index.html" class="ghost-btn text-center no-underline inline-flex items-center justify-center">메인으로 돌아가기</a>
+                    </div>
+                </section>
+            `;
+        }
+
+        function chooseOption(index) {
+            if (state.answered) {
+                return;
+            }
+            const question = currentQuestion();
+            state.selected = question.o[index];
+            state.answered = true;
+            state.lastCorrect = state.selected === question.a;
+            if (state.lastCorrect) {
+                state.streak += 1;
+                state.bestStreak = Math.max(state.bestStreak, state.streak);
+                state.totalCorrect += 1;
+                state.stageScores[state.stageIndex] += 1;
+                state.masteredWords.add(question.a);
+            } else {
+                state.streak = 0;
+            }
+            render();
+        }
+
+        function goNext() {
+            state.questionIndex += 1;
+            state.answered = false;
+            state.selected = '';
+            render();
+        }
+
+        function nextStage() {
+            state.stageIndex += 1;
+            state.questionIndex = 0;
+            state.answered = false;
+            state.selected = '';
+            render();
+        }
+
+        function finishQuiz() {
+            state.stageIndex = state.runStages.length;
+            render();
+        }
+
+        function currentStage() {
+            return state.runStages[state.stageIndex];
+        }
+
+        function currentQuestion() {
+            return currentStage().questions[state.questionIndex];
+        }
+
+        function renderStageChips(completeCurrent = false) {
+            return STAGES.map((stage, index) => {
+                let className = 'stage-chip';
+                if (index < state.stageIndex || (completeCurrent && index === state.stageIndex)) {
+                    className += ' done';
+                } else if (index === state.stageIndex) {
+                    className += ' active';
+                }
+                return `<span class="${className}">${index + 1}단계</span>`;
+            }).join('');
+        }
+
+        function optionState(option, question) {
+            if (!state.answered) {
+                return '';
+            }
+            if (option === question.a) {
+                return 'correct';
+            }
+            if (option === state.selected) {
+                return 'wrong';
+            }
+            return 'dimmed';
+        }
+
+        function currentQuestionNumber() {
+            let count = 0;
+            for (let i = 0; i < state.stageIndex; i += 1) {
+                count += state.runStages[i].questions.length;
+            }
+            return count + state.questionIndex + 1;
+        }
+
+        function totalQuestionCount() {
+            return state.runStages.reduce((sum, stage) => sum + stage.questions.length, 0);
+        }
+
+        function feedbackCopy(question) {
+            if (state.lastCorrect) {
+                if (state.streak >= 5) {
+                    return {
+                        title: '흐름이 아주 좋습니다.',
+                        body: `연속 정답 ${state.streak}개째예요. "${question.a}" 표현도 안정적으로 기억하고 있어요.`
+                    };
+                }
+                if (state.streak >= 3) {
+                    return {
+                        title: '좋아요, 리듬이 붙었습니다.',
+                        body: `연속 정답 ${state.streak}개예요. "${question.a}" 표현이 더 또렷해지고 있어요.`
+                    };
+                }
+                return {
+                    title: '정답입니다.',
+                    body: `"${question.a}" 표현을 정확하게 골랐어요.`
+                };
+            }
+
+            return {
+                title: `정답은 "${question.a}"입니다.`,
+                body: '괜찮아요. 정답을 한 번 더 보고 다음 문제로 가면 충분해요.'
+            };
+        }
+
+        function stageTip(stageKey, isCorrect) {
+            if (stageKey === 'blank') {
+                return isCorrect
+                    ? '문장 앞뒤를 함께 본 흐름이 좋았어요. 빈칸 문제는 문맥을 먼저 보면 더 빨라집니다.'
+                    : '빈칸 앞뒤 말을 먼저 보면 정답 후보가 금방 줄어들어요.';
+            }
+
+            if (stageKey === 'similar') {
+                return isCorrect
+                    ? '설명 속 핵심 뜻을 잘 잡았어요. 비슷한 말 문제는 중심 낱말 하나만 잡아도 쉬워집니다.'
+                    : '설명에서 가장 중요한 뜻 하나만 먼저 찾으면 비슷한 말 문제를 더 쉽게 풀 수 있어요.';
+            }
+
+            return isCorrect
+                ? '기준 표현과 거리를 잘 비교했어요. 대조 문제는 가장 반대되는 느낌을 먼저 찾으면 편해집니다.'
+                : '대조 문제는 기준 표현과 가장 멀리 있는 말을 먼저 지우면 정답이 더 잘 보여요.';
+        }
+
+        function reactionMarkup() {
+            if (state.lastCorrect) {
+                return `
+                    <div class="reaction-pill ok">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>정답! 감이 잘 잡히고 있어요.</span>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="reaction-pill no">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span>오답이에요. 지금 고치면 더 오래 기억돼요.</span>
+                </div>
+            `;
+        }
+
+        function stageSummaryMessage(score, total) {
+            const rate = score / total;
+            if (rate >= 0.9) {
+                return '대부분의 어휘가 안정적으로 기억되고 있어요.';
+            }
+            if (rate >= 0.7) {
+                return '핵심 어휘가 잘 잡혀 있어요. 한 단계씩 자신감 있게 가면 됩니다.';
+            }
+            return '어려운 표현도 방향은 잘 잡고 있어요. 한 번 더 풀면 훨씬 편해집니다.';
+        }
+
+        function finalSummaryMessage(totalQuestions) {
+            const rate = state.totalCorrect / totalQuestions;
+            if (rate >= 0.9) {
+                return '10~12과 어휘가 전반적으로 아주 탄탄합니다.';
+            }
+            if (rate >= 0.7) {
+                return '핵심 어휘가 잘 정리되어 있어요. 복습 효과가 분명히 보입니다.';
+            }
+            return '중요 어휘를 넓게 다시 본 것만으로도 큰 진전이에요. 한 번 더 풀면 정확도가 빠르게 올라갑니다.';
+        }
+
+        function shuffle(items) {
+            const array = [...items];
+            for (let i = array.length - 1; i > 0; i -= 1) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+    </script>
+</body>
+</html>
