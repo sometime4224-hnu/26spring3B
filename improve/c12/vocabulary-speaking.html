@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NB76SV96');</script>
+    <!-- End Google Tag Manager -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12과 어휘 문장 말하기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --page-bg: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.96);
+            --line: #e2e8f0;
+            --text: #0f172a;
+            --muted: #64748b;
+            --blue: #2563eb;
+            --green: #16a34a;
+            --amber: #d97706;
+            --red: #dc2626;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Noto Sans KR', sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(59, 130, 246, 0.10), transparent 30%),
+                radial-gradient(circle at top right, rgba(56, 189, 248, 0.10), transparent 28%),
+                linear-gradient(180deg, #eff6ff 0%, var(--page-bg) 34%, #f8fafc 100%);
+        }
+
+        .top-nav {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 16px;
+            background: rgba(255, 255, 255, 0.92);
+            border-bottom: 1px solid #bfdbfe;
+            backdrop-filter: blur(10px);
+        }
+
+        .top-nav a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .divider {
+            color: #cbd5e1;
+            font-weight: 700;
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+        }
+
+        .eyebrow {
+            margin: 0;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            color: var(--blue);
+            text-transform: uppercase;
+        }
+
+        .progress-fill {
+            transition: width 0.35s ease;
+        }
+
+        .action-btn {
+            position: relative;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 12px 14px;
+            background: #fff;
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+        }
+
+        .action-btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            border-color: #93c5fd;
+            background: #f8fbff;
+        }
+
+        .action-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.45;
+        }
+
+        .action-primary {
+            background: var(--blue);
+            color: #fff;
+            border-color: var(--blue);
+        }
+
+        .action-primary:hover:not(:disabled) {
+            background: #1d4ed8;
+            border-color: #1d4ed8;
+        }
+
+        .action-danger {
+            background: var(--red);
+            color: #fff;
+            border-color: var(--red);
+        }
+
+        @keyframes guide-ring {
+            0% { opacity: 0.75; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.06); }
+        }
+
+        .guide-active {
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16);
+        }
+
+        .guide-active::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 18px;
+            border: 2px solid rgba(37, 99, 235, 0.45);
+            pointer-events: none;
+            animation: guide-ring 1.2s ease-out infinite;
+        }
+
+        .guide-active::after {
+            content: attr(data-guide-label);
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            padding: 3px 7px;
+            border-radius: 999px;
+            background: #1d4ed8;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: 0.04em;
+            pointer-events: none;
+            box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25);
+        }
+
+        .action-primary.guide-active {
+            background: #1d4ed8;
+            border-color: #1d4ed8;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.16);
+        }
+
+        .action-danger.guide-active {
+            background: #dc2626;
+            border-color: #dc2626;
+            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.16);
+        }
+
+        .action-danger.guide-active::before {
+            border-color: rgba(220, 38, 38, 0.42);
+        }
+
+        .action-danger.guide-active::after {
+            background: #b91c1c;
+        }
+
+        .word-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1d4ed8;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .status-box {
+            border-radius: 16px;
+            border: 1px solid var(--line);
+            background: #f8fafc;
+        }
+
+        .warning-box {
+            border-radius: 16px;
+            border: 1px solid #fcd34d;
+            background: #fffbeb;
+            color: #92400e;
+            font-size: 13px;
+        }
+
+        .metric-box {
+            border-radius: 18px;
+            border: 1px solid var(--line);
+            background: #fff;
+            padding: 14px 16px;
+        }
+
+        .metric-label {
+            display: block;
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .readout {
+            border-radius: 18px;
+            border: 1px solid var(--line);
+            background: #ffffff;
+            padding: 18px;
+            font-size: 19px;
+            font-weight: 700;
+            line-height: 1.9;
+            letter-spacing: -0.01em;
+            word-break: keep-all;
+        }
+
+        .feedback-copy {
+            border-radius: 18px;
+            padding: 17px 18px;
+            font-size: 17px;
+            line-height: 1.85;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .feedback-copy.high {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+
+        .feedback-copy.mid {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fcd34d;
+        }
+
+        .feedback-copy.low {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .syllable-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .syllable-cell {
+            min-width: 36px;
+            padding: 6px 4px;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            font-weight: 800;
+        }
+
+        .syllable-icon { font-size: 9px; line-height: 1; }
+        .syllable-main { font-size: 15px; line-height: 1; }
+
+        .syllable-sub {
+            font-size: 8px;
+            line-height: 1;
+            padding: 2px 4px;
+            border-radius: 999px;
+        }
+
+        .syllable-exact { background: #dcfce7; border-color: #86efac; color: #166534; }
+        .syllable-close { background: #fef9c3; border-color: #fde047; color: #854d0e; }
+        .syllable-miss { background: #fee2e2; border-color: #fca5a5; color: #991b1b; }
+        .syllable-empty { background: #f1f5f9; border-color: #cbd5e1; color: #64748b; }
+        .syllable-extra { background: #eff6ff; border-color: #93c5fd; color: #1d4ed8; border-style: dashed; }
+
+        .sr-only-display {
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.7;
+            color: var(--muted);
+        }
+
+        @keyframes mic-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.35); }
+            100% { box-shadow: 0 0 0 16px rgba(220, 38, 38, 0); }
+        }
+
+        .is-recording {
+            animation: mic-pulse 1s ease-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav" aria-label="상단 이동">
+        <a href="../index.html">메인</a>
+        <span class="divider">|</span>
+        <a href="index.html">12과 목록</a>
+        <span class="divider">|</span>
+        <span class="text-sm font-bold text-slate-600">어휘 문장 말하기</span>
+    </nav>
+
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NB76SV96"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <main class="max-w-3xl mx-auto px-4 py-5 pb-12">
+        <section class="panel p-5 sm:p-6 mb-4">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <p class="eyebrow">12과 어휘 문장 말하기</p>
+                    <h1 class="text-2xl sm:text-3xl font-black leading-tight mt-2">문장을 보고 바로 말하기</h1>
+                    <p class="text-sm sm:text-base text-slate-500 mt-2">어휘 문장을 듣고, 보고, 말한 뒤 즉시 피드백을 확인하세요.</p>
+                </div>
+                <div class="text-4xl sm:text-5xl">🗣️</div>
+            </div>
+
+            <div class="mt-5 flex items-center justify-between gap-3 text-sm text-slate-500">
+                <span id="progressText">1 / 1</span>
+                <span id="statsText">시도 0회</span>
+            </div>
+            <div class="mt-2 h-2 rounded-full bg-slate-100 overflow-hidden">
+                <div id="progressBar" class="progress-fill h-full rounded-full bg-blue-500" style="width: 0%"></div>
+            </div>
+
+            <div id="browserWarn" class="warning-box hidden mt-4 px-4 py-3">
+                <i class="fa-solid fa-triangle-exclamation mr-2"></i>
+                이 브라우저에서는 음성 인식이 제한될 수 있습니다. Chrome 또는 Edge 최신 버전을 권장합니다.
+            </div>
+            <div id="httpsWarn" class="warning-box hidden mt-3 px-4 py-3">
+                <i class="fa-solid fa-lock mr-2"></i>
+                마이크 사용은 보통 HTTPS 또는 localhost 환경에서 안정적으로 동작합니다.
+            </div>
+        </section>
+
+        <section class="panel p-5 sm:p-6 mb-4">
+            <p class="eyebrow">목표 문장</p>
+            <h2 id="sentenceText" class="mt-3 text-2xl sm:text-3xl font-black leading-snug break-keep"></h2>
+
+            <div class="mt-5">
+                <p class="text-xs font-bold text-slate-500 mb-2">사용 어휘</p>
+                <div id="focusWords" class="flex flex-wrap gap-2"></div>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-5">
+                <button id="listenBtn" class="action-btn" type="button">
+                    <i class="fa-solid fa-volume-high mr-1"></i>듣기
+                </button>
+                <button id="slowBtn" class="action-btn" type="button">
+                    <i class="fa-solid fa-gauge-low mr-1"></i>천천히
+                </button>
+                <button id="micBtn" class="action-btn action-primary" type="button">
+                    <i id="micIcon" class="fa-solid fa-microphone mr-1"></i><span id="micLabel">말하기 시작</span>
+                </button>
+                <button id="nextBtn" class="action-btn" type="button">
+                    <i class="fa-solid fa-arrow-right mr-1"></i><span id="nextLabel">다음 문장</span>
+                </button>
+            </div>
+
+            <div class="status-box mt-4 px-4 py-3">
+                <p id="statusText" class="text-sm text-slate-600">문장을 보고 마이크 버튼을 눌러 말해 보세요.</p>
+                <div id="liveTranscript" class="sr-only-display hidden mt-2"></div>
+            </div>
+        </section>
+
+        <section id="resultCard" class="panel p-5 sm:p-6 hidden">
+            <p class="eyebrow">피드백</p>
+
+            <div class="mt-4">
+                <div class="flex items-center justify-between gap-3 mb-2">
+                    <p class="text-xs font-bold text-slate-500">음절 비교</p>
+                    <span class="text-[11px] text-slate-400">띄어쓰기는 자동으로 제외됩니다.</span>
+                </div>
+                <div id="syllableBlocks" class="syllable-grid"></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 mt-5">
+                <div class="metric-box">
+                    <span class="metric-label">정확도</span>
+                    <strong id="accuracyText" class="metric-value text-green-600">0%</strong>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-label">완성도</span>
+                    <strong id="completenessText" class="metric-value text-blue-600">0%</strong>
+                </div>
+            </div>
+
+            <div class="mt-5">
+                <p class="text-xs font-bold text-slate-500 mb-2">코멘트</p>
+                <div class="mb-3">
+                    <p class="text-xs font-bold text-slate-500 mb-2">인식한 문장</p>
+                    <div id="spokenText" class="readout">-</div>
+                </div>
+                <div id="feedbackBody" class="feedback-copy mid">핵심 어휘를 또렷하게 말해 보세요.</div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const PRACTICE_ITEMS = [
+            { sentence: '요즘 살이 쪄서 몸이 무겁고 쉽게 지쳐요.', focus: ['살이 찌다', '몸이 무겁다', '지치다'] },
+            { sentence: '운동을 꾸준히 했더니 힘이 세지고 근육이 생겼어요.', focus: ['힘이 세다', '근육이 생기다'] },
+            { sentence: '아침마다 목을 돌리고 옆구리를 굽히면 기분이 상쾌해요.', focus: ['(목을) 돌리다', '(옆구리를) 굽히다', '기분이 상쾌하다'] },
+            { sentence: '스트레칭을 할 때는 가슴을 펴고 몸을 젖혀 보세요.', focus: ['(가슴을) 펴다', '(몸을) 젖히다'] },
+            { sentence: '준비 운동을 할 때는 손을 허리에 대고 다리를 벌리세요.', focus: ['(손을 허리에) 대다', '(다리를) 벌리다'] },
+            { sentence: '마지막으로 팔을 뻗고 발뒤꿈치를 들어 보세요.', focus: ['(팔을) 뻗다', '(발뒤꿈치를) 들다'] },
+            { sentence: '계단을 빨리 올라가면 숨이 차고 땀이 나요.', focus: ['숨이 차다', '땀이 나다'] },
+            { sentence: '오래 서 있었더니 다리에 쥐가 나서 많이 아팠어요.', focus: ['쥐가 나다'] },
+            { sentence: '푹 쉬고 나니까 기운이 나고 몸이 좋아졌어요.', focus: ['기운이 나다', '몸이 좋아지다'] },
+            { sentence: '자세가 나쁘면 몸이 무겁고 쉽게 지칠 수 있어요.', focus: ['자세가 나쁘다', '몸이 무겁다', '지치다'] },
+            { sentence: '살이 빠지니까 몸이 가벼워지고 자세도 좋아졌어요.', focus: ['살이 빠지다', '몸이 가볍다', '자세가 좋다'] },
+            { sentence: '운동을 안 하면 힘이 약하고 숨이 자주 차요.', focus: ['힘이 약하다', '숨이 차다'] },
+            { sentence: '운동을 마치고 나면 땀이 나도 기분이 상쾌해요.', focus: ['땀이 나다', '기분이 상쾌하다'] }
+        ];
+
+        const refs = {
+            progressText: document.getElementById('progressText'),
+            statsText: document.getElementById('statsText'),
+            progressBar: document.getElementById('progressBar'),
+            browserWarn: document.getElementById('browserWarn'),
+            httpsWarn: document.getElementById('httpsWarn'),
+            sentenceText: document.getElementById('sentenceText'),
+            focusWords: document.getElementById('focusWords'),
+            listenBtn: document.getElementById('listenBtn'),
+            slowBtn: document.getElementById('slowBtn'),
+            micBtn: document.getElementById('micBtn'),
+            micIcon: document.getElementById('micIcon'),
+            micLabel: document.getElementById('micLabel'),
+            nextBtn: document.getElementById('nextBtn'),
+            nextLabel: document.getElementById('nextLabel'),
+            statusText: document.getElementById('statusText'),
+            liveTranscript: document.getElementById('liveTranscript'),
+            resultCard: document.getElementById('resultCard'),
+            accuracyText: document.getElementById('accuracyText'),
+            completenessText: document.getElementById('completenessText'),
+            spokenText: document.getElementById('spokenText'),
+            feedbackBody: document.getElementById('feedbackBody'),
+            syllableBlocks: document.getElementById('syllableBlocks')
+        };
+
+        let currentIndex = 0;
+        let recognition = null;
+        let isRecording = false;
+        let latestTranscript = '';
+        let finalTranscript = '';
+        let attempts = 0;
+        let bestScore = 0;
+
+        const hasRecognition = Boolean(window.SpeechRecognition || window.webkitSpeechRecognition);
+
+        init();
+
+        function init() {
+            renderWarnings();
+            renderItem();
+            bindEvents();
+            if (window.speechSynthesis) {
+                window.speechSynthesis.getVoices();
+                window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+            }
+        }
+
+        function bindEvents() {
+            refs.listenBtn.addEventListener('click', () => speakText(currentItem().sentence, 0.92, '표준 속도로 문장을 들려드릴게요.'));
+            refs.slowBtn.addEventListener('click', () => speakText(currentItem().sentence, 0.68, '천천히 다시 들려드릴게요.'));
+            refs.micBtn.addEventListener('click', toggleRecording);
+            refs.nextBtn.addEventListener('click', goNext);
+        }
+
+        function renderWarnings() {
+            refs.browserWarn.classList.toggle('hidden', hasRecognition);
+            refs.httpsWarn.classList.toggle('hidden', isSecureContextOrLocalhost());
+            refs.micBtn.disabled = !hasRecognition;
+        }
+
+        function renderItem() {
+            const item = currentItem();
+            refs.sentenceText.textContent = item.sentence;
+            refs.focusWords.innerHTML = item.focus.map((word) => `
+                <span class="word-chip">
+                    <i class="fa-solid fa-tag text-[11px]"></i>${escapeHtml(word)}
+                </span>
+            `).join('');
+
+            const progress = ((currentIndex + 1) / PRACTICE_ITEMS.length) * 100;
+            refs.progressText.textContent = `${currentIndex + 1} / ${PRACTICE_ITEMS.length}`;
+            refs.progressBar.style.width = `${progress}%`;
+            refs.nextLabel.textContent = currentIndex === PRACTICE_ITEMS.length - 1 ? '처음으로' : '다음 문장';
+            updateStats();
+            resetFeedback();
+            setStatus('문장을 보고 마이크 버튼을 눌러 말해 보세요.');
+            setGuidedButton(window.speechSynthesis ? 'listenBtn' : (hasRecognition ? 'micBtn' : 'listenBtn'));
+        }
+
+        function updateStats() {
+            refs.statsText.textContent = attempts === 0 ? '시도 0회' : `시도 ${attempts}회 · 최고 ${bestScore}점`;
+        }
+
+        function currentItem() {
+            return PRACTICE_ITEMS[currentIndex];
+        }
+
+        function setStatus(message) {
+            refs.statusText.textContent = message;
+        }
+
+        function goNext() {
+            if (isRecording) {
+                finishRecording();
+            }
+            currentIndex = (currentIndex + 1) % PRACTICE_ITEMS.length;
+            renderItem();
+        }
+
+        function speakText(text, rate, message) {
+            if (!window.speechSynthesis) {
+                setStatus('듣기 기능이 제한되어 있어요. 바로 말하기 버튼을 눌러 보세요.');
+                setGuidedButton(hasRecognition ? 'micBtn' : 'listenBtn');
+                return;
+            }
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'ko-KR';
+            utterance.rate = rate;
+            const voice = pickKoreanVoice();
+            if (voice) {
+                utterance.voice = voice;
+            }
+            setStatus(message);
+            setGuidedButton(hasRecognition ? 'micBtn' : 'listenBtn');
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function pickKoreanVoice() {
+            return window.speechSynthesis.getVoices().find((voice) => voice.lang && voice.lang.toLowerCase().startsWith('ko'));
+        }
+
+        function toggleRecording() {
+            if (!hasRecognition) {
+                setStatus('이 브라우저에서는 음성 인식을 사용할 수 없어요.');
+                setGuidedButton('listenBtn');
+                return;
+            }
+
+            if (isRecording) {
+                finishRecording();
+                return;
+            }
+
+            startRecording();
+        }
+
+        function startRecording() {
+            const RecognitionClass = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!RecognitionClass) {
+                return;
+            }
+
+            let finalReceived = false;
+            let restartCount = 0;
+            const maxRestarts = 5;
+
+            resetFeedback();
+            latestTranscript = '';
+            finalTranscript = '';
+            refs.liveTranscript.classList.remove('hidden');
+            refs.liveTranscript.textContent = '인식 중...';
+
+            isRecording = true;
+            updateMicUi(true);
+            setStatus('말하는 동안 자동으로 인식합니다. 문장을 끝까지 또렷하게 말해 보세요.');
+            setGuidedButton('micBtn', '종료');
+
+            function startRecognition() {
+                recognition = new RecognitionClass();
+                recognition.lang = 'ko-KR';
+                recognition.interimResults = true;
+                recognition.maxAlternatives = 3;
+
+                recognition.onresult = (event) => {
+                    let interim = '';
+                    let spokenFinal = '';
+
+                    for (let i = event.resultIndex; i < event.results.length; i += 1) {
+                        if (event.results[i].isFinal) {
+                            const target = norm(currentItem().sentence);
+                            let bestAlt = event.results[i][0].transcript;
+                            let bestScoreForAlt = jamoAnalyze(norm(bestAlt), target).score;
+
+                            for (let altIndex = 1; altIndex < event.results[i].length; altIndex += 1) {
+                                const altText = event.results[i][altIndex].transcript;
+                                const altScore = jamoAnalyze(norm(altText), target).score;
+                                if (altScore > bestScoreForAlt) {
+                                    bestAlt = altText;
+                                    bestScoreForAlt = altScore;
+                                }
+                            }
+
+                            spokenFinal += `${bestAlt} `;
+                        } else {
+                            interim += event.results[i][0].transcript;
+                        }
+                    }
+
+                    latestTranscript = (spokenFinal || interim).trim();
+                    refs.liveTranscript.textContent = latestTranscript || '인식 중...';
+
+                    if (spokenFinal.trim()) {
+                        finalReceived = true;
+                        finalTranscript = spokenFinal.trim();
+                        stopRecognitionLoop();
+                        analyzeResult(finalTranscript);
+                    }
+                };
+
+                recognition.onerror = (event) => {
+                    if (event.error === 'no-speech' && isRecording && restartCount < maxRestarts) {
+                        restartCount += 1;
+                        setTimeout(() => {
+                            if (isRecording) {
+                                startRecognition();
+                            }
+                        }, 220);
+                        return;
+                    }
+
+                    const messages = {
+                        'not-allowed': '마이크 권한이 필요합니다. 브라우저에서 마이크 사용을 허용해 주세요.',
+                        'no-speech': '음성이 들리지 않았어요. 조금 더 크게 다시 말해 보세요.'
+                    };
+
+                    stopRecognitionLoop();
+                    setStatus(messages[event.error] || `오류가 발생했어요: ${event.error}`);
+                    setGuidedButton(event.error === 'not-allowed' ? 'listenBtn' : 'micBtn');
+                };
+
+                recognition.onend = () => {
+                    if (!isRecording) {
+                        return;
+                    }
+
+                    if (!finalReceived && restartCount < maxRestarts) {
+                        restartCount += 1;
+                        setTimeout(() => {
+                            if (isRecording) {
+                                startRecognition();
+                            }
+                        }, 220);
+                    } else {
+                        finishRecording();
+                    }
+                };
+
+                try {
+                    recognition.start();
+                } catch (error) {
+                    console.error(error);
+                    stopRecognitionLoop();
+                    setStatus('음성 인식을 시작하지 못했어요. 다시 시도해 주세요.');
+                }
+            }
+
+            startRecognition();
+        }
+
+        function finishRecording() {
+            const transcript = (finalTranscript || latestTranscript || '').trim();
+            stopRecognitionLoop();
+
+            if (transcript) {
+                analyzeResult(transcript);
+            } else {
+                setStatus('인식된 문장이 없어요. 천천히 다시 말해 보세요.');
+                refs.liveTranscript.textContent = '인식된 문장 없음';
+                setGuidedButton('micBtn');
+            }
+        }
+
+        function stopRecognitionLoop() {
+            isRecording = false;
+            updateMicUi(false);
+            if (recognition) {
+                const activeRecognition = recognition;
+                recognition = null;
+                activeRecognition.onresult = null;
+                activeRecognition.onerror = null;
+                activeRecognition.onend = null;
+                try {
+                    activeRecognition.stop();
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        }
+
+        function updateMicUi(recording) {
+            refs.micBtn.classList.toggle('action-danger', recording);
+            refs.micBtn.classList.toggle('action-primary', !recording);
+            refs.micBtn.classList.toggle('is-recording', recording);
+            refs.micIcon.className = recording ? 'fa-solid fa-stop mr-1' : 'fa-solid fa-microphone mr-1';
+            refs.micLabel.textContent = recording ? '말하기 종료' : '말하기 시작';
+        }
+
+        function setGuidedButton(targetKey, label = '지금') {
+            const buttons = [refs.listenBtn, refs.slowBtn, refs.micBtn, refs.nextBtn];
+            buttons.forEach((button) => {
+                button.classList.remove('guide-active');
+                button.removeAttribute('data-guide-label');
+            });
+
+            const targetButton = refs[targetKey];
+            if (!targetButton || targetButton.disabled) {
+                return;
+            }
+
+            targetButton.classList.add('guide-active');
+            targetButton.setAttribute('data-guide-label', label);
+        }
+
+        function analyzeResult(spokenRaw) {
+            const targetNormalized = norm(currentItem().sentence);
+            const spokenNormalized = norm(spokenRaw);
+            const { accuracy, completeness, score } = jamoAnalyze(spokenNormalized, targetNormalized);
+            const feedback = buildFeedback(score, accuracy, completeness, currentItem().focus);
+
+            attempts += 1;
+            bestScore = Math.max(bestScore, score);
+            updateStats();
+
+            refs.resultCard.classList.remove('hidden');
+            refs.accuracyText.textContent = `${accuracy}%`;
+            refs.completenessText.textContent = `${completeness}%`;
+            refs.spokenText.textContent = spokenRaw || '인식된 문장이 없어요.';
+            refs.feedbackBody.textContent = feedback.body;
+            refs.feedbackBody.className = `feedback-copy ${feedbackTone(score)}`;
+            refs.syllableBlocks.innerHTML = buildSyllableBlocks(targetNormalized, spokenNormalized);
+
+            refs.liveTranscript.textContent = spokenRaw;
+            refs.liveTranscript.classList.remove('hidden');
+            setStatus(feedback.status);
+            setGuidedButton(score >= 85 ? 'nextBtn' : 'slowBtn');
+        }
+
+        function buildFeedback(score, accuracy, completeness, focusWords) {
+            const focusText = focusWords.join(', ');
+            const notes = [];
+
+            if (score >= 85) {
+                notes.push('문장 전체가 안정적으로 잘 들렸어요.');
+            } else if (score >= 65) {
+                notes.push('핵심 어휘는 잘 들리지만 몇 음절이 살짝 흔들렸어요.');
+            } else {
+                notes.push('핵심 어휘를 더 또렷하게 끊어 읽는 연습이 필요해요.');
+            }
+
+            if (completeness < 75) {
+                notes.push('문장 끝부분이 빠지지 않도록 끝까지 이어서 말해 보세요.');
+            }
+
+            if (accuracy < 70) {
+                notes.push(`특히 "${focusText}" 부분을 의식해서 한 번 더 말해 보세요.`);
+            } else if (score >= 85) {
+                notes.push('이제 다음 문장으로 넘어가도 좋아요.');
+            } else {
+                notes.push('천천히 버튼으로 한 번 더 듣고 같은 리듬으로 따라 말해 보세요.');
+            }
+
+            if (score >= 85) {
+                return {
+                    title: '아주 좋아요',
+                    body: notes.join(' '),
+                    status: '좋은 발음이에요. 다음 문장도 같은 느낌으로 말해 보세요.'
+                };
+            }
+
+            if (score >= 65) {
+                return {
+                    title: '조금만 더 다듬어 볼까요',
+                    body: notes.join(' '),
+                    status: '잘하고 있어요. 핵심 어휘만 조금 더 또렷하게 말해 보세요.'
+                };
+            }
+
+            return {
+                title: '천천히 다시 말해 보세요',
+                body: notes.join(' '),
+                status: '천천히 다시 듣고 같은 문장을 한 번 더 말해 보세요.'
+            };
+        }
+
+        function buildSyllableBlocks(target, spoken) {
+            const targetChars = [...target];
+            const spokenChars = [...spoken];
+            let html = '';
+
+            for (let index = 0; index < targetChars.length; index += 1) {
+                const targetChar = targetChars[index];
+                const spokenChar = spokenChars[index] || '';
+                const similarity = syllableSim(targetChar, spokenChar);
+
+                if (!spokenChar) {
+                    html += renderSyllableCell('syllable-empty', '🔇', targetChar, '');
+                    continue;
+                }
+
+                if (similarity >= 0.99) {
+                    html += renderSyllableCell('syllable-exact', '✅', targetChar, '');
+                    continue;
+                }
+
+                if (similarity >= 0.55) {
+                    html += renderSyllableCell('syllable-close', '⚠️', targetChar, spokenChar);
+                    continue;
+                }
+
+                html += renderSyllableCell('syllable-miss', '❌', targetChar, spokenChar);
+            }
+
+            for (let index = targetChars.length; index < spokenChars.length; index += 1) {
+                html += renderSyllableCell('syllable-extra', '➕', spokenChars[index], '');
+            }
+
+            return html;
+        }
+
+        function renderSyllableCell(tone, icon, main, sub) {
+            return `
+                <div class="syllable-cell ${tone}">
+                    <span class="syllable-icon">${icon}</span>
+                    <span class="syllable-main">${escapeHtml(main)}</span>
+                    ${sub ? `<span class="syllable-sub">${escapeHtml(sub)}</span>` : ''}
+                </div>
+            `;
+        }
+
+        function resetFeedback() {
+            refs.resultCard.classList.add('hidden');
+            refs.accuracyText.textContent = '0%';
+            refs.completenessText.textContent = '0%';
+            refs.spokenText.textContent = '-';
+            refs.feedbackBody.textContent = '핵심 어휘를 또렷하게 말해 보세요.';
+            refs.feedbackBody.className = 'feedback-copy mid';
+            refs.syllableBlocks.innerHTML = '';
+            refs.liveTranscript.textContent = '';
+            refs.liveTranscript.classList.add('hidden');
+            latestTranscript = '';
+            finalTranscript = '';
+        }
+
+        function feedbackTone(score) {
+            if (score >= 85) return 'high';
+            if (score >= 65) return 'mid';
+            return 'low';
+        }
+
+        function isSecureContextOrLocalhost() {
+            return location.protocol === 'https:' || ['localhost', '127.0.0.1'].includes(location.hostname);
+        }
+
+        function norm(value) {
+            return value.replace(/[\s.,!?~"'`()\[\]{}:;/\\-]/g, '');
+        }
+
+        function lcs(a, b) {
+            const m = a.length;
+            const n = b.length;
+            const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+
+            for (let i = 1; i <= m; i += 1) {
+                for (let j = 1; j <= n; j += 1) {
+                    dp[i][j] = a[i - 1] === b[j - 1]
+                        ? dp[i - 1][j - 1] + 1
+                        : Math.max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+
+            return dp[m][n];
+        }
+
+        function decomposeHangul(value) {
+            const CHO = 'ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ';
+            const JUNG = 'ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ';
+            const JONG = ['', 'ㄱ', 'ㄲ', 'ㄳ', 'ㄴ', 'ㄵ', 'ㄶ', 'ㄷ', 'ㄹ', 'ㄺ', 'ㄻ', 'ㄼ', 'ㄽ', 'ㄾ', 'ㄿ', 'ㅀ', 'ㅁ', 'ㅂ', 'ㅄ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'];
+            let output = '';
+
+            for (const ch of value) {
+                const code = ch.charCodeAt(0);
+                if (code >= 0xAC00 && code <= 0xD7A3) {
+                    const offset = code - 0xAC00;
+                    const jongIndex = offset % 28;
+                    const jungIndex = ((offset - jongIndex) / 28) % 21;
+                    const choIndex = Math.floor((offset - jongIndex) / 28 / 21);
+                    output += CHO[choIndex] + JUNG[jungIndex] + (jongIndex ? JONG[jongIndex] : '');
+                } else {
+                    output += ch;
+                }
+            }
+
+            return output;
+        }
+
+        function jamoAnalyze(spokenNormalized, targetNormalized) {
+            const targetJamo = decomposeHangul(targetNormalized);
+            const spokenJamo = decomposeHangul(spokenNormalized);
+            const targetLength = targetJamo.length;
+            const spokenLength = spokenJamo.length;
+
+            if (!targetLength) {
+                return { accuracy: 0, completeness: 0, score: 0 };
+            }
+
+            const matched = lcs(targetJamo, spokenJamo);
+            const accuracy = Math.round((matched / targetLength) * 100);
+            const completeness = Math.round((matched / Math.max(targetLength, spokenLength || 1)) * 100);
+            const score = Math.round((accuracy * 0.65) + (completeness * 0.35));
+
+            return { accuracy, completeness, score };
+        }
+
+        function syllableSim(targetChar, spokenChar) {
+            if (!spokenChar) return 0;
+            if (targetChar === spokenChar) return 1;
+
+            const targetJamo = decomposeHangul(targetChar);
+            const spokenJamo = decomposeHangul(spokenChar);
+            return targetJamo.length ? lcs(targetJamo, spokenJamo) / targetJamo.length : 0;
+        }
+
+        function escapeHtml(value) {
+            return value
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+    </script>
+</body>
+</html>
